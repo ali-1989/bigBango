@@ -1,0 +1,110 @@
+# Flutter: 3.0.1  (Framework revision fb57da5f94)
+# Dart: 2.17.1
+# Java: 17    gradle.properties (org.gradle.java.home)
+
+
+name: app  # BigBango
+description: A system to learn languages
+
+publish_to: 'none'
+
+version: 0.0.1+1
+
+
+environment:
+  sdk: ">=2.17.1"             # null Safety : 2.12.0
+  flutter: ">=3.0.0"
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  import_sorter: ^4.6.0
+  flutter_launcher_icons: ^0.9.3
+
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.5
+  url_launcher: ^6.1.5
+  device_info_plus: ^4.1.2
+  platform_device_id: ^1.0.1
+  permission_handler: ^10.0.0
+  pull_to_refresh: ^2.0.0
+  material_dialogs: ^1.1.3
+  flutter_spinkit: ^5.1.0
+  awesome_notifications: 0.6.21
+  popover: ^0.2.6+3
+  numberpicker: ^2.1.1
+  chewie: ^1.3.5
+  dio: ^4.0.6
+  video_player: ^2.4.7
+  im_animations: ^0.1.2                       # ColorSonar
+  animate_do: ^2.1.0
+  animator: ^3.2.0
+  pinput: ^2.2.12
+  stop_watch_timer: ^1.5.0
+  dropdown_button2: ^1.7.2
+  persian_modal_date_picker: ^0.0.3
+  modal_bottom_sheet: ^2.1.2
+  extended_sliver: ^2.1.3
+  jwt_decoder: ^2.0.1
+  dart_jsonwebtoken: ^2.4.2
+
+
+  iris_tools:
+    git: https://github.com/ali-1989/IrisTools.git
+  iris_db:
+    git: https://github.com/ali-1989/IrisDB.git
+
+
+dependency_overrides:
+  path: ^1.8.2
+  ffi: ^2.0.1
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Image.asset('assets/images/x.jpg')
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: shabnam
+      fonts:
+        - asset: assets/fonts/Shabnam-Medium-FD.ttf
+          #style: normal  # normal, italic
+          #weight: 500
+    - family: shabnam_bold
+      fonts:
+        - asset: assets/fonts/Shabnam-Bold-FD.ttf
+
+
+
+flutter_icons:
+  image_path: "dep/app_icon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
+
+
+import_sorter:
+  emojis: false
+  comments: false
+
+
+## flutter pub run import_sorter:main
+## flutter pub run flutter_launcher_icons:main
+
+
+# caret sign:
+# ^0.1.2 is the same as '>=0.1.2 <0.2.0'
+# ^1.2.3 would be the same as '>=1.2.3 <2.0.0'
+# if not use caret sign , force download/use that version.
