@@ -8,11 +8,11 @@ import 'package:app/system/enums.dart';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/tools/app/appThemes.dart';
 
+/// has usage in below
 
 class VideoPlayerView extends StatefulWidget {
   late final VideoSourceType videoSourceType;
   late final String srcAddress;
-  final Color? backColor;
   final bool allowFullScreen;
   final bool looping;
   final bool showControls;
@@ -26,7 +26,6 @@ class VideoPlayerView extends StatefulWidget {
     this.autoPlay = false,
     this.looping = false,
     this.showControls = true,
-    this.backColor,
   }) : super(key: key);
 
   @override
@@ -60,7 +59,7 @@ class VideoPlayerViewState extends StateBase<VideoPlayerView> {
     return Center(
         child: isVideoInit?
         Chewie(controller: chewieVideoController!,)
-            : Center(child: CircularProgressIndicator(),)
+            : const Center(child: CircularProgressIndicator(),)
     );
   }
 
@@ -108,7 +107,7 @@ class VideoPlayerViewState extends StateBase<VideoPlayerView> {
       showControlsOnInitialize: true,
       showOptions: true,
       playbackSpeeds: [1, 1.5, 2],
-      placeholder: Center(child: CircularProgressIndicator()),
+      placeholder: const Center(child: CircularProgressIndicator()),
       materialProgressColors: ChewieProgressColors(
           handleColor: AppThemes.instance.currentTheme.differentColor,
           playedColor: AppThemes.instance.currentTheme.differentColor,
@@ -119,3 +118,28 @@ class VideoPlayerViewState extends StateBase<VideoPlayerView> {
     update();
   }
 }
+
+/* usage:
+
+void showVideo(){
+    showDialog(
+        context: context,
+        builder: (ctx){
+          return Scaffold(
+            appBar: AppBar(
+                backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              foregroundColor: Colors.white,
+              iconTheme: const IconThemeData(color: Colors.white),
+              elevation: 0,
+            ),
+            backgroundColor: Colors.black,
+            body: VideoPlayerView(
+              videoSourceType: VideoSourceType.network,
+              srcAddress: 'http://techslides.com/demos/sample-videos/small.mp4',
+            ),
+          );
+        }
+    );
+  }
+ */

@@ -1,10 +1,12 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/pages/otp_page.dart';
+import 'package:app/system/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
+import 'package:app/views/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:im_animations/im_animations.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
@@ -45,17 +47,20 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
                       top: 122,
                         left: 0,
                         right: 0,
-                        child: Center(
-                          child: ColorSonar(
-                              contentAreaRadius: 20.0,
-                              waveFall: 10.0,
-                              waveMotionEffect: Curves.linear,
-                              waveMotion: WaveMotion.synced,
-                              innerWaveColor: Colors.red.withAlpha(100),
-                              middleWaveColor: Colors.red.withAlpha(50),
-                              outerWaveColor: Colors.transparent,
-                              duration: const Duration(seconds: 2),
-                              child: Image.asset(AppImages.playIcon, width: 40)
+                        child: GestureDetector(
+                          onTap: showVideo,
+                          child: Center(
+                            child: ColorSonar(
+                                contentAreaRadius: 20.0,
+                                waveFall: 10.0,
+                                waveMotionEffect: Curves.linear,
+                                waveMotion: WaveMotion.synced,
+                                innerWaveColor: Colors.red.withAlpha(100),
+                                middleWaveColor: Colors.red.withAlpha(50),
+                                outerWaveColor: Colors.transparent,
+                                duration: const Duration(seconds: 2),
+                                child: Image.asset(AppImages.playIcon, width: 40)
+                            ),
                           ),
                         )
                     ),
@@ -139,5 +144,27 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
 
   void onGoClick(){
     AppRoute.push(context, const OtpPage(phoneNumber: '09336044375',));
+  }
+
+  void showVideo(){
+    showDialog(
+        context: context,
+        builder: (ctx){
+          return Scaffold(
+            appBar: AppBar(
+                backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              foregroundColor: Colors.white,
+              iconTheme: const IconThemeData(color: Colors.white),
+              elevation: 0,
+            ),
+            backgroundColor: Colors.black,
+            body: VideoPlayerView(
+              videoSourceType: VideoSourceType.network,
+              srcAddress: 'http://techslides.com/demos/sample-videos/small.mp4',
+            ),
+          );
+        }
+    );
   }
 }

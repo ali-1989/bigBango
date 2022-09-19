@@ -117,15 +117,16 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
 
             Center(
               child: Column(
-                children: [
-                  const SizedBox(height: 4),
+                children: const [
+                  SizedBox(height: 4),
                   CircleAvatar(
                     radius: 20,
-                    child: Image.asset(AppImages.profile, fit: BoxFit.fill),
-
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: AssetImage(AppImages.profile),
+                    //child: Image.asset(AppImages.profile, fit: BoxFit.fill),
                   ),
-                  const SizedBox(height: 8),
-                  const Text('علی باقری یزدابادی'),
+                  SizedBox(height: 8),
+                  Text('علی باقری یزدابادی'),
                 ],
               ),
             )
