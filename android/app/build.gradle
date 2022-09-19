@@ -61,7 +61,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('E:\\FlutterProjects\\Zaban\\android\\key.jks')
+            storeFile file('E:\\FlutterProjects\\BigBango\\android\\key.jks')
             keyAlias 'app_alias'
             keyPassword '123456@aA'
             storePassword '123456@aA'
