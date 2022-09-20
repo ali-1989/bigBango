@@ -6,9 +6,12 @@ import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:im_animations/im_animations.dart';
+import 'package:iris_tools/api/checker.dart';
+import 'package:iris_tools/api/helpers/inputFormatter.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 class PhoneNumberPage extends StatefulWidget {
@@ -19,11 +22,18 @@ class PhoneNumberPage extends StatefulWidget {
 }
 ///===================================================================================================================
 class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
+  TextEditingController phoneCtr = TextEditingController();
 
 
   @override
   void initState(){
     super.initState();
+  }
+
+  @override
+  void dispose(){
+    phoneCtr.dispose();
+    super.dispose();
   }
 
   @override
@@ -69,13 +79,16 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
                         top: 182,
                         left: 0,
                         right: 0,
-                        child: Center(
-                          child: Pulse(
-                            delay: const Duration(seconds: 2),
-                            child: Text(AppMessages.loginDescription3)
-                                .wrapBoxBorder(
-                                alpha: 100,
-                                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5)
+                        child: GestureDetector(
+                          onTap: showVideo,
+                          child: Center(
+                            child: Pulse(
+                              delay: const Duration(seconds: 2),
+                              child: Text(AppMessages.loginDescription3)
+                                  .wrapBoxBorder(
+                                  alpha: 100,
+                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5)
+                              ),
                             ),
                           ),
                         )
@@ -105,6 +118,11 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
                   const SizedBox(height: 20),
 
                   TextField(
+                    controller: phoneCtr,
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [
+                      InputFormatter.filterInputFormatterDeny(RegExp(r'(\+)|(-)')),
+                    ],
                     decoration: InputDecoration(
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -143,6 +161,18 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
   }
 
   void onGoClick(){
+    final phoneNumber = phoneCtr.text.trim();
+
+    if(phoneNumber.isEmpty || phoneNumber.length < 11){
+      AppSnack.showError(context, AppMessages.mustEnterMobileNumber);
+      return;
+    }
+
+    if(!Checker.validateMobile(phoneNumber)){
+      AppSnack.showError(context, AppMessages.mustEnterMobileNumber);
+      return;
+    }
+
     AppRoute.push(context, const OtpPage(phoneNumber: '09336044375',));
   }
 
@@ -161,10 +191,15 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
             backgroundColor: Colors.black,
             body: VideoPlayerView(
               videoSourceType: VideoSourceType.network,
+              autoPlay: true,
               srcAddress: 'http://techslides.com/demos/sample-videos/small.mp4',
             ),
           );
         }
     );
+  }
+
+  void requestSendMobile(){
+
   }
 }

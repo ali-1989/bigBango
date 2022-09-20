@@ -99,61 +99,6 @@ class LoginService {
 
     return result.future;
   }
-
-  static Future<LoginResultWrapper> requestVerifyEmail({required String email}) async {
-    final http = HttpItem();
-    final result = Completer<LoginResultWrapper>();
-
-    final js = {};
-    js[Keys.requestZone] = 'verify_email';
-    js['email'] = email;
-    js.addAll(DeviceInfoTools.getDeviceInfo());
-    PublicAccess.addAppInfo(js);
-
-    http.fullUrl = PublicAccess.graphApi;
-    http.method = 'POST';
-    http.setBodyJson(js);
-
-    final request = AppHttpDio.send(http);
-    final loginWrapper = LoginResultWrapper();
-
-    var f = request.response.catchError((e){
-      loginWrapper.connectionError = true;
-      result.complete(loginWrapper);
-    });
-
-    f = f.then((Response? response){
-      if(response == null || !request.isOk) {
-        loginWrapper.connectionError = true;
-        result.complete(loginWrapper);
-      }
-
-
-      final resJs = request.getBodyAsJson()!;
-      final status = resJs[Keys.status];
-      loginWrapper.causeCode = resJs[Keys.causeCode]?? 0;
-      loginWrapper.jsResult = resJs;
-
-      if(status == Keys.error){
-        loginWrapper.hasError = true;
-
-        if(loginWrapper.causeCode == HttpCodes.error_dataNotExist){
-          /**/
-        }
-        else if(loginWrapper.causeCode == HttpCodes.error_userIsBlocked){
-          loginWrapper.isBlock = true;
-        }
-      }
-      else {
-        loginWrapper.isVerify = true;
-      }
-
-      result.complete(loginWrapper);
-      return null;
-    });
-
-    return result.future;
-  }
 }
 ///============================================================================
 class LoginResultWrapper {

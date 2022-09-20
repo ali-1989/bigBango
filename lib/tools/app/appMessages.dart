@@ -288,4 +288,8 @@ class AppMessages {
     return 'پشتیبانی از درس';
   }
 
+  static String get mustEnterMobileNumber {
+    return 'لطفا شماره موبایل خود را به درستی وارد کنید';
+  }
+
 }
