@@ -13,7 +13,7 @@ class CountryModel {
       countryName = map['country_name'];
       nativeName = map['native_name'];
       countryIso = map[Keys.countryIso];
-      countryPhoneCode = map[Keys.phoneCode];
+      countryPhoneCode = map['phone_code'];
     }
   }
 
@@ -22,7 +22,7 @@ class CountryModel {
       'country_name': countryName,
       'native_name': nativeName,
       Keys.countryIso: countryIso,
-      Keys.phoneCode: countryPhoneCode,
+      'phone_code': countryPhoneCode,
     };
   }
 }

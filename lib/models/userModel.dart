@@ -27,10 +27,10 @@ class UserModel {
   UserModel.fromMap(Map map, {String? domain}) {
     final tLoginDate = map[Keys.setting$lastLoginDate];
     final brDate = map[Keys.birthdate];
-    final regDate = map[Keys.registerDate];
+    //final regDate = map[Keys.registerDate];
 
-    userId = map[Keys.userId].toString();
-    userName = map[Keys.userName];
+    //userId = map[Keys.userId].toString();
+    //userName = map[Keys.userName];
     name = map[Keys.name];
     family = map[Keys.family];
     mobile = map[Keys.mobileNumber]?.toString();
@@ -58,12 +58,12 @@ class UserModel {
       birthDate = DateHelper.tsToSystemDate(brDate);
     }
 
-    if(regDate is int) {
+    /*if(regDate is int) {
       registerDate = DateHelper.milToDateTime(regDate);
     }
     else if(regDate is String) {
       registerDate = DateHelper.tsToSystemDate(regDate);
-    }
+    }*/
 
     //profileModel?.url = UriTools.correctAppUrl(profileModel?.url, domain: domain);
     //----------------------- local
@@ -77,12 +77,12 @@ class UserModel {
   
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{};
-    map[Keys.userId] = userId;
-    map[Keys.userName] = userName;
+    //map[Keys.userId] = userId;
+    //map[Keys.userName] = userName;
     map[Keys.name] = name;
     map[Keys.family] = family;
     map[Keys.birthdate] = birthDate == null? null: DateHelper.toTimestamp(birthDate!);
-    map[Keys.registerDate] = registerDate == null? null: DateHelper.toTimestamp(registerDate!);
+    //map[Keys.registerDate] = registerDate == null? null: DateHelper.toTimestamp(registerDate!);
     map[Keys.mobileNumber] = mobile;
     map[Keys.sex] = sex;
     map['profile_image_model'] = profileModel?.toMap();

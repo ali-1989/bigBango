@@ -19,7 +19,7 @@ class PublicAccess {
 
   static late Logger logger;
   static late Reporter reporter;
-  static String graphApi = '${SettingsManager.settingsModel.httpAddress}/graph-v1';
+  static String serverApi = '${SettingsManager.settingsModel.httpAddress}/';
   static ClassicFooter classicFooter = const ClassicFooter(
     loadingText: '',
     idleText: '',
@@ -44,8 +44,6 @@ class PublicAccess {
 
   static Map<String, dynamic> getAppInfo(String? token) {
     final res = <String, dynamic>{};
-    res[Keys.deviceId] = DeviceInfoTools.deviceId;
-    res[Keys.appName] = Constants.appName;
     res['app_version_code'] = Constants.appVersionCode;
     res['app_version_name'] = Constants.appVersionName;
 
@@ -102,7 +100,7 @@ class PublicAccess {
   static Map<String, dynamic> getHowIsMap() {
     final howIs = <String, dynamic>{
       'how_is': 'HowIs',
-      Keys.deviceId: DeviceInfoTools.deviceId,
+      //Keys.deviceId: DeviceInfoTools.deviceId,
       Keys.languageIso: System.getLocalizationsLanguageCode(AppRoute.getContext()),
       'app_version_code': Constants.appVersionCode,
       'app_version_name': Constants.appVersionName,
@@ -123,7 +121,7 @@ class PublicAccess {
   static Map<String, dynamic> getHeartMap() {
     final heart = <String, dynamic>{
       'heart': 'Heart',
-      Keys.deviceId: DeviceInfoTools.deviceId,
+      //Keys.deviceId: DeviceInfoTools.deviceId,
       Keys.languageIso: System.getLocalizationsLanguageCode(AppRoute.getContext()),
       'app_version_code': Constants.appVersionCode,
       'app_version_name': Constants.appVersionName,

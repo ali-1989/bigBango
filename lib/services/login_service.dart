@@ -12,17 +12,15 @@ import 'package:app/tools/deviceInfoTools.dart';
 class LoginService {
   LoginService._();
 
-  static Future<Map?> requestSendOtp({required CountryModel countryModel, required String phoneNumber}) async {
+  static Future<Map?> requestSendOtp({CountryModel? countryModel, required String phoneNumber}) async {
     final http = HttpItem();
     final result = Completer<Map?>();
 
     final js = {};
-    js[Keys.requestZone] = 'send_otp';
     js[Keys.mobileNumber] = phoneNumber;
-    js.addAll(countryModel.toMap());
-    PublicAccess.addAppInfo(js);
+    //js.addAll(countryModel.toMap());
 
-    http.fullUrl = PublicAccess.graphApi;
+    http.fullUrl = PublicAccess.serverApi;
     http.method = 'POST';
     http.setBodyJson(js);
 
@@ -35,6 +33,11 @@ class LoginService {
     f = f.then((Response? response){
       if(response == null || !request.isOk) {
         result.complete(null);
+        return;
+      }
+
+      if(response.statusCode == 422){
+
       }
 
       result.complete(request.getBodyAsJson());
@@ -44,19 +47,18 @@ class LoginService {
     return result.future;
   }
 
-  static Future<LoginResultWrapper> requestVerifyOtp({required CountryModel countryModel, required String phoneNumber, required String code}) async {
+  static Future<LoginResultWrapper> requestVerifyOtp({CountryModel? countryModel, required String phoneNumber, required String code}) async {
     final http = HttpItem();
     final result = Completer<LoginResultWrapper>();
 
     final js = {};
-    js[Keys.requestZone] = 'verify_otp';
     js[Keys.mobileNumber] = phoneNumber;
     js['code'] = code;
-    js.addAll(countryModel.toMap());
-    js.addAll(DeviceInfoTools.getDeviceInfo());
-    PublicAccess.addAppInfo(js);
+    js['clintId'] = DeviceInfoTools.deviceId;
+    //js.addAll(DeviceInfoTools.getDeviceInfo());
+    //PublicAccess.addAppInfo(js);
 
-    http.fullUrl = PublicAccess.graphApi;
+    http.fullUrl = PublicAccess.serverApi;
     http.method = 'POST';
     http.setBodyJson(js);
 
@@ -75,8 +77,7 @@ class LoginService {
       }
 
       final resJs = request.getBodyAsJson()!;
-      final status = resJs[Keys.status];
-      loginWrapper.causeCode = resJs[Keys.causeCode]?? 0;
+      final status = '';
       loginWrapper.jsResult = resJs;
 
       if(status == Keys.error){

@@ -134,7 +134,7 @@ class Requester {
         return;
       }
 
-      final result = js[Keys.status]?? Keys.error;
+      final result = Keys.error;
 
       if(result == Keys.ok) {
         await httpRequestEvents.onStatusOk?.call(_httpRequester, js);
@@ -142,8 +142,8 @@ class Requester {
       else {
         await httpRequestEvents.onFailState?.call(_httpRequester);
 
-        final cause = js[Keys.cause];
-        final causeCode = js[Keys.causeCode];
+        final cause = '';
+        final causeCode = 0;
         final managedByUser = await httpRequestEvents.onStatusError?.call(_httpRequester, js, causeCode, cause)?? false;
 
         if(context != null) {

@@ -10,8 +10,8 @@ class HttpProcess {
   HttpProcess._();
 
   static bool processCommonRequestError(BuildContext context, Map json) {
-    final int causeCode = json[Keys.causeCode] ?? 0;
-    final String cause = json[Keys.cause] ?? Keys.error;
+    final int causeCode = 0;
+    final String cause = Keys.error;
 
     return processCommonRequestErrors(context, causeCode, cause, json);
   }

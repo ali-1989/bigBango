@@ -27,9 +27,7 @@ class UserLoginTools {
   static void sendLogoffState(UserModel user){
     if(AppBroadcast.isNetConnected){
       final reqJs = <String, dynamic>{};
-      reqJs[Keys.requestZone] = 'Logoff_user_report';
-      reqJs[Keys.requesterId] = user.userId;
-      reqJs[Keys.forUserId] = user.userId;
+      reqJs[''] = user.userId;
 
       PublicAccess.addAppInfo(reqJs, curUser: user);
 
