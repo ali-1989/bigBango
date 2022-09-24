@@ -251,5 +251,13 @@ class SplashScreenState extends StateBase<SplashPage> {
 
   Future<void> testCodes(BuildContext context) async {
     //await AppDB.db.clearTable(AppDB.tbKv);
+    print('===============================');
+    final res = await getText();
+    print(res);
+  }
+
+  Future<String> getText() async {
+    throw Exception('eeeeeeeee');
+    //return '9999999999';
   }
 }
