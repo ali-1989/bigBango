@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app/managers/fontManager.dart';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/pages/home_page.dart';
+import 'package:app/pages/layout_page.dart';
 import 'package:app/pages/phone_number_page.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +11,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/system.dart';
-import 'package:iris_tools/net/trustSsl.dart';
 
 import 'package:app/constants.dart';
 import 'package:app/managers/settingsManager.dart';
@@ -22,7 +22,6 @@ import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/app/appToast.dart';
-import 'package:app/tools/deviceInfoTools.dart';
 
 bool _isInit = false;
 bool _isInLoadingSettings = true;
@@ -168,7 +167,7 @@ class SplashScreenState extends StateBase<SplashPage> {
     return Builder(
       builder: (ctx){
         if(Session.hasAnyLogin()){
-          return HomePage(key: AppBroadcast.homeScreenKey);
+          return LayoutPage(key: AppBroadcast.layoutPageKey);
         }
 
         return const PhoneNumberPage();
@@ -177,13 +176,13 @@ class SplashScreenState extends StateBase<SplashPage> {
   }
 
   ///==================================================================================================
-  bool canShowSplash() {
+  bool canShowSplash(){
     return mustShowSplash && !kIsWeb;
   }
 
   void splashTimer() async {
-    if (splashWaitingMil > 0 && canShowSplash()) {
-      Timer(Duration(milliseconds: splashWaitingMil), () {
+    if(splashWaitingMil > 0 && canShowSplash()){
+      Timer(Duration(milliseconds: splashWaitingMil), (){
         mustShowSplash = false;
 
         AppBroadcast.reBuildMaterial();
@@ -200,7 +199,6 @@ class SplashScreenState extends StateBase<SplashPage> {
 
     _isInit = true;
 
-    await InitialApplication.importantInit();
     await AppDB.init();
 
     AppThemes.initial();
@@ -208,7 +206,7 @@ class SplashScreenState extends StateBase<SplashPage> {
 
     if (!_isInLoadingSettings) {
       await Session.fetchLoginUsers();
-      await checkInstallVersion();
+      await VersionManager.checkInstallVersion();
       await InitialApplication.onceInit(context);
 
       AppBroadcast.reBuildMaterialBySetTheme();
@@ -223,8 +221,7 @@ class SplashScreenState extends StateBase<SplashPage> {
           if (InitialApplication.isInitialOk) {
             timer.cancel();
 
-            TrustSsl.acceptBadCertificate();
-            checkAppNewVersion(context);
+            VersionManager.checkAppHasNewVersion(context);
             InitialApplication.callOnLaunchUp();
           }
         });
@@ -232,32 +229,7 @@ class SplashScreenState extends StateBase<SplashPage> {
     }
   }
 
-  Future<void> checkInstallVersion() async {
-    final oldVersion = SettingsManager.settingsModel.currentVersion;
-
-    if (oldVersion == null) {
-      VersionManager.onFirstInstall();
-    }
-    else if (oldVersion < Constants.appVersionCode) {
-      VersionManager.onUpdateInstall();
-    }
-  }
-
-  void checkAppNewVersion(BuildContext context) async {
-    final holder = DeviceInfoTools.getDeviceInfo();
-
-    //final version = await VersionManager.checkVersion(holder);
-  }
-
   Future<void> testCodes(BuildContext context) async {
     //await AppDB.db.clearTable(AppDB.tbKv);
-    print('===============================');
-    final res = await getText();
-    print(res);
-  }
-
-  Future<String> getText() async {
-    throw Exception('eeeeeeeee');
-    //return '9999999999';
   }
 }

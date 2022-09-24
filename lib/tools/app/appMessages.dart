@@ -75,13 +75,29 @@ class AppMessages {
   static String get pay {
     return 'پرداخت';
   }
-
+  
   static String get register {
     return 'ثبت';
   }
 
   static String get logout {
-    return 'خروج از حساب کاربری';
+    return 'خروج از حساب';
+  }
+
+  static String get exit {
+    return 'خروج';
+  }
+
+  static String get search {
+    return 'جستجو';
+  }
+
+  static String get later {
+    return 'بعدا';
+  }
+
+  static String get update {
+    return 'بروز رسانه';
   }
 
   static String get validation {
@@ -110,6 +126,10 @@ class AppMessages {
 
   static String get doYouWantLogoutYourAccount {
     return '';
+  }
+  
+  static String get newAppVersionIsOk {
+    return 'نسخه ی جدید برنامه آماده شده است';
   }
 
   static String get terms {

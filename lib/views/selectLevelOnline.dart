@@ -1,5 +1,6 @@
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/pages/layout_page.dart';
+import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
@@ -120,7 +121,7 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
                     TextButton.icon(
                         onPressed: (){
                           System.showBothStatusBar();
-                          AppRoute.push(context, LayoutPage());
+                          AppRoute.push(context, LayoutPage(key: AppBroadcast.layoutPageKey));
                         },
                         icon: Image.asset(AppImages.arrowRightIco),
                         label: Text('Next', style: TextStyle(fontSize: 14))

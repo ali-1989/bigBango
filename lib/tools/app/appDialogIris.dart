@@ -86,7 +86,7 @@ class AppDialogIris {
 			context,
 			descriptionText: desc,
 			descriptionWidget: descView,
-      positiveButtonText: yesText?? '',
+      positiveButtonText: yesText,
 			title: title,
 			icon: icon,
 			positivePress: (ctx)=> yesFn?.call(),

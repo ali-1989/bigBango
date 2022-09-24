@@ -1,3 +1,8 @@
+import 'package:app/tools/app/appNavigator.dart';
+import 'package:app/tools/app/appSizes.dart';
+import 'package:app/tools/app/appThemes.dart';
+import 'package:app/tools/dateTools.dart';
+import 'package:app/system/extensions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/mathHelper.dart';
@@ -6,12 +11,7 @@ import 'package:iris_tools/dateSection/calendarTools.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 import 'package:app/tools/app/appSnack.dart';
-import '/managers/settingsManager.dart';
-import '/system/extensions.dart';
-import '/tools/app/appNavigator.dart';
-import '/tools/app/appSizes.dart';
-import '/tools/app/appThemes.dart';
-import '/tools/dateTools.dart';
+
 
 typedef OnSelect = void Function(DateTime dateTime);
 typedef OnChange = Widget? Function(DateTime dateTime);
@@ -22,27 +22,33 @@ class SelectDateCalendarView extends StatefulWidget {
   final Color? iconColor;
   final TextStyle? textStyle;
   final DateTime? currentDate;
-  final int? maxYear;
-  final int? minYear;
+  final int? maxYearAsGregorian;
+  final int? minYearAsGregorian;
   final bool showButton;
+  final bool showCalendar;
   final bool lockYear;
   final bool lockMonth;
   final bool lockDay;
+  final BorderRadiusGeometry? borderRadius;
+  final BoxBorder? border;
   final OnSelect? onSelect;
   final OnChange? onChange;
 
-  const SelectDateCalendarView({
+  SelectDateCalendarView({
     this.title,
     this.buttonText,
     this.currentDate,
-    this.maxYear,
-    this.minYear,
+    this.maxYearAsGregorian,
+    this.minYearAsGregorian,
     this.onSelect,
     this.showButton = true,
+    this.showCalendar = true,
     this.lockYear = false,
     this.lockMonth = false,
     this.lockDay = false,
     this.iconColor,
+    this.borderRadius,
+    this.border,
     this.textStyle,
     this.onChange,
     Key? key,
@@ -64,27 +70,29 @@ class SelectDateCalendarViewState extends State<SelectDateCalendarView> {
   late int maxOfYear;
   late int minOfYear;
   Widget? messageView;
+  late TextStyle titleStyle;
 
 
   @override
   void initState() {
     super.initState();
 
+    titleStyle = widget.textStyle?? TextStyle(color: AppThemes.instance.currentTheme.textColor);
     curDate = widget.currentDate?? DateTime.now();
 
     curDateRelative = DateTools.convertToADateByCalendar(curDate)!;
     final toDay = DateTools.convertToADateByCalendar(DateTime.now())!;
 
-    if(widget.maxYear != null){
-      final d = DateTime(widget.maxYear!, 12, 1);
+    if(widget.maxYearAsGregorian != null){
+      final d = DateTime(widget.maxYearAsGregorian!, 12, 1);
       maxOfYear = DateTools.convertToADateByCalendar(d)!.getYear();
     }
     else {
       maxOfYear = toDay.getYear() +1;
     }
 
-    if(widget.minYear != null){
-      final d = DateTime(widget.minYear!, 1, 1);
+    if(widget.minYearAsGregorian != null){
+      final d = DateTime(widget.minYearAsGregorian!, 1, 1);
       minOfYear = DateTools.convertToADateByCalendar(d)!.getYear();
     }
     else {
@@ -108,71 +116,51 @@ class SelectDateCalendarViewState extends State<SelectDateCalendarView> {
   Widget build(BuildContext context) {
     //Color itemColor = iconColor?? AppThemes.currentTheme.textColor;
 
-    return ColoredBox(
-      color: AppThemes.instance.currentTheme.backgroundColor,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppThemes.instance.currentTheme.backgroundColor,
+        borderRadius: widget.borderRadius,
+        border: widget.border,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 12, 20, 2),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Visibility(
-                  visible: widget.showButton,
-                  child: TextButton(
-                    child: const Text('انتخاب'),
-                    onPressed: (){
-                      onButtonClick();
-                    },
-                  ),
-                ),
-
-                SizedBox(
-                  height: 46,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                        color: Colors.grey[400],
-                        borderRadius: BorderRadius.circular(10.0)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          //borderRadius: BorderRadius.circular(10),
-                          dropdownColor: Colors.grey[400],
-                          value: SettingsManager.settingsModel.calendarType,
-                          onChanged: (newValue) {
-                            changeCalendar(newValue as CalendarType);
-
-                            setState(() {});
-                          },
-                          items: DateTools.calendarList.map((cal) => DropdownMenuItem(
-                            value: cal,
-                            child: const Text('calendarOptions'),
-                          ))
-                              .toList(),
-                        ),
-                      ),
+          Visibility(
+            visible: widget.showButton || widget.showCalendar,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Visibility(
+                    visible: widget.showButton,
+                    child: TextButton(
+                      child: Text('انتخاب'),
+                      onPressed: (){
+                        onButtonClick();
+                      },
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
 
-          const SizedBox(height: 10,),
+          const SizedBox(height: 5),
           Row(
             children: [
               Visibility(
                 visible: messageView != null,
-                child: messageView?? const SizedBox(),
+                child: Column(
+                  children: [
+                    messageView?? SizedBox(),
+                    const SizedBox(height: 4),
+                  ],
+                ),
               ),
             ],
           ),
-
-          const SizedBox(height: 10,),
 
           Scrollbar(
             thumbVisibility: true,
@@ -183,7 +171,7 @@ class SelectDateCalendarViewState extends State<SelectDateCalendarView> {
                   visible: widget.title != null,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: Text('${widget.title}').color(AppThemes.instance.currentTheme.textColor),
+                    child: Text('${widget.title}', style: titleStyle),
                   ),
                 ),
 
@@ -323,7 +311,7 @@ class SelectDateCalendarViewState extends State<SelectDateCalendarView> {
     ADateStructure date = DateTools.getADateByCalendar(selectedYear, selectedMonth, selectedDay)!;
 
     if(!date.isValidDate()){
-      AppSnack.showError(context, 'تاریخ نا معتبر است');
+      AppSnack.showError(context, 'تاریخ نامعتبر است');
       return;
     }
 
@@ -361,16 +349,16 @@ class SelectDateCalendarViewState extends State<SelectDateCalendarView> {
     maxDayOfMonth = DateTools.calMaxMonthDay(selectedYear, selectedMonth);
     final toDay = DateTools.convertToADateByCalendar(DateTime.now())!;
 
-    if(widget.maxYear != null){
-      final d = DateTime(widget.maxYear!, 12, 1);
+    if(widget.maxYearAsGregorian != null){
+      final d = DateTime(widget.maxYearAsGregorian!, 12, 1);
       maxOfYear = DateTools.convertToADateByCalendar(d)!.getYear();
     }
     else {
       maxOfYear = toDay.getYear() +1;
     }
 
-    if(widget.minYear != null){
-      final d = DateTime(widget.minYear!, 1, 1);
+    if(widget.minYearAsGregorian != null){
+      final d = DateTime(widget.minYearAsGregorian!, 1, 1);
       minOfYear = DateTools.convertToADateByCalendar(d)!.getYear();
     }
     else {

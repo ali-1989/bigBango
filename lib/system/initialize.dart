@@ -27,11 +27,13 @@ class InitialApplication {
   static bool isLaunchOk = false;
 
   static Future<bool> importantInit() async {
-    AppDirectories.prepareStoragePaths(Constants.appName);
+    await AppDirectories.prepareStoragePaths(Constants.appName);
 
     if (!kIsWeb) {
       PublicAccess.reporter = Reporter(AppDirectories.getAppFolderInExternalStorage(), 'report');
     }
+
+    PublicAccess.logger = Logger('${AppDirectories.getTempDir$ex()}/logs');
 
     return true;
   }
@@ -43,7 +45,6 @@ class InitialApplication {
 
     isCallInit = true;
     TrustSsl.acceptBadCertificate();
-    PublicAccess.logger = Logger('${AppDirectories.getTempDir$ex()}/events.txt');
     await DeviceInfoTools.prepareDeviceInfo();
     await DeviceInfoTools.prepareDeviceId();
 

@@ -72,11 +72,11 @@ class AppRoute {
   }
 }
 ///============================================================================================
-class AppPageRoute extends PageRouteBuilder {
+class MyPageRoute extends PageRouteBuilder {
   final Widget widget;
   final String? routeName;
 
-  AppPageRoute({
+  MyPageRoute({
     required this.widget,
     this.routeName,
   })

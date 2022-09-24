@@ -8,6 +8,21 @@ import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/dateTools.dart';
 
 class SettingsModel {
+  static const defaultHttpAddress = 'http://vosatezehn.com:7436'; // http://vosatezehn.com, http://192.168.43.140 1.103
+  static const defaultWsAddress = 'ws://vosatezehn.com:7438/ws'; // ws://vosatezehn.com:7438 ws://192.168.43.140
+  static const defaultProxyAddress = '95.174.67.50:18080';
+  static const Locale defaultAppLocale = Locale('fa', 'IR');
+  static final CalendarType defaultCalendarType = CalendarType.solarHijri;
+  static final defaultDateFormat = DateFormat.yyyyMmDd.format();
+  static int webSocketPeriodicHeartMinutes = 3;
+  static int drawerMenuTimeMill = 350;
+  static int maxCoverWidth = 180;
+  static int maxCoverHeightL = 120;
+  static int maxCoverHeightP = 240;
+  static int maxViewWidth = 380;
+  static int maxViewHeightL = 200;
+  static int maxViewHeightP = 460;
+
   String? lastUserId;
   //String? currentRouteScreen;
   Locale appLocale = defaultAppLocale;
@@ -22,21 +37,8 @@ class SettingsModel {
   String proxyAddress = defaultProxyAddress;
   Orientation? appRotationState; // null: free
   int? currentVersion;
-  static int webSocketPeriodicHeart = 3;
-  static int drawerMenuTimeMill = 350;
-  static int maxCoverWidth = 180;
-  static int maxCoverHeightL = 120;
-  static int maxCoverHeightP = 240;
-  static int maxViewWidth = 380;
-  static int maxViewHeightL = 200;
-  static int maxViewHeightP = 460;
+  
 
-  static const defaultHttpAddress = 'http://192.168.43.140:7436'; //
-  static const defaultWsAddress = 'ws://192.168.43.140:7438/ws';
-  static const defaultProxyAddress = '95.174.67.50:18080';
-  static const Locale defaultAppLocale = Locale('fa', 'IR');
-  static const CalendarType defaultCalendarType = CalendarType.solarHijri;
-  static final defaultDateFormat = DateFormat.yyyyMmDd.format();
 
   SettingsModel();
 

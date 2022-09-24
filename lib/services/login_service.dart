@@ -74,6 +74,7 @@ class LoginService {
       if(response == null || !request.isOk) {
         loginWrapper.connectionError = true;
         result.complete(loginWrapper);
+        return;
       }
 
       final resJs = request.getBodyAsJson()!;

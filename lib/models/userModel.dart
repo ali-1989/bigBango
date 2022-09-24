@@ -29,7 +29,7 @@ class UserModel {
     final brDate = map[Keys.birthdate];
     //final regDate = map[Keys.registerDate];
 
-    //userId = map[Keys.userId].toString();
+    userId = map[Keys.userId].toString();
     //userName = map[Keys.userName];
     name = map[Keys.name];
     family = map[Keys.family];
@@ -77,7 +77,7 @@ class UserModel {
   
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{};
-    //map[Keys.userId] = userId;
+    map[Keys.userId] = userId;
     //map[Keys.userName] = userName;
     map[Keys.name] = name;
     map[Keys.family] = family;

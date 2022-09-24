@@ -12,7 +12,7 @@ import 'package:app/managers/settingsManager.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/tools/deviceInfoTools.dart';
+
 
 class PublicAccess {
   PublicAccess._();
@@ -37,19 +37,20 @@ class PublicAccess {
   static Map addAppInfo(Map src, {UserModel? curUser}) {
     final token = curUser?.token ?? Session.getLastLoginUser()?.token;
 
-    src.addAll(getAppInfo(token?.token));
+    src.addAll(getAppInfo());
+
+    if (token?.token != null) {
+      src[Keys.token] = token?.token;
+      //src['fcm_token'] = FireBaseService.token;
+    }
 
     return src;
   }
 
-  static Map<String, dynamic> getAppInfo(String? token) {
+  static Map<String, dynamic> getAppInfo() {
     final res = <String, dynamic>{};
     res['app_version_code'] = Constants.appVersionCode;
     res['app_version_name'] = Constants.appVersionName;
-
-    if (token != null) {
-      res['token'] = token;
-    }
 
     return res;
   }
@@ -94,28 +95,6 @@ class PublicAccess {
     }
 
     list.sort(sorter);
-  }
-
-  ///----------- HowIs ----------------------------------------------------
-  static Map<String, dynamic> getHowIsMap() {
-    final howIs = <String, dynamic>{
-      'how_is': 'HowIs',
-      //Keys.deviceId: DeviceInfoTools.deviceId,
-      Keys.languageIso: System.getLocalizationsLanguageCode(AppRoute.getContext()),
-      'app_version_code': Constants.appVersionCode,
-      'app_version_name': Constants.appVersionName,
-      'app_name': Constants.appName,
-    };
-
-    final users = [];
-
-    for(var um in Session.currentLoginList) {
-      users.add(um.userId);
-    }
-
-    howIs['users'] = users;
-
-    return howIs;
   }
 
   static Map<String, dynamic> getHeartMap() {

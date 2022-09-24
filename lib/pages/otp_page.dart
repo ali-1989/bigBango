@@ -1,6 +1,8 @@
 import 'package:app/managers/fontManager.dart';
 import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/pages/layout_page.dart';
 import 'package:app/pages/register_form_page.dart';
+import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
@@ -235,6 +237,13 @@ class _OtpPageState extends StateBase<OtpPage> {
   }
 
   void sendOtpCode(){
-    AppRoute.push(context, RegisterFormPage(phoneNumber: '09139277303'));
+    if(true) {
+      AppRoute.backToRoot(context);
+      AppRoute.push(context, RegisterFormPage(phoneNumber: widget.phoneNumber));
+    }
+    else {
+      AppRoute.backToRoot(context);
+      AppRoute.push(context, LayoutPage(key: AppBroadcast.layoutPageKey));
+    }
   }
 }

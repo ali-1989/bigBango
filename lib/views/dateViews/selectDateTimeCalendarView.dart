@@ -1,3 +1,7 @@
+import 'package:app/tools/app/appNavigator.dart';
+import 'package:app/tools/app/appSizes.dart';
+import 'package:app/tools/app/appThemes.dart';
+import 'package:app/tools/dateTools.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/mathHelper.dart';
@@ -6,12 +10,7 @@ import 'package:iris_tools/dateSection/calendarTools.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 import 'package:app/tools/app/appSnack.dart';
-import '/managers/settingsManager.dart';
-import '/system/extensions.dart';
-import '/tools/app/appNavigator.dart';
-import '/tools/app/appSizes.dart';
-import '/tools/app/appThemes.dart';
-import '/tools/dateTools.dart';
+import 'package:app/system/extensions.dart';
 
 typedef OnSelect = void Function(DateTime dateTime);
 typedef OnChange = Widget? Function(DateTime dateTime);
@@ -31,7 +30,7 @@ class SelectDateTimeCalendarView extends StatefulWidget {
   final OnSelect? onSelect;
   final OnChange? onChange;
 
-  const SelectDateTimeCalendarView({
+  SelectDateTimeCalendarView({
     this.title,
     this.buttonText,
     this.currentDate,
@@ -121,40 +120,10 @@ class SelectDateTimeCalendarViewState extends State<SelectDateTimeCalendarView> 
                 Visibility(
                   visible: widget.showButton,
                   child: TextButton(
-                    child: const Text('انتخاب'),
+                    child: Text('انتخاب'),
                     onPressed: (){
                       onButtonClick();
                     },
-                  ),
-                ),
-
-                SizedBox(
-                  height: 46,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                        color: Colors.grey[400],
-                        borderRadius: BorderRadius.circular(10.0)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          //borderRadius: BorderRadius.circular(10),
-                          dropdownColor: Colors.grey[400],
-                          value: SettingsManager.settingsModel.calendarType,
-                          onChanged: (newValue) {
-                            changeCalendar(newValue as CalendarType);
-
-                            setState(() {});
-                          },
-                          items: DateTools.calendarList.map((cal) => DropdownMenuItem(
-                            value: cal,
-                            child: const Text('context.tInMap(calendarOptions, cal.name)}'),
-                          ))
-                              .toList(),
-                        ),
-                      ),
-                    ),
                   ),
                 ),
               ],
@@ -166,7 +135,7 @@ class SelectDateTimeCalendarViewState extends State<SelectDateTimeCalendarView> 
             children: [
               Visibility(
                 visible: messageView != null,
-                child: messageView?? const SizedBox(),
+                child: messageView?? SizedBox(),
               ),
             ],
           ),
@@ -305,7 +274,7 @@ class SelectDateTimeCalendarViewState extends State<SelectDateTimeCalendarView> 
                           ),
                         ),
 
-                        const SizedBox(width: 20,),
+                        SizedBox(width: 20,),
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -339,8 +308,8 @@ class SelectDateTimeCalendarViewState extends State<SelectDateTimeCalendarView> 
                             ),
 
                             Transform.translate(
-                              offset: const Offset(0, 5),
-                              child: const Text(':')
+                              offset: Offset(0, 5),
+                              child: Text(':')
                                   .bold().color(AppThemes.instance.currentTheme.activeItemColor),
                             ),
 
@@ -398,7 +367,7 @@ class SelectDateTimeCalendarViewState extends State<SelectDateTimeCalendarView> 
     ADateStructure date = DateTools.getADateByCalendar(selectedYear, selectedMonth, selectedDay, hour: selectedHour, minutes: selectedMin)!;
 
     if(!date.isValidDate()){
-      AppSnack.showError(context, 'تاریخ نا معتبر است');
+      AppSnack.showError(context, 'تاریخ نامعتبر است');
       return;
     }
 

@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/pages/otp_page.dart';
+import 'package:app/services/login_service.dart';
 import 'package:app/system/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -138,7 +139,7 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
                     height: 50,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                        onPressed: onGoClick,
+                        onPressed: onContinueClick,
                         child: Text(AppMessages.checkAndContinue)
                     ),
                   ),
@@ -160,29 +161,13 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
     );
   }
 
-  void onGoClick(){
-    final phoneNumber = phoneCtr.text.trim();
-
-    if(phoneNumber.isEmpty || phoneNumber.length < 11){
-      AppSnack.showError(context, AppMessages.mustEnterMobileNumber);
-      return;
-    }
-
-    if(!Checker.validateMobile(phoneNumber)){
-      AppSnack.showError(context, AppMessages.mustEnterMobileNumber);
-      return;
-    }
-
-    AppRoute.push(context, const OtpPage(phoneNumber: '09336044375',));
-  }
-
   void showVideo(){
     showDialog(
         context: context,
         builder: (ctx){
           return Scaffold(
             appBar: AppBar(
-                backgroundColor: Colors.transparent,
+              backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
               foregroundColor: Colors.white,
               iconTheme: const IconThemeData(color: Colors.white),
@@ -199,7 +184,24 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
     );
   }
 
-  void requestSendMobile(){
+  void onContinueClick(){
+    final phoneNumber = phoneCtr.text.trim();
 
+    if(phoneNumber.isEmpty || phoneNumber.length < 11){
+      AppSnack.showError(context, AppMessages.mustEnterMobileNumber);
+      return;
+    }
+
+    if(!Checker.validateMobile(phoneNumber)){
+      AppSnack.showError(context, AppMessages.mustEnterMobileNumber);
+      return;
+    }
+
+    requestSendOtp(phoneNumber);
+  }
+
+  void requestSendOtp(String phoneNumber){
+    LoginService.requestSendOtp(phoneNumber: phoneNumber);
+    AppRoute.push(context, OtpPage(phoneNumber: phoneNumber));
   }
 }

@@ -9,10 +9,10 @@ class LayoutPage extends StatefulWidget {
   const LayoutPage({Key? key}) : super(key: key);
 
   @override
-  State<LayoutPage> createState() => _LayoutPageState();
+  State<LayoutPage> createState() => LayoutPageState();
 }
 ///===================================================================================================================
-class _LayoutPageState extends StateBase<LayoutPage> {
+class LayoutPageState extends StateBase<LayoutPage> {
   int selectedPageIndex = 0;
   PageController pageController = PageController(initialPage: 0);
 
