@@ -200,8 +200,19 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
     requestSendOtp(phoneNumber);
   }
 
-  void requestSendOtp(String phoneNumber){
-    LoginService.requestSendOtp(phoneNumber: phoneNumber);
+  void requestSendOtp(String phoneNumber) async {
+    final httpRequester = await LoginService.requestSendOtp(phoneNumber: phoneNumber);
+
+    if(httpRequester == null){
+      AppSnack.showSnack$errorCommunicatingServer(context);
+      return;
+    }
+
+    if(httpRequester.responseData!.statusCode == 429){
+      AppSnack.showError(context, AppMessages.tokenIsIncorrectOrExpire);
+      return;
+    }
+
     AppRoute.push(context, OtpPage(phoneNumber: phoneNumber));
   }
 }

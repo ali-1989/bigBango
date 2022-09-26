@@ -8,8 +8,8 @@ import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/dateTools.dart';
 
 class SettingsModel {
-  static const defaultHttpAddress = 'http://vosatezehn.com:7436'; // http://vosatezehn.com, http://192.168.43.140 1.103
-  static const defaultWsAddress = 'ws://vosatezehn.com:7438/ws'; // ws://vosatezehn.com:7438 ws://192.168.43.140
+  static const defaultHttpAddress = 'https://bigbangoappapi.nicode.org/v1';
+  static const defaultWsAddress = 'https://bigbangoappapi.nicode.org/v1';
   static const defaultProxyAddress = '95.174.67.50:18080';
   static const Locale defaultAppLocale = Locale('fa', 'IR');
   static final CalendarType defaultCalendarType = CalendarType.solarHijri;
@@ -53,7 +53,7 @@ class SettingsModel {
     calendarType = CalendarTypeHelper.calendarTypeFrom(map['calendar_type_name']);
     dateFormat = map['date_format']?? defaultDateFormat;
     colorTheme = map[Keys.setting$colorThemeName];
-    appPatternKey = map[Keys.setting$patternKey];
+    //appPatternKey = map[Keys.setting$patternKey];
     lastForegroundTs = map[Keys.setting$lastForegroundTs];
     confirmOnExit = map[Keys.setting$confirmOnExit]?? true;
     httpAddress = map['http_address']?? defaultHttpAddress;
@@ -72,7 +72,7 @@ class SettingsModel {
     map['calendar_type_name'] = calendarType.name;
     map['date_format'] = dateFormat;
     map[Keys.setting$colorThemeName] = colorTheme;
-    map[Keys.setting$patternKey] = appPatternKey;
+    //map[Keys.setting$patternKey] = appPatternKey;
     map[Keys.setting$lastForegroundTs] = lastForegroundTs;
     map[Keys.setting$confirmOnExit] = confirmOnExit;
     map[Keys.setting$currentVersion] = currentVersion;

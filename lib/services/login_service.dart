@@ -12,15 +12,14 @@ import 'package:app/tools/deviceInfoTools.dart';
 class LoginService {
   LoginService._();
 
-  static Future<Map?> requestSendOtp({CountryModel? countryModel, required String phoneNumber}) async {
+  static Future<HttpRequester?> requestSendOtp({CountryModel? countryModel, required String phoneNumber}) async {
     final http = HttpItem();
-    final result = Completer<Map?>();
+    final result = Completer<HttpRequester?>();
 
     final js = {};
     js[Keys.mobileNumber] = phoneNumber;
-    //js.addAll(countryModel.toMap());
 
-    http.fullUrl = PublicAccess.serverApi;
+    http.fullUrl = '${PublicAccess.serverApi}/login';
     http.method = 'POST';
     http.setBodyJson(js);
 
@@ -31,16 +30,12 @@ class LoginService {
     });
 
     f = f.then((Response? response){
-      if(response == null || !request.isOk) {
+      if(response == null) {
         result.complete(null);
         return;
       }
 
-      if(response.statusCode == 422){
-
-      }
-
-      result.complete(request.getBodyAsJson());
+      result.complete(request);
       return null;
     });
 

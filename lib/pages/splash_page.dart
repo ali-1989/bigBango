@@ -5,6 +5,8 @@ import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/pages/home_page.dart';
 import 'package:app/pages/layout_page.dart';
 import 'package:app/pages/phone_number_page.dart';
+import 'package:app/pages/register_form_page.dart';
+import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -163,11 +165,18 @@ class SplashScreenState extends StateBase<SplashPage> {
     );
   }
 
+  /// first route
   Widget pageRouting(){
     return Builder(
       builder: (ctx){
         if(Session.hasAnyLogin()){
           return LayoutPage(key: AppBroadcast.layoutPageKey);
+        }
+
+        final pNumber = AppDB.fetchKv(Keys.setting$registerPhoneNumber);
+
+        if(pNumber != null){
+          return RegisterFormPage(phoneNumber: pNumber);
         }
 
         return const PhoneNumberPage();

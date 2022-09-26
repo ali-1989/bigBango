@@ -1,5 +1,4 @@
 import 'package:app/system/httpProcess.dart';
-import 'package:app/system/keys.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:flutter/widgets.dart';
 
@@ -57,13 +56,11 @@ class Requester {
     _http.fullUrl = SettingsManager.settingsModel.httpAddress;
   }
 
-  void prepareUrl({String? fullUrl, String? pathUrl}){
+  void prepareUrl({String? fullUrl, required String pathUrl}){
     if(fullUrl != null){
       _http.fullUrl = fullUrl;
       return;
     }
-
-    pathUrl ??= '/graph-v1';
 
     if(!_http.fullUrl.contains(pathUrl)) {
       _http.fullUrl += pathUrl;
@@ -73,10 +70,6 @@ class Requester {
   void request([BuildContext? context, bool promptErrors = true]){
     _http.debugMode = debug;
     _http.method = methodType == MethodType.get ? 'GET': 'POST';
-
-    /*if(_requestPath != RequestPath.Others) {
-      _http.pathSection = _requestPath == RequestPath.GetData ? '/get-data' : '/set-data';
-    }*/
 
     if(_bodyJs != null) {
       _http.body = JsonHelper.mapToJson(_bodyJs!);
@@ -134,20 +127,16 @@ class Requester {
         return;
       }
 
-      final result = Keys.error;
-
-      if(result == Keys.ok) {
+      if(_httpRequester.responseData!.statusCode == 200) {
         await httpRequestEvents.onStatusOk?.call(_httpRequester, js);
       }
       else {
         await httpRequestEvents.onFailState?.call(_httpRequester);
 
-        final cause = '';
-        final causeCode = 0;
-        final managedByUser = await httpRequestEvents.onStatusError?.call(_httpRequester, js, causeCode, cause)?? false;
+        final managedByUser = await httpRequestEvents.onStatusError?.call(_httpRequester, js)?? false;
 
         if(context != null) {
-          if (!managedByUser && promptErrors && !HttpProcess.processCommonRequestError(context, js)) {
+          if (!managedByUser && promptErrors && !HttpProcess.processCommonRequestError(context, _httpRequester, js)) {
             await AppSheet.showSheet$ServerNotRespondProperly(context);
           }
         }
@@ -169,5 +158,5 @@ class HttpRequestEvents {
   Future Function(HttpRequester, bool)? onResponseError;
   Future Function(HttpRequester, Map)? manageResponse;
   Future Function(HttpRequester, Map)? onStatusOk;
-  Future<bool> Function(HttpRequester, Map, int?, String?)? onStatusError;
+  Future<bool> Function(HttpRequester, Map)? onStatusError;
 }

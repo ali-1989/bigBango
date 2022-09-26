@@ -61,7 +61,7 @@ class AppRoute {
     Navigator.of(context).pushReplacementNamed(name, arguments: extra);
   }
 
-  static Future<bool> saveRouteName(String routeName) async {
+ /*static Future<bool> saveRouteName(String routeName) async {
     final int res = await AppDB.setReplaceKv(Keys.setting$lastRouteName, routeName);
 
     return res > 0;
@@ -69,7 +69,7 @@ class AppRoute {
 
   static String? fetchRouteScreenName() {
     return AppDB.fetchKv(Keys.setting$lastRouteName);
-  }
+  }*/
 }
 ///============================================================================================
 class MyPageRoute extends PageRouteBuilder {

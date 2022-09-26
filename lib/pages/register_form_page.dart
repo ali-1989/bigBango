@@ -297,6 +297,11 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
   }
 
   void sendClick(){
+    final name = nameTextCtr.text.trim();
+    final family = familyTextCtr.text.trim();
+    final email = emailTextCtr.text.trim();
+    final inviteCode = inviteCodeTextCtr.text.trim();
+
     AppRoute.push(context, SelectLanguageLevelPage());
   }
 }

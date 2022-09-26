@@ -71,7 +71,7 @@ class VersionManager {
     };
 
     requester.bodyJson = data;
-    requester.prepareUrl();
+    requester.prepareUrl(pathUrl: '');
     requester.request(context, false);
     return res.future;
   }

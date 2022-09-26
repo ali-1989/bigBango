@@ -31,11 +31,10 @@ class Keys {
   static const languageIso = 'language_iso';
   //----- common settings key -----------------------------------------------------------------
   static const setting$lastLoginDate = 'last_login_date';
-  static const setting$lastRouteName = 'Last_route_name';
+  //static const setting$lastRouteName = 'Last_route_name';
   static const setting$appSettings = 'app_settings';
   static const setting$fontThemeData = 'font_theme_data';
   static const setting$colorThemeName = 'color_theme_name';
-  static const setting$patternKey = 'lock_pattern';
   static const setting$lastForegroundTs = 'last_foreground_ts';
   static const setting$confirmOnExit = 'confirm_on_exit';
   static const setting$notificationChanelKey = 'notification_chanel_key';
@@ -43,8 +42,8 @@ class Keys {
   static const setting$notificationModel = 'notification_model';
   static const setting$currentVersion = 'current_version';
   static const setting$webDeviceId = 'web_device_id';
-  static const setting$userMessageIds = 'user_messages_ids';
   //----- app settings key -----------------------------------------------------------------
+  static const setting$registerPhoneNumber = 'register_phone_number';
 
   static String genDownloadKey_userAvatar(int userId) {
     return 'downloadUserAvatar_$userId';

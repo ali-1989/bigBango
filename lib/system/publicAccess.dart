@@ -19,7 +19,7 @@ class PublicAccess {
 
   static late Logger logger;
   static late Reporter reporter;
-  static String serverApi = '${SettingsManager.settingsModel.httpAddress}/';
+  static String serverApi = SettingsManager.settingsModel.httpAddress;
   static ClassicFooter classicFooter = const ClassicFooter(
     loadingText: '',
     idleText: '',
