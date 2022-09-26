@@ -1,17 +1,20 @@
 import 'package:app/managers/fontManager.dart';
 import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/pages/layout_page.dart';
-import 'package:app/pages/register_form_page.dart';
+import 'package:app/services/login_service.dart';
 import 'package:app/system/keys.dart';
+import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/app/appSnack.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
+import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
+
 
 class OtpPage extends StatefulWidget {
   final String phoneNumber;
@@ -238,15 +241,46 @@ class _OtpPageState extends StateBase<OtpPage> {
     AppRoute.pop(context);
   }
 
-  void sendOtpCode(){
-    if(true) {
-      AppRoute.backToRoot(context);
+  void sendOtpCode() async {
+    showLoading();
+    final httpRequester = await LoginService.requestVerifyOtp(phoneNumber: widget.phoneNumber, code: otpCode);
+
+    if(httpRequester == null){
+      await hideLoading();
+      AppSnack.showSnack$errorCommunicatingServer(context);
+      return;
+    }
+
+    int statusCode = httpRequester.responseData!.statusCode?? 200;
+
+    if(statusCode != 200){
+      await hideLoading();
+      String? message = httpRequester.getBodyAsJson()![Keys.message];
+
+      if(message == null) {
+        AppSnack.showSnack$serverNotRespondProperly(context);
+      }
+      else {
+        AppSnack.showError(context, message);
+      }
+
+      return;
+    }
+
+
+    final dataJs = httpRequester.getBodyAsJson()![Keys.data];
+
+    if(dataJs == null || dataJs[Keys.token] == null) {
+      await hideLoading();
+
       AppDB.setReplaceKv(Keys.setting$registerPhoneNumber, widget.phoneNumber);
+      AppDB.setReplaceKv(Keys.setting$registerPhoneNumberTs, DateHelper.getNowTimestamp());
       AppBroadcast.reBuildMaterial();
     }
     else {
-      AppRoute.backToRoot(context);
-      AppRoute.push(context, LayoutPage(key: AppBroadcast.layoutPageKey));
+      await Session.login$newProfileData(dataJs);
+      await hideLoading();
+      AppBroadcast.reBuildMaterial();
     }
   }
 }

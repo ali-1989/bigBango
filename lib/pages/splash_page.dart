@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:app/managers/fontManager.dart';
 import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/pages/home_page.dart';
 import 'package:app/pages/layout_page.dart';
 import 'package:app/pages/phone_number_page.dart';
 import 'package:app/pages/register_form_page.dart';
@@ -11,6 +10,7 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/generator.dart';
 
 import 'package:iris_tools/api/system.dart';
 
@@ -24,6 +24,7 @@ import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/app/appToast.dart';
+import 'package:iris_tools/dateSection/dateHelper.dart';
 
 bool _isInit = false;
 bool _isInLoadingSettings = true;
@@ -137,7 +138,7 @@ class SplashScreenState extends StateBase<SplashPage> {
       //darkTheme: ThemeData.dark(),
       themeMode: AppThemes.instance.currentThemeMode,
       scaffoldMessengerKey: AppBroadcast.rootScaffoldMessengerKey,
-      home: pageRouting(),
+      //home: pageRouting(),
       scrollBehavior: ScrollConfiguration.of(context).copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,
@@ -145,7 +146,8 @@ class SplashScreenState extends StateBase<SplashPage> {
         },
       ),
       builder: (context, home) {
-        AppRoute.materialContext = context;
+        return pageRouting();
+        /*AppRoute.materialContext = context;
         final mediaQueryData = MediaQuery.of(context);
 
         /// detect orientation change and rotate screen
@@ -160,7 +162,7 @@ class SplashScreenState extends StateBase<SplashPage> {
                 child: Toaster(child: home!)
             );
           }),
-        );
+        );*/
       },
     );
   }
@@ -176,10 +178,15 @@ class SplashScreenState extends StateBase<SplashPage> {
         final pNumber = AppDB.fetchKv(Keys.setting$registerPhoneNumber);
 
         if(pNumber != null){
-          return RegisterFormPage(phoneNumber: pNumber);
+          final ts = AppDB.fetchKv(Keys.setting$registerPhoneNumberTs);
+          print('ts -------$ts--------------');
+          if(ts != null && !DateHelper.isPastOf(DateHelper.tsToSystemDate(ts), Duration(minutes: 1))) {
+            print('gggg RegisterFormPage ---------------------');
+            return RegisterFormPage(phoneNumber: pNumber);
+          }
         }
-
-        return const PhoneNumberPage();
+        print('gggg PhoneNumberPage ---------------------');
+        return PhoneNumberPage();
       },
     );
   }

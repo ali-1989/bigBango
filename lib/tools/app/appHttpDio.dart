@@ -10,6 +10,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:iris_tools/api/converter.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/listHelper.dart';
+import 'package:iris_tools/api/logger/logger.dart';
 
 
 class AppHttpDio {
@@ -23,7 +24,11 @@ class AppHttpDio {
 
 	static HttpRequester send(HttpItem item, {BaseOptions? options}){
 		if(item.debugMode) {
+			var txt = '\nhttp: ${item.fullUrl}\n';
+			txt += 'Method: ${item.method}\n';
+			txt += 'Body: ${item.body} \n---------------------';
 
+			Logger.L.logToScreen(txt);
 		}
 
 		item.prepareMultiParts();
@@ -67,6 +72,14 @@ class AppHttpDio {
 								//return handler.reject(dioError);
 							},
 							 onResponse: (Response<dynamic> res, ResponseInterceptorHandler handler) {
+								 if(item.debugMode) {
+									 var txt = '\n==== onResponse ====\n';
+									 txt += 'statusCode:  ${res.statusCode}\n';
+									 txt += 'data: ${res.data}\n---------------------';
+
+									 Logger.L.logToScreen(txt);
+								 }
+
 								itemRes._response = res;
 								itemRes.isOk = !(res is Error
 										|| res is Exception
@@ -77,18 +90,30 @@ class AppHttpDio {
 									handler.next(res);
 								}
 							},
-							onError: (DioError err, ErrorInterceptorHandler handler) async{
+							onError: (DioError err, ErrorInterceptorHandler handler) async {
+								if(item.debugMode) {
+									var txt = '\n==== onError ====\n';
+									txt += 'statusCode: ${err.response?.statusCode}\n';
+									txt += 'data: ${err.response?.data}';
+									txt += 'error: ${err.error} \n---------------------';
+
+									Logger.L.logToScreen(txt);
+								}
+
 								final ro = RequestOptions(path: uri);
-								final res = Response<DioError>(
+								final res = Response<dynamic>(
 										requestOptions: ro,
-										data: DioError(requestOptions: ro, error: err.error, type: DioErrorType.response)
+										statusCode: err.response?.statusCode,
+										data: err.response ?? DioError(requestOptions: ro, error: err.error, type: DioErrorType.response)
 								);
 
-								itemRes._response = res;
-								err.response = res;
+								/*itemRes._response = res;
+								err.response = res;*/
+
+								itemRes._response = err.response;
 
 								//handler.next(err);
-								handler.resolve(res);
+								handler.resolve(err.response?? res);
 							}
 					)
 			);
@@ -444,7 +469,7 @@ class HttpItem {
 	List<FormDataItem> formDataItems = [];
 	Options options = Options(
 		method: 'GET',
-		receiveDataWhenStatusError: false,// if true: go to error section in interceptors
+		receiveDataWhenStatusError: true,// if true: error section in interceptors has body
 		responseType: ResponseType.plain,
 		//sendTimeout: ,
 		//receiveTimeout: ,

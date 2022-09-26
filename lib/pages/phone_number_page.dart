@@ -4,6 +4,7 @@ import 'package:app/pages/otp_page.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/system/enums.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
@@ -201,15 +202,27 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
   }
 
   void requestSendOtp(String phoneNumber) async {
+    showLoading();
     final httpRequester = await LoginService.requestSendOtp(phoneNumber: phoneNumber);
+    await hideLoading();
 
     if(httpRequester == null){
       AppSnack.showSnack$errorCommunicatingServer(context);
       return;
     }
 
-    if(httpRequester.responseData!.statusCode == 429){
-      AppSnack.showError(context, AppMessages.tokenIsIncorrectOrExpire);
+    int statusCode = httpRequester.responseData!.statusCode?? 200;
+
+    if(statusCode != 200){
+      String? message = httpRequester.getBodyAsJson()![Keys.message];
+
+      if(message == null) {
+        AppSnack.showSnack$serverNotRespondProperly(context);
+      }
+      else {
+        AppSnack.showError(context, message);
+      }
+
       return;
     }
 

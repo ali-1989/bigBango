@@ -29,6 +29,7 @@ class Keys {
   static const id = 'id';
   static const description = 'description';
   static const languageIso = 'language_iso';
+  static const message = 'message';
   //----- common settings key -----------------------------------------------------------------
   static const setting$lastLoginDate = 'last_login_date';
   //static const setting$lastRouteName = 'Last_route_name';
@@ -44,6 +45,7 @@ class Keys {
   static const setting$webDeviceId = 'web_device_id';
   //----- app settings key -----------------------------------------------------------------
   static const setting$registerPhoneNumber = 'register_phone_number';
+  static const setting$registerPhoneNumberTs = 'register_phone_number_ts';
 
   static String genDownloadKey_userAvatar(int userId) {
     return 'downloadUserAvatar_$userId';
