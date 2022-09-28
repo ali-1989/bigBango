@@ -1,7 +1,5 @@
-import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:flutter/material.dart';
-import 'package:app/tools/app/appDb.dart';
 
 
 class AppRoute {
@@ -10,6 +8,9 @@ class AppRoute {
 
   static late BuildContext materialContext;
 
+  static void init() {
+  }
+
   static BuildContext getContext() {
     var res = WidgetsBinding.instance.focusManager.rootScope.focusedChild?.context;//deep: 50
     res ??= WidgetsBinding.instance.focusManager.primaryFocus?.context; //deep: 71
@@ -17,8 +18,21 @@ class AppRoute {
     return res?? materialContext;
   }
 
-  static void init(){
+  /*static Future<bool> saveRouteName(String routeName) async {
+    final int res = await AppDB.setReplaceKv(Keys.setting$lastRouteName, routeName);
+
+    return res > 0;
   }
+
+  static String? fetchRouteScreenName() {
+    return AppDB.fetchKv(Keys.setting$lastRouteName);
+  }
+
+  static void navigateRouteScreen(String routeName) {
+    saveRouteName(routeName);
+    SettingsManager.settingsModel.currentRouteScreen = routeName;
+    AppBroadcast.reBuildMaterial();
+  }*/
 
   static void backRoute() {
     final lastCtx = AppNavigator.getLastRouteContext(getContext());

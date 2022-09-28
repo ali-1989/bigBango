@@ -17,7 +17,7 @@ import 'package:iris_tools/api/helpers/inputFormatter.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 class PhoneNumberPage extends StatefulWidget {
-  const PhoneNumberPage({Key? key}) : super(key: key);
+  PhoneNumberPage({Key? key}) : super(key: key);
 
   @override
   State<PhoneNumberPage> createState() => _PhoneNumberPageState();

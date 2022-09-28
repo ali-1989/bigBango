@@ -3,7 +3,7 @@
 # Java: 17    gradle.properties (org.gradle.java.home)
 
 
-name: app  # BigBango
+name: app         # BigBango
 description: A system to learn languages
 
 publish_to: 'none'

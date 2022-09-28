@@ -14,7 +14,7 @@ import 'package:shamsi_date/shamsi_date.dart';
 class RegisterFormPage extends StatefulWidget {
   final String phoneNumber;
 
-  const RegisterFormPage({
+  RegisterFormPage({
     required this.phoneNumber,
     Key? key,
   }) : super(key: key);

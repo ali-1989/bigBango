@@ -10,7 +10,6 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/api/generator.dart';
 
 import 'package:iris_tools/api/system.dart';
 
@@ -134,35 +133,40 @@ class SplashScreenState extends StateBase<SplashPage> {
       //scrollBehavior: MyCustomScrollBehavior(),
       title: Constants.appTitle,
       theme: AppThemes.instance.themeData,
-      // ThemeData.light()
       //darkTheme: ThemeData.dark(),
       themeMode: AppThemes.instance.currentThemeMode,
       scaffoldMessengerKey: AppBroadcast.rootScaffoldMessengerKey,
-      //home: pageRouting(),
       scrollBehavior: ScrollConfiguration.of(context).copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,
           PointerDeviceKind.touch,
         },
       ),
-      builder: (context, home) {
-        return pageRouting();
-        /*AppRoute.materialContext = context;
-        final mediaQueryData = MediaQuery.of(context);
+        home: homeBuilder(),
+        builder: (context, home) {
+          return home!;
+        },
+    );
+  }
+
+  Widget homeBuilder(){
+    return Builder(
+      builder: (ctx){
+        AppRoute.materialContext = ctx;
+        final mediaQueryData = MediaQuery.of(ctx);
 
         /// detect orientation change and rotate screen
         return MediaQuery(
           data: mediaQueryData.copyWith(textScaleFactor: 1.0),
           child: OrientationBuilder(builder: (context, orientation) {
-            //AppLocale.detectLocaleDirection(SettingsManager.settingsModel.appLocale); //Localizations.localeOf(context)
             testCodes(context);
 
             return Directionality(
                 textDirection: AppThemes.instance.textDirection,
-                child: Toaster(child: home!)
+                child: Toaster(child: pageRouting())
             );
           }),
-        );*/
+        );
       },
     );
   }
@@ -179,18 +183,16 @@ class SplashScreenState extends StateBase<SplashPage> {
 
         if(pNumber != null){
           final ts = AppDB.fetchKv(Keys.setting$registerPhoneNumberTs);
-          print('ts -------$ts--------------');
+
           if(ts != null && !DateHelper.isPastOf(DateHelper.tsToSystemDate(ts), Duration(minutes: 1))) {
-            print('gggg RegisterFormPage ---------------------');
             return RegisterFormPage(phoneNumber: pNumber);
           }
         }
-        print('gggg PhoneNumberPage ---------------------');
+
         return PhoneNumberPage();
       },
     );
   }
-
   ///==================================================================================================
   bool canShowSplash(){
     return mustShowSplash && !kIsWeb;
@@ -226,6 +228,7 @@ class SplashScreenState extends StateBase<SplashPage> {
       await InitialApplication.onceInit(context);
 
       AppBroadcast.reBuildMaterialBySetTheme();
+      // ignore: use_build_context_synchronously
       asyncInitial(context);
     }
   }

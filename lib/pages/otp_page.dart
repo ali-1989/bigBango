@@ -272,15 +272,16 @@ class _OtpPageState extends StateBase<OtpPage> {
 
     if(dataJs == null || dataJs[Keys.token] == null) {
       await hideLoading();
-
       AppDB.setReplaceKv(Keys.setting$registerPhoneNumber, widget.phoneNumber);
       AppDB.setReplaceKv(Keys.setting$registerPhoneNumberTs, DateHelper.getNowTimestamp());
       AppBroadcast.reBuildMaterial();
+      AppRoute.backToRoot(context);
     }
     else {
       await Session.login$newProfileData(dataJs);
       await hideLoading();
       AppBroadcast.reBuildMaterial();
+      AppRoute.backToRoot(context);
     }
   }
 }
