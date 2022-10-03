@@ -5,6 +5,7 @@ import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/pages/layout_page.dart';
 import 'package:app/pages/phone_number_page.dart';
 import 'package:app/pages/register_form_page.dart';
+import 'package:app/services/login_service.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:flutter/foundation.dart';
@@ -123,7 +124,6 @@ class SplashScreenState extends StateBase<SplashPage> {
       ),
     );
   }
-
   ///==================================================================================================
   Widget getMaterialApp() {
     return MaterialApp(
@@ -142,18 +142,21 @@ class SplashScreenState extends StateBase<SplashPage> {
           PointerDeviceKind.touch,
         },
       ),
-        home: homeBuilder(),
-        builder: (context, home) {
-          return home!;
-        },
+      home: homeBuilder(),
+      builder: (subContext, home) {
+        return Directionality(
+            textDirection: AppThemes.instance.textDirection,
+            child: home!
+        );
+      },
     );
   }
 
   Widget homeBuilder(){
     return Builder(
-      builder: (ctx){
-        AppRoute.materialContext = ctx;
-        final mediaQueryData = MediaQuery.of(ctx);
+      builder: (subContext){
+        AppRoute.materialContext = subContext;
+        final mediaQueryData = MediaQuery.of(subContext);
 
         /// detect orientation change and rotate screen
         return MediaQuery(
@@ -161,10 +164,7 @@ class SplashScreenState extends StateBase<SplashPage> {
           child: OrientationBuilder(builder: (context, orientation) {
             testCodes(context);
 
-            return Directionality(
-                textDirection: AppThemes.instance.textDirection,
-                child: Toaster(child: pageRouting())
-            );
+            return Toaster(child: pageRouting());
           }),
         );
       },
@@ -184,7 +184,7 @@ class SplashScreenState extends StateBase<SplashPage> {
         if(pNumber != null){
           final ts = AppDB.fetchKv(Keys.setting$registerPhoneNumberTs);
 
-          if(ts != null && !DateHelper.isPastOf(DateHelper.tsToSystemDate(ts), Duration(minutes: 1))) {
+          if(ts != null && !DateHelper.isPastOf(DateHelper.tsToSystemDate(ts), Duration(minutes: 10))) {
             return RegisterFormPage(phoneNumber: pNumber);
           }
         }
@@ -228,6 +228,7 @@ class SplashScreenState extends StateBase<SplashPage> {
       await InitialApplication.onceInit(context);
 
       AppBroadcast.reBuildMaterialBySetTheme();
+      LoginService.requestOnSplash();
       // ignore: use_build_context_synchronously
       asyncInitial(context);
     }

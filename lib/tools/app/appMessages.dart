@@ -312,4 +312,40 @@ class AppMessages {
     return 'لطفا شماره موبایل خود را به درستی وارد کنید';
   }
 
+  static String get enterYourName {
+    return 'لطفا نام خود را وارد کنید';
+  }
+
+  static String get yourNameIsLittle {
+    return 'نام کوتاه است';
+  }
+
+  static String get enterYourFamily {
+    return 'لطفا فامیلی خود را وارد کنید';
+  }
+
+  static String get yourFamilyIsLittle {
+    return 'فامیلی کوتاه است';
+  }
+
+  static String get emailFormatInCorrect {
+    return 'قالب فرمت درست نیست';
+  }
+
+  static String get inviteCodeInCorrect {
+    return 'این کد معرف درست نیست';
+  }
+
+  static String get birthdateNotDefined {
+    return 'تاریخ تولد را وارد کنید';
+  }
+
+  static String get genderNotDefined {
+    return 'جنسیت خود را انتخاب کنید';
+  }
+
+  static String get emailNotCorrect {
+    return 'ایمیل معتبر نیست';
+  }
+
 }

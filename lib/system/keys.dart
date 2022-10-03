@@ -12,9 +12,9 @@ class Keys {
   static const name = 'name';
   static const key = 'key';
   static const family = 'family';
-  static const userId = 'userId';
-  static const sex = 'sex';
-  static const birthdate = 'birthdate';
+  static const userId = 'id';
+  static const gender = 'gender';
+  static const birthdate = 'birthDate';
   static const title = 'title';
   static const type = 'type';
   static const domain = 'domain';

@@ -1,12 +1,20 @@
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/pages/select_language_level_page.dart';
+import 'package:app/system/keys.dart';
+import 'package:app/system/requester.dart';
+import 'package:app/system/session.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/app/appSnack.dart';
+import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/dateTools.dart';
+import 'package:app/tools/deviceInfoTools.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:persian_modal_date_picker/button.dart';
 import 'package:persian_modal_date_picker/persian_date_picker.dart';
 import 'package:shamsi_date/shamsi_date.dart';
@@ -30,6 +38,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
   TextEditingController inviteCodeTextCtr = TextEditingController();
   List<DropdownMenuItem<int>> genderList = [];
   int? gender;
+  Requester requester = Requester();
   DateTime? birthDate;
   String birthDateText = AppMessages.birthdate;
   late InputDecoration inputDecoration;
@@ -67,6 +76,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
     familyTextCtr.dispose();
     emailTextCtr.dispose();
     inviteCodeTextCtr.dispose();
+    requester.dispose();
 
     super.dispose();
   }
@@ -138,7 +148,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
 
                                   const SizedBox(height: 10),
                                   TextField(
-                                    controller: nameTextCtr,
+                                    controller: familyTextCtr,
                                     decoration: inputDecoration.copyWith(
                                       hintText: AppMessages.registerFormEnterFamilyHint,
                                       prefixIcon: Image.asset(AppImages.userInputIco),
@@ -147,7 +157,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
 
                                   const SizedBox(height: 10),
                                   TextField(
-                                    controller: nameTextCtr,
+                                    controller: emailTextCtr,
                                     decoration: inputDecoration.copyWith(
                                       hintText: AppMessages.registerFormEnterEmailHint,
                                       prefixIcon: Image.asset(AppImages.emailInputIco),
@@ -302,6 +312,111 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
     final email = emailTextCtr.text.trim();
     final inviteCode = inviteCodeTextCtr.text.trim();
 
-    AppRoute.push(context, SelectLanguageLevelPage());
+    if(name.isEmpty){
+      AppSnack.showError(context, AppMessages.enterYourName);
+      return;
+    }
+
+    if(name.length < 3){
+      AppSnack.showError(context, AppMessages.yourNameIsLittle);
+      return;
+    }
+
+    if(family.isEmpty){
+      AppSnack.showError(context, AppMessages.enterYourFamily);
+      return;
+    }
+
+    if(family.length < 3){
+      AppSnack.showError(context, AppMessages.yourFamilyIsLittle);
+      return;
+    }
+
+    /*if(email.isNotEmpty){
+      if(!Checker.isValidEmail(email)){
+        AppSnack.showError(context, AppMessages.emailFormatInCorrect);
+        return;
+      }
+    }*/
+
+    if(birthDate == null){
+      AppSnack.showError(context, AppMessages.birthdateNotDefined);
+      return;
+    }
+
+    if(gender == null){
+      AppSnack.showError(context, AppMessages.genderNotDefined);
+      return;
+    }
+
+    if(inviteCode.isNotEmpty){
+      if(inviteCode.length != 5){
+        AppSnack.showError(context, AppMessages.inviteCodeInCorrect);
+        return;
+      }
+    }
+
+    requestRegister();
+  }
+
+  void requestRegister(){
+    final name = nameTextCtr.text.trim();
+    final family = familyTextCtr.text.trim();
+    final email = emailTextCtr.text.trim();
+    final inviteCode = inviteCodeTextCtr.text.trim();
+
+    final js = <String, dynamic>{};
+    js['phoneNumber'] = widget.phoneNumber;
+    js['firstName'] = name;
+    js['lastName'] = family;
+    js['gender'] = gender;
+    js['birthDate'] = DateHelper.dateOnlyToStamp(birthDate!);
+    js['clientSecret'] = DeviceInfoTools.deviceId;
+
+    if(email.isNotEmpty){
+      js['email'] = email;
+    }
+
+    if(inviteCode.isNotEmpty){
+      js['introducerCode'] = inviteCode;
+    }
+
+    requester.httpRequestEvents.onAnyState = (requester) async {
+      hideLoading();
+    };
+
+    requester.httpRequestEvents.onFailState = (requester, res) async {
+
+      if(res != null && res.statusCode == 403){
+        // no defined
+      }
+
+      if(res != null && res.statusCode == 422){
+        final js = JsonHelper.jsonToMap(res.data)!;
+        final message = js['message'];
+        AppSnack.showInfo(context, message);
+        return false;
+      }
+    };
+
+    requester.httpRequestEvents.onStatusOk = (requester, js) async {
+      print(js);
+      final data = js[Keys.data];
+      final message = js[Keys.message];
+
+      final t = await Session.login$newProfileData(data);
+      print(t?.token);
+      print(t?.birthDate);
+      print(t?.nameFamily);
+
+      AppToast.showToast(context, message);
+      AppRoute.push(context, SelectLanguageLevelPage());
+    };
+
+    showLoading();
+    requester.prepareUrl(pathUrl: '/register');
+    requester.methodType = MethodType.post;
+    requester.bodyJson = js;
+    requester.request(context);
   }
 }

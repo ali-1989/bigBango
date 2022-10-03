@@ -234,11 +234,34 @@ class _OtpPageState extends StateBase<OtpPage> {
     showResendOtpButton = false;
     pinTextCtr.clear();
 
+    resendOtpCode();
     callState();
   }
 
   void changeNumberClick(){
     AppRoute.pop(context);
+  }
+
+  void resendOtpCode() async {
+    final httpRequester = await LoginService.requestSendOtp(phoneNumber: widget.phoneNumber);
+
+    if(httpRequester == null){
+      AppSnack.showSnack$errorCommunicatingServer(context);
+      return;
+    }
+
+    int statusCode = httpRequester.responseData!.statusCode?? 0;
+
+    if(statusCode != 200){
+      String? message = httpRequester.getBodyAsJson()![Keys.message];
+
+      if(message == null) {
+        AppSnack.showSnack$serverNotRespondProperly(context);
+      }
+      else {
+        AppSnack.showError(context, message);
+      }
+    }
   }
 
   void sendOtpCode() async {
@@ -253,6 +276,7 @@ class _OtpPageState extends StateBase<OtpPage> {
 
     int statusCode = httpRequester.responseData!.statusCode?? 200;
 
+    //422 : timeout
     if(statusCode != 200){
       await hideLoading();
       String? message = httpRequester.getBodyAsJson()![Keys.message];

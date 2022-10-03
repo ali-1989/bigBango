@@ -578,7 +578,7 @@ class AppThemes {
 
 	static TextStyle relativeSheetTextStyle() {
 		final app = AppThemes._instance.themeData.appBarTheme.toolbarTextStyle!;
-		final color = ColorHelper.getUnNearColor(app.color!, AppThemes._instance.currentTheme.primaryColor, Colors.black);
+		final color = ColorHelper.getUnNearColor(/*app.color!*/Colors.white, AppThemes._instance.currentTheme.primaryColor, Colors.white);
 
 		return app.copyWith(color: color, fontSize: 14);//currentTheme.appBarItemColor
 	}

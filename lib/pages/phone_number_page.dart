@@ -211,7 +211,7 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
       return;
     }
 
-    int statusCode = httpRequester.responseData!.statusCode?? 200;
+    int statusCode = httpRequester.responseData!.statusCode?? 0;
 
     if(statusCode != 200){
       String? message = httpRequester.getBodyAsJson()![Keys.message];

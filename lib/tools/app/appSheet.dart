@@ -135,17 +135,19 @@ class AppSheet {
       fn?.call();
     }
 
+    final txtStyle = AppThemes.relativeSheetTextStyle();
+
     final posBtn = TextButton(
         onPressed: dismissOnAction ? close : fn,
-        child: Text(buttonText, style: AppThemes.relativeSheetTextStyle(),)
+        child: Text(buttonText, style: txtStyle)
     );
     //TextButton.icon(onPressed: fn, label: Text(btnText,), icon: Icon(icon, color: textColor,),);
 
-    final content = Text(message, style: AppThemes.relativeSheetTextStyle(),);
+    final content = Text(message, style: txtStyle);
     Widget? titleView;
 
     if (title != null) {
-      titleView = Text(title, style: AppThemes.relativeSheetTextStyle(),);
+      titleView = Text(title, style: txtStyle.copyWith(fontSize: txtStyle.fontSize!+2));
     }
 
     var body = _buildBody(
@@ -221,7 +223,7 @@ class AppSheet {
       posButton: posBtn,
       negButton: negBtn,
       title: title,
-      buttonBarColor: theme.btnBarColor,
+      buttonBarColor: theme.buttonbarColor,
       padding: const EdgeInsets.fromLTRB(16, 22, 16, 12),
     );
 
@@ -393,7 +395,7 @@ class AppSheet {
                       textAlign: TextAlign.start,
                       child: title),
                 if (title != null)
-                  const SizedBox(height: 10,),
+                  const SizedBox(height: 15),
 
                 DefaultTextStyle(
                   style: theme.textTheme.headline6!.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
@@ -581,7 +583,6 @@ class _SheetTheme {
   Color backgroundColor = Colors.white;
   Color contentColor = AppThemes.instance.currentTheme.primaryColor;
   Color buttonbarColor = AppThemes.instance.currentTheme.primaryColor;
-  Color btnBarColor = AppThemes.instance.currentTheme.primaryColor;
   Color barrierColor = ColorHelper.isNearColors(AppThemes.instance.currentTheme.primaryColor, [Colors.black,])
       ? Colors.white.withAlpha(80)
       : Colors.black.withAlpha(150);

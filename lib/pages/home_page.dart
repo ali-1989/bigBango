@@ -135,16 +135,16 @@ class HomePageState extends StateBase<HomePage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const SizedBox(height: 16),
-                          Row(
+                          /*Row(
                             children: [
                               const SizedBox(width: 15),
                               Image.asset(AppImages.clockIco, width: 16, height: 16),
                               const SizedBox(width: 6),
                               const Text('اخیرا مطالعه شده', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                             ],
-                          ),
+                          ),*/
 
-                          Padding(
+                          /*Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
@@ -236,7 +236,7 @@ class HomePageState extends StateBase<HomePage> {
                                 ),
                               ),
                             ),
-                          ),
+                          ),*/
 
                           const SizedBox(height: 5),
                         ],

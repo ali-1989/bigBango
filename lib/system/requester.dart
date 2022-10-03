@@ -1,5 +1,6 @@
 import 'package:app/system/httpProcess.dart';
 import 'package:app/system/publicAccess.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
@@ -81,7 +82,7 @@ class Requester {
 
     var f = _httpRequester.response.catchError((e){
       if(debug){
-        Logger.L.logToScreen(' catchError --> $e');
+        Logger.L.logToScreen(' dio catch Error --> $e');
       }
 
       if (_httpRequester.isDioCancelError){
@@ -89,7 +90,7 @@ class Requester {
       }
 
       httpRequestEvents.onAnyState?.call(_httpRequester);
-      httpRequestEvents.onFailState?.call(_httpRequester);
+      httpRequestEvents.onFailState?.call(_httpRequester, null);
       httpRequestEvents.onNetworkError?.call(_httpRequester);
     });
 
@@ -101,8 +102,7 @@ class Requester {
           Logger.L.logToScreen('>> Response receive, but is not ok | $val');
         }
 
-        await httpRequestEvents.onFailState?.call(_httpRequester);
-        await httpRequestEvents.onResponseError?.call(_httpRequester, false);
+        await httpRequestEvents.onFailState?.call(_httpRequester, val);
         return;
       }
 
@@ -113,8 +113,7 @@ class Requester {
           Logger.L.logToScreen('>> Response receive, but is not json | $val');
         }
 
-        await httpRequestEvents.onFailState?.call(_httpRequester);
-        await httpRequestEvents.onResponseError?.call(_httpRequester, true);
+        await httpRequestEvents.onFailState?.call(_httpRequester, val);
         return;
       }
 
@@ -131,7 +130,7 @@ class Requester {
         await httpRequestEvents.onStatusOk?.call(_httpRequester, js);
       }
       else {
-        await httpRequestEvents.onFailState?.call(_httpRequester);
+        await httpRequestEvents.onFailState?.call(_httpRequester, val);
 
         final managedByUser = await httpRequestEvents.onStatusError?.call(_httpRequester, js)?? false;
 
@@ -153,9 +152,8 @@ class Requester {
 ///================================================================================================
 class HttpRequestEvents {
   Future Function(HttpRequester)? onAnyState;
-  Future Function(HttpRequester)? onFailState;
+  Future Function(HttpRequester, Response?)? onFailState;
   Future Function(HttpRequester)? onNetworkError;
-  Future Function(HttpRequester, bool)? onResponseError;
   Future Function(HttpRequester, Map)? manageResponse;
   Future Function(HttpRequester, Map)? onStatusOk;
   Future<bool> Function(HttpRequester, Map)? onStatusError;

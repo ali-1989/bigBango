@@ -18,15 +18,19 @@ class AppHttpDio {
 
 	static BaseOptions _genOptions(){
 		return BaseOptions(
-			connectTimeout: 15000,
+			connectTimeout: 45000,
 		);
 	}
 
 	static HttpRequester send(HttpItem item, {BaseOptions? options}){
 		if(item.debugMode) {
-			var txt = '\nhttp: ${item.fullUrl}\n';
+			var txt = '\n-------------------------http debug\n';
+			txt += 'url: ${item.fullUrl}\n';
 			txt += 'Method: ${item.method}\n';
-			txt += 'Body: ${item.body} \n---------------------';
+
+			if(item.body is String) {
+				txt += 'Body: ${item.body} \n------------------------- End';
+			}
 
 			Logger.L.logToScreen(txt);
 		}
@@ -73,9 +77,9 @@ class AppHttpDio {
 							},
 							 onResponse: (Response<dynamic> res, ResponseInterceptorHandler handler) {
 								 if(item.debugMode) {
-									 var txt = '\n==== onResponse ====\n';
+									 var txt = '\n----------------- http Debug [onResponse]\n';
 									 txt += 'statusCode:  ${res.statusCode}\n';
-									 txt += 'data: ${res.data}\n---------------------';
+									 txt += 'data: ${res.data}\n-----------------------End';
 
 									 Logger.L.logToScreen(txt);
 								 }
@@ -92,10 +96,10 @@ class AppHttpDio {
 							},
 							onError: (DioError err, ErrorInterceptorHandler handler) async {
 								if(item.debugMode) {
-									var txt = '\n==== onError ====\n';
+									var txt = '\n----------------- http Debug [onError]\n';
 									txt += 'statusCode: ${err.response?.statusCode}\n';
 									txt += 'data: ${err.response?.data}';
-									txt += 'error: ${err.error} \n---------------------';
+									txt += 'error: ${err.error} \n--------------------------- End';
 
 									Logger.L.logToScreen(txt);
 								}
@@ -112,7 +116,6 @@ class AppHttpDio {
 
 								itemRes._response = err.response;
 
-								//handler.next(err);
 								handler.resolve(err.response?? res);
 							}
 					)

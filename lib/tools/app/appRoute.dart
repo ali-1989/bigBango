@@ -55,16 +55,20 @@ class AppRoute {
     Navigator.of(context).pop();
   }
 
-  /*static void push(BuildContext context, String address, {dynamic extra}) {
-    Navigator.of(context).push(r);
-  }*/
-
   static void push(BuildContext context, Widget page, {dynamic extra}) {
     final r = MaterialPageRoute(builder: (ctx){
       return page;
     });
 
     Navigator.of(context).push(r);
+  }
+
+  static void replace(BuildContext context, Widget page, {dynamic extra}) {
+    final r = MaterialPageRoute(builder: (ctx){
+      return page;
+    });
+
+    Navigator.of(context).pushReplacement(r);
   }
 
   static void pushNamed(BuildContext context, String name, {dynamic extra}) {
@@ -75,13 +79,17 @@ class AppRoute {
     Navigator.of(context).pushReplacementNamed(name, arguments: extra);
   }
 
- /*static Future<bool> saveRouteName(String routeName) async {
+  /*static void push(BuildContext context, String address, {dynamic extra}) {
+    Navigator.of(context).push(r);
+  }*/
+
+  /*static Future<bool> saveRouteName(String routeName) async {
     final int res = await AppDB.setReplaceKv(Keys.setting$lastRouteName, routeName);
 
     return res > 0;
   }
 
-  static String? fetchRouteScreenName() {
+  static String? fetchRoutePageName() {
     return AppDB.fetchKv(Keys.setting$lastRouteName);
   }*/
 }

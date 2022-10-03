@@ -29,7 +29,7 @@ class LoginService {
     });
 
     f = f.then((Response? response){
-      if(response == null) {
+      if(response == null || response.statusCode == null) {
         result.complete(null);
         return;
       }
@@ -66,6 +66,34 @@ class LoginService {
         return;
       }
 
+      result.complete(request);
+      return null;
+    });
+
+    return result.future;
+  }
+
+  static Future<HttpRequester?> requestOnSplash() async {
+    final http = HttpItem();
+    final result = Completer<HttpRequester?>();
+
+    http.fullUrl = '${PublicAccess.serverApi}/primitiveOptions';
+    http.method = 'GET';
+    //http.setBodyJson(js);
+
+    final request = AppHttpDio.send(http);
+
+    var f = request.response.catchError((e){
+      result.complete(null);
+    });
+
+    f = f.then((Response? response){
+      if(response == null || response.statusCode == null) {
+        result.complete(null);
+        return;
+      }
+
+      print(response);//todo
       result.complete(request);
       return null;
     });

@@ -2,7 +2,6 @@ import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/views/selectLevelOnline.dart';
-import 'package:app/views/selectSupportTime.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
@@ -134,8 +133,8 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
 
                           GestureDetector(
                             onTap: (){
-                              selectValue = 1;
-                              assistCtr.updateMain();
+                              /*selectValue = 1;
+                              assistCtr.updateMain();*/
                             },
                             child: Card(
                               color: Colors.grey.shade100,
@@ -179,8 +178,8 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
 
                           GestureDetector(
                             onTap: (){
-                              selectValue = 2;
-                              assistCtr.updateMain();
+                              /*selectValue = 2;
+                              assistCtr.updateMain();*/
                             },
                             child: Card(
                               color: Colors.grey.shade100,
