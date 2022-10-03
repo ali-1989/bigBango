@@ -386,17 +386,20 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
     };
 
     requester.httpRequestEvents.onFailState = (requester, res) async {
+      if(res != null){
+        if(res.statusCode == 403){
+          // no defined
+        }
 
-      if(res != null && res.statusCode == 403){
-        // no defined
+        if(res.statusCode == 422){
+          final js = JsonHelper.jsonToMap(res.data)!;
+          final message = js['message'];
+          AppSnack.showInfo(context, message);
+          return false;
+        }
       }
 
-      if(res != null && res.statusCode == 422){
-        final js = JsonHelper.jsonToMap(res.data)!;
-        final message = js['message'];
-        AppSnack.showInfo(context, message);
-        return false;
-      }
+      AppSnack.showInfo(context, AppMessages.serverNotRespondProperly);
     };
 
     requester.httpRequestEvents.onStatusOk = (requester, js) async {

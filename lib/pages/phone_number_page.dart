@@ -122,6 +122,7 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
                   TextField(
                     controller: phoneCtr,
                     keyboardType: TextInputType.phone,
+                    textAlign: TextAlign.center,
                     inputFormatters: [
                       InputFormatter.filterInputFormatterDeny(RegExp(r'(\+)|(-)')),
                     ],
