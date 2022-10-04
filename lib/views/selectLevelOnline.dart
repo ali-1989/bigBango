@@ -1,11 +1,9 @@
 import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/pages/layout_page.dart';
+import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appRoute.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/api/system.dart';
 
 
 class SelectLevelOnline extends StatefulWidget {
@@ -120,8 +118,8 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
                   children: [
                     TextButton.icon(
                         onPressed: (){
-                          System.showBothStatusBar();
-                          AppRoute.push(context, LayoutPage(key: AppBroadcast.layoutPageKey));
+                          Session.getLastLoginUser()?.courseLevelId = 0;
+                          AppBroadcast.reBuildMaterial();
                         },
                         icon: Image.asset(AppImages.arrowRightIco),
                         label: Text('Next', style: TextStyle(fontSize: 14))

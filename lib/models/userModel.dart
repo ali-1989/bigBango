@@ -11,12 +11,11 @@ class UserModel {
   String? family;
   DateTime? birthDate;
   String? mobile;
-  DateTime? registerDate;
   int? gender;
   Token? token;
   MediaModel? profileModel;
   String? email;
-  int? userType;
+  int? courseLevelId;
   //---------------- locale
   DateTime? loginDate;
 
@@ -28,17 +27,16 @@ class UserModel {
     //final regDate = map[Keys.registerDate];
 
     userId = map[Keys.userId].toString();
-    name = map[Keys.name];
-    family = map[Keys.family];
+    name = map[Keys.firstName];
+    family = map[Keys.lastName];
     mobile = map[Keys.mobileNumber]?.toString();
     gender = map[Keys.gender];
     email = map['email'];
-    userType = map['user_type'];
+    courseLevelId = map['courseLevelId'];
 
     if(map[Keys.token] is Map) {
       token = Token.fromMap(map[Keys.token]);
     }
-
     else if(map[Keys.token] is String) {
       token = Token()..token = map[Keys.token];
       token?.parseToken();
@@ -55,13 +53,6 @@ class UserModel {
       birthDate = DateHelper.tsToSystemDate(brDate);
     }
 
-    /*if(regDate is int) {
-      registerDate = DateHelper.milToDateTime(regDate);
-    }
-    else if(regDate is String) {
-      registerDate = DateHelper.tsToSystemDate(regDate);
-    }*/
-
     //profileModel?.url = UriTools.correctAppUrl(profileModel?.url, domain: domain);
     //----------------------- local
     if (tLoginDate is int) {
@@ -75,16 +66,14 @@ class UserModel {
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{};
     map[Keys.userId] = userId;
-    //map[Keys.userName] = userName;
-    map[Keys.name] = name;
-    map[Keys.family] = family;
+    map[Keys.firstName] = name;
+    map[Keys.lastName] = family;
     map[Keys.birthdate] = birthDate == null? null: DateHelper.toTimestamp(birthDate!);
-    //map[Keys.registerDate] = registerDate == null? null: DateHelper.toTimestamp(registerDate!);
     map[Keys.mobileNumber] = mobile;
     map[Keys.gender] = gender;
     map['profile_image_model'] = profileModel?.toMap();
     map['email'] = email;
-    map['user_type'] = userType;
+    map['courseLevelId'] = courseLevelId;
 
     if (token != null) {
       map[Keys.token] = token!.toMap();
@@ -102,11 +91,10 @@ class UserModel {
     family = other.family;
     birthDate = other.birthDate;
     mobile = other.mobile;
-    registerDate = other.registerDate;
     gender = other.gender;
     profileModel = other.profileModel;
     email = other.email;
-    userType = other.userType;
+    courseLevelId = other.courseLevelId;
     token = other.token;
 
     //--------------------------------- local
@@ -171,13 +159,13 @@ class Token {
     final exp = jwt['exp'];
 
     if(exp != null && expireDate == null){
-      expireDate = DateTime.fromMillisecondsSinceEpoch(exp);
-      print(expireDate);
+      expireDate = DateTime(1970, 1, 1);
+      expireDate = expireDate!.add(Duration(seconds: exp));
     }
   }
 
   @override
   String toString(){
-    return '$token | $refreshToken | $expireDate';
+    return 'Token: $token | refreshToken: $refreshToken | expire Date: $expireDate';
   }
 }

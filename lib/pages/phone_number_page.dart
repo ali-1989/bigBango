@@ -86,11 +86,11 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
                           child: Center(
                             child: Pulse(
                               delay: const Duration(seconds: 2),
-                              child: Text(AppMessages.loginDescription3)
-                                  .wrapBoxBorder(
+                              child: Text(AppMessages.loginDescription3).bold()
+                                  /*.wrapBoxBorder(
                                   alpha: 100,
                                   padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5)
-                              ),
+                              ),*/
                             ),
                           ),
                         )

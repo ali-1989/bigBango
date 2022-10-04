@@ -52,25 +52,22 @@ class AppThemes {
 
 	static void initial() {
 		if(!_isInit) {
+			_isInit = true;
+
 			_instance = AppThemes._();
 
 			_instance.baseFont = Font();
 			_instance.subFont = Font();
 			_instance.boldFont = Font();
+
+			prepareThemes();
+			applyDefaultTheme();
 		}
-
-		_instance.themeList.clear();
-		prepareThemes();
-
-		if(!_isInit) {
-			_instance.currentTheme = _instance.defaultTheme;
-		}
-
-		_instance.themeData = createThemeData(_instance.currentTheme);
-		_isInit = true;
 	}
 
 	static void prepareThemes() {
+		_instance.themeList.clear();
+
 		{
 			final mainTheme = ColorTheme(const Color(0xFFF95959), const Color(0xFFF0A17D), const Color(0xFFF7C8B3), Colors.black);
 

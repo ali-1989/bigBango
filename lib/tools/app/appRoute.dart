@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 
 class AppRoute {
-
   AppRoute._();
 
   static late BuildContext materialContext;
@@ -15,7 +14,11 @@ class AppRoute {
     var res = WidgetsBinding.instance.focusManager.rootScope.focusedChild?.context;//deep: 50
     res ??= WidgetsBinding.instance.focusManager.primaryFocus?.context; //deep: 71
 
-    return res?? materialContext;
+    return res?? getMaterialContext();
+  }
+
+  static BuildContext getMaterialContext() {
+    return materialContext;
   }
 
   /*static Future<bool> saveRouteName(String routeName) async {

@@ -1,12 +1,12 @@
 import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/system/session.dart';
+import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
-import 'package:app/views/selectLevelOnline.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class SelectLanguageLevelPage extends StatefulWidget {
 
@@ -229,7 +229,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                                 onPressed: sendClick,
-                                child: Text(AppMessages.send)
+                                child: Text(AppMessages.register)
                             ),
                           ),
 
@@ -261,8 +261,9 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
   }
 
   void sendClick(){
-    //AppRoute.push(context, SelectLanguageLevelPage(phoneNumber: '09139277303'));
-    showMaterialModalBottomSheet(
+    Session.getLastLoginUser()?.courseLevelId = 0;
+    AppBroadcast.reBuildMaterial();
+    /*showMaterialModalBottomSheet(
       context: context,
       isDismissible: true,
       bounce: true,
@@ -275,6 +276,6 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
           child: const SelectLevelOnline(),
         );
       },
-    );
+    );*/
   }
 }

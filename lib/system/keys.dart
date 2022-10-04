@@ -10,8 +10,9 @@ class Keys {
   static const expire = 'expire';
   static const value = 'value';
   static const name = 'name';
+  static const firstName = 'firstName';
   static const key = 'key';
-  static const family = 'family';
+  static const lastName = 'lastName';
   static const userId = 'id';
   static const gender = 'gender';
   static const birthdate = 'birthDate';

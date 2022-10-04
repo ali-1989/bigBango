@@ -85,7 +85,7 @@ class AppSheet {
   }
 
   static Future<T?> showModalBottomSheet$<T>(
-      BuildContext ctx, {
+      BuildContext context, {
       required Widget Function(BuildContext context) builder,
       Color? backgroundColor,
       Color? barrierColor,
@@ -98,10 +98,10 @@ class AppSheet {
       bool isScrollControlled = true,
       String routeName = 'ModalBottomSheet',
       }) {
-    FocusHelper.hideKeyboardByUnFocus(ctx);
+    FocusHelper.hideKeyboardByUnFocus(context);
 
     return showModalBottomSheet<T>(
-        context: ctx,
+        context: context,
         elevation: elevation,
         shape: shape,
         constraints: AppSizes.isBigWidth()? BoxConstraints.tightFor(width: AppSizes.webMaxDialogSize) : null,
@@ -111,13 +111,15 @@ class AppSheet {
         barrierColor: barrierColor,
         routeSettings: RouteSettings(name: routeName),
         isScrollControlled: isScrollControlled,
-        builder: builder
+        builder: builder,
+        useRootNavigator: false,
     );
   }
 
   ///======== flutter api | =====================================================================================
   /// T: is returned value from Navigator.Pop()
-  static Future<T?> showSheetOneAction<T>(BuildContext context,
+  static Future<T?> showSheetOneAction<T>(
+      BuildContext context,
       String message,
       VoidCallback? fn, {
         String? title,
@@ -218,7 +220,8 @@ class AppSheet {
     );
 
     final body = _buildBody(
-      context, theme.contentColor,
+      context,
+      theme.contentColor,
       msg,
       posButton: posBtn,
       negButton: negBtn,

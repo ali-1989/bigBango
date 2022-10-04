@@ -7,6 +7,8 @@ import 'package:app/system/keys.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/deviceInfoTools.dart';
+import 'package:iris_tools/api/converter.dart';
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
 
 class LoginService {
   LoginService._();
@@ -88,12 +90,18 @@ class LoginService {
     });
 
     f = f.then((Response? response){
+      print(response);//todo
+      print('=============================================');//todo
+
       if(response == null || response.statusCode == null) {
         result.complete(null);
         return;
       }
 
-      print(response);//todo
+      final js = JsonHelper.jsonToMap(response.data);
+      final data = js?['data']?? {};
+      PublicAccess.courseLevels = Converter.correctList<Map>(data['courseLevels'])?? [];
+
       result.complete(request);
       return null;
     });

@@ -20,6 +20,7 @@ class PublicAccess {
   static late Logger logger;
   static late Reporter reporter;
   static String serverApi = SettingsManager.settingsModel.httpAddress;
+  static List<Map> courseLevels = [];
   static ClassicFooter classicFooter = const ClassicFooter(
     loadingText: '',
     idleText: '',

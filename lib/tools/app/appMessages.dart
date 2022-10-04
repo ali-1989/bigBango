@@ -233,7 +233,7 @@ class AppMessages {
   }
 
   static String get loginDescription3 {
-    return 'معرفی روش آموزش';
+    return 'چرا بیگ بنگو؟';
   }
 
   static String get otpDescription {
@@ -347,5 +347,4 @@ class AppMessages {
   static String get emailNotCorrect {
     return 'ایمیل معتبر نیست';
   }
-
 }

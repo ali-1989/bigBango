@@ -5,11 +5,13 @@ import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/pages/layout_page.dart';
 import 'package:app/pages/phone_number_page.dart';
 import 'package:app/pages/register_form_page.dart';
+import 'package:app/pages/select_language_level_page.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/appMessages.dart';
+import 'package:app/tools/app/appSheet.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/system.dart';
@@ -23,13 +25,13 @@ import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appThemes.dart';
-import 'package:app/tools/app/appToast.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
 bool _isInit = false;
 bool _isInLoadingSettings = true;
-bool mustShowSplash = true;
-int splashWaitingMil = 4000;
+bool _isConnectToServer = false;
+bool isInSplashTimer = true;
+int splashWaitingMil = 2000;
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -43,27 +45,21 @@ class SplashScreenState extends StateBase<SplashPage> {
   @override
   void initState() {
     super.initState();
-
-    System.hideBothStatusBar();
   }
 
   @override
   Widget build(BuildContext context) {
-    /// ReBuild First Widgets tree, not call on Navigator pages
-    return StreamBuilder<bool>(
-        initialData: false,
-        stream: AppBroadcast.viewUpdaterStream.stream,
-        builder: (context, snapshot) {
-          splashTimer();
-          init();
+    splashWaitTimer();
+    init();
 
-          if (_isInLoadingSettings || canShowSplash()) {
-            return getSplashView();
-          }
-          else {
-            return getMaterialApp();
-          }
-        });
+    if (waitInSplash()) {
+      System.hideBothStatusBar();
+      return getSplashView();
+    }
+    else {
+      System.showBothStatusBar();
+      return getFirstPage();
+    }
   }
   ///==================================================================================================
   Widget getSplashView() {
@@ -73,8 +69,7 @@ class SplashScreenState extends StateBase<SplashPage> {
       );
     }
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
+    return Material(
       child: Stack(
         children: [
           const DecoratedBox(
@@ -114,8 +109,8 @@ class SplashScreenState extends StateBase<SplashPage> {
                     height: 30,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      child: Text(' نسخه ی 1.1',
-                        style: TextStyle(fontFamily: FontManager.instance.defaultFontFor('fa', FontUsage.bold).family)
+                      child: Text(' نسخه ی ${Constants.appVersionName}',
+                          style: TextStyle(fontFamily: FontManager.instance.defaultFontFor('fa', FontUsage.bold).family)
                       ),
                     )
                 ),
@@ -125,57 +120,16 @@ class SplashScreenState extends StateBase<SplashPage> {
     );
   }
   ///==================================================================================================
-  Widget getMaterialApp() {
-    return MaterialApp(
-      key: AppBroadcast.materialAppKey,
-      debugShowCheckedModeBanner: false,
-      //navigatorObservers: [ClearFocusOnPush()],
-      //scrollBehavior: MyCustomScrollBehavior(),
-      title: Constants.appTitle,
-      theme: AppThemes.instance.themeData,
-      //darkTheme: ThemeData.dark(),
-      themeMode: AppThemes.instance.currentThemeMode,
-      scaffoldMessengerKey: AppBroadcast.rootScaffoldMessengerKey,
-      scrollBehavior: ScrollConfiguration.of(context).copyWith(
-        dragDevices: {
-          PointerDeviceKind.mouse,
-          PointerDeviceKind.touch,
-        },
-      ),
-      home: homeBuilder(),
-      builder: (subContext, home) {
-        return Directionality(
-            textDirection: AppThemes.instance.textDirection,
-            child: home!
-        );
-      },
-    );
-  }
-
-  Widget homeBuilder(){
-    return Builder(
-      builder: (subContext){
-        AppRoute.materialContext = subContext;
-        final mediaQueryData = MediaQuery.of(subContext);
-
-        /// detect orientation change and rotate screen
-        return MediaQuery(
-          data: mediaQueryData.copyWith(textScaleFactor: 1.0),
-          child: OrientationBuilder(builder: (context, orientation) {
-            testCodes(context);
-
-            return Toaster(child: pageRouting());
-          }),
-        );
-      },
-    );
-  }
-
-  /// first route
-  Widget pageRouting(){
+  Widget getFirstPage(){
     return Builder(
       builder: (ctx){
         if(Session.hasAnyLogin()){
+          final user = Session.getLastLoginUser()!;
+
+          if(user.courseLevelId == null){
+            return SelectLanguageLevelPage();
+          }
+
           return LayoutPage(key: AppBroadcast.layoutPageKey);
         }
 
@@ -193,15 +147,15 @@ class SplashScreenState extends StateBase<SplashPage> {
       },
     );
   }
-  ///==================================================================================================
-  bool canShowSplash(){
-    return mustShowSplash && !kIsWeb;
+
+  bool waitInSplash(){
+    return !kIsWeb && (isInSplashTimer || _isInLoadingSettings || !_isConnectToServer);
   }
 
-  void splashTimer() async {
-    if(splashWaitingMil > 0 && canShowSplash()){
+  void splashWaitTimer() async {
+    if(splashWaitingMil > 0){
       Timer(Duration(milliseconds: splashWaitingMil), (){
-        mustShowSplash = false;
+        isInSplashTimer = false;
 
         AppBroadcast.reBuildMaterial();
       });
@@ -218,38 +172,39 @@ class SplashScreenState extends StateBase<SplashPage> {
     _isInit = true;
 
     await AppDB.init();
-
     AppThemes.initial();
-    _isInLoadingSettings = !SettingsManager.loadSettings();
+    final settingsLoad = SettingsManager.loadSettings();
 
-    if (!_isInLoadingSettings) {
+    if (settingsLoad) {
       await Session.fetchLoginUsers();
       await VersionManager.checkInstallVersion();
-      await InitialApplication.onceInit(context);
+      await InitialApplication.launchUpInit();
+      connectToServer();
+
+      InitialApplication.appLazyInit();
+      _isInLoadingSettings = false;
 
       AppBroadcast.reBuildMaterialBySetTheme();
-      LoginService.requestOnSplash();
-      // ignore: use_build_context_synchronously
-      asyncInitial(context);
     }
   }
 
-  void asyncInitial(BuildContext context) {
-    if (!InitialApplication.isLaunchOk) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        Timer.periodic(const Duration(milliseconds: 50), (Timer timer) {
-          if (InitialApplication.isInitialOk) {
-            timer.cancel();
+  void connectToServer() async {
+    final serverData = await LoginService.requestOnSplash();
 
-            VersionManager.checkAppHasNewVersion(context);
-            InitialApplication.callOnLaunchUp();
-          }
-        });
-      });
+    if(serverData == null){
+      AppSheet.showSheetOneAction(
+        AppRoute.materialContext,
+        AppMessages.errorCommunicatingServer, (){
+        AppBroadcast.gotoSplash(2);
+        connectToServer();
+      },
+          buttonText: AppMessages.tryAgain,
+          isDismissible: false,
+      );
     }
-  }
-
-  Future<void> testCodes(BuildContext context) async {
-    //await AppDB.db.clearTable(AppDB.tbKv);
+    else {
+      _isConnectToServer = true;
+      AppBroadcast.reBuildMaterial();
+    }
   }
 }
