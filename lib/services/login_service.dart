@@ -1,5 +1,9 @@
 import 'dart:async';
 
+import 'package:app/constants.dart';
+import 'package:app/managers/versionManager.dart';
+import 'package:app/models/versionModel.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:dio/dio.dart';
 
 import 'package:app/models/countryModel.dart';
@@ -9,6 +13,7 @@ import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/deviceInfoTools.dart';
 import 'package:iris_tools/api/converter.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
+import 'package:iris_tools/api/system.dart';
 
 class LoginService {
   LoginService._();
@@ -79,7 +84,13 @@ class LoginService {
     final http = HttpItem();
     final result = Completer<HttpRequester?>();
 
-    http.fullUrl = '${PublicAccess.serverApi}/primitiveOptions';
+    var os = 1;
+
+    if(System.isIOS()){
+      os = 2;
+    }
+
+    http.fullUrl = '${PublicAccess.serverApi}/primitiveOptions?CurrentVersion=${Constants.appVersionName}&OperationSystem=$os';
     http.method = 'GET';
     //http.setBodyJson(js);
 
@@ -90,9 +101,6 @@ class LoginService {
     });
 
     f = f.then((Response? response){
-      print(response);//todo
-      print('=============================================');//todo
-
       if(response == null || response.statusCode == null) {
         result.complete(null);
         return;
@@ -101,6 +109,9 @@ class LoginService {
       final js = JsonHelper.jsonToMap(response.data);
       final data = js?['data']?? {};
       PublicAccess.courseLevels = Converter.correctList<Map>(data['courseLevels'])?? [];
+      PublicAccess.advertisingVideos = data['advertisingVideos']?? {}; // login, determiningCourseLevel
+      final versionModel = VersionModel.fromMap(data['version']);
+      VersionManager.checkAppHasNewVersion(AppRoute.getContext(), versionModel);
 
       result.complete(request);
       return null;

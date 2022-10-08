@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/system/publicAccess.dart';
+import 'package:app/system/requester.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -20,6 +24,7 @@ class SelectLanguageLevelPage extends StatefulWidget {
 ///===================================================================================================================
 class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
   int selectValue = 0;
+  Requester requester = Requester();
 
   @override
   void initState(){
@@ -28,6 +33,8 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
 
   @override
   void dispose(){
+    requester.dispose();
+
     super.dispose();
   }
 
@@ -261,8 +268,9 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
   }
 
   void sendClick(){
-    Session.getLastLoginUser()?.courseLevelId = 0;
-    AppBroadcast.reBuildMaterial();
+    if(selectValue == 0) {
+      requestSetLevel();
+    }
     /*showMaterialModalBottomSheet(
       context: context,
       isDismissible: true,
@@ -277,5 +285,27 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
         );
       },
     );*/
+  }
+
+  void requestSetLevel(){
+
+    requester.httpRequestEvents.onAnyState = (req) async {
+      await hideLoading();
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, data) async {
+      Session.getLastLoginUser()?.courseLevelId = 1;
+      AppBroadcast.reBuildMaterial();
+    };
+
+    //PublicAccess.courseLevels.firstWhere((element) => element['id'] == selectValue+1)
+
+    requester.bodyJson = {'courseLevelId' : 1};
+    requester.prepareUrl(pathUrl: '/profile/update');
+    requester.methodType = MethodType.put;
+    requester.debug = true;
+
+    showLoading();
+    requester.request(context, true);
   }
 }

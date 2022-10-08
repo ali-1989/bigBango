@@ -112,7 +112,7 @@ class AppSheet {
         routeSettings: RouteSettings(name: routeName),
         isScrollControlled: isScrollControlled,
         builder: builder,
-        useRootNavigator: false,
+        useRootNavigator: true, // if false: sheet show under bottom bar and not show fully
     );
   }
 

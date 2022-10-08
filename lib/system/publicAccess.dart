@@ -20,7 +20,9 @@ class PublicAccess {
   static late Logger logger;
   static late Reporter reporter;
   static String serverApi = SettingsManager.settingsModel.httpAddress;
+  /// {id: 1, name: پایه, order: 1}, {id: 2, name: مبتدی, order: 2}, {id: 3, name: متوسط, order: 3}, {id: 4, name: پیشرفته, order: 4}
   static List<Map> courseLevels = [];
+  static Map advertisingVideos = {};
   static ClassicFooter classicFooter = const ClassicFooter(
     loadingText: '',
     idleText: '',

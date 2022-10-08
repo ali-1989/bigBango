@@ -18,7 +18,7 @@ class AppHttpDio {
 
 	static BaseOptions _genOptions(){
 		return BaseOptions(
-			connectTimeout: 45000,
+			connectTimeout: 15000,
 		);
 	}
 

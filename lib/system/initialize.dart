@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:app/managers/versionManager.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/userLoginTools.dart';
 import 'package:flutter/foundation.dart';
@@ -92,7 +91,7 @@ class InitialApplication {
 
     _callLazyInit = true;
 
-    VersionManager.checkAppHasNewVersion(AppRoute.getContext());
+    //VersionManager.checkAppHasNewVersion(AppRoute.getContext()); // this is check in splash
     final eventListener = AppEventListener();
     eventListener.addResumeListener(LifeCycleApplication.onResume);
     eventListener.addPauseListener(LifeCycleApplication.onPause);

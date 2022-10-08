@@ -11,6 +11,7 @@ import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
+import 'package:iris_tools/api/tools.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -133,6 +134,7 @@ class _OtpPageState extends StateBase<OtpPage> {
                                   closeKeyboardWhenCompleted: true,
                                   //senderPhoneNumber: ,
                                   controller: pinTextCtr,
+                                  smsCodeMatcher: 'xkij3pr8Ot',
                                   defaultPinTheme: PinTheme(
                                     width: 56,
                                     height: 56,
@@ -302,6 +304,9 @@ class _OtpPageState extends StateBase<OtpPage> {
       AppRoute.backToRoot(context);
     }
     else {
+      print('///////////////////////////////////////////////');
+      Tools.verbosePrint(dataJs);//todo
+      print('///////////////////////////////////////////////');
       await Session.login$newProfileData(dataJs);
       await hideLoading();
       AppBroadcast.reBuildMaterial();

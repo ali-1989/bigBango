@@ -1,5 +1,6 @@
+import 'package:app/services/jwtService.dart';
 import 'package:app/system/httpProcess.dart';
-import 'package:app/system/publicAccess.dart';
+import 'package:app/system/session.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 
@@ -46,9 +47,9 @@ class Requester {
   set bodyJson(Map<String, dynamic>? js) {
     _bodyJs = js;
 
-    if(js != null) {
+    /*if(js != null) {
       PublicAccess.addAppInfo(_bodyJs!);
-    }
+    }*/
   }
 
   void _prepareHttp(){
@@ -70,13 +71,30 @@ class Requester {
 
   void request([BuildContext? context, bool promptErrors = true]){
     _http.debugMode = debug;
-    _http.method = methodType == MethodType.get ? 'GET': 'POST';
+
+    switch(methodType){
+      case MethodType.get:
+        _http.method = 'GET';
+        break;
+      case MethodType.post:
+        _http.method = 'POST';
+        break;
+      case MethodType.put:
+        _http.method = 'PUT';
+        break;
+    }
 
     if(_bodyJs != null) {
       _http.body = JsonHelper.mapToJson(_bodyJs!);
     }
 
     AppHttpDio.cancelAndClose(_httpRequester);
+
+    if(Session.hasAnyLogin()) {
+      print('token: ---------------------------- current token :${Session.getLastLoginUser()!.token?.token}');
+      print('token: ---------------------------- refresh token:${Session.getLastLoginUser()!.token?.refreshToken}');
+      _http.headers.addAll({'authorization': 'Bearer ${Session.getLastLoginUser()!.token?.token}'});
+    }
 
     _httpRequester = AppHttpDio.send(_http);
 
@@ -100,6 +118,16 @@ class Requester {
       if(!_httpRequester.isOk){
         if(debug){
           Logger.L.logToScreen('>> Response receive, but is not ok | $val');
+        }
+
+        if(_httpRequester.responseData?.statusCode == 401){
+          final rToken = await JwtService.requestNewToken(Session.getLastLoginUser()!);
+
+          if(rToken) {
+            request(context, promptErrors);
+          }
+
+          return;
         }
 
         await httpRequestEvents.onFailState?.call(_httpRequester, val);

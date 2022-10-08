@@ -49,6 +49,9 @@ class AppImages {
   static const startExercise = 'assets/images/startExercise.png';
   static const supportIco = 'assets/images/supportIco.png';
   static const speakerIco = 'assets/images/speakerIco.png';
+  static const examIco = 'assets/images/examIco.png';
+  static const grammerIco = 'assets/images/grammerIco.png';
+  static const readingIco = 'assets/images/readingIco.png';
 }
 
 

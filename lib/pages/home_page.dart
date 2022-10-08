@@ -4,6 +4,7 @@ import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lessonModel.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
+import 'package:app/system/extensions.dart';
 import 'package:extended_sliver/extended_sliver.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -469,22 +470,293 @@ class HomePageState extends StateBase<HomePage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          child: Text(lesson.title),
+                          padding: const EdgeInsets.symmetric(vertical: 7),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: Stack(
+                                    children: [
+                                      CardExtend(
+                                        color: Colors.grey.shade200,
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                CardExtend(
+                                                  color: Colors.white,
+                                                    padding: EdgeInsets.all(5),
+                                                    child: Image.asset(AppImages.grammerIco)
+                                                ),
+
+                                                SizedBox(width: 10),
+
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text('گرامر'),
+                                                    SizedBox(height: 5),
+                                                    Text('grammar').alpha(alpha: 100),
+                                                  ],
+                                                ),
+
+                                              ],
+                                            ),
+
+                                            SizedBox(height: 8),
+
+                                            Directionality(
+                                              textDirection: TextDirection.ltr,
+                                              child: LinearProgressIndicator(
+                                                backgroundColor: Colors.greenAccent.withAlpha(40),
+                                                color: Colors.greenAccent,
+                                                value: 0.3,
+                                                minHeight: 3,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      Positioned(
+                                        bottom: 10,
+                                          left: 5,
+                                          child: Text('32 %'),
+                                      ),
+                                    ],
+                                  )
+                              ),
+
+                              SizedBox(width: 8),
+
+                              Expanded(
+                                  child:  Stack(
+                                    children: [
+                                      CardExtend(
+                                        color: Colors.grey.shade200,
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                CardExtend(
+                                                    color: Colors.white,
+                                                    padding: EdgeInsets.all(5),
+                                                    child: Image.asset(AppImages.abcIco)
+                                                ),
+
+                                                SizedBox(width: 10),
+
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text('واژه آموزی'),
+                                                    SizedBox(height: 5),
+                                                    Text('Vocabulary').alpha(alpha: 100),
+                                                  ],
+                                                ),
+
+                                              ],
+                                            ),
+
+                                            SizedBox(height: 8),
+
+                                            Directionality(
+                                              textDirection: TextDirection.ltr,
+                                              child: LinearProgressIndicator(
+                                                backgroundColor: Colors.greenAccent.withAlpha(40),
+                                                color: Colors.greenAccent,
+                                                value: 0.3,
+                                                minHeight: 3,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      Positioned(
+                                        bottom: 10,
+                                        left: 5,
+                                        child: Text('32 %'),
+                                      ),
+                                    ],
+                                  )
+                              ),
+                            ],
+                          ),
                         ),
 
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 7),
 
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          child: Text(lesson.title),
+                          padding: const EdgeInsets.symmetric(vertical: 7),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: Stack(
+                                    children: [
+                                      CardExtend(
+                                        color: Colors.grey.shade200,
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                CardExtend(
+                                                    color: Colors.white,
+                                                    padding: EdgeInsets.all(5),
+                                                    child: Image.asset(AppImages.readingIco)
+                                                ),
+
+                                                SizedBox(width: 10),
+
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text('خواندن'),
+                                                    SizedBox(height: 5),
+                                                    Text('Reading').alpha(alpha: 100),
+                                                  ],
+                                                ),
+
+                                              ],
+                                            ),
+
+                                            SizedBox(height: 8),
+
+                                            Directionality(
+                                              textDirection: TextDirection.ltr,
+                                              child: LinearProgressIndicator(
+                                                backgroundColor: Colors.greenAccent.withAlpha(40),
+                                                color: Colors.greenAccent,
+                                                value: 0.3,
+                                                minHeight: 3,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      Positioned(
+                                        bottom: 10,
+                                        left: 5,
+                                        child: Text('32 %'),
+                                      ),
+                                    ],
+                                  )
+                              ),
+
+                              SizedBox(width: 8),
+
+                              Expanded(
+                                  child:  Stack(
+                                    children: [
+                                      CardExtend(
+                                        color: Colors.grey.shade200,
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                CardExtend(
+                                                    color: Colors.white,
+                                                    padding: EdgeInsets.all(5),
+                                                    child: Image.asset(AppImages.speakerIco)
+                                                ),
+
+                                                SizedBox(width: 10),
+
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text('شنیدن'),
+                                                    SizedBox(height: 5),
+                                                    Text('Speaking').alpha(alpha: 100),
+                                                  ],
+                                                ),
+
+                                              ],
+                                            ),
+
+                                            SizedBox(height: 8),
+
+                                            Directionality(
+                                              textDirection: TextDirection.ltr,
+                                              child: LinearProgressIndicator(
+                                                backgroundColor: Colors.greenAccent.withAlpha(40),
+                                                color: Colors.greenAccent,
+                                                value: 0.3,
+                                                minHeight: 3,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      Positioned(
+                                        bottom: 10,
+                                        left: 5,
+                                        child: Text('32 %'),
+                                      ),
+                                    ],
+                                  )
+                              ),
+                            ],
+                          ),
                         ),
 
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 7),
 
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          child: Text(lesson.title),
+                          padding: const EdgeInsets.symmetric(vertical: 7),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: Stack(
+                                    children: [
+                                      CardExtend(
+                                        color: Colors.grey.shade200,
+                                        padding: const EdgeInsets.symmetric(horizontal:5.0, vertical: 10),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                CardExtend(
+                                                    color: Colors.white,
+                                                    padding: EdgeInsets.all(5),
+                                                    child: Image.asset(AppImages.examIco)
+                                                ),
+
+                                                SizedBox(width: 10),
+
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text('آزمون'),
+                                                    SizedBox(height: 5),
+                                                    Text('Quiz').alpha(alpha: 100),
+                                                  ],
+                                                ),
+
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      Positioned(
+                                        bottom: 10,
+                                        left: 5,
+                                        child: CardExtend(
+                                          padding: EdgeInsets.all(10),
+                                          child: Text('شروع'),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                              ),
+                            ],
+                          ),
                         ),
 
                         SizedBox(
@@ -529,5 +801,34 @@ class HomePageState extends StateBase<HomePage> {
     }
 
     assistCtr.updateMain();
+  }
+}
+
+class CardExtend extends StatelessWidget {
+  final Widget child;
+  final EdgeInsets? padding;
+  final Color? color;
+  final double? radius;
+
+  const CardExtend({
+    required this.child,
+    this.padding,
+    this.radius,
+    this.color,
+    Key? key
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+        borderRadius: BorderRadius.circular(radius?? 8),
+        child: ColoredBox(
+            color: color?? Colors.white,
+            child: Padding(
+              padding: padding?? EdgeInsets.zero,
+              child: child,
+            )
+        )
+    );
   }
 }

@@ -4,35 +4,33 @@ class VersionModel {
   int newVersionCode = 0;
   String? description;
   bool restricted = false;
-  String? link;
+  String? directLink;
+  String? storeLink;
   String? newVersionTs;
-  String? pkgName;
-  int? os;
+
 
   VersionModel();
 
   VersionModel.fromMap(Map map) {
-    newVersionName = map['new_version_name'];
+    newVersionName = map['version'];
     newVersionCode = map['new_version_code']?? 0;
     description = map['description'];
-    restricted = map['restricted'];
-    link = map['link'];
-    pkgName = map['pkg_name'];
-    os = map['os'];
-    newVersionTs = map['new_version_ts'];
+    restricted = map['isForce'];
+    directLink = map['downloadLink'];
+    storeLink = map['storeLink'];
+    newVersionTs = map['createdAt'];
   }
 
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{};
 
-    map['new_version_name'] = newVersionName;
+    map['version'] = newVersionName;
     map['new_version_code'] = newVersionCode;
     map['description'] = description;
-    map['restricted'] = restricted;
-    map['link'] = link;
-    map['pkg_name'] = pkgName;
-    map['os'] = os;
-    map['new_version_ts'] = newVersionTs;
+    map['isForce'] = restricted;
+    map['downloadLink'] = directLink;
+    map['storeLink'] = storeLink;
+    map['createdAt'] = newVersionTs;
 
     return map;
   }

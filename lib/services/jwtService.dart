@@ -1,3 +1,10 @@
+import 'package:app/models/userModel.dart';
+import 'package:app/system/publicAccess.dart';
+import 'package:app/system/session.dart';
+import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/tools/app/appHttpDio.dart';
+import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/app/appToast.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -66,5 +73,42 @@ class JwtService {
     }
 
     return !isExpired(accessToken!);
+  }
+
+  static Future<bool> requestNewToken(UserModel um) async {
+    final js = <String, dynamic>{};
+    js['accessToken'] = um.token?.token;
+    js['refreshToken'] = um.token?.refreshToken;
+
+    final r = HttpItem();
+    r.fullUrl = '${PublicAccess.serverApi}/updateToken';
+    r.method = 'PUT';
+    r.body = js;
+    r.headers['accept'] = 'application/json';
+    r.headers['Content-Type'] = 'application/json';
+
+    final a = AppHttpDio.send(r);
+    await a.response;
+
+    print('////////////////////////////// aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa new token: ${a.responseData} , stasus:${a.responseData?.statusCode}');
+
+    if(a.responseData?.statusCode == 200){
+      final dataJs = a.getBodyAsJson()!;
+      um.token?.token = dataJs['data'];
+
+      return true;
+    }
+
+    else if(a.responseData?.statusCode == 307){
+      final dataJs = a.getBodyAsJson()!;
+      final message = dataJs['message'];
+
+      await Session.logoff(um.userId);
+
+      AppToast.showToast(AppRoute.getMaterialContext(), message);
+      AppBroadcast.reBuildMaterial();
+    }
+
+    return false;
   }
 }

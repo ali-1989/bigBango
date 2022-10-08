@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:app/constants.dart';
 import 'package:app/models/versionModel.dart';
-import 'package:app/system/requester.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/tools/deviceInfoTools.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/api/helpers/urlHelper.dart';
 import 'package:iris_tools/api/system.dart';
 import '/managers/settingsManager.dart';
@@ -39,7 +38,7 @@ class VersionManager {
     }
   }
 
-  static void checkAppHasNewVersion(BuildContext context) async {
+  /*static void checkAppHasNewVersion(BuildContext context) async {
     final deviceInfo = DeviceInfoTools.getDeviceInfo();
 
     final vm = await requestCheckVersion(context, deviceInfo);
@@ -75,6 +74,16 @@ class VersionManager {
     requester.request(context, false);
     return res.future;
   }
+*/
+
+  static void checkAppHasNewVersion(BuildContext context, VersionModel serverVersion) async {
+    var v = serverVersion.newVersionName!;
+    v = v.replaceAll('.', '');
+
+    if(MathHelper.toInt(v) > Constants.appVersionCode){
+      showUpdateDialog(AppRoute.getContext(), serverVersion);
+    }
+  }
 
   static void showUpdateDialog(BuildContext context, VersionModel vm) {
     final msg = vm.description?? AppMessages.newAppVersionIsOk;
@@ -93,7 +102,7 @@ class VersionManager {
       yesText: AppMessages.update,
       noText: vm.restricted ? AppMessages.exit : AppMessages.later,
       yesFn: (){
-        UrlHelper.launchLink(vm.link?? '');
+        UrlHelper.launchLink(vm.directLink?? '');
       },
       noFn: vm.restricted ? closeApp: null,
     );

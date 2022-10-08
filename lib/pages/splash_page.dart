@@ -121,8 +121,9 @@ class SplashScreenState extends StateBase<SplashPage> {
   }
   ///==================================================================================================
   Widget getFirstPage(){
-    return Builder(
+    return Builder( //kg06SVVHoxK
       builder: (ctx){
+        //Session.logoffAll();
         if(Session.hasAnyLogin()){
           final user = Session.getLastLoginUser()!;
 
@@ -138,7 +139,7 @@ class SplashScreenState extends StateBase<SplashPage> {
         if(pNumber != null){
           final ts = AppDB.fetchKv(Keys.setting$registerPhoneNumberTs);
 
-          if(ts != null && !DateHelper.isPastOf(DateHelper.tsToSystemDate(ts), Duration(minutes: 10))) {
+          if(ts != null && !DateHelper.isPastOf(DateHelper.tsToSystemDate(ts), Duration(minutes: 13))) {
             return RegisterFormPage(phoneNumber: pNumber);
           }
         }
@@ -195,7 +196,7 @@ class SplashScreenState extends StateBase<SplashPage> {
       AppSheet.showSheetOneAction(
         AppRoute.materialContext,
         AppMessages.errorCommunicatingServer, (){
-        AppBroadcast.gotoSplash(2);
+        AppBroadcast.gotoSplash(2000);
         connectToServer();
       },
           buttonText: AppMessages.tryAgain,

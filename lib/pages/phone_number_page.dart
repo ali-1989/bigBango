@@ -5,6 +5,7 @@ import 'package:app/services/login_service.dart';
 import 'package:app/system/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
+import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
@@ -179,7 +180,7 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
             body: VideoPlayerView(
               videoSourceType: VideoSourceType.network,
               autoPlay: true,
-              srcAddress: 'http://techslides.com/demos/sample-videos/small.mp4',
+              srcAddress: PublicAccess.advertisingVideos['login']?? '',
             ),
           );
         }

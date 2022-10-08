@@ -810,12 +810,12 @@ packages:
     source: hosted
     version: "0.27.5"
   shamsi_date:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: shamsi_date
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.15.0"
+    version: "1.0.1"
   sky_engine:
     dependency: transitive
     description: flutter
