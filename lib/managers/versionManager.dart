@@ -18,7 +18,7 @@ class VersionManager {
   static Future<void> onFirstInstall() async {
     SettingsManager.settingsModel.currentVersion = Constants.appVersionCode;
 
-    await AppDB.firstDatabasePrepare();
+    await AppDB.firstLaunch();
     SettingsManager.saveSettings();
   }
 

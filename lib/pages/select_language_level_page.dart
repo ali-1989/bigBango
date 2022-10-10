@@ -1,7 +1,5 @@
-import 'dart:math';
 
 import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/system/publicAccess.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
@@ -294,16 +292,16 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, data) async {
-      Session.getLastLoginUser()?.courseLevelId = 1;
+      final user = Session.getLastLoginUser()!;
+      user.courseLevelId = 1;
+      Session.sinkUserInfo(user);
+
       AppBroadcast.reBuildMaterial();
     };
-
-    //PublicAccess.courseLevels.firstWhere((element) => element['id'] == selectValue+1)
 
     requester.bodyJson = {'courseLevelId' : 1};
     requester.prepareUrl(pathUrl: '/profile/update');
     requester.methodType = MethodType.put;
-    requester.debug = true;
 
     showLoading();
     requester.request(context, true);

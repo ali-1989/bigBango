@@ -34,7 +34,9 @@ bool isInSplashTimer = true;
 int splashWaitingMil = 2000;
 
 class SplashPage extends StatefulWidget {
-  const SplashPage({super.key});
+  final Widget? firstPage;
+
+  SplashPage({this.firstPage, super.key});
 
   @override
   SplashScreenState createState() => SplashScreenState();
@@ -53,11 +55,10 @@ class SplashScreenState extends StateBase<SplashPage> {
     init();
 
     if (waitInSplash()) {
-      System.hideBothStatusBar();
+      System.hideBothStatusBarOnce();
       return getSplashView();
     }
     else {
-      System.showBothStatusBar();
       return getFirstPage();
     }
   }
@@ -125,6 +126,10 @@ class SplashScreenState extends StateBase<SplashPage> {
       builder: (ctx){
         //Session.logoffAll();
         if(Session.hasAnyLogin()){
+          System.showBothStatusBar();
+
+          print(Session.getLastLoginUser());
+          print('---------------------------------------');
           final user = Session.getLastLoginUser()!;
 
           if(user.courseLevelId == null){
@@ -139,7 +144,7 @@ class SplashScreenState extends StateBase<SplashPage> {
         if(pNumber != null){
           final ts = AppDB.fetchKv(Keys.setting$registerPhoneNumberTs);
 
-          if(ts != null && !DateHelper.isPastOf(DateHelper.tsToSystemDate(ts), Duration(minutes: 13))) {
+          if(ts != null && !DateHelper.isPastOf(DateHelper.tsToSystemDate(ts), Duration(minutes: 10))) {
             return RegisterFormPage(phoneNumber: pNumber);
           }
         }

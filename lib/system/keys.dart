@@ -33,7 +33,7 @@ class Keys {
   static const message = 'message';
   //----- common settings key -----------------------------------------------------------------
   static const setting$lastLoginDate = 'last_login_date';
-  //static const setting$lastRouteName = 'Last_route_name';
+  //static const setting$toBackgroundTs = 'to_background_ts';
   static const setting$appSettings = 'app_settings';
   static const setting$fontThemeData = 'font_theme_data';
   static const setting$colorThemeName = 'color_theme_name';

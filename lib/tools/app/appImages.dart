@@ -43,15 +43,26 @@ class AppImages {
   static const clockIco = 'assets/images/clockIco.png';
   static const lockIco = 'assets/images/lockIco.png';
   static const lessonListIco = 'assets/images/lessonListIco.png';
+  static const abc2Ico = 'assets/images/abc2Ico.png';
   static const abcIco = 'assets/images/abcIco.png';
   static const exerciseIco = 'assets/images/exerciseIco.png';
   static const messageIco = 'assets/images/messageIco.png';
   static const startExercise = 'assets/images/startExercise.png';
   static const supportIco = 'assets/images/supportIco.png';
   static const speakerIco = 'assets/images/speakerIco.png';
+  static const speaker2Ico = 'assets/images/speaker2Ico.png';
   static const examIco = 'assets/images/examIco.png';
-  static const grammerIco = 'assets/images/grammerIco.png';
+  static const exam2Ico = 'assets/images/exam2Ico.png';
+  static const grammarIco = 'assets/images/grammarIco.png';
   static const readingIco = 'assets/images/readingIco.png';
+  static const doutar = 'assets/images/doutar.png';
+  static const errorTry = 'assets/images/error_try.png';
+  static const greeting = 'assets/images/greeting.png';
+  static const notFound = 'assets/images/notFound.png';
+  static const vocabIco = 'assets/images/vocab.png';
+  static const returnArrow = 'assets/images/returnArrow.png';
+  static const arrowRight2 = 'assets/images/arrowRight2.png';
+  static const examManMen = 'assets/images/examManMen.png';
 }
 
 

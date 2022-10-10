@@ -21,13 +21,13 @@ class AppRoute {
     return materialContext;
   }
 
-  /*static Future<bool> saveRouteName(String routeName) async {
+  /*static Future<bool> saveRoutePageName(String routeName) async {
     final int res = await AppDB.setReplaceKv(Keys.setting$lastRouteName, routeName);
 
     return res > 0;
   }
 
-  static String? fetchRouteScreenName() {
+  static String? fetchRoutePageName() {
     return AppDB.fetchKv(Keys.setting$lastRouteName);
   }
 
@@ -46,17 +46,21 @@ class AppRoute {
     //AppNavigator.popRoutesUntilRoot(AppRoute.getContext());
 
     while(canPop(context)){
-      pop(context);
+      popTopView(context);
     }
   }
 
   static bool canPop(BuildContext context) {
-    return Navigator.of(context).canPop();
+    return AppNavigator.canPop(context);
   }
 
-  static void pop(BuildContext context) {
-    Navigator.of(context).pop();
+  static void popTopView(BuildContext context) {
+    AppNavigator.pop(context);
   }
+
+  /*static void popPage(BuildContext context) {
+    GoRouter.of(context).pop();
+  }*/
 
   static void push(BuildContext context, Widget page, {dynamic extra}) {
     final r = MaterialPageRoute(builder: (ctx){
@@ -65,6 +69,15 @@ class AppRoute {
 
     Navigator.of(context).push(r);
   }
+  
+  /*static void push(BuildContext context, String address, {dynamic extra}) {
+    if(kIsWeb){
+      GoRouter.of(context).go(address, extra: extra);
+    }
+    else {
+      GoRouter.of(context).push(address, extra: extra);
+    }
+  }*/
 
   static void replace(BuildContext context, Widget page, {dynamic extra}) {
     final r = MaterialPageRoute(builder: (ctx){
@@ -76,25 +89,19 @@ class AppRoute {
 
   static void pushNamed(BuildContext context, String name, {dynamic extra}) {
     Navigator.of(context).pushNamed(name, arguments: extra);
+  
+    /*if(kIsWeb){
+      GoRouter.of(context).goNamed(name, params: {}, extra: extra);
+    }
+    else {
+      GoRouter.of(context).pushNamed(name, params: {}, extra: extra);
+    }*/
   }
 
   static void replaceNamed(BuildContext context, String name, {dynamic extra}) {
     Navigator.of(context).pushReplacementNamed(name, arguments: extra);
+    //GoRouter.of(context).replaceNamed(name, params: {}, extra: extra);
   }
-
-  /*static void push(BuildContext context, String address, {dynamic extra}) {
-    Navigator.of(context).push(r);
-  }*/
-
-  /*static Future<bool> saveRouteName(String routeName) async {
-    final int res = await AppDB.setReplaceKv(Keys.setting$lastRouteName, routeName);
-
-    return res > 0;
-  }
-
-  static String? fetchRoutePageName() {
-    return AppDB.fetchKv(Keys.setting$lastRouteName);
-  }*/
 }
 ///============================================================================================
 class MyPageRoute extends PageRouteBuilder {

@@ -22,7 +22,10 @@ class PublicAccess {
   static String serverApi = SettingsManager.settingsModel.httpAddress;
   /// {id: 1, name: پایه, order: 1}, {id: 2, name: مبتدی, order: 2}, {id: 3, name: متوسط, order: 3}, {id: 4, name: پیشرفته, order: 4}
   static List<Map> courseLevels = [];
+  /// login, determiningCourseLevel
   static Map advertisingVideos = {};
+  /// "supportPhoneNumber": "031-32355205","supportEmail": "support@bigbango.ir","conditionTermsLink": "google.com", "description": "بیگ‌‌بنگو اپلیکیشن آموزش زبان"
+  static Map contacts = {};
   static ClassicFooter classicFooter = const ClassicFooter(
     loadingText: '',
     idleText: '',

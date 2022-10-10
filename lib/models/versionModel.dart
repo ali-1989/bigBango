@@ -15,7 +15,7 @@ class VersionModel {
     newVersionName = map['version'];
     newVersionCode = map['new_version_code']?? 0;
     description = map['description'];
-    restricted = map['isForce'];
+    restricted = map['isForce']?? false;
     directLink = map['downloadLink'];
     storeLink = map['storeLink'];
     newVersionTs = map['createdAt'];

@@ -16,6 +16,7 @@ import 'package:im_animations/im_animations.dart';
 import 'package:iris_tools/api/checker.dart';
 import 'package:iris_tools/api/helpers/inputFormatter.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
+import 'package:android_sms_retriever/android_sms_retriever.dart';
 
 class PhoneNumberPage extends StatefulWidget {
   PhoneNumberPage({Key? key}) : super(key: key);
@@ -205,7 +206,9 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
 
   void requestSendOtp(String phoneNumber) async {
     showLoading();
-    final httpRequester = await LoginService.requestSendOtp(phoneNumber: phoneNumber);
+
+    final sign = (await AndroidSmsRetriever.getAppSignature())?? '';
+    final httpRequester = await LoginService.requestSendOtp(phoneNumber: phoneNumber, sign: sign);
     await hideLoading();
 
     if(httpRequester == null){
@@ -228,6 +231,6 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
       return;
     }
 
-    AppRoute.push(context, OtpPage(phoneNumber: phoneNumber));
+    AppRoute.push(context, OtpPage(phoneNumber: phoneNumber, sign: sign));
   }
 }

@@ -286,7 +286,8 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
     }
 
     await showPersianDatePicker(
-      context,margin: EdgeInsets.only(bottom: 50),
+      context,
+       // margin: EdgeInsets.only(bottom: 50),
       (context, Date date) async {
         birthDate = date.toDateTime();
         birthDateText = DateTools.dateOnlyRelative(birthDate!);
@@ -299,7 +300,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
         initYear: curBirthdate?.year,
       border: const BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15)),
       validate: (ctx, date) {
-        return date.year < 1402;
+        return date.year < 1398;
       },
       submitButtonStyle: ButtonsStyle(
         text: AppMessages.select,
@@ -336,12 +337,12 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
       return;
     }
 
-    /*if(email.isNotEmpty){
-      if(!Checker.isValidEmail(email)){
+    if(email.isNotEmpty){
+      if(!isValidEmail(email)){
         AppSnack.showError(context, AppMessages.emailFormatInCorrect);
         return;
       }
-    }*/
+    }
 
     if(birthDate == null){
       AppSnack.showError(context, AppMessages.birthdateNotDefined);
@@ -424,9 +425,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
     requester.httpRequestEvents.onStatusOk = (requester, js) async {
       final data = js[Keys.data];
       final message = js[Keys.message];
-  print('///////////////////////////////////////////////');
-  Tools.verbosePrint(js);//todo
-  print('///////////////////////////////////////////////');
+
       await Session.login$newProfileData(data);
       await AppDB.deleteKv(Keys.setting$registerPhoneNumber);
 
@@ -439,5 +438,18 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
     requester.methodType = MethodType.post;
     requester.bodyJson = js;
     requester.request(context);
+  }
+
+  static bool isValidEmail(String email) {
+
+    var ePattern = '''^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@
+        (([(\d|[1-9]\d|1[0-9][0-9]|(2([0-4]\d|5[0-5])))\.
+        (\d|[1-9]\d|1[0-9][0-9]|(2([0-4]\d|5[0-5])))\.
+        (\d|[1-9]\d|1[0-9][0-9]|(2([0-4]\d|5[0-5])))\.
+        (\d|[1-9]\d|1[0-9][0-9]|(2([0-4]\d|5[0-5])))])|(([a-zA-Z\\-0-9]+\.)+[a-zA-Z]{2,})\$''';
+
+
+    final regExp = RegExp(ePattern);
+    return regExp.hasMatch(email);
   }
 }

@@ -128,7 +128,7 @@ class UserModel {
 
   @override
   String toString(){
-    return '$userId _ name: $name _ family: $family _ mobile: $mobile _ sex: $gender ';
+    return '$userId _ name: $name _ family: $family _ mobile: $mobile _ sex: $gender | token: ${token?.token} , refresh Token: ${token?.refreshToken} ';
   }
 }
 ///=======================================================================================================
@@ -141,6 +141,8 @@ class Token {
 
   Token.fromMap(Map json) {
     token = json[Keys.token];
+    refreshToken = json['refreshToken'];
+    expireDate = DateHelper.tsToSystemDate(json[Keys.expire]);
 
     parseToken();
   }

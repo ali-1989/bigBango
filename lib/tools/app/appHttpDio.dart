@@ -2,6 +2,7 @@ import 'dart:convert' as system_convert;
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:app/system/publicAccess.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +11,6 @@ import 'package:http_parser/http_parser.dart';
 import 'package:iris_tools/api/converter.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/listHelper.dart';
-import 'package:iris_tools/api/logger/logger.dart';
 
 
 class AppHttpDio {
@@ -23,7 +23,7 @@ class AppHttpDio {
 	}
 
 	static HttpRequester send(HttpItem item, {BaseOptions? options}){
-		if(item.debugMode) {
+		if(item.debugMode && !kIsWeb) {
 			var txt = '\n-------------------------http debug\n';
 			txt += 'url: ${item.fullUrl}\n';
 			txt += 'Method: ${item.method}\n';
@@ -32,7 +32,7 @@ class AppHttpDio {
 				txt += 'Body: ${item.body} \n------------------------- End';
 			}
 
-			Logger.L.logToScreen(txt);
+			PublicAccess.logger.logToAll(txt);
 		}
 
 		item.prepareMultiParts();
@@ -81,7 +81,7 @@ class AppHttpDio {
 									 txt += 'statusCode:  ${res.statusCode}\n';
 									 txt += 'data: ${res.data}\n-----------------------End';
 
-									 Logger.L.logToScreen(txt);
+									 PublicAccess.logger.logToAll(txt);
 								 }
 
 								itemRes._response = res;
@@ -101,7 +101,7 @@ class AppHttpDio {
 									txt += 'data: ${err.response?.data}';
 									txt += 'error: ${err.error} \n--------------------------- End';
 
-									Logger.L.logToScreen(txt);
+									PublicAccess.logger.logToAll(txt);
 								}
 
 								final ro = RequestOptions(path: uri);
@@ -143,8 +143,8 @@ class AppHttpDio {
 	}
 
 	static HttpRequester download(HttpItem item, String savePath, {BaseOptions? options}){
-		if(item.debugMode) {
-
+		if(item.debugMode && !kIsWeb) {
+			PublicAccess.logger.logToAll('==== Stack Trace : ${StackTrace.current.toString()}');
 		}
 
 		final itemRes = HttpRequester();

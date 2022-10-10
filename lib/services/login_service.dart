@@ -18,12 +18,13 @@ import 'package:iris_tools/api/system.dart';
 class LoginService {
   LoginService._();
 
-  static Future<HttpRequester?> requestSendOtp({CountryModel? countryModel, required String phoneNumber}) async {
+  static Future<HttpRequester?> requestSendOtp({CountryModel? countryModel, required String phoneNumber, required String sign}) async {
     final http = HttpItem();
     final result = Completer<HttpRequester?>();
 
     final js = {};
     js[Keys.mobileNumber] = phoneNumber;
+    js['smsReaderSignature'] = sign;
 
     http.fullUrl = '${PublicAccess.serverApi}/login';
     http.method = 'POST';
@@ -108,9 +109,11 @@ class LoginService {
 
       final js = JsonHelper.jsonToMap(response.data);
       final data = js?['data']?? {};
+
       PublicAccess.courseLevels = Converter.correctList<Map>(data['courseLevels'])?? [];
-      PublicAccess.advertisingVideos = data['advertisingVideos']?? {}; // login, determiningCourseLevel
-      final versionModel = VersionModel.fromMap(data['version']);
+      PublicAccess.advertisingVideos = data['advertisingVideos']?? {};
+      PublicAccess.contacts = data['contact']?? {};
+      final versionModel = VersionModel.fromMap(data['version']?? {});
       VersionManager.checkAppHasNewVersion(AppRoute.getContext(), versionModel);
 
       result.complete(request);

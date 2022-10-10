@@ -11,7 +11,6 @@ import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
-import 'package:iris_tools/api/tools.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -19,9 +18,11 @@ import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class OtpPage extends StatefulWidget {
   final String phoneNumber;
+  final String sign;
 
   const OtpPage({
     required this.phoneNumber,
+    required this.sign,
     Key? key,
   }) : super(key: key);
 
@@ -134,7 +135,7 @@ class _OtpPageState extends StateBase<OtpPage> {
                                   closeKeyboardWhenCompleted: true,
                                   //senderPhoneNumber: ,
                                   controller: pinTextCtr,
-                                  smsCodeMatcher: 'xkij3pr8Ot',
+                                  smsCodeMatcher: widget.sign,
                                   defaultPinTheme: PinTheme(
                                     width: 56,
                                     height: 56,
@@ -241,11 +242,11 @@ class _OtpPageState extends StateBase<OtpPage> {
   }
 
   void changeNumberClick(){
-    AppRoute.pop(context);
+    AppRoute.popTopView(context);
   }
 
   void resendOtpCode() async {
-    final httpRequester = await LoginService.requestSendOtp(phoneNumber: widget.phoneNumber);
+    final httpRequester = await LoginService.requestSendOtp(phoneNumber: widget.phoneNumber, sign: widget.sign);
 
     if(httpRequester == null){
       AppSnack.showSnack$errorCommunicatingServer(context);
@@ -304,9 +305,6 @@ class _OtpPageState extends StateBase<OtpPage> {
       AppRoute.backToRoot(context);
     }
     else {
-      print('///////////////////////////////////////////////');
-      Tools.verbosePrint(dataJs);//todo
-      print('///////////////////////////////////////////////');
       await Session.login$newProfileData(dataJs);
       await hideLoading();
       AppBroadcast.reBuildMaterial();

@@ -68,11 +68,11 @@ class MyApp extends StatelessWidget {
               PointerDeviceKind.touch,
             },
           ),
-          home: materialHomeBuilder(),
+          home: materialHomeBuilder(null),
           builder: (subContext, home) {
             return Directionality(
                 textDirection: AppThemes.instance.textDirection,
-                child: home!
+                child: home! //materialHomeBuilder(home)
             );
           },
         );
@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Widget materialHomeBuilder(){
+  Widget materialHomeBuilder(Widget? firstPage){
     return Builder(
       builder: (subContext){
         AppRoute.materialContext = subContext;
@@ -138,9 +138,3 @@ zonedGuardedCatch(error, sTrace) {
     throw error;
   }
 }
-/*if(kIsWeb){
-    flutterBindingInitialize();
-  }
-  else {
-    Timer(const Duration(milliseconds: 100), flutterBindingInitialize);
-  }*/

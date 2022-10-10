@@ -435,6 +435,7 @@ class AppSheet {
       String routeName, {
         Color? backgroundColor,
         bool isDismissible = true,
+        EdgeInsets? padding,
       }) {
 
     final view = BottomSheet(
@@ -448,12 +449,15 @@ class AppSheet {
           )
       ),
       builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ...widgets,
-          ],
+        return Padding(
+          padding: padding?? const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...widgets,
+            ],
+          ),
         );
       },
     ).wrapListTileTheme();
@@ -550,6 +554,13 @@ class AppSheet {
     return showSheetOneAction<T>(context, AppMessages.accountIsBlock, null);
   }
 
+  /*static Future<T?> showSheet$YouDoNotHaveAccess<T>(BuildContext context) {
+    return showSheetOneAction<T>(context, AppMessages.sorryYouDoNotHaveAccess, null);
+  }
+
+  static Future<T?> showSheet$ThereAreNoResults<T>(BuildContext context) {
+    return showSheetOneAction<T>(context, AppMessages.thereAreNoResults, null);
+  }*/
   ///======== third party package ===============================================================================
   static void showSheetDialog(
       BuildContext context, {

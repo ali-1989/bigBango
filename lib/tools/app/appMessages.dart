@@ -321,15 +321,15 @@ class AppMessages {
   }
 
   static String get enterYourFamily {
-    return 'لطفا فامیلی خود را وارد کنید';
+    return 'لطفا نام خانوادگی خود را وارد کنید';
   }
 
   static String get yourFamilyIsLittle {
-    return 'فامیلی کوتاه است';
+    return 'نام خانوادگی کوتاه است';
   }
 
   static String get emailFormatInCorrect {
-    return 'قالب فرمت درست نیست';
+    return 'قالب ایمیل درست نیست';
   }
 
   static String get inviteCodeInCorrect {

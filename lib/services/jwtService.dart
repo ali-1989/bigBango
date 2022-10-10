@@ -9,9 +9,6 @@ import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class JwtService {
-  static String? refreshToken;
-  static String? accessToken;
-
   JwtService._();
 
   static Map decodeToken(String token){
@@ -59,20 +56,20 @@ class JwtService {
     return null;
   }
 
-  static bool refreshTokenIsOk(){
-    if(refreshToken == null){
+  static bool refreshTokenIsOk(String? rToken){
+    if(rToken == null){
       return false;
     }
 
-    return !isExpired(refreshToken!);
+    return !isExpired(rToken);
   }
 
-  static bool accessTokenIsOk(){
+  static bool accessTokenIsOk(String? accessToken){
     if(accessToken == null){
       return false;
     }
 
-    return !isExpired(accessToken!);
+    return !isExpired(accessToken);
   }
 
   static Future<bool> requestNewToken(UserModel um) async {
@@ -89,8 +86,6 @@ class JwtService {
 
     final a = AppHttpDio.send(r);
     await a.response;
-
-    print('////////////////////////////// aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa new token: ${a.responseData} , stasus:${a.responseData?.statusCode}');
 
     if(a.responseData?.statusCode == 200){
       final dataJs = a.getBodyAsJson()!;
