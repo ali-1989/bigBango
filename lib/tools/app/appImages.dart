@@ -63,6 +63,7 @@ class AppImages {
   static const returnArrow = 'assets/images/returnArrow.png';
   static const arrowRight2 = 'assets/images/arrowRight2.png';
   static const examManMen = 'assets/images/examManMen.png';
+  static const noImage = 'assets/images/noImage.png';
 }
 
 

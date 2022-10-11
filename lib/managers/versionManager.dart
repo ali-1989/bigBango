@@ -77,7 +77,7 @@ class VersionManager {
 */
 
   static void checkAppHasNewVersion(BuildContext context, VersionModel serverVersion) async {
-    var v = serverVersion.newVersionName!;
+    var v = serverVersion.newVersionName;
     v = v.replaceAll('.', '');
 
     if(MathHelper.toInt(v) > Constants.appVersionCode){

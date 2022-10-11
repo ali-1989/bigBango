@@ -144,6 +144,10 @@ class AppMessages {
     return 'ورود';
   }
 
+  static String get back {
+    return 'بازگشت';
+  }
+
   static String get errorOccur {
     return 'خطایی رخ داده';
   }
@@ -346,5 +350,13 @@ class AppMessages {
 
   static String get emailNotCorrect {
     return 'ایمیل معتبر نیست';
+  }
+
+  static String get youFinishedThis {
+    return 'این بخش را به پایان رساندید';
+  }
+
+  static String get greetingForYou {
+    return 'تبریک بابت تلاشت';
   }
 }

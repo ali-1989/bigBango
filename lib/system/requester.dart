@@ -111,21 +111,21 @@ class Requester {
     });
 
     f = f.then((val) async {
+      if(_httpRequester.responseData?.statusCode == 401){
+        final rToken = await JwtService.requestNewToken(Session.getLastLoginUser()!);
+
+        if(rToken) {
+          request(context, promptErrors);
+        }
+
+        return;
+      }
+
       await httpRequestEvents.onAnyState?.call(_httpRequester);
 
       if(!_httpRequester.isOk){
         if(debug){
           Logger.L.logToScreen('>> Response receive, but is not ok | $val');
-        }
-
-        if(_httpRequester.responseData?.statusCode == 401){
-          final rToken = await JwtService.requestNewToken(Session.getLastLoginUser()!);
-
-          if(rToken) {
-            request(context, promptErrors);
-          }
-
-          return;
         }
 
         await httpRequestEvents.onFailState?.call(_httpRequester, val);

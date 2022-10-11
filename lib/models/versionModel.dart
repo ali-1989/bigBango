@@ -1,6 +1,6 @@
 
 class VersionModel {
-  String? newVersionName;
+  String newVersionName = '0';
   int newVersionCode = 0;
   String? description;
   bool restricted = false;
@@ -12,7 +12,7 @@ class VersionModel {
   VersionModel();
 
   VersionModel.fromMap(Map map) {
-    newVersionName = map['version'];
+    newVersionName = map['code']?? '0';
     newVersionCode = map['new_version_code']?? 0;
     description = map['description'];
     restricted = map['isForce']?? false;
@@ -24,7 +24,7 @@ class VersionModel {
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{};
 
-    map['version'] = newVersionName;
+    map['code'] = newVersionName;
     map['new_version_code'] = newVersionCode;
     map['description'] = description;
     map['isForce'] = restricted;

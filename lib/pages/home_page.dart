@@ -7,8 +7,8 @@ import 'package:app/tools/app/appMessages.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/views/customCard.dart';
+import 'package:app/views/lessonSegmentView.dart';
 import 'package:extended_sliver/extended_sliver.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -480,7 +480,7 @@ class HomePageState extends StateBase<HomePage> {
                               Expanded(
                                   child: GestureDetector(
                                     onTap: (){
-                                      onLessonSectionClick(lesson, 'گرامر');
+                                      onLessonSegmentClick(lesson, 'گرامر');
                                     },
                                     child: Stack(
                                       children: [
@@ -541,7 +541,7 @@ class HomePageState extends StateBase<HomePage> {
                               Expanded(
                                   child: GestureDetector(
                                     onTap: (){
-                                      onLessonSectionClick(lesson, 'واژه آموزی');
+                                      onLessonSegmentClick(lesson, 'واژه آموزی');
                                     },
                                     child: Stack(
                                       children: [
@@ -609,7 +609,7 @@ class HomePageState extends StateBase<HomePage> {
                               Expanded(
                                   child: GestureDetector(
                                     onTap: (){
-                                      onLessonSectionClick(lesson, 'خواندن');
+                                      onLessonSegmentClick(lesson, 'خواندن');
                                     },
                                     child: Stack(
                                       children: [
@@ -670,7 +670,7 @@ class HomePageState extends StateBase<HomePage> {
                               Expanded(
                                   child: GestureDetector(
                                     onTap: (){
-                                      onLessonSectionClick(lesson, 'شنیدن');
+                                      onLessonSegmentClick(lesson, 'شنیدن');
                                     },
                                     child: Stack(
                                       children: [
@@ -814,10 +814,10 @@ class HomePageState extends StateBase<HomePage> {
     );
   }
 
-  void onLessonSectionClick(LessonModel lesson, String section){
-    final inject = LessonContentViewInjection();
+  void onLessonSegmentClick(LessonModel lesson, String section){
+    final inject = LessonSegmentViewInjection();
     inject.lessonModel = lesson;
-    inject.section = section;
+    inject.segmentTitle = section;
 
     final view = OverlayScreenView(
       content: GestureDetector(
@@ -828,7 +828,7 @@ class HomePageState extends StateBase<HomePage> {
         child: GestureDetector(
           onTap: (){},
           child: SizedBox.expand(
-              child: LessonContentView(injection: inject)
+              child: LessonSegmentView(injection: inject)
           ),
         ),
       ),
@@ -856,132 +856,5 @@ class HomePageState extends StateBase<HomePage> {
     assistCtr.updateMain();
   }
 }
-///---------------------------------------------------------------------------------------
-class LessonContentViewInjection {
-  late LessonModel lessonModel;
-  late String section;
-}
 
-class LessonContentView extends StatefulWidget {
-  final LessonContentViewInjection injection;
-
-  const LessonContentView({
-    required this.injection,
-    Key? key
-  }) : super(key: key);
-
-  @override
-  State<LessonContentView> createState() => _LessonContentViewState();
-}
-
-class _LessonContentViewState extends State<LessonContentView> {
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(25)),
-          child: ColoredBox(
-            color: Colors.white,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(AppImages.lessonListIco),
-                      SizedBox(width: 10),
-                      Text(widget.injection.lessonModel.title).bold().fsR(3),
-                    ],
-                  ),
-
-                  SizedBox(height: 10),
-                  Chip(
-                      label: Text(widget.injection.section).bold().color(Colors.white),
-                      labelPadding: EdgeInsets.symmetric(horizontal: 10),
-                      visualDensity: VisualDensity.compact
-                  ),
-
-                  SizedBox(height: 10),
-                  Image.asset(AppImages.doutar),
-                  SizedBox(height: 10),
-
-                  Row(
-                    children: [
-                      Expanded(
-                          child: CustomCard(
-                            color: Colors.grey.shade300,
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10),
-                                CustomCard(
-                                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 11),
-                                    radius: 14,
-                                    child: Image.asset(AppImages.abcIco, width: 25)
-                                ),
-                                SizedBox(height: 15),
-                                Text('<< بخش اول >>'),
-                                SizedBox(height: 10),
-                                Text('کلمات').bold(),
-                                SizedBox(height: 15),
-                              ],
-                            ),
-                          )
-                      ),
-
-                      SizedBox(width: 10),
-
-                      Expanded(
-                          child: CustomCard(
-                            color: Colors.grey.shade300,
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10),
-                                CustomCard(
-                                  padding: EdgeInsets.all(6),
-                                    radius: 14,
-                                    child: Image.asset(AppImages.messageIco)
-                                ),
-                                SizedBox(height: 15),
-                                Text('<< بخش دوم >>'),
-                                SizedBox(height: 10),
-                                Text('اصطلاحات').bold(),
-                                SizedBox(height: 15),
-                              ],
-                            ),
-                          )
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 15),
-                  CustomCard(
-                    color: Colors.grey.shade300,
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      child: Row(
-                        children: [
-                          CustomCard(
-                            padding: EdgeInsets.all(6),
-                            radius: 12,
-                            child: Image.asset(AppImages.exerciseIco),
-                          ),
-
-                          SizedBox(width: 10),
-                          Text('<< تمرین >>')
-                        ],
-                      )
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 

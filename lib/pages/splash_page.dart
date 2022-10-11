@@ -128,8 +128,7 @@ class SplashScreenState extends StateBase<SplashPage> {
         if(Session.hasAnyLogin()){
           System.showBothStatusBar();
 
-          print(Session.getLastLoginUser());
-          print('---------------------------------------');
+          //print(Session.getLastLoginUser());
           final user = Session.getLastLoginUser()!;
 
           if(user.courseLevelId == null){

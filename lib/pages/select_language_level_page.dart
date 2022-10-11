@@ -304,6 +304,6 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
     requester.methodType = MethodType.put;
 
     showLoading();
-    requester.request(context, true);
+    requester.request(context, false);
   }
 }
