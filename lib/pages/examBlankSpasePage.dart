@@ -34,37 +34,42 @@ class ExamBlankSpacePage extends StatefulWidget {
 class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
   List<ExamBlankModel> examItems = [];
   bool showAnswers = false;
+  late TextStyle questionNormalStyle;
 
   @override
   void initState(){
     super.initState();
 
+    questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
+
     List.generate(10, (index) {
       final m = ExamBlankModel()..id = index;
       m.question = generateWords(20, 2, 10);
+      //m.question = '*****${m.question}';
 
       examItems.add(m);
     });
 
     for(final k in examItems){
-      final splits = k.question.split('*****');
-
-      for(final f in splits) {
-        k.userAnswers.add('');
-      }
+      k.doSplitQuestion();
     }
   }
 
   String generateWords(int wordCount, int minWordLen, int maxWordLean){
     final List<String> words = [];
     words.add('hi');
+    words.add('hello');
     words.add('and');
+    words.add('a');
+    words.add('an');
+    words.add('is');
+    words.add('was');
+    words.add('has');
+    words.add('the');
     words.add('good');
     words.add('goodBy');
     words.add('good morning');
-    words.add('hello');
     words.add('what');
-    words.add('is');
     words.add('not');
     words.add('same');
     words.add('some');
@@ -79,8 +84,15 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
     words.add('wallet');
     words.add('device');
     words.add('go');
+    words.add('come');
     words.add('back');
     words.add('next');
+    words.add('glass');
+    words.add('dish');
+    words.add('he');
+    words.add('she');
+    words.add('we');
+
 
     List<String> res = [];
     final r = Random();
@@ -194,10 +206,7 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
               style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
               ),
-              onPressed: (){
-                showAnswers = !showAnswers;
-                assistCtr.updateMain();
-              },
+              onPressed: onCheckClick,
               child: Text('ثبت و بررسی'),
             ),
           ),
@@ -209,110 +218,8 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
 
   Widget listItemBuilder(ctx, idx){
     final item = examItems[idx];
-    final List<String> splits = item.question.split('*****');
-    final List<InlineSpan> spans = [];
+    final List<InlineSpan> spans = generateSpans(item);
 
-    for(int i = 0; i < splits.length; i++){
-      spans.add(TextSpan(text: splits[i], style: TextStyle(fontSize: 16, color: Colors.black)));
-
-      if(i < splits.length-1) {
-        String t = '';
-        bool hasUserAnswer = item.userAnswers[i] != '';
-
-        if(showAnswers){
-          if(item.userAnswers[i] == 'hi'){
-            spans.add(WidgetSpan(child: Image.asset(AppImages.trueCheckIco)));
-          }
-          else {
-            spans.add(WidgetSpan(child: Image.asset(AppImages.falseCheckIco)));
-          }
-        }
-
-        // ‍ \u2060
-        if(hasUserAnswer){
-          t = '${showAnswers? '\u00A0' : ' '}${item.userAnswers[i]} ';
-        }
-        else {
-          t = ' [\u00A0____\u00A0] ';
-        }
-
-
-
-        final s = TextSpan(
-            text: t,
-            style: TextStyle(fontSize: 16, color: hasUserAnswer? Colors.blue: Colors.blue.shade200),
-            recognizer: TapGestureRecognizer()..onTapUp = (de){
-
-              late final OverlayEntry over;
-              TextEditingController tControl = TextEditingController();
-              FocusNode focusNode = FocusNode();
-              tControl.text = item.userAnswers[i];
-
-              over = OverlayEntry(
-                  builder: (BuildContext context) {
-                    return Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: GestureDetector(
-                            onTap: (){
-                              over.remove();
-                              over.dispose();
-                              tControl.dispose();
-                            },
-                          ),
-                        ),
-
-                        Positioned(
-                          top: 60,
-                          left: 0,
-                          right: 0,
-                          child: AnimationPositionScale(
-                            x: de.globalPosition.dx,
-                            y: de.globalPosition.dy,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 14.0),
-                              child: Card(
-                                  color: Colors.blue.shade200,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                                    child: Directionality(
-                                      textDirection: TextDirection.ltr,
-                                      child: TextField(
-                                        controller: tControl,
-                                        focusNode: focusNode,
-                                        style: TextStyle(fontSize: 16),
-                                        onChanged: (t){
-                                          item.userAnswers[i] = t.trim();
-                                          assistCtr.updateMain();
-                                        },
-                                      ),
-                                    ),
-                                  )
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-              );
-
-              AppOverlay.showOverlay(context, over);
-              Future.delayed(Duration(milliseconds: 700), (){
-                tControl.selection = TextSelection.collapsed(offset: item.userAnswers[i].length);
-                focusNode.requestFocus();
-              });
-          },
-        );
-
-        spans.add(s);
-      }
-    }
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -341,6 +248,150 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
         ],
       ),
     );
+  }
+
+  void onCheckClick(){
+    showAnswers = !showAnswers;
+    assistCtr.updateMain();
+  }
+
+  List<InlineSpan> generateSpans(ExamBlankModel model){
+    final List<InlineSpan> spans = [];
+
+    for(int i = 0; i < model.questionSplit.length; i++) {
+      spans.add(TextSpan(text: model.questionSplit[i], style: questionNormalStyle));
+
+      if(i < model.questionSplit.length-1) {
+        InlineSpan blankSpan;
+        String blankText = '';
+        Color blankColor;
+        bool hasUserAnswer = model.userAnswers[i].isNotEmpty;
+        final tapRecognizer = TapGestureRecognizer()..onTapUp = (gesDetail){
+
+          if(showAnswers){
+            return;
+          }
+
+          late final OverlayEntry over;
+          TextEditingController tControl = TextEditingController();
+          FocusNode focusNode = FocusNode();
+          tControl.text = model.userAnswers[i];
+
+          over = OverlayEntry(
+              builder: (_) {
+                return Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Positioned.fill(
+                      child: GestureDetector(
+                        onTap: (){
+                          over.remove();
+                          over.dispose();
+                          focusNode.dispose();
+                          tControl.dispose();
+                        },
+                      ),
+                    ),
+
+                    Positioned(
+                      top: 60,
+                      left: 0,
+                      right: 0,
+                      child: AnimationPositionScale(
+                        x: gesDetail.globalPosition.dx,
+                        y: gesDetail.globalPosition.dy,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Card(
+                              color: Colors.blue.shade200,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                child: Directionality(
+                                  textDirection: TextDirection.ltr,
+                                  child: TextField(
+                                    controller: tControl,
+                                    focusNode: focusNode,
+                                    style: TextStyle(fontSize: 16),
+                                    onChanged: (t){
+                                      model.userAnswers[i] = t.trim();
+                                      assistCtr.updateMain();
+                                    },
+                                    onSubmitted: (t){
+                                      over.remove();
+                                      over.dispose();
+                                      focusNode.dispose();
+                                      //tControl.dispose();
+                                    },
+                                  ),
+                                ),
+                              )
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
+          );
+
+          AppOverlay.showOverlay(context, over);
+          Future.delayed(Duration(milliseconds: 600), (){
+            tControl.selection = TextSelection.collapsed(offset: model.userAnswers[i].length);
+            focusNode.requestFocus();
+          });
+        };
+
+        if(showAnswers){
+          if(model.userAnswers[i] == 'hi'){
+            blankColor = Colors.green;
+            blankSpan = WidgetSpan(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(AppImages.trueCheckIco),
+                    SizedBox(width: 5),
+                    Text(model.userAnswers[i], style: questionNormalStyle.copyWith(color: blankColor))
+                  ],
+                )
+            );
+          }
+          else {
+            blankColor = Colors.red;
+            blankText = model.userAnswers[i].isNotEmpty? model.userAnswers[i]: '[\u00A0_\u00A0]';
+            blankSpan = WidgetSpan(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(AppImages.falseCheckIco),
+                    SizedBox(width: 5),
+                    Text(blankText, style: questionNormalStyle.copyWith(color: blankColor))
+                  ],
+                )
+            );
+          }
+        }
+        else {
+          if(hasUserAnswer){
+            blankText = ' ${model.userAnswers[i]} ';
+            blankColor = Colors.blue;
+          }
+          else {
+            blankText = ' [\u00A0____\u00A0] '; // \u202F , \u2007
+            blankColor = Colors.blue.shade200;
+          }
+
+          blankSpan = TextSpan(
+            text: blankText,
+            style: questionNormalStyle.copyWith(color: blankColor),
+            recognizer: tapRecognizer,
+          );
+        }
+
+        spans.add(blankSpan);
+      }
+    }
+
+    return spans;
   }
 }
 
