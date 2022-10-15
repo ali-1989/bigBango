@@ -187,39 +187,62 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
 
           /// exam
           Expanded(
-              child: ListView.separated(
+              child: CustomScrollView(
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                        listItemBuilder,
+                      childCount: examItems.length *2 -1,
+                    ),
+                  ),
+
+                  SliverToBoxAdapter(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(height: 20),
+
+                        SizedBox(
+                          width: double.infinity,
+                          height: 46,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
+                            ),
+                            onPressed: onCheckClick,
+                            child: Text('ثبت و بررسی'),
+                          ),
+                        ),
+
+                        SizedBox(height: 20),
+                      ],
+                    ),
+                  )
+                ],
+              )
+          ),
+
+        /*
+        ListView.separated(
                 itemCount: examItems.length,
                 itemBuilder: listItemBuilder,
                 separatorBuilder: (ctx, idx){
                   return Divider(color: Colors.black, height: 2);
                 },
               )
-          ),
-
-
-
-          SizedBox(height: 14),
-          SizedBox(
-            width: double.infinity,
-            height: 46,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
-              ),
-              onPressed: onCheckClick,
-              child: Text('ثبت و بررسی'),
-            ),
-          ),
-          SizedBox(height: 14),
+         */
         ],
       ),
     );
   }
 
   Widget listItemBuilder(ctx, idx){
-    final item = examItems[idx];
-    final List<InlineSpan> spans = generateSpans(item);
+    if(idx % 2 != 0){
+      return Divider(color: Colors.black, height: 2);
+    }
 
+    final item = examItems[idx~/2];
+    final List<InlineSpan> spans = generateSpans(item);
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -230,7 +253,7 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
           CustomCard(
             color: Colors.white,
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            child: Text('${idx + 1}').bold(weight: FontWeight.w900).fsR(1),
+            child: Text('${idx~/2 + 1}').bold(weight: FontWeight.w900).fsR(1),
           ).wrapBoxBorder(
             padding: EdgeInsets.all(2),
             radius: 9,

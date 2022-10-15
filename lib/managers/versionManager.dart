@@ -2,14 +2,12 @@ import 'dart:async';
 
 import 'package:app/constants.dart';
 import 'package:app/models/versionModel.dart';
+import 'package:app/pages/new_version_page.dart';
 import 'package:app/tools/app/appDb.dart';
-import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
-import 'package:iris_tools/api/helpers/urlHelper.dart';
-import 'package:iris_tools/api/system.dart';
 import '/managers/settingsManager.dart';
 
 class VersionManager {
@@ -86,9 +84,10 @@ class VersionManager {
   }
 
   static void showUpdateDialog(BuildContext context, VersionModel vm) {
-    final msg = vm.description?? AppMessages.newAppVersionIsOk;
+    //final msg = vm.description?? AppMessages.newAppVersionIsOk;
 
-    void closeApp(){
+    AppRoute.push(context, NewVersionPage(versionModel: vm));
+    /*void closeApp(){
       System.exitApp();
     }
 
@@ -105,6 +104,6 @@ class VersionManager {
         UrlHelper.launchLink(vm.directLink?? '');
       },
       noFn: vm.restricted ? closeApp: null,
-    );
+    );*/
   }
 }

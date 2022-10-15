@@ -66,6 +66,9 @@ class AppImages {
   static const noImage = 'assets/images/noImage.png';
   static const trueCheckIco = 'assets/images/trueCheckIco.png';
   static const falseCheckIco = 'assets/images/falseCheckIco.png';
+  static const checkBlack = 'assets/images/checkBlack.png';
+  static const newVersion = 'assets/images/newVersion.png';
+  static const newVersionIco = 'assets/images/newVersionIco.png';
 }
 
 

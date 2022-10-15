@@ -1,4 +1,5 @@
 import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/views/changeLevel.dart';
 import 'package:flutter/foundation.dart';
@@ -83,52 +84,63 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
           ),
         ),
         child: Stack(
+          fit: StackFit.expand,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 15, 15, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 22, 15, 0),
                   child: Row(
                     children: [
                       Image.asset(AppImages.menuIco),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 10),
                       Image.asset(AppImages.bigbangoSmallText),
                     ],
                   ),
                 ),
 
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
-                  child: Row(
-                    children: [
-                      TextButton(
-                        onPressed: onLevelClick,
-                        child: const Text('سطح مبتدی'),
-                      ),
-                      const SizedBox(width: 6),
-                      Image.asset(AppImages.levelBadgeIco),
-                    ],
+                GestureDetector(
+                  onTap: onLevelClick,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 16, 0, 0),
+                    child: Row(
+                      children: [
+                        Icon(AppIcons.arrowDropDown),
+
+                        TextButton(
+                          onPressed: onLevelClick,
+                          style: TextButton.styleFrom(
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              visualDensity: VisualDensity.compact,
+                              padding: EdgeInsets.zero
+                          ),
+                          child: const Text('سطح مبتدی'),
+                        ),
+                        const SizedBox(width: 5),
+                        Image.asset(AppImages.levelBadgeIco),
+                      ],
+                    ),
                   ),
                 )
               ],
             ),
 
-            Center(
-              child: Column(
-                children: const [
-                  SizedBox(height: 4),
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: AssetImage(AppImages.profile),
-                    //child: Image.asset(AppImages.profile, fit: BoxFit.fill),
-                  ),
-                  SizedBox(height: 8),
-                  Text('علی باقری یزدابادی'),
-                ],
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: AssetImage(AppImages.profile),
+                  //child: Image.asset(AppImages.profile, fit: BoxFit.fill),
+                ),
+                SizedBox(height: 20),
+                //SizedBox(height: 8),
+                //Text('علی باقری'),
+              ],
             )
           ],
         ),

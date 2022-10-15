@@ -36,7 +36,6 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
     super.initState();
 
     htmlText = '''
-    <html >
     <body>
     <p>verb (used with object)</p>
     <p><strong>1 ali bagheri is very good:</strong></p>
@@ -45,7 +44,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
     <p><strong>2 ali bagheri is very good ali bagheri is very good ali bagheri is very good:</strong></p>
     <p><span style="color: #ff0000;">&nbsp; &nbsp; she is not good</span></p>
     <p><strong>&nbsp;&nbsp;</strong></p>
-    </body></html>
+    </body>
 ''';
   }
 
@@ -263,7 +262,8 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
 
                     Directionality(
                       textDirection: TextDirection.ltr,
-                      child: HTML.toRichText(context, htmlText, defaultTextStyle: AppThemes.body2TextStyle())),
+                      child: HTML.toRichText(context, htmlText, defaultTextStyle: AppThemes.body2TextStyle())
+                    ),
                   ],
                 ),
               ),

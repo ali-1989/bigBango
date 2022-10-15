@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:app/managers/versionManager.dart';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lessonModel.dart';
+import 'package:app/models/versionModel.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/system/extensions.dart';
@@ -86,18 +88,24 @@ class HomePageState extends StateBase<HomePage> {
                               right: 0,
                               child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 30),
-                              child: Center(
-                                  child: Chip(
-                                    backgroundColor: Colors.white,
-                                      label: RichText(
-                                        text: const TextSpan(
-                                          children: [
-                                            TextSpan(text: 'آکادمی آنلاین آموزش انگلیسی ', style: TextStyle(color: Colors.black)),
-                                            TextSpan(text: 'بیگ بنگو ', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
-                                          ]
-                                        ),
-                                      )
-                                  )
+                              child: GestureDetector(
+                                onTap: (){
+                                  VersionModel vm = VersionModel();
+                                  VersionManager.showUpdateDialog(context, vm);
+                                },
+                                child: Center(
+                                    child: Chip(
+                                      backgroundColor: Colors.white,
+                                        label: RichText(
+                                          text: const TextSpan(
+                                            children: [
+                                              TextSpan(text: 'آکادمی آنلاین آموزش انگلیسی ', style: TextStyle(color: Colors.black)),
+                                              TextSpan(text: 'بیگ بنگو ', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
+                                            ]
+                                          ),
+                                        )
+                                    )
+                                ),
                               ),
                             ),
                             ),
