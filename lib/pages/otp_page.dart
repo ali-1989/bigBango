@@ -1,3 +1,4 @@
+import 'package:android_sms_retriever/android_sms_retriever.dart';
 import 'package:app/managers/fontManager.dart';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/services/login_service.dart';
@@ -10,6 +11,7 @@ import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:pinput/pinput.dart';
@@ -52,6 +54,16 @@ class _OtpPageState extends StateBase<OtpPage> {
 
     addPostOrCall(() {
       stopWatchTimer.onExecute.add(StopWatchExecute.start);
+
+      AndroidSmsRetriever.listenForSms().then((value) {
+        final reg = RegExp(r'(\b[0-9]+\b)', multiLine: true, unicode: true);
+        final mat = reg.firstMatch(value?? '');
+
+        otpCode = LocaleHelper.numberToEnglish(mat?.group(0))?? '';
+        pinTextCtr.text = otpCode;
+
+        callState();
+      });
     });
   }
 
@@ -131,7 +143,7 @@ class _OtpPageState extends StateBase<OtpPage> {
                               Directionality(
                                 textDirection: TextDirection.ltr,
                                 child: Pinput(
-                                  androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsRetrieverApi,
+                                  androidSmsAutofillMethod: AndroidSmsAutofillMethod.none,
                                   closeKeyboardWhenCompleted: true,
                                   //senderPhoneNumber: ,
                                   controller: pinTextCtr,
@@ -269,6 +281,7 @@ class _OtpPageState extends StateBase<OtpPage> {
 
   void sendOtpCode() async {
     showLoading();
+
     final httpRequester = await LoginService.requestVerifyOtp(phoneNumber: widget.phoneNumber, code: otpCode);
 
     if(httpRequester == null){

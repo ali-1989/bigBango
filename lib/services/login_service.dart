@@ -114,6 +114,12 @@ class LoginService {
       PublicAccess.advertisingVideos = data['advertisingVideos']?? {};
       PublicAccess.contacts = data['contact']?? {};
       final versionModel = VersionModel.fromMap(data['version']?? {});
+
+      /* test VersionModel versionModel = VersionModel();
+      versionModel.directLink = 'http://google.com';
+      versionModel.restricted = false;
+      versionModel.newVersionName = '2.0.1';*/
+
       VersionManager.checkAppHasNewVersion(AppRoute.getContext(), versionModel);
 
       result.complete(request);

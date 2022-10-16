@@ -4,7 +4,6 @@ import 'package:app/constants.dart';
 import 'package:app/models/versionModel.dart';
 import 'package:app/pages/new_version_page.dart';
 import 'package:app/tools/app/appDb.dart';
-import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
@@ -84,12 +83,12 @@ class VersionManager {
   }
 
   static void showUpdateDialog(BuildContext context, VersionModel vm) {
-    //final msg = vm.description?? AppMessages.newAppVersionIsOk;
-
     AppRoute.push(context, NewVersionPage(versionModel: vm));
     /*void closeApp(){
       System.exitApp();
     }
+
+    //final msg = vm.description?? AppMessages.newAppVersionIsOk;
 
     final decoration = AppDialogIris.instance.dialogDecoration.copy();
     decoration.positiveButtonBackColor = Colors.blue;

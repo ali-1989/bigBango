@@ -4,8 +4,20 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/helpers/urlHelper.dart';
 import 'package:iris_tools/api/system.dart';
 import 'package:simple_html_css/simple_html_css.dart';
+import 'dart:math';
+
+
+/*
+'''
+<body>
+<span>\u2705</span><p><strong> اضافه شدن لایتنر</strong></p>
+<span>\u2705</span><p><strong> دریافت دروس از سرور</strong></p>
+</body>
+''';
+ */
 
 class NewVersionPage extends StatefulWidget {
   final VersionModel versionModel;
@@ -21,22 +33,20 @@ class NewVersionPage extends StatefulWidget {
 ///================================================================================================
 class _NewVersionPageState extends StateBase<NewVersionPage> {
   String html = '';
-  ScrollController sc = ScrollController();
+
   @override
   void initState(){
     super.initState();
 
-    html = '''
-<body>
-<span>\u2705</span><p><strong> اضافه شدن لایتنر</strong></p>
-<span>\u2705</span><p><strong> دریافت دروس از سرور</strong></p>
-    </body>
-''';
+    html = widget.versionModel.description?? '--';
   }
 
   Future<bool> onBack(){
     if(widget.versionModel.restricted){
       System.exitApp();
+    }
+    else {
+      return Future.value(true);
     }
 
     return Future.value(false);
@@ -102,9 +112,7 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
                         child: Scrollbar(
                           thumbVisibility: true,
                           trackVisibility: false,
-                          controller: sc,
                           child: SingleChildScrollView(
-                            controller: sc,
                             child: HTML.toRichText(context, html, defaultTextStyle: AppThemes.body2TextStyle()),
                           ),
                         ),
@@ -118,10 +126,20 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: (){},
+                          onPressed: onUpdateClick,
                           child: Text('بروز رسانی')
                       ),
                     ),
+                  ),
+
+                  Visibility(
+                    visible: widget.versionModel.directLink != null,
+                      child: Center(
+                        child: TextButton(
+                          onPressed: onDirectLinkClick,
+                          child: Text('لینک مستقیم'),
+                        ),
+                      )
                   ),
 
                   Visibility(
@@ -131,7 +149,7 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
                           onPressed: (){
                             AppNavigator.pop(context);
                           },
-                          child: Text('انصراف'),
+                          child: Text('بعدا'),
                         ),
                       )
                   ),
@@ -146,10 +164,29 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
     );
   }
 
+  void onDirectLinkClick(){
+    UrlHelper.launchLink(widget.versionModel.directLink!);
 
+    if(widget.versionModel.restricted){
+      System.exitApp();
+    }
+    else {
+      AppNavigator.pop(context);
+    }
+  }
+
+  void onUpdateClick(){
+    UrlHelper.launchLink(widget.versionModel.storeLink?? '');
+
+    if(widget.versionModel.restricted){
+      System.exitApp();
+    }
+    else {
+      AppNavigator.pop(context);
+    }
+  }
 }
-
-
+///===============================================================================================
 class MyCustomPainter extends CustomPainter {
 
   @override
@@ -159,8 +196,11 @@ class MyCustomPainter extends CustomPainter {
 
     canvas.drawRect(Rect.fromLTWH(0.0, 0.0, size.width, size.height), paint);
 
-    paint.color = Colors.yellow;
-    canvas.drawArc(Rect.fromLTWH(0.0, 0.0, size.width *3 /2, size.height), 0.0, 3.0, false, paint);
+    paint.color = Colors.white;
+    canvas.drawRect(Rect.fromLTWH(size.width/2, -2, size.width, size.height+2), paint);
+
+    paint.color = Colors.white;
+    canvas.drawArc(Rect.fromLTWH(0.0, -size.height-2, size.width, size.height*2 +2), 0.5 * pi, 0.5 * pi, true, paint);
   }
 
   @override

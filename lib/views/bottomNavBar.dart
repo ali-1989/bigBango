@@ -37,7 +37,7 @@ class BottomNavBarState extends State<BottomNavBar> {
           children: [
             Flexible(
                 child: buildItem('صفحه اصلی',
-                  _isSel(0)? Image.asset(AppImages.homeIcoRed, width: 40) : Image.asset(AppImages.homeIcoBlack, width: 40),
+                  _isSelected(0)? Image.asset(AppImages.homeIcoRed, width: 40) : Image.asset(AppImages.homeIcoBlack, width: 40),
                     0
                 )
             ),
@@ -45,7 +45,7 @@ class BottomNavBarState extends State<BottomNavBar> {
             buildSeparator(),
             Flexible(
                 child: buildItem('لایتنر',
-                    _isSel(1)? Image.asset(AppImages.lightnerIcoRed, width: 40) : Image.asset(AppImages.lightnerIcoBlack, width: 40),
+                    _isSelected(1)? Image.asset(AppImages.lightnerIcoRed, width: 40) : Image.asset(AppImages.lightnerIcoBlack, width: 40),
                     1
                 )
             ),
@@ -53,7 +53,7 @@ class BottomNavBarState extends State<BottomNavBar> {
             buildSeparator(),
             Flexible(
                 child: buildItem('پروفایل',
-                    _isSel(2)? Image.asset(AppImages.userIcoBlack, width: 40, color: Colors.red) : Image.asset(AppImages.userIcoBlack, width: 40),
+                    _isSelected(2)? Image.asset(AppImages.userIcoBlack, width: 40, color: Colors.red) : Image.asset(AppImages.userIcoBlack, width: 40),
                     2
                 )
             ),
@@ -61,7 +61,7 @@ class BottomNavBarState extends State<BottomNavBar> {
             buildSeparator(),
             Flexible(
                 child: buildItem('اعلانات',
-                    _isSel(3)? Image.asset(AppImages.notificationIcoBlack, width: 40, color: Colors.red) : Image.asset(AppImages.notificationIcoBlack, width: 40),
+                    _isSelected(3)? Image.asset(AppImages.notificationIcoBlack, width: 40, color: Colors.red) : Image.asset(AppImages.notificationIcoBlack, width: 40),
                     3
                 )
             ),
@@ -71,7 +71,7 @@ class BottomNavBarState extends State<BottomNavBar> {
     );
   }
 
-  bool _isSel(int idx){
+  bool _isSelected(int idx){
     return widget.selectedItemIndex == idx;
   }
 
@@ -94,7 +94,7 @@ class BottomNavBarState extends State<BottomNavBar> {
         mainAxisSize: MainAxisSize.min,
         children: [
           icon,
-          Text(text),
+          Text(text, style: TextStyle(color: _isSelected(idx)? selectedColor: Colors.black)),
 
           const SizedBox(height: 5),
 
@@ -106,7 +106,7 @@ class BottomNavBarState extends State<BottomNavBar> {
                 height: 3,
                 width: 100,
                 child: ColoredBox(
-                  color: _isSel(idx)? selectedColor: unSelectedColor,
+                  color: _isSelected(idx)? selectedColor: unSelectedColor,
                 ),
               ),
             ),

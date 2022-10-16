@@ -1,13 +1,13 @@
 import 'dart:math';
 
-import 'package:app/managers/versionManager.dart';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lessonModel.dart';
-import 'package:app/models/versionModel.dart';
+import 'package:app/pages/lightner_page.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appOverlay.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:app/views/customCard.dart';
 import 'package:app/views/lessonSegmentView.dart';
 import 'package:extended_sliver/extended_sliver.dart';
@@ -25,7 +25,7 @@ class HomePage extends StatefulWidget {
 ///===================================================================================================================
 class HomePageState extends StateBase<HomePage> {
   List<LessonModel> lessons = [];
-  List<int> openedListIds = [];
+  List<int> openedLessonsIds = [];
 
   @override
   void initState(){
@@ -47,7 +47,7 @@ class HomePageState extends StateBase<HomePage> {
   Widget build(BuildContext context) {
     return Assist(
       controller: assistCtr,
-      builder: (ctx, ctr, data) {
+      builder: (_, ctr, data) {
         return Column(
           children: [
             const SizedBox(height: 60),
@@ -90,8 +90,7 @@ class HomePageState extends StateBase<HomePage> {
                               padding: const EdgeInsets.symmetric(horizontal: 30),
                               child: GestureDetector(
                                 onTap: (){
-                                  VersionModel vm = VersionModel();
-                                  VersionManager.showUpdateDialog(context, vm);
+                                  AppRoute.push(context, LightnerPage());
                                 },
                                 child: Center(
                                     child: Chip(
@@ -275,7 +274,7 @@ class HomePageState extends StateBase<HomePage> {
                       ),
                     ),
 
-
+                    /// lessons list
                     SliverList(
                       delegate: SliverChildBuilderDelegate((ctx, idx){
                             return buildListItem(lessons[idx]);
@@ -846,7 +845,7 @@ class HomePageState extends StateBase<HomePage> {
   }
 
   bool isOpen(LessonModel model){
-    return openedListIds.contains(model.id);
+    return openedLessonsIds.contains(model.id);
   }
 
   void onLessonClick(LessonModel model){
@@ -854,11 +853,11 @@ class HomePageState extends StateBase<HomePage> {
       return;
     }
 
-    if(openedListIds.contains(model.id)){
-      openedListIds.remove(model.id);
+    if(openedLessonsIds.contains(model.id)){
+      openedLessonsIds.remove(model.id);
     }
     else {
-      openedListIds.add(model.id);
+      openedLessonsIds.add(model.id);
     }
 
     assistCtr.updateMain();

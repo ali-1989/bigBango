@@ -1,5 +1,6 @@
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/pages/home_page.dart';
+import 'package:app/pages/lightner_page.dart';
 import 'package:app/views/AppBarCustom.dart';
 import 'package:app/views/bottomNavBar.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class LayoutPageState extends StateBase<LayoutPage> {
               physics: const NeverScrollableScrollPhysics(),
               children: const [
                 HomePage(),
-                HomePage(),
+                LightnerPage(),
                 HomePage(),
                 HomePage(),
               ],

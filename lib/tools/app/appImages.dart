@@ -69,6 +69,7 @@ class AppImages {
   static const checkBlack = 'assets/images/checkBlack.png';
   static const newVersion = 'assets/images/newVersion.png';
   static const newVersionIco = 'assets/images/newVersionIco.png';
+  static const lightner = 'assets/images/lightner.png';
 }
 
 
