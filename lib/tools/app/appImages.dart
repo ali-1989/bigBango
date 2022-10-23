@@ -35,7 +35,7 @@ class AppImages {
   static const levelBadgeIco = 'assets/images/levelBadgeIco.png';
   static const profile = 'assets/images/profile.png';
   static const homeIcoBlack = 'assets/images/homeIcoBlack.png';
-  static const homeIcoRed = 'assets/images/homeIcoRed.png';
+  static const lessonIcoRed = 'assets/images/lessonsIco.png';
   static const lightnerIcoBlack = 'assets/images/lightnerIcoBlack.png';
   static const lightnerIcoRed = 'assets/images/lightnerIcoRed.png';
   static const userIcoBlack = 'assets/images/userIcoBlack.png';

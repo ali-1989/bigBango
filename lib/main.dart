@@ -7,6 +7,7 @@ import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/app/appToast.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,9 @@ Future<void> main() async {
   else {
     runZonedGuarded(() async {
       await mainInitialize();
-      runApp(const MyApp());
+      runApp(DevicePreview(builder: (ctx){
+        return const MyApp();
+      }));
     }, zonedGuardedCatch);
   }
 }
@@ -57,6 +60,7 @@ class MyApp extends StatelessWidget {
           key: AppBroadcast.materialAppKey,
           scaffoldMessengerKey: AppBroadcast.rootScaffoldMessengerKey,
           debugShowCheckedModeBanner: false,
+          useInheritedMediaQuery: true,
           title: Constants.appTitle,
           theme: AppThemes.instance.themeData,
           //darkTheme: ThemeData.dark(),
@@ -72,7 +76,7 @@ class MyApp extends StatelessWidget {
           builder: (subContext, home) {
             return Directionality(
                 textDirection: AppThemes.instance.textDirection,
-                child: home! //materialHomeBuilder(home)
+                child: DevicePreview.appBuilder(subContext, home)// home! //materialHomeBuilder(home)
             );
           },
         );

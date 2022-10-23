@@ -51,11 +51,13 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
 
             SizedBox(
                 width: double.infinity,
-                height: sh*0.58,
+                height: sh * 0.58,
                 child: Stack(
                   fit: StackFit.passthrough,
                   children: [
-                    Center(child: Image.asset(AppImages.register, width: sw*0.88, height: sh*0.58, fit: BoxFit.fill)),
+                    Center(
+                        child: Image.asset(AppImages.register, width: sw*0.88, height: sh*0.58, fit: BoxFit.fill)
+                    ),
 
                     Positioned(
                       top: 122,

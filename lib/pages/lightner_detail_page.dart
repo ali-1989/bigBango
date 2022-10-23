@@ -147,7 +147,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                 child: LinearProgressIndicator(value: 0.3, backgroundColor: Colors.red.shade50)
             ),
 
-            SizedBox(height: 14),
+            SizedBox(height: 60),
 
             DecoratedBox(
                 decoration: BoxDecoration(
@@ -164,11 +164,11 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children:[
-                          CustomCard(
+                          /*CustomCard(
                             padding: EdgeInsets.all(5),
                               color: Colors.red,
                               child: Image.asset(AppImages.lightnerIcoBlack, width: 20, color: Colors.white)
-                          ),
+                          ),*/
 
                           SizedBox(width: 8),
                           CustomCard(
@@ -210,7 +210,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                               child: Text('نمایش معنی')
                           ),
                           secondChild: Padding(
-                            padding: const EdgeInsets.only(top: 12.0),
+                            padding: const EdgeInsets.only(top: 14.0),
                             child: Text('تشکر / سپاس'),
                           ),
                           crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,

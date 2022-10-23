@@ -277,7 +277,7 @@ class AppMessages {
   }
 
   static String get registerFormEnterInviteHint {
-    return 'کد معرف را درصورت وجود وارد کنید';
+    return 'شماره موبایل معرف را درصورت وجود وارد کنید';
   }
 
   static String get birthdate {

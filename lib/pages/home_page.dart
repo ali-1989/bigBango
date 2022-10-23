@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lessonModel.dart';
-import 'package:app/pages/lightner_page.dart';
+import 'package:app/pages/select_language_level_page.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/system/extensions.dart';
@@ -90,7 +90,7 @@ class HomePageState extends StateBase<HomePage> {
                               padding: const EdgeInsets.symmetric(horizontal: 30),
                               child: GestureDetector(
                                 onTap: (){
-                                  AppRoute.push(context, LightnerPage());
+                                  AppRoute.push(context, SelectLanguageLevelPage());
                                 },
                                 child: Center(
                                     child: Chip(

@@ -1,11 +1,15 @@
 
 import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/system/enums.dart';
+import 'package:app/system/publicAccess.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
+import 'package:app/views/video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:im_animations/im_animations.dart';
 import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -46,8 +50,42 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
           body: SizedBox.expand(
               child: Column(
                 children: [
-                  const SizedBox(height: 15),
-                  Image.asset(AppImages.selectLevelBack, height: sh*0.3),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                      width: double.infinity,
+                      //height: sh * 0.58,
+                      child: Stack(
+                        fit: StackFit.passthrough,
+                        children: [
+                          Center(
+                              child: Image.asset(AppImages.selectLevelBack, height: sh*0.3),
+                          ),
+
+                          Positioned(
+                              top: ((sh*0.3)/2)-70,
+                              left: -60,
+                              right: 0,
+                              child: GestureDetector(
+                                onTap: showVideo,
+                                child: Center(
+                                  child: ColorSonar(
+                                      contentAreaRadius: 20.0,
+                                      waveFall: 10.0,
+                                      waveMotionEffect: Curves.linear,
+                                      waveMotion: WaveMotion.synced,
+                                      innerWaveColor: Colors.red.withAlpha(100),
+                                      middleWaveColor: Colors.red.withAlpha(50),
+                                      outerWaveColor: Colors.transparent,
+                                      duration: const Duration(seconds: 2),
+                                      child: Image.asset(AppImages.playIcon, width: 40)
+                                  ),
+                                ),
+                              )
+                          ),
+                        ],
+                      )
+                  ),
+
 
                   const SizedBox(height: 15),
                   Row(
@@ -263,6 +301,29 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
 
   Widget getSelectedBox(){
     return Image.asset(AppImages.selectLevelIco);
+  }
+
+  void showVideo(){
+    showDialog(
+        context: context,
+        builder: (ctx){
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              foregroundColor: Colors.white,
+              iconTheme: const IconThemeData(color: Colors.white),
+              elevation: 0,
+            ),
+            backgroundColor: Colors.black,
+            body: VideoPlayerView(
+              videoSourceType: VideoSourceType.network,
+              autoPlay: true,
+              srcAddress: PublicAccess.advertisingVideos['determiningCourseLevel']?? '',
+            ),
+          );
+        }
+    );
   }
 
   void sendClick(){

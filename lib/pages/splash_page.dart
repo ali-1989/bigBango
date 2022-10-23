@@ -27,6 +27,7 @@ import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
+
 bool _isInit = false;
 bool _isInLoadingSettings = true;
 bool _isConnectToServer = false;

@@ -227,12 +227,12 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                     const SizedBox(height: 10),
                                     TextField(
                                       controller: inviteCodeTextCtr,
+                                      keyboardType: TextInputType.phone,
                                       decoration: inputDecoration.copyWith(
                                         hintText: AppMessages.registerFormEnterInviteHint,
                                         prefixIcon: Image.asset(AppImages.inviteCodeInputIco),
                                       ),
                                     ),
-
                                   ],
                                 ),
                               ),
@@ -355,7 +355,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
     }
 
     if(inviteCode.isNotEmpty){
-      if(inviteCode.length != 5){
+      if(inviteCode.length != 11){
         AppSnack.showError(context, AppMessages.inviteCodeInCorrect);
         return;
       }

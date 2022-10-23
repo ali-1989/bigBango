@@ -36,8 +36,8 @@ class BottomNavBarState extends State<BottomNavBar> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
-                child: buildItem('صفحه اصلی',
-                  _isSelected(0)? Image.asset(AppImages.homeIcoRed, width: 40) : Image.asset(AppImages.homeIcoBlack, width: 40),
+                child: buildItem('دروس',
+                  _isSelected(0)? Image.asset(AppImages.lessonIcoRed, width: 40) : Image.asset(AppImages.homeIcoBlack, width: 40),
                     0
                 )
             ),
