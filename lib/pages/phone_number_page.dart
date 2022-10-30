@@ -218,10 +218,14 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
       return;
     }
 
-    int statusCode = httpRequester.responseData!.statusCode?? 0;
+    int statusCode = httpRequester.responseData?.statusCode?? 0;
 
     if(statusCode != 200){
-      String? message = httpRequester.getBodyAsJson()![Keys.message];
+      String? message;
+
+      if(httpRequester.getBodyAsJson() != null) {
+        message = httpRequester.getBodyAsJson()![Keys.message];
+      }
 
       if(message == null) {
         AppSnack.showSnack$serverNotRespondProperly(context);

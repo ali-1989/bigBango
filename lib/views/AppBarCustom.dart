@@ -1,4 +1,6 @@
 import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/system/session.dart';
+import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/views/changeLevel.dart';
@@ -92,12 +94,18 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 22, 15, 0),
-                  child: Row(
-                    children: [
-                      Image.asset(AppImages.menuIco),
-                      const SizedBox(width: 10),
-                      Image.asset(AppImages.bigbangoSmallText),
-                    ],
+                  child: GestureDetector(
+                    onTap: () async {
+                      await Session.logoffAll();
+                      AppBroadcast.reBuildMaterial();
+                    },
+                    child: Row(
+                      children: [
+                        Image.asset(AppImages.menuIco),
+                        const SizedBox(width: 10),
+                        Image.asset(AppImages.bigbangoSmallText),
+                      ],
+                    ),
                   ),
                 ),
 

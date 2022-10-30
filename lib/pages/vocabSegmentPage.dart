@@ -1,6 +1,8 @@
 import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/lessonModel.dart';
+import 'package:app/models/lessonModels/iSegmentModel.dart';
+import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/system/requester.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
@@ -10,13 +12,13 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:simple_html_css/simple_html_css.dart';
 
-class VocabSegmentPageInjection {
+class VocabSegmentPageInjector {
   late LessonModel lessonModel;
-  late String segmentTitle;
+  late ISegmentModel segment;
 }
 ///-----------------------------------------------------
 class VocabSegmentPage extends StatefulWidget {
-  final VocabSegmentPageInjection injection;
+  final VocabSegmentPageInjector injection;
 
   const VocabSegmentPage({
     required this.injection,
@@ -30,10 +32,15 @@ class VocabSegmentPage extends StatefulWidget {
 class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
   String htmlText = '';
   bool showTranslate = false;
+  Requester requester = Requester();
+  String state$loading = 'state_loading';
+  String state$error = 'state_error';
 
   @override
   void initState(){
     super.initState();
+
+    requesVocabs();
 
     htmlText = '''
     <body>
@@ -50,6 +57,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
 
   @override
   void dispose(){
+    requester.dispose();
     super.dispose();
   }
 
@@ -133,7 +141,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                 Row(
                   children: [
                     Chip(
-                      label: Text(widget.injection.segmentTitle).bold().color(Colors.white),
+                      label: Text(widget.injection.segment.title).bold().color(Colors.white),
                       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
                       visualDensity: VisualDensity.compact,
                     ),
@@ -274,5 +282,33 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
         ),
       ),
     );
+  }
+
+  void requesVocabs(){
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      assistCtr.removeState(state$loading);
+      assistCtr.addStateAndUpdate(state$error);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
+      assistCtr.removeState(state$loading);
+      assistCtr.removeState(state$error);
+
+      final List? data = res['data'];
+print(res);
+      /*if(data is List){
+        for(final k in data){
+          final les = LessonModel.fromMap(k);
+          lessons.add(les);
+        }
+      }*/
+
+      assistCtr.updateMain();
+    };
+
+    requester.methodType = MethodType.get;
+    requester.prepareUrl(pathUrl: '/vocabularies?LessonId=${widget.injection.lessonModel.id}');
+    requester.request(context);
   }
 }

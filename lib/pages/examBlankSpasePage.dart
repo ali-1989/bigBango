@@ -2,7 +2,8 @@ import 'dart:math';
 
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/examBlankModel.dart';
-import 'package:app/models/lessonModel.dart';
+import 'package:app/models/lessonModels/iSegmentModel.dart';
+import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
@@ -16,7 +17,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 class ExamBlankSpacePageInjection {
   late LessonModel lessonModel;
-  late String segmentTitle;
+  late ISegmentModel segment;
 }
 ///-----------------------------------------------------
 class ExamBlankSpacePage extends StatefulWidget {

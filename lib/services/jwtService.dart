@@ -94,6 +94,16 @@ class JwtService {
       return true;
     }
 
+    else if(a.responseData?.statusCode == 422){
+      final dataJs = a.getBodyAsJson()!;
+      final message = dataJs['message'];
+
+      await Session.logoff(um.userId);
+
+      AppToast.showToast(AppRoute.getMaterialContext(), message);
+      AppBroadcast.reBuildMaterial();
+    }
+
     else if(a.responseData?.statusCode == 307){
       final dataJs = a.getBodyAsJson()!;
       final message = dataJs['message'];

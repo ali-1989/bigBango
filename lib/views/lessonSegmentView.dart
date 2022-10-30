@@ -1,5 +1,5 @@
-import 'package:app/models/lessonModel.dart';
-import 'package:app/pages/examBlankSpasePage.dart';
+import 'package:app/models/lessonModels/iSegmentModel.dart';
+import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/pages/vocabSegmentPage.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/system/extensions.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class LessonSegmentViewInjection {
   late LessonModel lessonModel;
-  late String segmentTitle;
+  late ISegmentModel segment;
 }
 
 class LessonSegmentView extends StatefulWidget {
@@ -51,7 +51,7 @@ class _LessonSegmentViewState extends State<LessonSegmentView> {
 
                   SizedBox(height: 10),
                   Chip(
-                      label: Text(widget.injection.segmentTitle).bold().color(Colors.white),
+                      label: Text(widget.injection.segment.title).bold().color(Colors.white),
                       labelPadding: EdgeInsets.symmetric(horizontal: 10),
                       visualDensity: VisualDensity.compact
                   ),
@@ -66,9 +66,9 @@ class _LessonSegmentViewState extends State<LessonSegmentView> {
                           child: GestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onTap: (){
-                              final inject = VocabSegmentPageInjection();
+                              final inject = VocabSegmentPageInjector();
                               inject.lessonModel = widget.injection.lessonModel;
-                              inject.segmentTitle = widget.injection.segmentTitle;
+                              inject.segment = widget.injection.segment;
 
                               AppRoute.push(context, VocabSegmentPage(injection: inject));
                             },
@@ -119,42 +119,6 @@ class _LessonSegmentViewState extends State<LessonSegmentView> {
                   ),
 
                   SizedBox(height: 15),
-                  CustomCard(
-                      color: Colors.grey.shade300,
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              CustomCard(
-                                padding: EdgeInsets.all(6),
-                                radius: 12,
-                                child: Image.asset(AppImages.exerciseIco),
-                              ),
-
-                              SizedBox(width: 10),
-                              Text('« تمرین »')
-                            ],
-                          ),
-
-                          InkWell(
-                            onTap: (){
-                              final inject = ExamBlankSpacePageInjection();
-                              inject.lessonModel = widget.injection.lessonModel;
-                              inject.segmentTitle = widget.injection.segmentTitle;
-
-                              AppRoute.push(context, ExamBlankSpacePage(injection: inject));
-                            },
-                            child: CustomCard(
-                              padding: EdgeInsets.all(6),
-                              radius: 4,
-                              child: Text('شروع'),
-                            ),
-                          ),
-                        ],
-                      )
-                  )
                 ],
               ),
             ),

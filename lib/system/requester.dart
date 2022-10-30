@@ -58,9 +58,9 @@ class Requester {
     _http.fullUrl = SettingsManager.settingsModel.httpAddress;
   }
 
-  void prepareUrl({String? fullUrl, required String pathUrl}){
-    if(fullUrl != null){
-      _http.fullUrl = fullUrl;
+  void prepareUrl({required String pathUrl, bool isFull = false}){
+    if(isFull){
+      _http.fullUrl = pathUrl;
       return;
     }
 
@@ -112,13 +112,13 @@ class Requester {
 
     f = f.then((val) async {
       if(_httpRequester.responseData?.statusCode == 401){
-        final rToken = await JwtService.requestNewToken(Session.getLastLoginUser()!);
+        final getNewToken = await JwtService.requestNewToken(Session.getLastLoginUser()!);
 
-        if(rToken) {
+        /// try request again
+        if(getNewToken) {
           request(context, promptErrors);
+          return;
         }
-
-        return;
       }
 
       await httpRequestEvents.onAnyState?.call(_httpRequester);

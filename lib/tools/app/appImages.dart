@@ -57,6 +57,7 @@ class AppImages {
   static const readingIco = 'assets/images/readingIco.png';
   static const doutar = 'assets/images/doutar.png';
   static const errorTry = 'assets/images/error_try.png';
+  static const closeIco = 'assets/images/closeIco.png';
   static const greeting = 'assets/images/greeting.png';
   static const notFound = 'assets/images/notFound.png';
   static const vocabIco = 'assets/images/vocab.png';

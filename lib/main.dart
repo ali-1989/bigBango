@@ -36,7 +36,9 @@ Future<void> main() async {
   else {
     runZonedGuarded(() async {
       await mainInitialize();
-      runApp(DevicePreview(builder: (ctx){
+      runApp(DevicePreview(
+        enabled: false,
+          builder: (ctx){
         return const MyApp();
       }));
     }, zonedGuardedCatch);

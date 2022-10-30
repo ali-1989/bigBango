@@ -268,7 +268,11 @@ class _OtpPageState extends StateBase<OtpPage> {
     int statusCode = httpRequester.responseData!.statusCode?? 0;
 
     if(statusCode != 200){
-      String? message = httpRequester.getBodyAsJson()![Keys.message];
+      String? message;
+
+      if(httpRequester.getBodyAsJson() != null) {
+        message = httpRequester.getBodyAsJson()![Keys.message];
+      }
 
       if(message == null) {
         AppSnack.showSnack$serverNotRespondProperly(context);
@@ -290,12 +294,15 @@ class _OtpPageState extends StateBase<OtpPage> {
       return;
     }
 
-    int statusCode = httpRequester.responseData!.statusCode?? 200;
+    int statusCode = httpRequester.responseData?.statusCode?? 0;
 
-    //422 : timeout
     if(statusCode != 200){
       await hideLoading();
-      String? message = httpRequester.getBodyAsJson()![Keys.message];
+      String? message;
+
+      if(httpRequester.getBodyAsJson() != null) {
+        message = httpRequester.getBodyAsJson()![Keys.message];
+      }
 
       if(message == null) {
         AppSnack.showSnack$serverNotRespondProperly(context);

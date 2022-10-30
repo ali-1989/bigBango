@@ -24,7 +24,10 @@ class PublicAccess {
   static List<Map> courseLevels = [];
   /// login, determiningCourseLevel
   static Map advertisingVideos = {};
-  /// "supportPhoneNumber": "031-32355205","supportEmail": "support@bigbango.ir","conditionTermsLink": "google.com", "description": "بیگ‌‌بنگو اپلیکیشن آموزش زبان"
+  /** "supportPhoneNumber": "031-32355205",
+    "supportEmail": "support@bigbango.ir",
+   "conditionTermsLink": "google.com",
+   "description": "بیگ‌‌بنگو اپلیکیشن آموزش زبان"*/
   static Map contacts = {};
   static ClassicFooter classicFooter = const ClassicFooter(
     loadingText: '',
