@@ -1,10 +1,10 @@
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/tools/app/appImages.dart';
 
-class VocabModel extends ISegmentModel {
+class LessonVocabularyModel extends ISegmentModel {
   bool hasIdioms = false;
 
-  VocabModel(){
+  LessonVocabularyModel(){
     _init();
   }
 
@@ -14,7 +14,7 @@ class VocabModel extends ISegmentModel {
     icon = AppImages.abc2Ico;
   }
 
-  VocabModel.fromMap(Map map):super.fromMap(map) {
+  LessonVocabularyModel.fromMap(Map map):super.fromMap(map) {
     _init();
     hasIdioms = map['hasIdioms'];
   }
@@ -27,5 +27,4 @@ class VocabModel extends ISegmentModel {
 
     return map;
   }
-
 }

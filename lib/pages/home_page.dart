@@ -1,7 +1,7 @@
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
-import 'package:app/models/lessonModels/vocabModel.dart';
+import 'package:app/models/lessonModels/lessonVocabularyModel.dart';
 import 'package:app/pages/select_language_level_page.dart';
 import 'package:app/pages/vocabSegmentPage.dart';
 import 'package:app/system/requester.dart';
@@ -58,7 +58,7 @@ class HomePageState extends StateBase<HomePage> {
         if(assistCtr.hasState(state$error)){
           return ErrorOccur(
             fullScreen: false,
-            onRefresh: (){},
+            onRefresh: onRefresh,
           );
         }
 
@@ -89,7 +89,7 @@ class HomePageState extends StateBase<HomePage> {
                               bottom: 30,
                               left: 0,
                               right: 0,
-                              child: Image.asset(AppImages.homeBack,
+                              child: Image.asset(AppImages.homeBackground,
                               fit: BoxFit.fill,
                             ),
                             ),
@@ -580,7 +580,7 @@ class HomePageState extends StateBase<HomePage> {
   }
 
   void onLessonSegmentClick(LessonModel lesson, ISegmentModel section){
-    if(section is VocabModel){
+    if(section is LessonVocabularyModel){
       if(!section.hasIdioms){
         final inject = VocabSegmentPageInjector();
         inject.lessonModel = lesson;
@@ -630,6 +630,12 @@ class HomePageState extends StateBase<HomePage> {
     }
 
     assistCtr.updateMain();
+  }
+
+  void onRefresh(){
+    assistCtr.removeState(state$error);
+    assistCtr.addStateAndUpdate(state$loading);
+    requestLessons();
   }
 
   void requestLessons(){

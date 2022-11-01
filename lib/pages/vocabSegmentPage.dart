@@ -1,16 +1,23 @@
+import 'package:animator/animator.dart';
+import 'package:app/managers/fontManager.dart';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
+import 'package:app/models/vocabModels/vocabModel.dart';
+import 'package:app/services/audioPplayerService.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/requester.dart';
+import 'package:app/taskQueueCaller.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
-import 'package:app/tools/app/appThemes.dart';
+import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/customCard.dart';
+import 'package:app/views/errorOccur.dart';
+import 'package:app/views/waitToLoad.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:simple_html_css/simple_html_css.dart';
+import 'package:iris_tools/widgets/irisImageView.dart';
 
 class VocabSegmentPageInjector {
   late LessonModel lessonModel;
@@ -30,34 +37,35 @@ class VocabSegmentPage extends StatefulWidget {
 }
 ///======================================================================================================================
 class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
-  String htmlText = '';
   bool showTranslate = false;
   Requester requester = Requester();
-  String state$loading = 'state_loading';
-  String state$error = 'state_error';
+  List<VocabModel> vocabList = [];
+  String id$voicePlayerGroupId = 'voicePlayerGroupId';
+  String id$usVoicePlayerSectionId = 'usVoicePlayerSectionId';
+  String id$ukVoicePlayerSectionId = 'ukVoicePlayerSectionId';
+  int currentVocabIdx = 0;
+  late VocabModel currentVocab;
+  TaskQueueCaller<VocabModel, dynamic> taskQue = TaskQueueCaller();
+  String selectedPlayerId = '';
 
   @override
   void initState(){
     super.initState();
 
-    requesVocabs();
+    taskQue.setFn((VocabModel voc, value){
+      requestLeitner(voc, voc.inLeitner);
+    });
 
-    htmlText = '''
-    <body>
-    <p>verb (used with object)</p>
-    <p><strong>1 ali bagheri is very good:</strong></p>
-    <p><span style="color: #ff0000;">&nbsp; &nbsp; she is not good</span></p>
-    <p>noun</p>
-    <p><strong>2 ali bagheri is very good ali bagheri is very good ali bagheri is very good:</strong></p>
-    <p><span style="color: #ff0000;">&nbsp; &nbsp; she is not good</span></p>
-    <p><strong>&nbsp;&nbsp;</strong></p>
-    </body>
-''';
+    assistCtr.addState(AssistController.state$loading);
+    requestVocabs();
   }
 
   @override
   void dispose(){
     requester.dispose();
+    taskQue.dispose();
+    AudioPlayerService.getAudioPlayer().stop();
+
     super.dispose();
   }
 
@@ -77,6 +85,26 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
   }
 
   Widget buildBody(){
+    if(assistCtr.hasState(AssistController.state$error)){
+      return ErrorOccur(onRefresh: onRefresh);
+    }
+
+    if(assistCtr.hasState(AssistController.state$loading)){
+      return WaitToLoad();
+    }
+
+    currentVocab = vocabList[currentVocabIdx];
+    Color preColor = Colors.black;
+    Color nextColor = Colors.black;
+
+    if(currentVocabIdx == 0){
+      preColor = Colors.grey;
+    }
+
+    if(currentVocabIdx == vocabList.length-1){
+      nextColor = Colors.grey;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SingleChildScrollView(
@@ -132,8 +160,8 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
               ),
             ),
 
-
             SizedBox(height: 14),
+
             /// 7/20
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -158,24 +186,22 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
 
                     SizedBox(width: 10),
 
-                    Text('بخش اول').color(Colors.black45)
+                    Text('بخش اول').color(Colors.black45)//todo
                   ],
                 ),
 
                 Row(
                   children: [
-                    Text('20').englishFont().fsR(4),
+                    Text('${vocabList.length}').englishFont().fsR(4),
 
                     SizedBox(width: 10),
-
                     Text('/').englishFont().fsR(5),
 
                     SizedBox(width: 10),
-
                     CustomCard(
                       color: Colors.grey.shade200,
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                        child: Text('7').englishFont().bold().fsR(4)
+                        child: Text('${currentVocabIdx+1}').englishFont().bold().fsR(4)
                     )
                   ],
                 ),
@@ -186,11 +212,28 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
             /// progressbar
             Directionality(
                 textDirection: TextDirection.ltr,
-                child: LinearProgressIndicator(value: 0.3, backgroundColor: Colors.red.shade50)
+                child: LinearProgressIndicator(value: calcProgress(), backgroundColor: Colors.red.shade50)
             ),
 
             SizedBox(height: 14),
-            Image.asset(AppImages.noImage),
+
+            Visibility(
+              visible: currentVocab.image?.fileLocation != null,
+                child: IrisImageView(
+                  height: sh/3,
+                  url: currentVocab.image?.fileLocation,
+                  beforeLoadWidget: SizedBox(
+                      height: sh/3,
+                      child: WaitToLoad()
+                  ),
+                ),
+            ),
+
+            Visibility(
+              visible: currentVocab.image?.fileLocation == null,
+                child: Image.asset(AppImages.noImage),
+            ),
+
 
             SizedBox(height: 14),
             DecoratedBox(
@@ -208,18 +251,89 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                       children: [
                         Row(
                           children: [
-                            CustomCard(
-                              padding: EdgeInsets.all(5),
-                                color: Colors.grey.shade200,
-                                child: Image.asset(AppImages.lightnerIcoBlack),
+                            GestureDetector(
+                              onTap: (){
+                                leitnerClick();
+                              },
+                              child: CustomCard(
+                                padding: EdgeInsets.all(5),
+                                  color: Colors.grey.shade200,
+                                  child: Image.asset(currentVocab.inLeitner? AppImages.leitnerIcoRed : AppImages.leitnerIcoBlack),
+                              ),
                             ),
 
                             SizedBox(width: 10),
 
-                            CustomCard(
-                              padding: EdgeInsets.all(5),
-                              color: Colors.grey.shade200,
-                              child: Image.asset(AppImages.speaker2Ico),
+                            GestureDetector(
+                              onTap: (){
+                                selectedPlayerId = id$usVoicePlayerSectionId;
+                                playSound(id$usVoicePlayerSectionId);
+                              },
+                              child: Assist(
+                                controller: assistCtr,
+                                id: id$usVoicePlayerSectionId,
+                                groupId: id$voicePlayerGroupId,
+                                builder: (_, ctr, data){
+                                  return AnimateWidget(
+                                    resetOnRebuild: true,
+                                    triggerOnRebuild: true,
+                                    duration: Duration(milliseconds: 500),
+                                    cycles: data == 'prepare' ? 100 : 1,
+                                    builder: (_, animate){
+                                      Color color = Colors.grey.shade200;
+                                      if(data == 'prepare'){
+                                        color = animate.fromTween((v) => ColorTween(begin: Colors.red, end:Colors.red.withAlpha(50)))!;
+                                      }
+                                      else if(data == 'play'){
+                                        color = Colors.red;
+                                      }
+
+                                      return CustomCard(
+                                        padding: EdgeInsets.all(5),
+                                        color: color,
+                                        child: Image.asset(AppImages.speaker2Ico),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+
+                            SizedBox(width: 10),
+
+                           GestureDetector(
+                              onTap: (){
+                                selectedPlayerId = id$ukVoicePlayerSectionId;
+                                playSound(id$ukVoicePlayerSectionId);
+                              },
+                              child: Assist(
+                                controller: assistCtr,
+                                id: id$ukVoicePlayerSectionId,
+                                groupId: id$voicePlayerGroupId,
+                                builder: (_, ctr, data){
+                                  return AnimateWidget(
+                                    resetOnRebuild: true,
+                                    triggerOnRebuild: true,
+                                    duration: Duration(milliseconds: 500),
+                                    cycles: data == 'prepare' ? 100 : 1,
+                                    builder: (_, animate){
+                                      Color color = Colors.grey.shade200;
+                                      if(data == 'prepare'){
+                                        color = animate.fromTween((v) => ColorTween(begin: Colors.red, end:Colors.red.withAlpha(50)))!;
+                                      }
+                                      else if(data == 'play'){
+                                        color = Colors.red;
+                                      }
+
+                                      return CustomCard(
+                                        padding: EdgeInsets.all(5),
+                                        color: color,
+                                        child: Image.asset(AppImages.speaker2Ico),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                             ),
 
                             SizedBox(width: 10),
@@ -228,7 +342,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(text: '[ ', style: TextStyle(fontSize: 16, color: Colors.black)),
-                                  TextSpan(text: 'thanks', style: TextStyle(fontSize: 12, color: Colors.black)),
+                                  TextSpan(text: '${currentVocab.pronunciation}', style: TextStyle(fontSize: 12, color: Colors.black)),
                                   TextSpan(text: ' ]', style: TextStyle(fontSize: 16, color: Colors.black))
                                 ]
                               ),
@@ -236,7 +350,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                           ],
                         ),
 
-                        Text('Thanks').bold().fsR(4),
+                        Text(currentVocab.word).bold().fsR(4),
                       ],
                     ),
 
@@ -259,24 +373,42 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                         ),
                         secondChild: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text('تشکر / سپاس'),
+                          child: Text(currentVocab.translation),
                         ),
                         crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
                         duration: Duration(milliseconds: 300)
                     ),
 
-
                     SizedBox(height: 10),
 
-                    Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: HTML.toRichText(context, htmlText, defaultTextStyle: AppThemes.body2TextStyle())
-                    ),
+                    ...buildDescription(),
+
                   ],
                 ),
               ),
             ),
 
+            SizedBox(height: 14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton.icon(
+                    onPressed: onNextClick,
+                    icon: RotatedBox(
+                      quarterTurns: 2,
+                        child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
+                    ),
+                    label: Text('next').englishFont().color(nextColor)
+                ),
+
+                TextButton.icon(
+                  style: TextButton.styleFrom(),
+                    onPressed: onPreClick,
+                    icon: Text('pre').englishFont().color(preColor),
+                    label: Image.asset(AppImages.arrowLeftIco, color: preColor)
+                ),
+              ],
+            ),
             SizedBox(height: 14),
           ],
         ),
@@ -284,26 +416,177 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
     );
   }
 
-  void requesVocabs(){
+  List<Widget> buildDescription(){
+    List<Widget> list = [];
 
+    for(int i=0; i < currentVocab.descriptions.length; i++) {
+      final k = currentVocab.descriptions[i];
+
+      if(k.content != null) {
+        final t = Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          textDirection: TextDirection.ltr,
+          children: [
+            Text('${k.number}  ',
+              style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13,
+                  fontFamily: FontManager.instance.getEnglishFont()?.family,
+              ),
+              textDirection: TextDirection.ltr,
+            ),
+
+            Flexible(
+                child: Text('${k.content}',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 13,
+                      fontFamily: FontManager.instance.getEnglishFont()?.family,
+                  ),
+                  textDirection: TextDirection.ltr,
+                )
+            ),
+          ],
+        );
+
+        list.add(t);
+      }
+
+      for(final sample in k.samples) {
+        if (sample.title != null) {
+          final t = Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Flexible(
+                  child: Text(' > ${sample.title}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        color: Colors.blueAccent,
+                      fontFamily: FontManager.instance.getEnglishFont()?.family,
+                    ),
+                    textDirection: TextDirection.ltr,
+                  )
+              ),
+            ],
+          );
+
+          list.add(SizedBox(height: 10));
+          list.add(t);
+        }
+
+        if (sample.content != null) {
+          final t = Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Flexible(
+                  child: Text('${sample.content}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: Colors.red,
+                        fontFamily: FontManager.instance.getEnglishFont()?.family,
+                      ),
+                    textDirection: TextDirection.ltr,
+                  )
+              ),
+            ],
+          );
+
+          list.add(SizedBox(height: 10));
+          list.add(t);
+        }
+
+        if (sample.translation != null) {
+          final t = Text('${sample.translation}', style: TextStyle());
+          list.add(SizedBox(height: 10));
+          list.add(t);
+        }
+      }
+
+      if(i+1 < currentVocab.descriptions.length) {
+        if (k.samples.isNotEmpty) {
+          list.add(SizedBox(height: 12));
+          list.add(Divider());
+          list.add(SizedBox(height: 12));
+        }
+      }
+    }
+
+    return list;
+  }
+
+  double calcProgress(){
+    int r = ((currentVocabIdx+1) * 100) ~/ vocabList.length;
+    return r/100;
+  }
+
+  void playSound(String sectionId){
+    // currentVocab.americanVoiceId
+    assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
+    assistCtr.update(sectionId, stateData: 'prepare');
+    AudioPlayerService.networkVoicePlayer('https://download.samplelib.com/mp3/sample-3s.mp3').then((p) async {
+      if(sectionId != selectedPlayerId){
+        return;
+      }
+
+      assistCtr.update(sectionId, stateData: 'play');
+      await p.play();
+      assistCtr.update(sectionId, stateData: null);
+      p.stop();
+    });
+  }
+
+  void onNextClick(){
+    AudioPlayerService.getAudioPlayer().stop();
+    assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
+    currentVocabIdx++;
+    assistCtr.updateMain();
+  }
+
+  void onPreClick(){
+    AudioPlayerService.getAudioPlayer().stop();
+    assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
+    currentVocabIdx--;
+    assistCtr.updateMain();
+  }
+
+  void onRefresh(){
+    assistCtr.clearStates();
+    assistCtr.addStateAndUpdate(AssistController.state$loading);
+    requestVocabs();
+  }
+
+  void leitnerClick() async {
+    currentVocab.inLeitner = !currentVocab.inLeitner;
+    assistCtr.updateMain();
+
+    taskQue.addObject(currentVocab);
+  }
+
+  void requestVocabs(){
     requester.httpRequestEvents.onFailState = (req, res) async {
-      assistCtr.removeState(state$loading);
-      assistCtr.addStateAndUpdate(state$error);
+      assistCtr.clearStates();
+      assistCtr.addStateAndUpdate(AssistController.state$error);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
-      assistCtr.removeState(state$loading);
-      assistCtr.removeState(state$error);
-
       final List? data = res['data'];
-print(res);
-      /*if(data is List){
-        for(final k in data){
-          final les = LessonModel.fromMap(k);
-          lessons.add(les);
-        }
-      }*/
 
+      if(data is List){
+        for(final k in data){
+          final vo = VocabModel.fromMap(k);
+          for(int i=0 ; i<20; i++){
+            final temp = VocabModel.fromMap(vo.toMap());
+            temp.id = 'idddd-$i';
+            vocabList.add(temp);
+          }
+        }
+      }
+
+      assistCtr.clearStates();
       assistCtr.updateMain();
     };
 
@@ -311,4 +594,43 @@ print(res);
     requester.prepareUrl(pathUrl: '/vocabularies?LessonId=${widget.injection.lessonModel.id}');
     requester.request(context);
   }
+
+  void requestLeitner(VocabModel vocab, bool state){
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      AppToast.showToast(context, 'خطا در ارتباط با سرور');
+      vocab.inLeitner = !state;
+      taskQue.callNext(null);
+      assistCtr.updateMain();
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
+      taskQue.callNext(null);
+      //assistCtr.updateMain();
+    };
+
+    requester.methodType = MethodType.post;
+    requester.prepareUrl(pathUrl: '/setLeitner?vocabId=${widget.injection.lessonModel.id}?state=$state');
+    requester.request(context);
+  }
 }
+
+
+/*
+htmlText = '''
+    <body>
+    <p>verb (used with object)</p>
+    <p><strong>1 ali bagheri is very good:</strong></p>
+    <p><span style="color: #ff0000;">&nbsp; &nbsp; she is not good</span></p>
+    <p>noun</p>
+    <p><strong>2 ali bagheri is very good ali bagheri is very good ali bagheri is very good:</strong></p>
+    <p><span style="color: #ff0000;">&nbsp; &nbsp; she is not good</span></p>
+    <p><strong>&nbsp;&nbsp;</strong></p>
+    </body>
+''';
+
+
+Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: HTML.toRichText(context, htmlText, defaultTextStyle: AppThemes.body2TextStyle())
+                    ),
+* */

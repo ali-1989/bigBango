@@ -1,7 +1,7 @@
 import 'package:app/models/lessonModels/grammarModel.dart';
 import 'package:app/models/lessonModels/readingModel.dart';
 import 'package:app/models/lessonModels/speakingModel.dart';
-import 'package:app/models/lessonModels/vocabModel.dart';
+import 'package:app/models/lessonModels/lessonVocabularyModel.dart';
 import 'package:app/system/keys.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 
@@ -11,7 +11,7 @@ class LessonModel {
   bool isLock = false;
   int number = 0;
   int improvementPercentage = 0;
-  VocabModel? vocabModel;
+  LessonVocabularyModel? vocabModel;
   GrammarModel? grammarModel;
   ReadingModel? readingModel;
   SpeakingModel? speakingModel;
@@ -26,7 +26,7 @@ class LessonModel {
     improvementPercentage = MathHelper.clearToInt(map['progress']);
 
     if(map['vocabulary'] is Map) {
-      vocabModel = VocabModel.fromMap(map['vocabulary']);
+      vocabModel = LessonVocabularyModel.fromMap(map['vocabulary']);
     }
 
     if(map['vocabulary'] is Map) {

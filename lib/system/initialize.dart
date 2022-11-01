@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/services/audioPplayerService.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/userLoginTools.dart';
 import 'package:flutter/foundation.dart';
@@ -56,10 +57,7 @@ class InitialApplication {
     await DeviceInfoTools.prepareDeviceId();
 
     AppRoute.init();
-
-    //AppCache.screenBack = const AssetImage(AppImages.background);
-    //await precacheImage(AppCache.screenBack!, context);
-    //PlayerTools.init();
+    AudioPlayerService.init();
 
     if (!kIsWeb) {
       await AppNotification.initial();

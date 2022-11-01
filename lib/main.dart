@@ -36,11 +36,13 @@ Future<void> main() async {
   else {
     runZonedGuarded(() async {
       await mainInitialize();
-      runApp(DevicePreview(
-        enabled: false,
-          builder: (ctx){
-        return const MyApp();
-      }));
+      runApp(Toaster(
+        child: DevicePreview(
+          enabled: false,
+            builder: (ctx){
+          return const MyApp();
+        }),
+      ));
     }, zonedGuardedCatch);
   }
 }
@@ -98,7 +100,7 @@ class MyApp extends StatelessWidget {
           child: OrientationBuilder(builder: (context, orientation) {
             testCodes(context);
 
-            return Toaster(child: SplashPage());
+            return SplashPage();
           }),
         );
       },

@@ -37,7 +37,7 @@ class BottomNavBarState extends State<BottomNavBar> {
           children: [
             Flexible(
                 child: buildItem('دروس',
-                  _isSelected(0)? Image.asset(AppImages.lessonIcoRed, width: 40) : Image.asset(AppImages.homeIcoBlack, width: 40),
+                  _isSelected(0)? Image.asset(AppImages.lessonIcoRed, width: 40) : Image.asset(AppImages.lessonIcoBlack, width: 40),
                     0
                 )
             ),
@@ -45,7 +45,7 @@ class BottomNavBarState extends State<BottomNavBar> {
             buildSeparator(),
             Flexible(
                 child: buildItem('لایتنر',
-                    _isSelected(1)? Image.asset(AppImages.lightnerIcoRed, width: 40) : Image.asset(AppImages.lightnerIcoBlack, width: 40),
+                    _isSelected(1)? Image.asset(AppImages.leitnerIcoRed, width: 40) : Image.asset(AppImages.leitnerIcoBlack, width: 40),
                     1
                 )
             ),

@@ -77,7 +77,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                           children: [
                             Row(
                               children: [
-                                Image.asset(AppImages.lightnerIcoRed),
+                                Image.asset(AppImages.leitnerIcoRed),
                                 SizedBox(width: 10),
                                 Text('جعبه لایتنر').bold().fsR(3)
                               ],
