@@ -35,7 +35,7 @@ class VocabDescriptionSampleModel {
   String? title;
   String? content;
   String? translation;
-  int? voiceId;
+  String? voice;
 
   VocabDescriptionSampleModel();
 
@@ -45,7 +45,7 @@ class VocabDescriptionSampleModel {
     title = map['title'];
     content = map['content'];
     translation = map['translation'];
-    voiceId = map['voiceId'];
+    voice = map['voice'];
   }
 
   Map<String, dynamic> toMap() {
@@ -56,7 +56,7 @@ class VocabDescriptionSampleModel {
     map['title'] = title;
     map['content'] = content;
     map['translation'] = translation;
-    map['voiceId'] = voiceId;
+    map['voice'] = voice;
 
     return map;
   }

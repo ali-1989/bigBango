@@ -86,7 +86,8 @@ class JwtService {
 
     final a = AppHttpDio.send(r);
     await a.response;
-
+    PublicAccess.logger.logToAll('@@@@@@@@@@@@@@@ Token @@@@ >> ${a.responseData?.statusCode}');
+    PublicAccess.logger.logToAll('@@@@@@@@@@@@@@@ Token @@@@ >> ${a.getBodyAsJson()}');
     if(a.responseData?.statusCode == 200){
       final dataJs = a.getBodyAsJson()!;
       um.token?.token = dataJs['data'];

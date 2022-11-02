@@ -10,9 +10,9 @@ class VocabModel {
   String? pronunciation;
   List<VocabDescriptionModel> descriptions = [];
   int order = 0;
-  int? britishVoiceId;
-  int? americanVoiceId;
   bool inLeitner = false;
+  MediaModel? britishVoice;
+  MediaModel? americanVoice;
   MediaModel? image;
 
 
@@ -28,6 +28,14 @@ class VocabModel {
 
     if (map['image'] is Map) {
       image = MediaModel.fromMap(map['image']);
+    }
+
+    if (map['britishVoice'] is Map) {
+      britishVoice = MediaModel.fromMap(map['britishVoice']);
+    }
+
+    if (map['americanVoice'] is Map) {
+      americanVoice = MediaModel.fromMap(map['americanVoice']);
     }
 
     if (map['descriptions'] is List) {
@@ -48,8 +56,10 @@ class VocabModel {
     map['pronunciation'] = pronunciation;
     map['order'] = order;
     map['inLeitner'] = inLeitner;
-    map['image'] = image?.toMap();
     map['descriptions'] = descriptions.map((e) => e.toMap()).toList();
+    map['image'] = image?.toMap();
+    map['britishVoice'] = britishVoice?.toMap();
+    map['americanVoice'] = americanVoice?.toMap();
 
     return map;
   }

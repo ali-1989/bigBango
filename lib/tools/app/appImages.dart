@@ -51,6 +51,7 @@ class AppImages {
   static const supportIco = 'assets/images/supportIco.png';
   static const speakerIco = 'assets/images/speakerIco.png';
   static const speaker2Ico = 'assets/images/speaker2Ico.png';
+  static const speaker3Ico = 'assets/images/speaker3Ico.png';
   static const examIco = 'assets/images/examIco.png';
   static const exam2Ico = 'assets/images/exam2Ico.png';
   static const grammarIco = 'assets/images/grammarIco.png';

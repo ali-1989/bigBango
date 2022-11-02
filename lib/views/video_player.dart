@@ -58,8 +58,8 @@ class VideoPlayerViewState extends StateBase<VideoPlayerView> {
   Widget build(BuildContext context) {
     return Center(
         child: isVideoInit?
-        Chewie(controller: chewieVideoController!,)
-            : const Center(child: CircularProgressIndicator(),)
+        Chewie(controller: chewieVideoController!)
+            : const Center(child: CircularProgressIndicator())
     );
   }
 

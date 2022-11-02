@@ -1,5 +1,6 @@
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
+import 'package:app/pages/idiomsSegmentPage.dart';
 import 'package:app/pages/vocabSegmentPage.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/system/extensions.dart';
@@ -96,22 +97,31 @@ class _LessonSegmentViewState extends State<LessonSegmentView> {
                       SizedBox(width: 10),
 
                       Expanded(
-                          child: CustomCard(
-                            color: Colors.grey.shade300,
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10),
-                                CustomCard(
-                                    padding: EdgeInsets.all(6),
-                                    radius: 14,
-                                    child: Image.asset(AppImages.messageIco)
-                                ),
-                                SizedBox(height: 15),
-                                Text('« بخش دوم »'),
-                                SizedBox(height: 10),
-                                Text('اصطلاحات').bold(),
-                                SizedBox(height: 15),
-                              ],
+                          child: GestureDetector(
+                            onTap: (){
+                              final inject = IdiomsSegmentPageInjector();
+                              inject.lessonModel = widget.injection.lessonModel;
+                              inject.segment = widget.injection.segment;
+
+                              AppRoute.push(context, IdiomsSegmentPage(injection: inject));
+                            },
+                            child: CustomCard(
+                              color: Colors.grey.shade300,
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 10),
+                                  CustomCard(
+                                      padding: EdgeInsets.all(6),
+                                      radius: 14,
+                                      child: Image.asset(AppImages.messageIco)
+                                  ),
+                                  SizedBox(height: 15),
+                                  Text('« بخش دوم »'),
+                                  SizedBox(height: 10),
+                                  Text('اصطلاحات').bold(),
+                                  SizedBox(height: 15),
+                                ],
+                              ),
                             ),
                           )
                       ),

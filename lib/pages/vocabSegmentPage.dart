@@ -16,6 +16,7 @@ import 'package:app/views/customCard.dart';
 import 'package:app/views/errorOccur.dart';
 import 'package:app/views/waitToLoad.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
 
@@ -176,17 +177,13 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
 
                     SizedBox(width: 10),
 
-                    SizedBox(
+                    /*SizedBox(
                       height: 15,
                       width: 2,
                       child: ColoredBox(
                         color: Colors.black45,
                       ),
-                    ),
-
-                    SizedBox(width: 10),
-
-                    Text('بخش اول').color(Colors.black45)//todo
+                    ),*/
                   ],
                 ),
 
@@ -256,7 +253,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                                 leitnerClick();
                               },
                               child: CustomCard(
-                                padding: EdgeInsets.all(5),
+                                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 7),
                                   color: Colors.grey.shade200,
                                   child: Image.asset(currentVocab.inLeitner? AppImages.leitnerIcoRed : AppImages.leitnerIcoBlack),
                               ),
@@ -289,9 +286,15 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                                       }
 
                                       return CustomCard(
-                                        padding: EdgeInsets.all(5),
+                                        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
                                         color: color,
-                                        child: Image.asset(AppImages.speaker2Ico),
+                                        child: Column(
+                                          children: [
+                                            Image.asset(AppImages.speaker2Ico, height: 16, width: 20),
+                                            SizedBox(height: 3),
+                                            Text('US', style: TextStyle(fontSize: 9))
+                                          ],
+                                        ),
                                       );
                                     },
                                   );
@@ -326,9 +329,15 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                                       }
 
                                       return CustomCard(
-                                        padding: EdgeInsets.all(5),
+                                        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
                                         color: color,
-                                        child: Image.asset(AppImages.speaker2Ico),
+                                        child: Column(
+                                          children: [
+                                            Image.asset(AppImages.speaker2Ico, height: 16, width: 20),
+                                            SizedBox(height: 3),
+                                            Text('UK', style: TextStyle(fontSize: 9),)
+                                          ],
+                                        )
                                       );
                                     },
                                   );
@@ -350,7 +359,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                           ],
                         ),
 
-                        Text(currentVocab.word).bold().fsR(4),
+                        Flexible(child: Text(currentVocab.word, textAlign: TextAlign.left).bold(weight: FontWeight.w400).fsR(4)),
                       ],
                     ),
 
@@ -452,19 +461,20 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
         );
 
         list.add(t);
+        list.add(SizedBox(height: 10,));
       }
 
       for(final sample in k.samples) {
-        if (sample.title != null) {
+        if (sample.type == 2) {
           final t = Row(
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.max,
             children: [
               Flexible(
-                  child: Text(' > ${sample.title}',
+                  child: Text('${sample.title}',
                     style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.deepOrange,
                       fontFamily: FontManager.instance.getEnglishFont()?.family,
                     ),
                     textDirection: TextDirection.ltr,
@@ -475,40 +485,84 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
 
           list.add(SizedBox(height: 10));
           list.add(t);
+          list.add(SizedBox(height: 10));
         }
-
-        if (sample.content != null) {
-          final t = Row(
+        else {
+          final contentText = Row(
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.max,
             children: [
               Flexible(
                   child: Text('${sample.content}',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.red,
-                        fontFamily: FontManager.instance.getEnglishFont()?.family,
-                      ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey.shade800,
+                      fontFamily: FontManager.instance.getEnglishFont()?.family,
+                    ),
                     textDirection: TextDirection.ltr,
                   )
               ),
             ],
           );
 
-          list.add(SizedBox(height: 10));
-          list.add(t);
-        }
+          final id = Generator.generateKey(4);
+          final transText = Text('${sample.translation}', style: TextStyle(color: Colors.grey.shade800));
 
-        if (sample.translation != null) {
-          final t = Text('${sample.translation}', style: TextStyle());
-          list.add(SizedBox(height: 10));
-          list.add(t);
+          final voiceView = GestureDetector(
+            onTap: (){
+              selectedPlayerId = id;
+              playSound(id);
+            },
+            child: Assist(
+              controller: assistCtr,
+              id: id,
+              groupId: id$voicePlayerGroupId,
+              builder: (_, ctr, data){
+                return AnimateWidget(
+                  resetOnRebuild: true,
+                  triggerOnRebuild: true,
+                  duration: Duration(milliseconds: 600),
+                  cycles: data == 'prepare'  || data == 'play'? 100 : 1,
+                  builder: (_, animate){
+                    double val = 1;
+                    if(data == 'prepare'){
+                      val = animate.fromTween((v) => Tween(begin: 0.1, end: 0.5))!;
+                    }
+
+                    if(data == 'play'){
+                      val = animate.fromTween((v) => Tween(begin: 0.5, end: 1))!;
+                    }
+
+                    return Opacity(
+                      opacity: val,
+                      child: Image.asset(AppImages.speaker3Ico),
+                    );
+                  },
+                );
+              },
+            ),
+          );
+
+          list.add(Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            textDirection: TextDirection.ltr,
+            children: [
+              voiceView,
+              SizedBox(width: 6),
+              Flexible(child: contentText),
+            ],
+          ));
+
+          list.add(SizedBox(height: 7));
+          list.add(transText);
+          list.add(SizedBox(height: 7));
         }
       }
 
       if(i+1 < currentVocab.descriptions.length) {
         if (k.samples.isNotEmpty) {
-          list.add(SizedBox(height: 12));
+          list.add(SizedBox(height: 15));
           list.add(Divider());
           list.add(SizedBox(height: 12));
         }
@@ -578,6 +632,8 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
       if(data is List){
         for(final k in data){
           final vo = VocabModel.fromMap(k);
+
+          //todo: temp
           for(int i=0 ; i<20; i++){
             final temp = VocabModel.fromMap(vo.toMap());
             temp.id = 'idddd-$i';
