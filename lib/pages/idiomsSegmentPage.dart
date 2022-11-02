@@ -372,7 +372,7 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
           //todo: temp
           for(int i=0 ; i<20; i++){
             final temp = IdiomModel.fromMap(vo.toMap());
-            temp.id = 'idddd-$i';
+            temp.id = 'iddd-$i';
             idiomsList.add(temp);
           }
         }
