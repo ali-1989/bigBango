@@ -36,12 +36,14 @@ Future<void> main() async {
   else {
     runZonedGuarded(() async {
       await mainInitialize();
-      runApp(Toaster(
-        child: DevicePreview(
-          enabled: false,
-            builder: (ctx){
-          return const MyApp();
-        }),
+
+      runApp(
+          Toaster(
+            child: DevicePreview(
+              enabled: false,
+              builder: (ctx){
+                return const MyApp();
+            }),
       ));
     }, zonedGuardedCatch);
   }

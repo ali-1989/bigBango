@@ -359,7 +359,10 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                           ],
                         ),
 
-                        Flexible(child: Text(currentVocab.word, textAlign: TextAlign.left).bold(weight: FontWeight.w400).fsR(4)),
+                        Flexible(
+                            child: Text(currentVocab.word, textDirection: TextDirection.ltr,)
+                                .bold(weight: FontWeight.w400).fsR(4)
+                        ),
                       ],
                     ),
 
@@ -632,13 +635,13 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
       if(data is List){
         for(final k in data){
           final vo = VocabModel.fromMap(k);
-
+          vocabList.add(vo);
           //todo: temp
-          for(int i=0 ; i<20; i++){
+          /*for(int i=0 ; i<20; i++){
             final temp = VocabModel.fromMap(vo.toMap());
             temp.id = 'idddd-$i';
             vocabList.add(temp);
-          }
+          }*/
         }
       }
 

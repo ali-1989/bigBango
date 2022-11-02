@@ -123,13 +123,11 @@ class SplashScreenState extends StateBase<SplashPage> {
   }
   ///==================================================================================================
   Widget getFirstPage(){
-    return Builder( //kg06SVVHoxK
+    return Builder(
       builder: (ctx){
-        //Session.logoffAll();
         if(Session.hasAnyLogin()){
           System.showBothStatusBar();
 
-          //print(Session.getLastLoginUser());
           final user = Session.getLastLoginUser()!;
 
           if(user.courseLevelId == null){

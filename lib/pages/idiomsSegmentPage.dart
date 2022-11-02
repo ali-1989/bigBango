@@ -14,7 +14,6 @@ import 'package:app/views/waitToLoad.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/irisImageView.dart';
 import 'package:video_player/video_player.dart';
 
 class IdiomsSegmentPageInjector {
@@ -88,6 +87,7 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
     currentIdiom = idiomsList[currentIdiomIdx];
     Color preColor = Colors.black;
     Color nextColor = Colors.black;
+    initVideo();
 
     if(currentIdiomIdx == 0){
       preColor = Colors.grey;
@@ -207,7 +207,12 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
 
             Visibility(
               visible: currentIdiom.video?.fileLocation != null,
-                child: isVideoInit? Chewie(controller: chewieVideoController!) : const Center(child: CircularProgressIndicator()),
+                child: isVideoInit?
+                Chewie(controller: chewieVideoController!)
+                    : SizedBox(
+                    height: 190,
+                    child: const Center(child: CircularProgressIndicator())
+                ),
             ),
 
             Visibility(
@@ -228,20 +233,13 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      textDirection: TextDirection.ltr,
                       children: [
-
-                        Flexible(child: Text(currentIdiom.content, textAlign: TextAlign.left).bold(weight: FontWeight.w400).fsR(4)),
+                        Flexible(
+                            child: Text(currentIdiom.content, textDirection: TextDirection.ltr).englishFont()
+                                .bold(weight: FontWeight.w400).fsR(4)),
                       ],
-                    ),
-
-                    Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 1,
-                        child: ColoredBox(color: Colors.grey),
-                      ),
                     ),
 
                     AnimatedCrossFade(
@@ -312,14 +310,13 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
     assistCtr.updateMain();
   }
 
-  void initVideo(){
+  void initVideo() async {
     isVideoInit = false;
-    playerController = VideoPlayerController.network('todo');
+    playerController = VideoPlayerController.network(currentIdiom.video?.fileLocation?? '');
 
-    playerController!.initialize().then((value) {
-      isVideoInit = playerController!.value.isInitialized;
-      onVideoInit();
-    });
+    await playerController!.initialize();
+    isVideoInit = playerController!.value.isInitialized;
+    onVideoInit();
   }
 
   void onVideoInit(){
@@ -369,12 +366,7 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
         for(final k in data){
           final vo = IdiomModel.fromMap(k);
 
-          //todo: temp
-          for(int i=0 ; i<20; i++){
-            final temp = IdiomModel.fromMap(vo.toMap());
-            temp.id = 'iddd-$i';
-            idiomsList.add(temp);
-          }
+          idiomsList.add(vo);
         }
       }
 
