@@ -15,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:iris_tools/api/tools.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:persian_modal_date_picker/button.dart';
 import 'package:persian_modal_date_picker/persian_date_picker.dart';
@@ -110,14 +109,14 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                     UnconstrainedBox(
                       alignment: Alignment.topCenter,
                       child: SizedBox(
-                          height: sh * 0.50,
+                          height: sh * 0.60,
                           width: sw,
                           child: Image.asset(AppImages.otp, fit: BoxFit.fill)
                       ),
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.only(top: 250),
+                      padding: EdgeInsets.only(top: sh * 0.35),
                       child: Column(
                         children: [
                           Padding(
@@ -287,7 +286,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
 
     await showPersianDatePicker(
       context,
-       // margin: EdgeInsets.only(bottom: 50),
+       margin: EdgeInsets.only(bottom: 50),
       (context, Date date) async {
         birthDate = date.toDateTime();
         birthDateText = DateTools.dateOnlyRelative(birthDate!);

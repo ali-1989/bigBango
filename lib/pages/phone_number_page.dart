@@ -44,124 +44,132 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SizedBox.expand(
-        child: ListView(
-          children: [
-            const SizedBox(height: 10),
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: sh,
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
 
-            SizedBox(
-                width: double.infinity,
-                height: sh * 0.58,
-                child: Stack(
-                  fit: StackFit.passthrough,
-                  children: [
-                    Center(
-                        child: Image.asset(AppImages.register, width: sw*0.88, height: sh*0.58, fit: BoxFit.fill)
-                    ),
-
-                    Positioned(
-                      top: 122,
-                        left: 0,
-                        right: 0,
-                        child: GestureDetector(
-                          onTap: showVideo,
-                          child: Center(
-                            child: ColorSonar(
-                                contentAreaRadius: 20.0,
-                                waveFall: 10.0,
-                                waveMotionEffect: Curves.linear,
-                                waveMotion: WaveMotion.synced,
-                                innerWaveColor: Colors.red.withAlpha(100),
-                                middleWaveColor: Colors.red.withAlpha(50),
-                                outerWaveColor: Colors.transparent,
-                                duration: const Duration(seconds: 2),
-                                child: Image.asset(AppImages.playIcon, width: 40)
-                            ),
-                          ),
-                        )
-                    ),
-
-                    Positioned(
-                        top: 182,
-                        left: 0,
-                        right: 0,
-                        child: GestureDetector(
-                          onTap: showVideo,
-                          child: Center(
-                            child: Pulse(
-                              delay: const Duration(seconds: 2),
-                              child: Text(AppMessages.loginDescription3).bold()
-                                  /*.wrapBoxBorder(
-                                  alpha: 100,
-                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5)
-                              ),*/
-                            ),
-                          ),
-                        )
-                    ),
-                  ],
-                )
-            ),
-
-            const SizedBox(height: 10),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
+              /// play icon
+              SizedBox(
+                  width: double.infinity,
+                  height: sh * 0.52,
+                  child: Stack(
+                    fit: StackFit.passthrough,
                     children: [
-                      Image.asset(AppImages.registerIco2),
-                      const SizedBox(width: 8),
-                      Text(AppMessages.loginDescription, style: const TextStyle(fontSize: 18)),
+                      Center(
+                          child: Image.asset(AppImages.register, width: sw*0.88, height: sh*0.52, fit: BoxFit.fill)
+                      ),
+
+                      Positioned(
+                        top: sw* 0.3,
+                          left: 0,
+                          right: 0,
+                          child: GestureDetector(
+                            onTap: showVideo,
+                            child: Center(
+                              child: ColorSonar(
+                                  contentAreaRadius: 20.0,
+                                  waveFall: 10.0,
+                                  waveMotionEffect: Curves.linear,
+                                  waveMotion: WaveMotion.synced,
+                                  innerWaveColor: Colors.red.withAlpha(100),
+                                  middleWaveColor: Colors.red.withAlpha(50),
+                                  outerWaveColor: Colors.transparent,
+                                  duration: const Duration(seconds: 2),
+                                  child: Image.asset(AppImages.playIcon, width: 40)
+                              ),
+                            ),
+                          )
+                      ),
+
+                      Positioned(
+                          top: sw *.45,
+                          left: 0,
+                          right: 0,
+                          child: GestureDetector(
+                            onTap: showVideo,
+                            child: Center(
+                              child: Pulse(
+                                delay: const Duration(seconds: 2),
+                                child: Text(AppMessages.loginDescription3).bold()
+                                    /*.wrapBoxBorder(
+                                    alpha: 100,
+                                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5)
+                                ),*/
+                              ),
+                            ),
+                          )
+                      ),
                     ],
-                  ),
-
-                  const SizedBox(height: 10),
-                  Text(AppMessages.loginDescription2),
-
-                  const SizedBox(height: 20),
-
-                  TextField(
-                    controller: phoneCtr,
-                    keyboardType: TextInputType.phone,
-                    textAlign: TextAlign.center,
-                    inputFormatters: [
-                      InputFormatter.filterInputFormatterDeny(RegExp(r'(\+)|(-)')),
-                    ],
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                      disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                  ),
-
-                  const SizedBox(height: 14),
-
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                        onPressed: onContinueClick,
-                        child: Text(AppMessages.checkAndContinue)
-                    ),
-                  ),
-                ],
+                  )
               ),
-            ),
 
-            const SizedBox(height: 14),
+              const SizedBox(height: 10),
 
-            SizedBox(
-                height: MathHelper.minDouble(70, sh*0.14),
-                child: Image.asset(AppImages.keyboardOpacity, width: sw*0.75)
-            ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                  child: Column(
+                    children: [
+                      /// why bigbango text
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(AppImages.registerIco2),
+                          const SizedBox(width: 8),
+                          Text(AppMessages.loginDescription, style: const TextStyle(fontSize: 18)),
+                        ],
+                      ),
 
-            const SizedBox(height: 7),
-          ],
+                      const SizedBox(height: 10),
+                      Text(AppMessages.loginDescription2),
+
+                      Expanded(child: SizedBox()),
+
+                      TextField(
+                        controller: phoneCtr,
+                        keyboardType: TextInputType.phone,
+                        textAlign: TextAlign.center,
+                        inputFormatters: [
+                          InputFormatter.filterInputFormatterDeny(RegExp(r'(\+)|(-)')),
+                        ],
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.zero,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(width: 0.7)),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(width: 0.7)),
+                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(width: 0.7)),
+                          disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(width: 0.7)),
+                        ),
+                      ),
+
+                      const SizedBox(height: 14),
+
+                      SizedBox(
+                        width: double.infinity,
+                        height: 40,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                            onPressed: onContinueClick,
+                            child: Text(AppMessages.checkAndContinue)
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 14),
+
+              SizedBox(
+                  height: MathHelper.minDouble(70, sh*0.14),
+                  child: Image.asset(AppImages.keyboardOpacity, width: sw*0.75)
+              ),
+
+              const SizedBox(height: 7),
+            ],
+          ),
         ),
       ),
     );

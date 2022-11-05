@@ -53,7 +53,8 @@ class _OtpPageState extends StateBase<OtpPage> {
     );
 
     addPostOrCall(() {
-      stopWatchTimer.onExecute.add(StopWatchExecute.start);
+      stopWatchTimer.onStartTimer();
+      //stopWatchTimer.onExecute.add(StopWatchExecute.start);
 
       AndroidSmsRetriever.listenForSms().then((value) {
         final reg = RegExp(r'(\b[0-9]+\b)', multiLine: true, unicode: true);
@@ -95,12 +96,12 @@ class _OtpPageState extends StateBase<OtpPage> {
             SingleChildScrollView(
               child: Stack(
                 children: [
-                  SizedBox(height: sh/2),
+                  //SizedBox(height: sh/2),
 
                   UnconstrainedBox(
                     alignment: Alignment.topCenter,
                     child: SizedBox(
-                        height: sh * 0.50,
+                        height: sh * 0.70,
                         width: sw,
                         child: Image.asset(AppImages.otp, fit: BoxFit.fill)
                     ),

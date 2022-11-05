@@ -74,13 +74,13 @@ class SettingsModel {
     map['calendar_type_name'] = calendarType.name;
     map['date_format'] = dateFormat;
     map[Keys.setting$colorThemeName] = colorTheme;
-    //map[Keys.setting$patternKey] = appPatternKey;
-    //map[Keys.setting$toBackgroundTs] = lastToBackgroundTs;
     map[Keys.setting$confirmOnExit] = confirmOnExit;
     map[Keys.setting$currentVersion] = currentVersion;
     map['http_address'] = httpAddress;
     map['ws_address'] = wsAddress;
     map['proxy_address'] = proxyAddress;
+    //map[Keys.setting$patternKey] = appPatternKey;
+    //map[Keys.setting$toBackgroundTs] = lastToBackgroundTs;
 
     return map;
   }

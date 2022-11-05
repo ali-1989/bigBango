@@ -97,199 +97,205 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
       nextColor = Colors.grey;
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 20),
+    return Column(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
 
-            ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-              child: ColoredBox(
-                color: Colors.red,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 1.5),
-                  child: ClipRRect(
+                  ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(12)),
                     child: ColoredBox(
-                      color: Colors.white,
+                      color: Colors.red,
                       child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Image.asset(AppImages.lessonListIco),
-                                SizedBox(width: 10),
-                                Text(widget.injection.lessonModel.title).bold().fsR(3)
-                              ],
-                            ),
-
-                            GestureDetector(
-                              onTap: (){
-                                AppNavigator.pop(context);
-                              },
+                        padding: const EdgeInsets.symmetric(vertical: 1.5),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          child: ColoredBox(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(AppMessages.back),
-                                  SizedBox(width: 10),
-                                  CustomCard(
-                                    color: Colors.grey.shade200,
-                                      padding: EdgeInsets.all(5),
-                                      child: Image.asset(AppImages.arrowLeftIco)
+                                  Row(
+                                    children: [
+                                      Image.asset(AppImages.lessonListIco),
+                                      SizedBox(width: 10),
+                                      Text(widget.injection.lessonModel.title).bold().fsR(3)
+                                    ],
+                                  ),
+
+                                  GestureDetector(
+                                    onTap: (){
+                                      AppNavigator.pop(context);
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Text(AppMessages.back),
+                                        SizedBox(width: 10),
+                                        CustomCard(
+                                          color: Colors.grey.shade200,
+                                            padding: EdgeInsets.all(5),
+                                            child: Image.asset(AppImages.arrowLeftIco)
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ),
 
-            SizedBox(height: 14),
+                  SizedBox(height: 14),
 
-            /// 7/20
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Chip(
-                      label: Text(widget.injection.segment.title).bold().color(Colors.white),
-                      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-                      visualDensity: VisualDensity.compact,
-                    ),
+                  /// 7/20
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Chip(
+                            label: Text(widget.injection.segment.title).bold().color(Colors.white),
+                            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                            visualDensity: VisualDensity.compact,
+                          ),
 
-                    SizedBox(width: 10),
+                          SizedBox(width: 10),
 
-                    /*SizedBox(
-                      height: 15,
-                      width: 2,
-                      child: ColoredBox(
-                        color: Colors.black45,
+                          /*SizedBox(
+                            height: 15,
+                            width: 2,
+                            child: ColoredBox(
+                              color: Colors.black45,
+                            ),
+                          ),*/
+                        ],
                       ),
-                    ),*/
-                  ],
-                ),
 
-                Row(
-                  children: [
-                    Text('${idiomsList.length}').englishFont().fsR(4),
+                      Row(
+                        children: [
+                          Text('${idiomsList.length}').englishFont().fsR(4),
 
-                    SizedBox(width: 10),
-                    Text('/').englishFont().fsR(5),
+                          SizedBox(width: 10),
+                          Text('/').englishFont().fsR(5),
 
-                    SizedBox(width: 10),
-                    CustomCard(
-                      color: Colors.grey.shade200,
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                        child: Text('${currentIdiomIdx+1}').englishFont().bold().fsR(4)
-                    )
-                  ],
-                ),
-              ],
-            ),
+                          SizedBox(width: 10),
+                          CustomCard(
+                            color: Colors.grey.shade200,
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                              child: Text('${currentIdiomIdx+1}').englishFont().bold().fsR(4)
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
 
-            SizedBox(height: 14),
-            /// progressbar
-            Directionality(
-                textDirection: TextDirection.ltr,
-                child: LinearProgressIndicator(value: calcProgress(), backgroundColor: Colors.red.shade50)
-            ),
-
-            SizedBox(height: 14),
-
-            Visibility(
-              visible: currentIdiom.video?.fileLocation != null,
-                child: isVideoInit?
-                Chewie(controller: chewieVideoController!)
-                    : SizedBox(
-                    height: 190,
-                    child: const Center(child: CircularProgressIndicator())
-                ),
-            ),
-
-            Visibility(
-              visible: currentIdiom.video?.fileLocation == null,
-                child: Image.asset(AppImages.noImage),
-            ),
-
-
-            SizedBox(height: 14),
-            DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.black, width: 1, style: BorderStyle.solid)
-                ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                  SizedBox(height: 14),
+                  /// progressbar
+                  Directionality(
                       textDirection: TextDirection.ltr,
-                      children: [
-                        Flexible(
-                            child: Text(currentIdiom.content, textDirection: TextDirection.ltr).englishFont()
-                                .bold(weight: FontWeight.w400).fsR(4)),
-                      ],
+                      child: LinearProgressIndicator(value: calcProgress(), backgroundColor: Colors.red.shade50)
+                  ),
+
+                  SizedBox(height: 14),
+
+                  Visibility(
+                    visible: currentIdiom.video?.fileLocation != null,
+                      child: isVideoInit?
+                      Chewie(controller: chewieVideoController!)
+                          : SizedBox(
+                          height: 190,
+                          child: const Center(child: CircularProgressIndicator())
+                      ),
+                  ),
+
+                  Visibility(
+                    visible: currentIdiom.video?.fileLocation == null,
+                      child: Image.asset(AppImages.noImage),
+                  ),
+
+
+                  SizedBox(height: 14),
+                  DecoratedBox(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.black, width: 1, style: BorderStyle.solid)
+                      ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            textDirection: TextDirection.ltr,
+                            children: [
+                              Flexible(
+                                  child: Text(currentIdiom.content, textDirection: TextDirection.ltr).englishFont()
+                                      .bold(weight: FontWeight.w400).fsR(4)),
+                            ],
+                          ),
+
+                          AnimatedCrossFade(
+                              firstChild: InputChip(
+                                onPressed: (){
+                                  showTranslate = !showTranslate;
+                                  assistCtr.updateMain();
+                                },
+                                label: Text('مشاهده ترجمه'),
+                              ),
+                              secondChild: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Text(currentIdiom.translation),
+                              ),
+                              crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                              duration: Duration(milliseconds: 300)
+                          ),
+
+                          SizedBox(height: 10),
+
+                        ],
+                      ),
                     ),
+                  ),
 
-                    AnimatedCrossFade(
-                        firstChild: InputChip(
-                          onPressed: (){
-                            showTranslate = !showTranslate;
-                            assistCtr.updateMain();
-                          },
-                          label: Text('مشاهده ترجمه'),
-                        ),
-                        secondChild: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(currentIdiom.translation),
-                        ),
-                        crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                        duration: Duration(milliseconds: 300)
-                    ),
-
-                    SizedBox(height: 10),
-
-                  ],
-                ),
+                  SizedBox(height: 14),
+                ],
               ),
             ),
+          ),
+        ),
 
-            SizedBox(height: 14),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton.icon(
-                    onPressed: onNextClick,
-                    icon: RotatedBox(
-                      quarterTurns: 2,
-                        child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
-                    ),
-                    label: Text('next').englishFont().color(nextColor)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton.icon(
+                onPressed: onNextClick,
+                icon: RotatedBox(
+                    quarterTurns: 2,
+                    child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
                 ),
-
-                TextButton.icon(
-                  style: TextButton.styleFrom(),
-                    onPressed: onPreClick,
-                    icon: Text('pre').englishFont().color(preColor),
-                    label: Image.asset(AppImages.arrowLeftIco, color: preColor)
-                ),
-              ],
+                label: Text('next').englishFont().color(nextColor)
             ),
-            SizedBox(height: 14),
+
+            TextButton.icon(
+                style: TextButton.styleFrom(),
+                onPressed: onPreClick,
+                icon: Text('pre').englishFont().color(preColor),
+                label: Image.asset(AppImages.arrowLeftIco, color: preColor)
+            ),
           ],
         ),
-      ),
+      ],
     );
   }
 
@@ -299,12 +305,14 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
   }
 
   void onNextClick(){
+    showTranslate = false;
     chewieVideoController?.pause();
     currentIdiomIdx++;
     assistCtr.updateMain();
   }
 
   void onPreClick(){
+    showTranslate = false;
     chewieVideoController?.pause();
     currentIdiomIdx--;
     assistCtr.updateMain();
