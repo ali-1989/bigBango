@@ -86,8 +86,9 @@ class JwtService {
 
     final a = AppHttpDio.send(r);
     await a.response;
-    PublicAccess.logger.logToAll('@@@@@@@@@@@@@@@ Token @@@@ >> ${a.responseData?.statusCode}');
-    PublicAccess.logger.logToAll('@@@@@@@@@@@@@@@ Token @@@@ >> ${a.getBodyAsJson()}');
+    PublicAccess.logger.logToAll('@@@@@@@@@@@@@@@ requestNewToken response @@@@ >> ${a.responseData?.statusCode}');
+    PublicAccess.logger.logToAll('@@@@@@@@@@@@@@@ send js @@@@ >> $js');
+    PublicAccess.logger.logToAll('@@@@@@@@@@@@@@@ receive Token @@@@ >> ${a.getBodyAsJson()}');
     if(a.responseData?.statusCode == 200){
       final dataJs = a.getBodyAsJson()!;
       um.token?.token = dataJs['data'];
@@ -99,20 +100,22 @@ class JwtService {
       final dataJs = a.getBodyAsJson()!;
       final message = dataJs['message'];
 
-      await Session.logoff(um.userId);
-
       AppToast.showToast(AppRoute.getMaterialContext(), message);
+
+      await Session.logoff(um.userId);
       AppBroadcast.reBuildMaterial();
+      AppRoute.backToRoot(AppRoute.getContext());
     }
 
     else if(a.responseData?.statusCode == 307){
       final dataJs = a.getBodyAsJson()!;
       final message = dataJs['message'];
 
-      await Session.logoff(um.userId);
-
       AppToast.showToast(AppRoute.getMaterialContext(), message);
+
+      await Session.logoff(um.userId);
       AppBroadcast.reBuildMaterial();
+      AppRoute.backToRoot(AppRoute.getContext());
     }
 
     return false;

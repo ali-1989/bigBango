@@ -32,7 +32,7 @@ bool _isInit = false;
 bool _isInLoadingSettings = true;
 bool _isConnectToServer = false;
 bool isInSplashTimer = true;
-int splashWaitingMil = 20000;
+int splashWaitingMil = 2000;
 
 class SplashPage extends StatefulWidget {
   final Widget? firstPage;

@@ -11,6 +11,7 @@ class VocabModel {
   List<VocabDescriptionModel> descriptions = [];
   int order = 0;
   bool inLeitner = false;
+  bool showTranslation = false;
   MediaModel? britishVoice;
   MediaModel? americanVoice;
   MediaModel? image;
@@ -25,6 +26,7 @@ class VocabModel {
     pronunciation = map['pronunciation'];
     order = map['order'] ?? 0;
     inLeitner = map['inLeitner'] ?? false;
+    showTranslation = map['showTranslation']?? false;
 
     if (map['image'] is Map) {
       image = MediaModel.fromMap(map['image']);
@@ -60,6 +62,7 @@ class VocabModel {
     map['image'] = image?.toMap();
     map['britishVoice'] = britishVoice?.toMap();
     map['americanVoice'] = americanVoice?.toMap();
+    map['showTranslation'] = showTranslation;
 
     return map;
   }

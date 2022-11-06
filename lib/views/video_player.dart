@@ -86,7 +86,9 @@ class VideoPlayerViewState extends StateBase<VideoPlayerView> {
 
     playerController!.initialize().then((value) {
       isVideoInit = playerController!.value.isInitialized;
-      _onVideoInit();
+      if(mounted){
+        _onVideoInit();
+      }
     });
   }
 

@@ -52,7 +52,7 @@ class _OtpPageState extends StateBase<OtpPage> {
       },
     );
 
-    addPostOrCall(() {
+    addPostOrCall(fn: () {
       stopWatchTimer.onStartTimer();
       //stopWatchTimer.onExecute.add(StopWatchExecute.start);
 
@@ -246,7 +246,7 @@ class _OtpPageState extends StateBase<OtpPage> {
 
   void resetTimer(){
     stopWatchTimer.setPresetTime(mSec: StopWatchTimer.getMilliSecFromMinute(1));
-    stopWatchTimer.onExecute.add(StopWatchExecute.start);
+    stopWatchTimer.onStartTimer();
     showResendOtpButton = false;
     pinTextCtr.clear();
 

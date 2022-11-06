@@ -10,6 +10,7 @@ import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/customCard.dart';
 import 'package:app/views/errorOccur.dart';
+import 'package:app/views/greetingView.dart';
 import 'package:app/views/waitToLoad.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,11 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
   VideoPlayerController? playerController;
   ChewieController? chewieVideoController;
   bool isVideoInit = false;
+  bool showGreeting = false;
+  /*bool regulatorIsCall = false;
+  AttributeController atrCtr1 = AttributeController();
+  AttributeController atrCtr2 = AttributeController();
+  double regulator = 200;*/
 
   @override
   void initState(){
@@ -85,6 +91,7 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
     }
 
     currentIdiom = idiomsList[currentIdiomIdx];
+    showTranslate = currentIdiom.showTranslation;
     Color preColor = Colors.black;
     Color nextColor = Colors.black;
     initVideo();
@@ -93,7 +100,7 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
       preColor = Colors.grey;
     }
 
-    if(currentIdiomIdx == idiomsList.length-1){
+    if(currentIdiomIdx == idiomsList.length){
       nextColor = Colors.grey;
     }
 
@@ -164,7 +171,7 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
                       Row(
                         children: [
                           Chip(
-                            label: Text(widget.injection.segment.title).bold().color(Colors.white),
+                            label: Text('اصطلاحات').bold().color(Colors.white),//widget.injection.segment.title
                             padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
                             visualDensity: VisualDensity.compact,
                           ),
@@ -200,6 +207,7 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
                   ),
 
                   SizedBox(height: 14),
+
                   /// progressbar
                   Directionality(
                       textDirection: TextDirection.ltr,
@@ -208,65 +216,104 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
 
                   SizedBox(height: 14),
 
-                  Visibility(
-                    visible: currentIdiom.video?.fileLocation != null,
-                      child: isVideoInit?
-                      Chewie(controller: chewieVideoController!)
-                          : SizedBox(
-                          height: 190,
-                          child: const Center(child: CircularProgressIndicator())
-                      ),
-                  ),
+                 Builder(
+                     builder: (ctx){
+                       if(showGreeting){
+                         return Column(
+                           mainAxisSize: MainAxisSize.min,
+                           children: [
+                             buildGreetingView(),
+                             SizedBox(height: 20),
 
-                  Visibility(
-                    visible: currentIdiom.video?.fileLocation == null,
-                      child: Image.asset(AppImages.noImage),
-                  ),
+                             Row(
+                               children: [
+                                 ElevatedButton.icon(
+                                     onPressed: gotoNextPart,
+                                     label: Image.asset(AppImages.arrowRight2),
+                                     icon: Text('بخش بعدی')
+                                 ),
+
+                                 SizedBox(width: 30),
+                                 OutlinedButton.icon(
+                                     style: OutlinedButton.styleFrom(
+                                         side: BorderSide(color: Colors.red)
+                                     ),
+                                     onPressed: resetVocab,
+                                     label: Image.asset(AppImages.returnArrow),
+                                     icon: Text('شروع مجدد')
+                                 ),
+                               ],
+                             )
+                           ],
+                         );
+                       }
+                       else {
+                         return Column(
+                           children: [
+                             Visibility(
+                               visible: currentIdiom.video?.fileLocation != null,
+                               child: isVideoInit?
+                               Chewie(controller: chewieVideoController!)
+                                   : SizedBox(
+                                   height: 190,
+                                   child: const Center(child: CircularProgressIndicator())
+                               ),
+                             ),
+
+                             Visibility(
+                               visible: currentIdiom.video?.fileLocation == null,
+                               child: Image.asset(AppImages.noImage),
+                             ),
 
 
-                  SizedBox(height: 14),
-                  DecoratedBox(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.black, width: 1, style: BorderStyle.solid)
-                      ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            textDirection: TextDirection.ltr,
-                            children: [
-                              Flexible(
-                                  child: Text(currentIdiom.content, textDirection: TextDirection.ltr).englishFont()
-                                      .bold(weight: FontWeight.w400).fsR(4)),
-                            ],
-                          ),
+                             SizedBox(height: 14),
+                             DecoratedBox(
+                               decoration: BoxDecoration(
+                                   borderRadius: BorderRadius.circular(20),
+                                   border: Border.all(color: Colors.black, width: 1, style: BorderStyle.solid)
+                               ),
+                               child: Padding(
+                                 padding: const EdgeInsets.all(12.0),
+                                 child: Column(
+                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                   children: [
+                                     Row(
+                                       mainAxisAlignment: MainAxisAlignment.start,
+                                       textDirection: TextDirection.ltr,
+                                       children: [
+                                         Flexible(
+                                             child: Text(currentIdiom.content, textDirection: TextDirection.ltr).englishFont()
+                                                 .bold(weight: FontWeight.w400).fsR(4)),
+                                       ],
+                                     ),
 
-                          AnimatedCrossFade(
-                              firstChild: InputChip(
-                                onPressed: (){
-                                  showTranslate = !showTranslate;
-                                  assistCtr.updateMain();
-                                },
-                                label: Text('مشاهده ترجمه'),
-                              ),
-                              secondChild: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Text(currentIdiom.translation),
-                              ),
-                              crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                              duration: Duration(milliseconds: 300)
-                          ),
+                                     AnimatedCrossFade(
+                                         firstChild: InputChip(
+                                           onPressed: (){
+                                             showTranslate = !showTranslate;
+                                             assistCtr.updateMain();
+                                           },
+                                           label: Text('مشاهده ترجمه'),
+                                         ),
+                                         secondChild: Padding(
+                                           padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                           child: Text(currentIdiom.translation),
+                                         ),
+                                         crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                         duration: Duration(milliseconds: 300)
+                                     ),
 
-                          SizedBox(height: 10),
+                                     SizedBox(height: 10),
 
-                        ],
-                      ),
-                    ),
-                  ),
+                                   ],
+                                 ),
+                               ),
+                             ),
+                           ],
+                         );
+                       }
+                     }
+                 ),
 
                   SizedBox(height: 14),
                 ],
@@ -299,22 +346,58 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
     );
   }
 
+  Widget buildGreetingView(){
+    return Column(
+      children: [
+        GreetingView(),
+      ],
+    );
+  }
+
+  void gotoNextPart(){
+    /*if(widget.injection.segment.hasIdioms){
+      final inject = IdiomsSegmentPageInjector();
+      inject.lessonModel = widget.injection.lessonModel;
+      inject.segment = widget.injection.segment;
+
+      AppRoute.replace(context, IdiomsSegmentPage(injection: inject));
+    }*/
+  }
+
+  void resetVocab(){
+    showGreeting = false;
+    currentIdiomIdx = 0;
+
+    assistCtr.updateMain();
+  }
+
   double calcProgress(){
     int r = ((currentIdiomIdx+1) * 100) ~/ idiomsList.length;
     return r/100;
   }
 
   void onNextClick(){
-    showTranslate = false;
     chewieVideoController?.pause();
-    currentIdiomIdx++;
+
+    if(currentIdiomIdx < idiomsList.length-1) {
+      currentIdiomIdx++;
+    }
+    else {
+      showGreeting = true;
+    }
+
     assistCtr.updateMain();
   }
 
   void onPreClick(){
-    showTranslate = false;
-    chewieVideoController?.pause();
-    currentIdiomIdx--;
+    if(showGreeting){
+      showGreeting = false;
+    }
+    else {
+      chewieVideoController?.pause();
+      currentIdiomIdx--;
+    }
+
     assistCtr.updateMain();
   }
 
@@ -324,7 +407,10 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
 
     await playerController!.initialize();
     isVideoInit = playerController!.value.isInitialized;
-    onVideoInit();
+
+    if(mounted) {
+      onVideoInit();
+    }
   }
 
   void onVideoInit(){

@@ -1,6 +1,5 @@
 import 'package:app/services/jwtService.dart';
 import 'package:app/system/httpProcess.dart';
-import 'package:app/system/publicAccess.dart';
 import 'package:app/system/session.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
@@ -112,18 +111,15 @@ class Requester {
     });
 
     f = f.then((val) async {
-      if(_httpRequester.responseData?.statusCode != 200){
-        PublicAccess.logger.logToAll('@@@@@@@@@@@@@@@@@@@ ${_httpRequester.responseData?.statusCode}');
-      }
-
-      if(_httpRequester.responseData?.statusCode == 401){
+      if(_httpRequester.responseData?.statusCode == 401){ // token
         final getNewToken = await JwtService.requestNewToken(Session.getLastLoginUser()!);
 
         /// try request again
         if(getNewToken) {
           request(context, promptErrors);
-          return;
         }
+
+        return;
       }
 
       await httpRequestEvents.onAnyState?.call(_httpRequester);

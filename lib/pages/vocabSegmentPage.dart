@@ -1,9 +1,10 @@
 import 'package:animator/animator.dart';
 import 'package:app/managers/fontManager.dart';
 import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
+import 'package:app/models/lessonModels/lessonVocabularyModel.dart';
 import 'package:app/models/vocabModels/vocabModel.dart';
+import 'package:app/pages/idiomsSegmentPage.dart';
 import 'package:app/services/audioPplayerService.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/requester.dart';
@@ -11,18 +12,21 @@ import 'package:app/taskQueueCaller.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/customCard.dart';
 import 'package:app/views/errorOccur.dart';
+import 'package:app/views/greetingView.dart';
 import 'package:app/views/waitToLoad.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/attribute.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
 
 class VocabSegmentPageInjector {
   late LessonModel lessonModel;
-  late ISegmentModel segment;
+  late LessonVocabularyModel segment;
 }
 ///-----------------------------------------------------
 class VocabSegmentPage extends StatefulWidget {
@@ -48,6 +52,11 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
   late VocabModel currentVocab;
   TaskQueueCaller<VocabModel, dynamic> taskQue = TaskQueueCaller();
   String selectedPlayerId = '';
+  bool showGreeting = false;
+  bool regulatorIsCall = false;
+  AttributeController atrCtr1 = AttributeController();
+  AttributeController atrCtr2 = AttributeController();
+  double regulator = 200;
 
   @override
   void initState(){
@@ -95,6 +104,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
     }
 
     currentVocab = vocabList[currentVocabIdx];
+    showTranslate = currentVocab.showTranslation;
     Color preColor = Colors.black;
     Color nextColor = Colors.black;
 
@@ -102,309 +112,368 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
       preColor = Colors.grey;
     }
 
-    if(currentVocabIdx == vocabList.length-1){
+    if(currentVocabIdx == vocabList.length){
       nextColor = Colors.grey;
     }
 
     return Column(
       children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
+        Attribute(
+          controller: atrCtr1,
+          child: Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SingleChildScrollView(
+                child: Attribute(
+                  controller: atrCtr2,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
 
-                  ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                    child: ColoredBox(
-                      color: Colors.red,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 1.5),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(12)),
-                          child: ColoredBox(
-                            color: Colors.white,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        child: ColoredBox(
+                          color: Colors.red,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 1.5),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(Radius.circular(12)),
+                              child: ColoredBox(
+                                color: Colors.white,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Image.asset(AppImages.lessonListIco),
-                                      SizedBox(width: 10),
-                                      Text(widget.injection.lessonModel.title).bold().fsR(3)
+                                      Row(
+                                        children: [
+                                          Image.asset(AppImages.lessonListIco),
+                                          SizedBox(width: 10),
+                                          Text(widget.injection.lessonModel.title).bold().fsR(3)
+                                        ],
+                                      ),
+
+                                      GestureDetector(
+                                        onTap: (){
+                                          AppNavigator.pop(context);
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Text(AppMessages.back),
+                                            SizedBox(width: 10),
+                                            CustomCard(
+                                              color: Colors.grey.shade200,
+                                                padding: EdgeInsets.all(5),
+                                                child: Image.asset(AppImages.arrowLeftIco)
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
-
-                                  GestureDetector(
-                                    onTap: (){
-                                      AppNavigator.pop(context);
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Text(AppMessages.back),
-                                        SizedBox(width: 10),
-                                        CustomCard(
-                                          color: Colors.grey.shade200,
-                                            padding: EdgeInsets.all(5),
-                                            child: Image.asset(AppImages.arrowLeftIco)
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
 
-                  SizedBox(height: 14),
+                      SizedBox(height: 14),
 
-                  /// 7/20
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                      /// 7/20
                       Row(
-                        children: [
-                          Chip(
-                            label: Text(widget.injection.segment.title).bold().color(Colors.white),
-                            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-                            visualDensity: VisualDensity.compact,
-                          ),
-
-                          SizedBox(width: 10),
-
-                          /*SizedBox(
-                            height: 15,
-                            width: 2,
-                            child: ColoredBox(
-                              color: Colors.black45,
-                            ),
-                          ),*/
-                        ],
-                      ),
-
-                      Row(
-                        children: [
-                          Text('${vocabList.length}').englishFont().fsR(4),
-
-                          SizedBox(width: 10),
-                          Text('/').englishFont().fsR(5),
-
-                          SizedBox(width: 10),
-                          CustomCard(
-                            color: Colors.grey.shade200,
-                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                              child: Text('${currentVocabIdx+1}').englishFont().bold().fsR(4)
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 14),
-                  /// progressbar
-                  Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: LinearProgressIndicator(value: calcProgress(), backgroundColor: Colors.red.shade50)
-                  ),
-
-                  SizedBox(height: 14),
-
-                  Visibility(
-                    visible: currentVocab.image?.fileLocation != null,
-                      child: IrisImageView(
-                        height: sh/3,
-                        url: currentVocab.image?.fileLocation,
-                        beforeLoadWidget: SizedBox(
-                            height: sh/3,
-                            child: WaitToLoad()
-                        ),
-                      ),
-                  ),
-
-                  Visibility(
-                    visible: currentVocab.image?.fileLocation == null,
-                      child: Image.asset(AppImages.noImage),
-                  ),
-
-
-                  SizedBox(height: 14),
-                  DecoratedBox(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.black, width: 1, style: BorderStyle.solid)
-                      ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: (){
-                                      leitnerClick();
-                                    },
-                                    child: CustomCard(
-                                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 7),
-                                        color: Colors.grey.shade200,
-                                        child: Image.asset(currentVocab.inLeitner? AppImages.leitnerIcoRed : AppImages.leitnerIcoBlack),
-                                    ),
-                                  ),
-
-                                  SizedBox(width: 10),
-
-                                  GestureDetector(
-                                    onTap: (){
-                                      selectedPlayerId = id$usVoicePlayerSectionId;
-                                      playSound(id$usVoicePlayerSectionId);
-                                    },
-                                    child: Assist(
-                                      controller: assistCtr,
-                                      id: id$usVoicePlayerSectionId,
-                                      groupId: id$voicePlayerGroupId,
-                                      builder: (_, ctr, data){
-                                        return AnimateWidget(
-                                          resetOnRebuild: true,
-                                          triggerOnRebuild: true,
-                                          duration: Duration(milliseconds: 500),
-                                          cycles: data == 'prepare' ? 100 : 1,
-                                          builder: (_, animate){
-                                            Color color = Colors.grey.shade200;
-                                            if(data == 'prepare'){
-                                              color = animate.fromTween((v) => ColorTween(begin: Colors.red, end:Colors.red.withAlpha(50)))!;
-                                            }
-                                            else if(data == 'play'){
-                                              color = Colors.red;
-                                            }
-
-                                            return CustomCard(
-                                              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
-                                              color: color,
-                                              child: Column(
-                                                children: [
-                                                  Image.asset(AppImages.speaker2Ico, height: 16, width: 20),
-                                                  SizedBox(height: 3),
-                                                  Text('US', style: TextStyle(fontSize: 9))
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-
-                                  SizedBox(width: 10),
-
-                                 GestureDetector(
-                                    onTap: (){
-                                      selectedPlayerId = id$ukVoicePlayerSectionId;
-                                      playSound(id$ukVoicePlayerSectionId);
-                                    },
-                                    child: Assist(
-                                      controller: assistCtr,
-                                      id: id$ukVoicePlayerSectionId,
-                                      groupId: id$voicePlayerGroupId,
-                                      builder: (_, ctr, data){
-                                        return AnimateWidget(
-                                          resetOnRebuild: true,
-                                          triggerOnRebuild: true,
-                                          duration: Duration(milliseconds: 500),
-                                          cycles: data == 'prepare' ? 100 : 1,
-                                          builder: (_, animate){
-                                            Color color = Colors.grey.shade200;
-                                            if(data == 'prepare'){
-                                              color = animate.fromTween((v) => ColorTween(begin: Colors.red, end:Colors.red.withAlpha(50)))!;
-                                            }
-                                            else if(data == 'play'){
-                                              color = Colors.red;
-                                            }
-
-                                            return CustomCard(
-                                              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
-                                              color: color,
-                                              child: Column(
-                                                children: [
-                                                  Image.asset(AppImages.speaker2Ico, height: 16, width: 20),
-                                                  SizedBox(height: 3),
-                                                  Text('UK', style: TextStyle(fontSize: 9),)
-                                                ],
-                                              )
-                                            );
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-
-                                  SizedBox(width: 10),
-
-                                  RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(text: '[ ', style: TextStyle(fontSize: 16, color: Colors.black)),
-                                        TextSpan(text: '${currentVocab.pronunciation}', style: TextStyle(fontSize: 12, color: Colors.black)),
-                                        TextSpan(text: ' ]', style: TextStyle(fontSize: 16, color: Colors.black))
-                                      ]
-                                    ),
-                                  ),
-                                ],
+                              Chip(
+                                label: Text(widget.injection.segment.title).bold().color(Colors.white),
+                                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                                visualDensity: VisualDensity.compact,
                               ),
 
-                              Flexible(
-                                  child: Text(currentVocab.word, textDirection: TextDirection.ltr,)
-                                      .bold(weight: FontWeight.w400).fsR(4)
-                              ),
+                              SizedBox(width: 10),
+
+                              /*SizedBox(
+                                height: 15,
+                                width: 2,
+                                child: ColoredBox(
+                                  color: Colors.black45,
+                                ),
+                              ),*/
                             ],
                           ),
 
-                          Padding(
-                              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 1,
-                              child: ColoredBox(color: Colors.grey),
-                            ),
+                          Row(
+                            children: [
+                              Text('${vocabList.length}').englishFont().fsR(4),
+
+                              SizedBox(width: 10),
+                              Text('/').englishFont().fsR(5),
+
+                              SizedBox(width: 10),
+                              CustomCard(
+                                color: Colors.grey.shade200,
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                  child: Text('${currentVocabIdx+1}').englishFont().bold().fsR(4)
+                              )
+                            ],
                           ),
-
-                          AnimatedCrossFade(
-                              firstChild: InputChip(
-                                onPressed: (){
-                                  showTranslate = !showTranslate;
-                                  assistCtr.updateMain();
-                                },
-                                label: Text('مشاهده ترجمه'),
-                              ),
-                              secondChild: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Text(currentVocab.translation),
-                              ),
-                              crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                              duration: Duration(milliseconds: 300)
-                          ),
-
-                          SizedBox(height: 10),
-
-                          ...buildDescription(),
-
                         ],
                       ),
-                    ),
-                  ),
 
-                  SizedBox(height: 14),
-                ],
+                      SizedBox(height: 14),
+
+                      /// progressbar
+                      Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: LinearProgressIndicator(value: calcProgress(), backgroundColor: Colors.red.shade50)
+                      ),
+
+                      SizedBox(height: 14),
+
+                      Builder(
+                          builder: (ctx){
+                            if(showGreeting){
+                              addPostOrCall(subContext: ctx, fn: () {
+                                final dif = atrCtr1.getHeight()! - atrCtr2.getHeight()!;
+
+                                if(dif > 0 && !regulatorIsCall) {
+                                  regulatorIsCall = true;
+                                  regulator += dif;
+                                  assistCtr.updateMain();
+                                }});
+
+                              return SizedBox(
+                                height: regulator,
+                                  child: FittedBox(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          buildGreetingView(),
+                                          SizedBox(height: 20),
+
+                                          Row(
+                                            children: [
+                                              ElevatedButton.icon(
+                                                  onPressed: gotoNextPart,
+                                                  label: Image.asset(AppImages.arrowRight2),
+                                                  icon: Text('بخش بعدی')
+                                              ),
+
+                                              SizedBox(width: 30),
+                                              OutlinedButton.icon(
+                                                style: OutlinedButton.styleFrom(
+                                                  side: BorderSide(color: Colors.red)
+                                                ),
+                                                  onPressed: resetVocab,
+                                                  label: Image.asset(AppImages.returnArrow),
+                                                  icon: Text('شروع مجدد')
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      )
+                                  )
+                              );
+                            }
+                            else {
+                              return Column(
+                                children: [
+                                  Visibility(
+                                    visible: currentVocab.image?.fileLocation != null,
+                                    child: IrisImageView(
+                                      height: sh/3,
+                                      url: currentVocab.image?.fileLocation,
+                                      beforeLoadWidget: SizedBox(
+                                          height: sh/3,
+                                          child: WaitToLoad()
+                                      ),
+                                    ),
+                                  ),
+
+                                  Visibility(
+                                    visible: currentVocab.image?.fileLocation == null,
+                                    child: Image.asset(AppImages.noImage),
+                                  ),
+
+                                  SizedBox(height: 14),
+                                  DecoratedBox(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(color: Colors.black, width: 1, style: BorderStyle.solid)
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: (){
+                                                      leitnerClick();
+                                                    },
+                                                    child: CustomCard(
+                                                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 7),
+                                                      color: Colors.grey.shade200,
+                                                      child: Image.asset(currentVocab.inLeitner? AppImages.leitnerIcoRed : AppImages.leitnerIcoBlack),
+                                                    ),
+                                                  ),
+
+                                                  SizedBox(width: 10),
+
+                                                  GestureDetector(
+                                                    onTap: (){
+                                                      selectedPlayerId = id$usVoicePlayerSectionId;
+                                                      playSound(id$usVoicePlayerSectionId);
+                                                    },
+                                                    child: Assist(
+                                                      controller: assistCtr,
+                                                      id: id$usVoicePlayerSectionId,
+                                                      groupId: id$voicePlayerGroupId,
+                                                      builder: (_, ctr, data){
+                                                        return AnimateWidget(
+                                                          resetOnRebuild: true,
+                                                          triggerOnRebuild: true,
+                                                          duration: Duration(milliseconds: 500),
+                                                          cycles: data == 'prepare' ? 100 : 1,
+                                                          builder: (_, animate){
+                                                            Color color = Colors.grey.shade200;
+                                                            if(data == 'prepare'){
+                                                              color = animate.fromTween((v) => ColorTween(begin: Colors.red, end:Colors.red.withAlpha(50)))!;
+                                                            }
+                                                            else if(data == 'play'){
+                                                              color = Colors.red;
+                                                            }
+
+                                                            return CustomCard(
+                                                              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+                                                              color: color,
+                                                              child: Column(
+                                                                children: [
+                                                                  Image.asset(AppImages.speaker2Ico, height: 16, width: 20),
+                                                                  SizedBox(height: 3),
+                                                                  Text('US', style: TextStyle(fontSize: 9))
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+
+                                                  SizedBox(width: 10),
+
+                                                  GestureDetector(
+                                                    onTap: (){
+                                                      selectedPlayerId = id$ukVoicePlayerSectionId;
+                                                      playSound(id$ukVoicePlayerSectionId);
+                                                    },
+                                                    child: Assist(
+                                                      controller: assistCtr,
+                                                      id: id$ukVoicePlayerSectionId,
+                                                      groupId: id$voicePlayerGroupId,
+                                                      builder: (_, ctr, data){
+                                                        return AnimateWidget(
+                                                          resetOnRebuild: true,
+                                                          triggerOnRebuild: true,
+                                                          duration: Duration(milliseconds: 500),
+                                                          cycles: data == 'prepare' ? 100 : 1,
+                                                          builder: (_, animate){
+                                                            Color color = Colors.grey.shade200;
+                                                            if(data == 'prepare'){
+                                                              color = animate.fromTween((v) => ColorTween(begin: Colors.red, end:Colors.red.withAlpha(50)))!;
+                                                            }
+                                                            else if(data == 'play'){
+                                                              color = Colors.red;
+                                                            }
+
+                                                            return CustomCard(
+                                                                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+                                                                color: color,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Image.asset(AppImages.speaker2Ico, height: 16, width: 20),
+                                                                    SizedBox(height: 3),
+                                                                    Text('UK', style: TextStyle(fontSize: 9),)
+                                                                  ],
+                                                                )
+                                                            );
+                                                          },
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+
+                                                  SizedBox(width: 10),
+
+                                                  RichText(
+                                                    text: TextSpan(
+                                                        children: [
+                                                          TextSpan(text: '[ ', style: TextStyle(fontSize: 16, color: Colors.black)),
+                                                          TextSpan(text: '${currentVocab.pronunciation}', style: TextStyle(fontSize: 12, color: Colors.black)),
+                                                          TextSpan(text: ' ]', style: TextStyle(fontSize: 16, color: Colors.black))
+                                                        ]
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+
+                                              Flexible(
+                                                  child: Text(currentVocab.word, textDirection: TextDirection.ltr,)
+                                                      .bold(weight: FontWeight.w400).fsR(4)
+                                              ),
+                                            ],
+                                          ),
+
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
+                                            child: SizedBox(
+                                              width: double.infinity,
+                                              height: 1,
+                                              child: ColoredBox(color: Colors.grey),
+                                            ),
+                                          ),
+
+                                          AnimatedCrossFade(
+                                              firstChild: InputChip(
+                                                onPressed: (){
+                                                  showTranslate = !showTranslate;
+                                                  assistCtr.updateMain();
+                                                },
+                                                label: Text('مشاهده ترجمه'),
+                                              ),
+                                              secondChild: Padding(
+                                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                                child: Text(currentVocab.translation),
+                                              ),
+                                              crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                              duration: Duration(milliseconds: 300)
+                                          ),
+
+                                          SizedBox(height: 10),
+
+                                          ...buildDescription(),
+
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                          }
+                      ),
+
+                      SizedBox(height: 14),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -581,6 +650,14 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
     return list;
   }
 
+  Widget buildGreetingView(){
+    return Column(
+      children: [
+        GreetingView(),
+      ],
+    );
+  }
+
   double calcProgress(){
     int r = ((currentVocabIdx+1) * 100) ~/ vocabList.length;
     return r/100;
@@ -602,19 +679,47 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
     });
   }
 
+  void resetVocab(){
+    showGreeting = false;
+    currentVocabIdx = 0;
+
+    assistCtr.updateMain();
+  }
+
+  void gotoNextPart(){
+    if(widget.injection.segment.hasIdioms){
+      final inject = IdiomsSegmentPageInjector();
+      inject.lessonModel = widget.injection.lessonModel;
+      inject.segment = widget.injection.segment;
+
+      AppRoute.replace(context, IdiomsSegmentPage(injection: inject));
+    }
+  }
+
   void onNextClick(){
-    showTranslate = false;
     AudioPlayerService.getAudioPlayer().stop();
     assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
-    currentVocabIdx++;
+
+    if(currentVocabIdx < vocabList.length-1) {
+      currentVocabIdx++;
+    }
+    else {
+      showGreeting = true;
+    }
+
     assistCtr.updateMain();
   }
 
   void onPreClick(){
-    showTranslate = false;
-    AudioPlayerService.getAudioPlayer().stop();
-    assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
-    currentVocabIdx--;
+    if(showGreeting){
+      showGreeting = false;
+    }
+    else {
+      AudioPlayerService.getAudioPlayer().stop();
+      assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
+      currentVocabIdx--;
+    }
+
     assistCtr.updateMain();
   }
 

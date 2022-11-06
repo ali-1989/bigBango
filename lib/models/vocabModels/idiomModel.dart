@@ -5,6 +5,7 @@ class IdiomModel {
   late String id;
   late String content;
   late String translation;
+  bool showTranslation = false;
   MediaModel? video;
 
 
@@ -14,6 +15,7 @@ class IdiomModel {
     id = map[Keys.id];
     content = map['content'];
     translation = map['translation'];
+    showTranslation = map['showTranslation']?? false;
 
 
     if (map['video'] is Map) {
@@ -28,6 +30,7 @@ class IdiomModel {
     map['content'] = content;
     map['translation'] = translation;
     map['video'] = video?.toMap();
+    map['showTranslation'] = showTranslation;
 
     return map;
   }

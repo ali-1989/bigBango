@@ -1,5 +1,6 @@
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
+import 'package:app/models/lessonModels/lessonVocabularyModel.dart';
 import 'package:app/pages/idiomsSegmentPage.dart';
 import 'package:app/pages/vocabSegmentPage.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -69,7 +70,7 @@ class _LessonSegmentViewState extends State<LessonSegmentView> {
                             onTap: (){
                               final inject = VocabSegmentPageInjector();
                               inject.lessonModel = widget.injection.lessonModel;
-                              inject.segment = widget.injection.segment;
+                              inject.segment = widget.injection.segment as LessonVocabularyModel;
 
                               AppRoute.push(context, VocabSegmentPage(injection: inject));
                             },
