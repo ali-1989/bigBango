@@ -15,6 +15,7 @@ import 'package:app/views/waitToLoad.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/attribute.dart';
 import 'package:video_player/video_player.dart';
 
 class IdiomsSegmentPageInjector {
@@ -44,10 +45,10 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
   ChewieController? chewieVideoController;
   bool isVideoInit = false;
   bool showGreeting = false;
-  /*bool regulatorIsCall = false;
+  bool regulatorIsCall = false;
   AttributeController atrCtr1 = AttributeController();
   AttributeController atrCtr2 = AttributeController();
-  double regulator = 200;*/
+  double regulator = 200;
 
   @override
   void initState(){
@@ -107,216 +108,230 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
     return Column(
       children: [
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
+          child: Attribute(
+            controller: atrCtr1,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SingleChildScrollView(
+                child: Attribute(
+                  controller: atrCtr2,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
 
-                  ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                    child: ColoredBox(
-                      color: Colors.red,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 1.5),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(12)),
-                          child: ColoredBox(
-                            color: Colors.white,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        child: ColoredBox(
+                          color: Colors.red,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 1.5),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(Radius.circular(12)),
+                              child: ColoredBox(
+                                color: Colors.white,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Image.asset(AppImages.lessonListIco),
-                                      SizedBox(width: 10),
-                                      Text(widget.injection.lessonModel.title).bold().fsR(3)
+                                      Row(
+                                        children: [
+                                          Image.asset(AppImages.lessonListIco),
+                                          SizedBox(width: 10),
+                                          Text(widget.injection.lessonModel.title).bold().fsR(3)
+                                        ],
+                                      ),
+
+                                      GestureDetector(
+                                        onTap: (){
+                                          AppNavigator.pop(context);
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Text(AppMessages.back),
+                                            SizedBox(width: 10),
+                                            CustomCard(
+                                              color: Colors.grey.shade200,
+                                                padding: EdgeInsets.all(5),
+                                                child: Image.asset(AppImages.arrowLeftIco)
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
-
-                                  GestureDetector(
-                                    onTap: (){
-                                      AppNavigator.pop(context);
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Text(AppMessages.back),
-                                        SizedBox(width: 10),
-                                        CustomCard(
-                                          color: Colors.grey.shade200,
-                                            padding: EdgeInsets.all(5),
-                                            child: Image.asset(AppImages.arrowLeftIco)
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
 
-                  SizedBox(height: 14),
+                      SizedBox(height: 14),
 
-                  /// 7/20
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                      /// 7/20
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Chip(
-                            label: Text('اصطلاحات').bold().color(Colors.white),//widget.injection.segment.title
-                            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-                            visualDensity: VisualDensity.compact,
+                          Row(
+                            children: [
+                              Chip(
+                                label: Text('اصطلاحات').bold().color(Colors.white),//widget.injection.segment.title
+                                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                                visualDensity: VisualDensity.compact,
+                              ),
+
+                              SizedBox(width: 10),
+                            ],
                           ),
 
-                          SizedBox(width: 10),
+                          Row(
+                            children: [
+                              Text('${idiomsList.length}').englishFont().fsR(4),
 
-                          /*SizedBox(
-                            height: 15,
-                            width: 2,
-                            child: ColoredBox(
-                              color: Colors.black45,
-                            ),
-                          ),*/
+                              SizedBox(width: 10),
+                              Text('/').englishFont().fsR(5),
+
+                              SizedBox(width: 10),
+                              CustomCard(
+                                color: Colors.grey.shade200,
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                  child: Text('${currentIdiomIdx+1}').englishFont().bold().fsR(4)
+                              )
+                            ],
+                          ),
                         ],
                       ),
 
-                      Row(
-                        children: [
-                          Text('${idiomsList.length}').englishFont().fsR(4),
+                      SizedBox(height: 14),
 
-                          SizedBox(width: 10),
-                          Text('/').englishFont().fsR(5),
-
-                          SizedBox(width: 10),
-                          CustomCard(
-                            color: Colors.grey.shade200,
-                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                              child: Text('${currentIdiomIdx+1}').englishFont().bold().fsR(4)
-                          )
-                        ],
+                      /// progressbar
+                      Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: LinearProgressIndicator(value: calcProgress(), backgroundColor: Colors.red.shade50)
                       ),
-                    ],
-                  ),
 
-                  SizedBox(height: 14),
+                      SizedBox(height: 14),
 
-                  /// progressbar
-                  Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: LinearProgressIndicator(value: calcProgress(), backgroundColor: Colors.red.shade50)
-                  ),
+                     Builder(
+                         builder: (ctx){
+                           if(showGreeting){
+                             addPostOrCall(subContext: ctx, fn: () {
+                               final dif = atrCtr1.getHeight()! - atrCtr2.getHeight()!;
 
-                  SizedBox(height: 14),
+                               if(dif > 0 && !regulatorIsCall) {
+                                 regulatorIsCall = true;
+                                 regulator += dif;
+                                 assistCtr.updateMain();
+                               }});
 
-                 Builder(
-                     builder: (ctx){
-                       if(showGreeting){
-                         return Column(
-                           mainAxisSize: MainAxisSize.min,
-                           children: [
-                             buildGreetingView(),
-                             SizedBox(height: 20),
-
-                             Row(
-                               children: [
-                                 ElevatedButton.icon(
-                                     onPressed: gotoNextPart,
-                                     label: Image.asset(AppImages.arrowRight2),
-                                     icon: Text('بخش بعدی')
-                                 ),
-
-                                 SizedBox(width: 30),
-                                 OutlinedButton.icon(
-                                     style: OutlinedButton.styleFrom(
-                                         side: BorderSide(color: Colors.red)
-                                     ),
-                                     onPressed: resetVocab,
-                                     label: Image.asset(AppImages.returnArrow),
-                                     icon: Text('شروع مجدد')
-                                 ),
-                               ],
-                             )
-                           ],
-                         );
-                       }
-                       else {
-                         return Column(
-                           children: [
-                             Visibility(
-                               visible: currentIdiom.video?.fileLocation != null,
-                               child: isVideoInit?
-                               Chewie(controller: chewieVideoController!)
-                                   : SizedBox(
-                                   height: 190,
-                                   child: const Center(child: CircularProgressIndicator())
-                               ),
-                             ),
-
-                             Visibility(
-                               visible: currentIdiom.video?.fileLocation == null,
-                               child: Image.asset(AppImages.noImage),
-                             ),
-
-
-                             SizedBox(height: 14),
-                             DecoratedBox(
-                               decoration: BoxDecoration(
-                                   borderRadius: BorderRadius.circular(20),
-                                   border: Border.all(color: Colors.black, width: 1, style: BorderStyle.solid)
-                               ),
-                               child: Padding(
-                                 padding: const EdgeInsets.all(12.0),
-                                 child: Column(
-                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                   children: [
-                                     Row(
-                                       mainAxisAlignment: MainAxisAlignment.start,
-                                       textDirection: TextDirection.ltr,
+                             return SizedBox(
+                                 height: regulator,
+                                 child: FittedBox(
+                                     child: Column(
+                                       mainAxisSize: MainAxisSize.min,
                                        children: [
-                                         Flexible(
-                                             child: Text(currentIdiom.content, textDirection: TextDirection.ltr).englishFont()
-                                                 .bold(weight: FontWeight.w400).fsR(4)),
+                                         buildGreetingView(),
+                                         SizedBox(height: 20),
+
+                                         Row(
+                                           children: [
+                                             ElevatedButton.icon(
+                                                 onPressed: gotoNextPart,
+                                                 label: Image.asset(AppImages.arrowRight2),
+                                                 icon: Text('بخش بعدی')
+                                             ),
+
+                                             SizedBox(width: 30),
+                                             OutlinedButton.icon(
+                                                 style: OutlinedButton.styleFrom(
+                                                     side: BorderSide(color: Colors.red)
+                                                 ),
+                                                 onPressed: resetVocab,
+                                                 label: Image.asset(AppImages.returnArrow),
+                                                 icon: Text('شروع مجدد')
+                                             ),
+                                           ],
+                                         )
+                                       ],
+                                     )
+                                 )
+                             );
+                           }
+                           else {
+                             return Column(
+                               children: [
+                                 Builder(
+                                   builder: (_){
+                                     if(currentIdiom.video?.fileLocation != null){
+                                       if(isVideoInit){
+                                         return Chewie(controller: chewieVideoController!);
+                                       }
+                                       else {
+                                         return SizedBox(
+                                             height: 190,
+                                             child: const Center(child: CircularProgressIndicator())
+                                         );
+                                       }
+                                     }
+                                     else {
+                                       return Image.asset(AppImages.noImage);
+                                     }
+                                   },
+                                 ),
+
+                                 SizedBox(height: 14),
+                                 DecoratedBox(
+                                   decoration: BoxDecoration(
+                                       borderRadius: BorderRadius.circular(20),
+                                       border: Border.all(color: Colors.black, width: 1, style: BorderStyle.solid)
+                                   ),
+                                   child: Padding(
+                                     padding: const EdgeInsets.all(12.0),
+                                     child: Column(
+                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                       children: [
+                                         Row(
+                                           mainAxisAlignment: MainAxisAlignment.start,
+                                           textDirection: TextDirection.ltr,
+                                           children: [
+                                             Flexible(
+                                                 child: Text(currentIdiom.content, textDirection: TextDirection.ltr).englishFont()
+                                                     .bold(weight: FontWeight.w400).fsR(4)),
+                                           ],
+                                         ),
+
+                                         AnimatedCrossFade(
+                                             firstChild: InputChip(
+                                               onPressed: (){
+                                                 showTranslate = !showTranslate;
+                                                 assistCtr.updateMain();
+                                               },
+                                               label: Text('مشاهده ترجمه'),
+                                             ),
+                                             secondChild: Padding(
+                                               padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                               child: Text(currentIdiom.translation),
+                                             ),
+                                             crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                             duration: Duration(milliseconds: 300)
+                                         ),
+
+                                         SizedBox(height: 10),
                                        ],
                                      ),
-
-                                     AnimatedCrossFade(
-                                         firstChild: InputChip(
-                                           onPressed: (){
-                                             showTranslate = !showTranslate;
-                                             assistCtr.updateMain();
-                                           },
-                                           label: Text('مشاهده ترجمه'),
-                                         ),
-                                         secondChild: Padding(
-                                           padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                           child: Text(currentIdiom.translation),
-                                         ),
-                                         crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                                         duration: Duration(milliseconds: 300)
-                                     ),
-
-                                     SizedBox(height: 10),
-
-                                   ],
+                                   ),
                                  ),
-                               ),
-                             ),
-                           ],
-                         );
-                       }
-                     }
-                 ),
+                               ],
+                             );
+                           }
+                         }
+                     ),
 
-                  SizedBox(height: 14),
-                ],
+                      SizedBox(height: 14),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -347,11 +362,7 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
   }
 
   Widget buildGreetingView(){
-    return Column(
-      children: [
-        GreetingView(),
-      ],
-    );
+    return GreetingView();
   }
 
   void gotoNextPart(){

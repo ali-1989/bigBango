@@ -10,14 +10,14 @@ class AppRoute {
   static void init() {
   }
 
-  static BuildContext getContext() {
+  static BuildContext getLastContext() {
     var res = WidgetsBinding.instance.focusManager.rootScope.focusedChild?.context;//deep: 50
     res ??= WidgetsBinding.instance.focusManager.primaryFocus?.context; //deep: 71
 
-    return res?? getMaterialContext();
+    return res?? getBaseContext();
   }
 
-  static BuildContext getMaterialContext() {
+  static BuildContext getBaseContext() {
     return materialContext;
   }
 
@@ -38,7 +38,7 @@ class AppRoute {
   }*/
 
   static void backRoute() {
-    final lastCtx = AppNavigator.getLastRouteContext(getContext());
+    final lastCtx = AppNavigator.getLastRouteContext(getLastContext());
     AppNavigator.backRoute(lastCtx);
   }
 

@@ -12,6 +12,7 @@ import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/dateTools.dart';
 import 'package:app/tools/deviceInfoTools.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/checker.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -337,7 +338,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
     }
 
     if(email.isNotEmpty){
-      if(!isValidEmail(email)){
+      if(!Checker.isValidEmail(email)){
         AppSnack.showError(context, AppMessages.emailFormatInCorrect);
         return;
       }
@@ -437,18 +438,5 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
     requester.methodType = MethodType.post;
     requester.bodyJson = js;
     requester.request(context);
-  }
-
-  static bool isValidEmail(String email) {
-
-    var ePattern = '''^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@
-        (([(\d|[1-9]\d|1[0-9][0-9]|(2([0-4]\d|5[0-5])))\.
-        (\d|[1-9]\d|1[0-9][0-9]|(2([0-4]\d|5[0-5])))\.
-        (\d|[1-9]\d|1[0-9][0-9]|(2([0-4]\d|5[0-5])))\.
-        (\d|[1-9]\d|1[0-9][0-9]|(2([0-4]\d|5[0-5])))])|(([a-zA-Z\\-0-9]+\.)+[a-zA-Z]{2,})\$''';
-
-
-    final regExp = RegExp(ePattern);
-    return regExp.hasMatch(email);
   }
 }

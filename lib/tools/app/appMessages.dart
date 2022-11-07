@@ -125,7 +125,7 @@ class AppMessages {
   }
 
   static String get doYouWantLogoutYourAccount {
-    return '';
+    return 'آیا از حساب کاربری خارج می شوید؟';
   }
   
   static String get newAppVersionIsOk {

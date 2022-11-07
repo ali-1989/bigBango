@@ -55,7 +55,6 @@ class MyApp extends StatelessWidget {
   ///============ call on any hot reload
   @override
   Widget build(BuildContext context) {
-    AppRoute.materialContext = context;
 
     /// ReBuild First Widgets tree, not call on Navigator pages
     return StreamBuilder<bool>(
@@ -80,6 +79,8 @@ class MyApp extends StatelessWidget {
           ),
           home: materialHomeBuilder(null),
           builder: (subContext, home) {
+            AppRoute.materialContext = subContext;
+
             return Directionality(
                 textDirection: AppThemes.instance.textDirection,
                 child: DevicePreview.appBuilder(subContext, home)// home! //materialHomeBuilder(home)

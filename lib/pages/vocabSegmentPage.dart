@@ -651,11 +651,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
   }
 
   Widget buildGreetingView(){
-    return Column(
-      children: [
-        GreetingView(),
-      ],
-    );
+    return GreetingView();
   }
 
   double calcProgress(){

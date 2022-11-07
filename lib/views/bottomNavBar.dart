@@ -52,8 +52,8 @@ class BottomNavBarState extends State<BottomNavBar> {
 
             buildSeparator(),
             Flexible(
-                child: buildItem('پروفایل',
-                    _isSelected(2)? Image.asset(AppImages.userIcoBlack, width: 40, color: Colors.red) : Image.asset(AppImages.userIcoBlack, width: 40),
+                child: buildItem('فروشگاه',
+                    _isSelected(2)? Image.asset(AppImages.marketIco, width: 40, color: Colors.red) : Image.asset(AppImages.marketIco, width: 40),
                     2
                 )
             ),

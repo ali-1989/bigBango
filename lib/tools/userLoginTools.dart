@@ -1,4 +1,3 @@
-import 'package:app/system/keys.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 
@@ -49,8 +48,8 @@ class UserLoginTools {
     //AppBroadcast.layoutPageKey.currentState?.scaffoldState.currentState?.closeDrawer();
 
     if (isCurrent) {
-      AppRoute.backToRoot(AppRoute.getContext());
-
+      AppRoute.backToRoot(AppRoute.getLastContext());
+      AppBroadcast.reBuildMaterial();
       /*Future.delayed(Duration(milliseconds: 400), (){
         AppRoute.replaceNamed(AppRoute.getContext(), LoginPage.route.name!);
       });*/
@@ -63,6 +62,7 @@ class UserLoginTools {
     AppBroadcast.drawerMenuRefresher.update();
     //AppBroadcast.layoutPageKey.currentState?.scaffoldState.currentState?.closeDrawer();
 
-    AppRoute.backToRoot(AppRoute.getContext());
+    AppRoute.backToRoot(AppRoute.getLastContext());
+    AppBroadcast.reBuildMaterial();
   }
 }

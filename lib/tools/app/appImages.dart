@@ -34,6 +34,7 @@ class AppImages {
   static const statusbar = 'assets/images/statusbar.png';
   static const levelBadgeIco = 'assets/images/levelBadgeIco.png';
   static const profile = 'assets/images/profile.png';
+  static const profileBig = 'assets/images/profileBig.png';
   static const lessonIcoRed = 'assets/images/lessonsIco.png';
   static const lessonIcoBlack = 'assets/images/lessonIcoBlack.png';
   static const leitnerIcoBlack = 'assets/images/lightnerIcoBlack.png';
@@ -72,6 +73,15 @@ class AppImages {
   static const newVersion = 'assets/images/newVersion.png';
   static const newVersionIco = 'assets/images/newVersionIco.png';
   static const lightner = 'assets/images/lightner.png';
+  static const drawerAboutIco = 'assets/images/drawer_aboutIco.png';
+  static const drawerExitIco = 'assets/images/drawer_exitIco.png';
+  static const drawerLogIco = 'assets/images/drawer_logIco.png';
+  static const drawerProfileIco = 'assets/images/drawer_profileIco.png';
+  static const drawerSendIco = 'assets/images/drawer_sendIco.png';
+  static const drawerSettingIco = 'assets/images/drawer_settingIco.png';
+  static const drawerSupportIco = 'assets/images/drawer_supportIco.png';
+  static const drawerWalletIco = 'assets/images/drawer_walletIco.png';
+  static const marketIco = 'assets/images/marketIco.png';
 }
 
 

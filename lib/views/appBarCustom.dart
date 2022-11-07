@@ -1,9 +1,8 @@
 import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/system/session.dart';
-import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/views/changeLevel.dart';
+import 'package:app/views/drawerMenuBuilder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
@@ -96,8 +95,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                   padding: const EdgeInsets.fromLTRB(0, 22, 15, 0),
                   child: GestureDetector(
                     onTap: () async {
-                      await Session.logoffAll();
-                      AppBroadcast.reBuildMaterial();
+                      DrawerMenuBuilder.toggleDrawer(context);
                     },
                     child: Row(
                       children: [
