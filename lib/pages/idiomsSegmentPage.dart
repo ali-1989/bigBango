@@ -5,8 +5,6 @@ import 'package:app/models/vocabModels/idiomModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/widgets/customCard.dart';

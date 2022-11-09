@@ -1,30 +1,27 @@
-import 'dart:math';
-
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/examBlankModel.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/views/widgets/animationPositionScale.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-class ExamBlankSpacePageInjection {
+class ExamBlankSpaceInjector {
   late LessonModel lessonModel;
   late ISegmentModel segment;
 }
 ///-----------------------------------------------------
 class ExamBlankSpacePage extends StatefulWidget {
-  final ExamBlankSpacePageInjection injection;
+  final ExamBlankSpaceInjector injector;
 
   const ExamBlankSpacePage({
-    required this.injection,
+    required this.injector,
     Key? key
   }) : super(key: key);
 
@@ -45,7 +42,7 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
 
     List.generate(10, (index) {
       final m = ExamBlankModel()..id = index;
-      m.question = generateWords(20, 2, 10);
+      m.question = Generator.generateWords(20, 2, 10);
       //m.question = '*****${m.question}';
 
       examItems.add(m);
@@ -54,59 +51,6 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
     for(final k in examItems){
       k.doSplitQuestion();
     }
-  }
-
-  String generateWords(int wordCount, int minWordLen, int maxWordLean){
-    final List<String> words = [];
-    words.add('hi');
-    words.add('hello');
-    words.add('and');
-    words.add('a');
-    words.add('an');
-    words.add('is');
-    words.add('was');
-    words.add('has');
-    words.add('the');
-    words.add('good');
-    words.add('goodBy');
-    words.add('good morning');
-    words.add('what');
-    words.add('not');
-    words.add('same');
-    words.add('some');
-    words.add('where');
-    words.add('*****');
-    words.add('who');
-    words.add('mr');
-    words.add('miss');
-    words.add('book');
-    words.add('flower');
-    words.add('computer');
-    words.add('wallet');
-    words.add('device');
-    words.add('go');
-    words.add('come');
-    words.add('back');
-    words.add('next');
-    words.add('glass');
-    words.add('dish');
-    words.add('he');
-    words.add('she');
-    words.add('we');
-
-
-    List<String> res = [];
-    final r = Random();
-
-    while(res.length < wordCount){
-      final w = words[r.nextInt(words.length)];
-
-      if(w.length >= minWordLen && w.length <= maxWordLean) {
-        res.add(w);
-      }
-    }
-
-    return res.join(' ');
   }
 
   @override
@@ -119,11 +63,7 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
     return Assist(
       controller: assistCtr,
         builder: (ctx, ctr, data){
-          return Scaffold(
-            body: SafeArea(
-                child: buildBody()
-            ),
-          );
+          return buildBody();
         }
     );
   }
@@ -133,58 +73,6 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          SizedBox(height: 20),
-
-          DecoratedBox(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-              ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 4,
-                        height: 26,
-                        child: ColoredBox(color: Colors.red),
-                      ),
-
-                      SizedBox(width: 7),
-                      Text('تمرین').bold().fsR(4),
-                    ],
-                  ),
-
-                  GestureDetector(
-                    onTap: (){
-                      AppNavigator.pop(context);
-                    },
-                    child: Row(
-                      children: [
-                        Text(AppMessages.back),
-                        SizedBox(width: 10),
-                        CustomCard(
-                            color: Colors.white,
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(AppImages.arrowLeftIco)
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          SizedBox(height: 10),
-          Row(
-            children: [
-              Text(' جای خالی را پر کنید')
-            ],
-          ),
-          SizedBox(height: 14),
 
           /// exam
           Expanded(

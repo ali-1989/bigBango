@@ -3,6 +3,7 @@ import 'package:app/models/lessonModels/grammarModel.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/models/lessonModels/lessonVocabularyModel.dart';
+import 'package:app/pages/examPage.dart';
 import 'package:app/pages/grammarPage.dart';
 import 'package:app/pages/select_language_level_page.dart';
 import 'package:app/pages/vocabSegmentPage.dart';
@@ -465,14 +466,19 @@ class HomePageState extends StateBase<HomePage> {
                                       Positioned(
                                         bottom: 10,
                                         left: 5,
-                                        child: CustomCard(
-                                          padding: EdgeInsets.all(10),
-                                          child: Row(
-                                            children: [
-                                              Image.asset(AppImages.startExercise),
-                                              SizedBox(width: 10),
-                                              Text('شروع'),
-                                            ],
+                                        child: GestureDetector(
+                                          onTap: (){
+                                            gotoExam(lesson);
+                                          },
+                                          child: CustomCard(
+                                            padding: EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                Image.asset(AppImages.startExercise),
+                                                SizedBox(width: 10),
+                                                Text('شروع'),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -578,6 +584,16 @@ class HomePageState extends StateBase<HomePage> {
           ),
         )
     );
+  }
+
+  void gotoExam(LessonModel lessonModel){
+    final injector = ExamPageInjector();
+    injector.lessonModel = lessonModel;
+    injector.segment = lessonModel.grammarModel!;
+    injector.description = 'جای خالی را پر کنید';
+    final examPage = ExamPage(injector: injector);
+
+    AppRoute.push(context, examPage);
   }
 
   void onLessonSegmentClick(LessonModel lesson, ISegmentModel section){
