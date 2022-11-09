@@ -8,6 +8,7 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appThemes.dart';
+import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/components/greetingView.dart';
@@ -119,53 +120,7 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
                     children: [
                       SizedBox(height: 20),
 
-                      ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        child: ColoredBox(
-                          color: Colors.red,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 1.5),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.all(Radius.circular(12)),
-                              child: ColoredBox(
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Image.asset(AppImages.lessonListIco),
-                                          SizedBox(width: 10),
-                                          Text(widget.injection.lessonModel.title).bold().fsR(3)
-                                        ],
-                                      ),
-
-                                      GestureDetector(
-                                        onTap: (){
-                                          AppNavigator.pop(context);
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Text(AppMessages.back),
-                                            SizedBox(width: 10),
-                                            CustomCard(
-                                              color: Colors.grey.shade200,
-                                                padding: EdgeInsets.all(5),
-                                                child: Image.asset(AppImages.arrowLeftIco)
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      AppbarLesson(title: widget.injection.lessonModel.title),
 
                       SizedBox(height: 14),
 
