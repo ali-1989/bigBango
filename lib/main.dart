@@ -38,13 +38,21 @@ Future<void> main() async {
       await mainInitialize();
 
       runApp(
-          Toaster(
-            child: DevicePreview(
-              enabled: false,
-              builder: (ctx){
-                return const MyApp();
-            }),
-      ));
+        /// ReBuild First Widgets tree, not call on Navigator pages
+          StreamBuilder<bool>(
+              initialData: false,
+              stream: AppBroadcast.viewUpdaterStream.stream,
+              builder: (context, snapshot) {
+              return Toaster(
+                child: DevicePreview(
+                    enabled: false,
+                    builder: (ctx){
+                      return MyApp();
+                    }),
+              );
+            }
+          )
+    );
     }, zonedGuardedCatch);
   }
 }
@@ -55,39 +63,32 @@ class MyApp extends StatelessWidget {
   ///============ call on any hot reload
   @override
   Widget build(BuildContext context) {
+    return MaterialApp(
+      key: AppBroadcast.materialAppKey,
+      navigatorKey: AppBroadcast.rootNavigatorKey,
+      scaffoldMessengerKey: AppBroadcast.rootScaffoldMessengerKey,
+      debugShowCheckedModeBanner: false,
+      useInheritedMediaQuery: true,
+      title: Constants.appTitle,
+      theme: AppThemes.instance.themeData,
+      //darkTheme: ThemeData.dark(),
+      themeMode: AppThemes.instance.currentThemeMode,
+      //navigatorObservers: [ClearFocusOnPush()],
+      scrollBehavior: ScrollConfiguration.of(context).copyWith(
+        dragDevices: {
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+        },
+      ),
+      home: materialHomeBuilder(null),
+      builder: (subContext, home) {
+        AppRoute.materialContext = subContext;
 
-    /// ReBuild First Widgets tree, not call on Navigator pages
-    return StreamBuilder<bool>(
-        initialData: false,
-        stream: AppBroadcast.viewUpdaterStream.stream,
-        builder: (context, snapshot) {
-        return MaterialApp(
-          key: AppBroadcast.materialAppKey,
-          scaffoldMessengerKey: AppBroadcast.rootScaffoldMessengerKey,
-          debugShowCheckedModeBanner: false,
-          useInheritedMediaQuery: true,
-          title: Constants.appTitle,
-          theme: AppThemes.instance.themeData,
-          //darkTheme: ThemeData.dark(),
-          themeMode: AppThemes.instance.currentThemeMode,
-          //navigatorObservers: [ClearFocusOnPush()],
-          scrollBehavior: ScrollConfiguration.of(context).copyWith(
-            dragDevices: {
-              PointerDeviceKind.mouse,
-              PointerDeviceKind.touch,
-            },
-          ),
-          home: materialHomeBuilder(null),
-          builder: (subContext, home) {
-            AppRoute.materialContext = subContext;
-
-            return Directionality(
-                textDirection: AppThemes.instance.textDirection,
-                child: DevicePreview.appBuilder(subContext, home)// home! //materialHomeBuilder(home)
-            );
-          },
+        return Directionality(
+            textDirection: AppThemes.instance.textDirection,
+            child: DevicePreview.appBuilder(subContext, home)// home! //materialHomeBuilder(home)
         );
-      }
+      },
     );
   }
 

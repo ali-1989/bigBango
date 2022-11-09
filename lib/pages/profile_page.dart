@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/userModel.dart';
+import 'package:app/system/enums.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appDb.dart';
+import 'package:app/tools/app/appDirectories.dart';
+import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSheet.dart';
@@ -13,13 +18,20 @@ import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/dateTools.dart';
 import 'package:app/tools/deviceInfoTools.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/tools/permissionTools.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:iris_pic_editor/pic_editor.dart';
 import 'package:iris_tools/api/checker.dart';
+import 'package:iris_tools/api/helpers/fileHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:iris_tools/api/helpers/pathHelper.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
+import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:persian_modal_date_picker/button.dart';
 import 'package:persian_modal_date_picker/persian_date_picker.dart';
 import 'package:shamsi_date/shamsi_date.dart';
@@ -41,6 +53,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
   TextEditingController familyTextCtr = TextEditingController();
   TextEditingController emailTextCtr = TextEditingController();
   TextEditingController mobileTextCtr = TextEditingController();
+  late UserModel user;
   List<DropdownMenuItem<int>> genderList = [];
   int? currentGender;
   Requester requester = Requester();
@@ -54,6 +67,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
   @override
   void initState(){
     super.initState();
+
+    user = widget.userModel;
 
     Map<String, int> genderText = {
       'مرد' : 1,
@@ -132,7 +147,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const SizedBox(width: 10),
-                        Image.asset(AppImages.drawerProfileIco, color: Colors.red),
+                        Image.asset(AppImages.changeImage, color: Colors.red),
                         const SizedBox(width: 8),
                         Text('پروفایل و اطلاعات', style: const TextStyle(fontSize: 17)),
                       ],
@@ -159,13 +174,16 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                         Divider(color: Colors.black54),
                         SizedBox(height: 5),
 
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Image.asset(AppImages.marketIco, width: 20),
-                            SizedBox(width: 10),
-                            Text('تغییر تصویر پروفایل')
-                          ],
+                        GestureDetector(
+                          onTap: changeAvatarClick,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.asset(AppImages.changeImage, width: 20),
+                              SizedBox(width: 10),
+                              Text('تغییر تصویر پروفایل')
+                            ],
+                          ),
                         ),
 
                         SizedBox(height: 5),
@@ -380,6 +398,226 @@ class _ProfilePageState extends StateBase<ProfilePage> {
         radius: 10,
       )
     );
+  }
+
+  void changeAvatarClick() async {
+    List<Widget> widgets = [];
+    widgets.add(
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: (){
+            onSelectProfile(1);
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              children: [
+                Icon(AppIcons.camera, size: 20),
+                SizedBox(width: 12),
+                Text('دوربین').bold(),
+              ],
+            ),
+          ),
+        ));
+
+    widgets.add(
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: (){
+            onSelectProfile(2);
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              children: [
+                Icon(AppIcons.picture, size:20),
+                SizedBox(width: 12),
+                Text('گالری').bold(),
+              ],
+            ),
+          ),
+        ));
+
+    if(user.profileModel != null){
+      widgets.add(
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: deleteProfile,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Row(
+                children: [
+                  Icon(AppIcons.delete, size: 20),
+                  SizedBox(width: 12),
+                  Text('حذف').bold(),
+                ],
+              ),
+            ),
+          ));
+    }
+
+    AppSheet.showSheetMenu(
+      context,
+      widgets,
+      'changeAvatar',
+
+    );
+  }
+
+  void onSelectProfile(int state) async {
+    AppSheet.closeSheet(context);
+
+    XFile? image;
+
+    if(state == 1){
+      image = await selectImageFromCamera();
+    }
+    else {
+      image = await selectImageFromGallery();
+    }
+
+    if(image == null){
+      return;
+    }
+
+    String? path = await editImage(image.path);
+
+    if(path != null){
+      uploadAvatar(path);
+    }
+  }
+
+  Future<XFile?> selectImageFromCamera() async {
+    final hasPermission = await PermissionTools.requestStoragePermission();
+
+    if(hasPermission != PermissionStatus.granted) {
+      return null;
+    }
+
+    final pick = await ImagePicker().pickImage(source: ImageSource.camera);
+
+    if(pick == null) {
+      return null;
+    }
+
+    return pick;
+  }
+
+  Future<XFile?> selectImageFromGallery() async {
+    final hasPermission = await PermissionTools.requestStoragePermission();
+
+    if(hasPermission != PermissionStatus.granted) {
+      return null;
+    }
+
+    final pick = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if(pick == null) {
+      return null;
+    }
+
+    return pick;
+  }
+
+  Future<String?> editImage(String imgPath) async {
+    final comp = Completer<String?>();
+
+    final editOptions = EditOptions.byPath(imgPath);
+    editOptions.cropBoxInitSize = const Size(200, 170);
+
+    void onOk(EditOptions op) async {
+      final pat = AppDirectories.getSavePathByPath(SavePathType.userProfile, imgPath)!;
+
+      FileHelper.createNewFileSync(pat);
+      FileHelper.writeBytesSync(pat, editOptions.imageBytes!);
+
+      comp.complete(pat);
+    }
+
+    editOptions.callOnResult = onOk;
+    final ov = OverlayScreenView(content: PicEditor(editOptions), backgroundColor: Colors.black);
+    OverlayDialog().show(context, ov).then((value){
+      if(!comp.isCompleted){
+        comp.complete(null/*imgPath*/);
+      }
+    });
+
+    return comp.future;
+  }
+
+  void afterUploadAvatar(String imgPath, Map map){
+    final String? url = map[Keys.url];
+
+    if(url == null){
+      return;
+    }
+
+    final newName = PathHelper.getFileName(url);
+    final newFileAddress = PathHelper.getParentDirPath(imgPath) + PathHelper.getSeparator() + newName;
+
+    final f = FileHelper.renameSyncSafe(imgPath, newFileAddress);
+
+    //user.profileModel = MediaModel()..url = url..path = f.path;
+
+    hideLoading();
+    Session.sinkUserInfo(user);
+    assistCtr.updateMain();
+
+    //after load image, auto will call: OverlayCenter().hideLoading(context);
+    AppSnack.showSnack$operationSuccess(context);
+  }
+
+  void uploadAvatar(String filePath) {
+    final partName = 'ProfileAvatar';
+    final fileName = PathHelper.getFileName(filePath);
+
+    final js = <String, dynamic>{};
+
+
+    requester.httpRequestEvents.onFailState = (req, r) async {
+      await hideLoading();
+      AppSnack.showSnack$errorCommunicatingServer(context);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, data) async {
+      afterUploadAvatar(filePath, data);
+    };
+
+    //requester.prepareUrl();
+    requester.bodyJson = null;
+    //requester.httpItem.addBodyField(Keys.jsonPart, JsonHelper.mapToJson(js));
+    //requester.httpItem.addBodyFile(partName, fileName, File(filePath));
+
+    showLoading(canBack: false);
+    requester.request(context, false);
+  }
+
+  void deleteProfile(){
+    AppSheet.closeSheet(context);
+
+    final js = <String, dynamic>{};
+
+
+    requester.httpRequestEvents.onAnyState = (req) async {
+      await hideLoading();
+    };
+
+    requester.httpRequestEvents.onFailState = (req, r) async {
+      AppSnack.showSnack$OperationFailed(context);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, data) async {
+      user.profileModel = null;
+
+      AppBroadcast.avatarNotifier.notifyAll(null);
+      Session.sinkUserInfo(user);
+    };
+
+    showLoading();
+    requester.bodyJson = js;
+    //requester.prepareUrl();
+
+    requester.request(context, false);
   }
 
   void sendChanges(){

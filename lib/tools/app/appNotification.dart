@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:app/system/publicAccess.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:iris_tools/api/generator.dart';
 
@@ -11,27 +10,29 @@ import '/models/notificationModel.dart' as nm;
 
 // https://github.com/rafaelsetragni/awesome_notifications/blob/master/example/lib/utils/notification_util.dart
 
+///---------------------------------------------------------------------
+/*@pragma('vm:entry-point')
+Future <void> onNotificationCreatedMethod(ReceivedNotification receivedNotification) async {
+}
+
+/// Use this method to detect every time that a new notification is displayed
+@pragma('vm:entry-point')
+Future <void> onNotificationDisplayedMethod(ReceivedNotification receivedNotification) async {
+}
+
+/// Use this method to detect if the user dismissed a notification
+@pragma('vm:entry-point')
+Future <void> onDismissActionReceivedMethod(ReceivedAction receivedAction) async {
+}
+
+/// Use this method to detect when the user taps on a notification or action button
+@pragma('vm:entry-point')
+Future <void> onActionReceivedMethod(ReceivedAction receivedAction) async {
+
+}*/
+///---------------------------------------------------------------------
 class AppNotification {
 	AppNotification._();
-
-	static Future<void> sinkNotificationIds() async {
-		await AppDB.setReplaceKv(Keys.setting$notificationChanelKey, 'C_${Generator.generateName(8)}');
-		await AppDB.setReplaceKv(Keys.setting$notificationChanelGroup, 'CG_${Generator.generateName(8)}');
-
-		return;
-	}
-
-	static String? fetchChannelKey(){
-		return AppDB.fetchKv(Keys.setting$notificationChanelKey);
-	}
-
-	static nm.NotificationModel fetchNotificationModel(){
-		return nm.NotificationModel.fromMap(AppDB.fetchKv(Keys.setting$notificationModel));
-	}
-
-	static Future saveNotificationModel(nm.NotificationModel model){
-		return AppDB.setReplaceKv(Keys.setting$notificationModel, model.toMap());
-	}
 
 	static Future<bool> initial() async {
 		var ch = fetchChannelKey();
@@ -80,6 +81,25 @@ class AppNotification {
 		return true;
 	}
 
+	static Future<void> sinkNotificationIds() async {
+		await AppDB.setReplaceKv(Keys.setting$notificationChanelKey, 'C_${Generator.generateName(8)}');
+		await AppDB.setReplaceKv(Keys.setting$notificationChanelGroup, 'CG_${Generator.generateName(8)}');
+
+		return;
+	}
+
+	static String? fetchChannelKey(){
+		return AppDB.fetchKv(Keys.setting$notificationChanelKey);
+	}
+
+	static nm.NotificationModel fetchNotificationModel(){
+		return nm.NotificationModel.fromMap(AppDB.fetchKv(Keys.setting$notificationModel));
+	}
+
+	static Future saveNotificationModel(nm.NotificationModel model){
+		return AppDB.setReplaceKv(Keys.setting$notificationModel, model.toMap());
+	}
+
 	static Int64List getVibration() {
 		final vibrationPattern = Int64List(4);
 		vibrationPattern[0] = 0;
@@ -110,9 +130,12 @@ class AppNotification {
 	}
 
 	static void startListenTap() {
-		AwesomeNotifications().actionStream.listen((ReceivedNotification receivedNotification){
-		//PublicAccess.logger.logToFile('tap notification  id: ${receivedNotification.id} ');
-		});
+		/*AwesomeNotifications().setListeners(
+				onActionReceivedMethod: onActionReceivedMethod,
+				onNotificationCreatedMethod:onNotificationCreatedMethod,
+				onNotificationDisplayedMethod: onNotificationDisplayedMethod,
+				onDismissActionReceivedMethod: onDismissActionReceivedMethod
+		);*/
 	}
 
 	static void dismissAll() {

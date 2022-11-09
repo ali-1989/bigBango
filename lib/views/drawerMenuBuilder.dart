@@ -1,4 +1,5 @@
 import 'package:animator/animator.dart';
+import 'package:app/pages/invite_page.dart';
 import 'package:app/pages/profile_page.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appOverlay.dart';
@@ -174,7 +175,7 @@ class DrawerMenuBuilder {
                 ListTile(
                   title: Text('دعوت از دوستان'),
                   leading: Image.asset(AppImages.drawerSendIco, width: 16, height: 16),
-                  onTap: gotoProfilePage,
+                  onTap: gotoInvitePage,
                   dense: true,
                   horizontalTitleGap: 0,
                   visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
@@ -310,8 +311,12 @@ class DrawerMenuBuilder {
 
   static void gotoProfilePage() async {
     await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext());
-
     AppRoute.push(AppRoute.getLastContext(), ProfilePage(userModel: Session.getLastLoginUser()!));
+  }
+
+  static void gotoInvitePage() async {
+    await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext());
+    AppRoute.push(AppRoute.getLastContext(), InvitePage());
   }
 
   static void onLogoffCall() async {
