@@ -2,7 +2,7 @@ import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/views/changeLevel.dart';
-import 'package:app/views/drawerMenuBuilder.dart';
+import 'package:app/views/homeComponents/drawerMenuBuilder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';

@@ -1,7 +1,9 @@
 import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/models/lessonModels/grammarModel.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/models/lessonModels/lessonVocabularyModel.dart';
+import 'package:app/pages/grammarPage.dart';
 import 'package:app/pages/select_language_level_page.dart';
 import 'package:app/pages/vocabSegmentPage.dart';
 import 'package:app/system/requester.dart';
@@ -11,10 +13,10 @@ import 'package:app/tools/app/appMessages.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/views/customCard.dart';
-import 'package:app/views/errorOccur.dart';
-import 'package:app/views/lessonSegmentView.dart';
-import 'package:app/views/waitToLoad.dart';
+import 'package:app/views/widgets/customCard.dart';
+import 'package:app/views/states/errorOccur.dart';
+import 'package:app/views/components/lessonSegmentView.dart';
+import 'package:app/views/states/waitToLoad.dart';
 import 'package:extended_sliver/extended_sliver.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
@@ -579,6 +581,8 @@ class HomePageState extends StateBase<HomePage> {
   }
 
   void onLessonSegmentClick(LessonModel lesson, ISegmentModel section){
+    Widget page = SizedBox();
+
     if(section is LessonVocabularyModel){
       if(!section.hasIdioms){
         final inject = VocabSegmentPageInjector();
@@ -588,11 +592,21 @@ class HomePageState extends StateBase<HomePage> {
         AppRoute.push(context, VocabSegmentPage(injection: inject));
         return;
       }
+
+      final inject = LessonSegmentViewInjection();
+      inject.lessonModel = lesson;
+      inject.segment = section;
+
+      page = LessonSegmentView(injection: inject);
+    }
+    else if (section is GrammarModel){
+      final inject = GrammarPageInjector();
+      inject.lessonModel = lesson;
+      inject.segment = section;
+
+      page = GrammarPage(injection: inject);
     }
 
-    final inject = LessonSegmentViewInjection();
-    inject.lessonModel = lesson;
-    inject.segment = section;
 
     final view = OverlayScreenView(
       content: GestureDetector(
@@ -603,7 +617,7 @@ class HomePageState extends StateBase<HomePage> {
         child: GestureDetector(
           onTap: (){},
           child: SizedBox.expand(
-              child: LessonSegmentView(injection: inject)
+              child: page
           ),
         ),
       ),

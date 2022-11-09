@@ -4,7 +4,7 @@ import 'package:app/pages/lightner_detail_page.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appThemes.dart';
-import 'package:app/views/customCard.dart';
+import 'package:app/views/widgets/customCard.dart';
 import 'package:app/system/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/generator.dart';

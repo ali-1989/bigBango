@@ -10,7 +10,7 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSnack.dart';
-import 'package:app/views/video_player.dart';
+import 'package:app/views/components/videoPlayer.dart';
 import 'package:flutter/material.dart';
 import 'package:im_animations/im_animations.dart';
 import 'package:iris_tools/api/checker.dart';

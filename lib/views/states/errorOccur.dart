@@ -1,5 +1,5 @@
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/views/customCard.dart';
+import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
 
 

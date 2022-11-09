@@ -6,7 +6,7 @@ import 'package:app/pages/vocabSegmentPage.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/views/customCard.dart';
+import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
 
 class LessonSegmentViewInjection {

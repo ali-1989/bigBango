@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:app/views/progressBarPrompt.dart';
+import 'package:app/views/widgets/progressBarPrompt.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -10,7 +10,7 @@ import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/tools/app/appThemes.dart';
-import 'package:app/views/overlay/overlayContainer.dart';
+import 'package:app/views/widgets/overlay/overlayContainer.dart';
 
 class AppLoading {
   AppLoading._();

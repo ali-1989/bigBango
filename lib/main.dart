@@ -43,12 +43,15 @@ Future<void> main() async {
               initialData: false,
               stream: AppBroadcast.viewUpdaterStream.stream,
               builder: (context, snapshot) {
-              return Toaster(
-                child: DevicePreview(
-                    enabled: false,
-                    builder: (ctx){
-                      return MyApp();
-                    }),
+              return DefaultTextHeightBehavior(
+                textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false),
+                child: Toaster(
+                  child: DevicePreview(
+                      enabled: false,
+                      builder: (ctx){
+                        return MyApp();
+                      }),
+                ),
               );
             }
           )

@@ -1,8 +1,8 @@
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/pages/home_page.dart';
 import 'package:app/pages/lightner_page.dart';
-import 'package:app/views/appBarCustom.dart';
-import 'package:app/views/bottomNavBar.dart';
+import 'package:app/views/homeComponents/appBarBuilder.dart';
+import 'package:app/views/homeComponents/bottomNavBar.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
