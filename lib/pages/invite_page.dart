@@ -5,7 +5,10 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/emptyData.dart';
+import 'package:app/views/errorOccur.dart';
+import 'package:app/views/waitToLoad.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/api/helpers/clipboardHelper.dart';
 import 'package:iris_tools/api/helpers/colorHelper.dart';
@@ -34,6 +37,7 @@ class _InvitePageState extends StateBase<InvitePage> {
 
     txtCtr.text = description;
 
+    assistCtr.addState(AssistController.state$loading);
     requestData();
   }
 
@@ -180,6 +184,14 @@ class _InvitePageState extends StateBase<InvitePage> {
           child: Builder(
             builder: (context) {
 
+              if(assistCtr.hasState(AssistController.state$loading)){
+                return WaitToLoad();
+              }
+
+              if(assistCtr.hasState(AssistController.state$error)){
+                return ErrorOccur(onRefresh: onRefresh);
+              }
+
               if(userList.isEmpty){
                 return SizedBox.expand(
                   child: Center(
@@ -239,17 +251,25 @@ class _InvitePageState extends StateBase<InvitePage> {
     AppToast.showToast(context, 'کد شما کپی شد');
   }
 
+  void onRefresh(){
+    assistCtr.clearStates();
+    assistCtr.addStateAndUpdate(AssistController.state$loading);
+
+    requestData();
+  }
+
   void requestData(){
     requester.httpRequestEvents.onAnyState = (requester) async {
       //hideLoading();
     };
 
     requester.httpRequestEvents.onFailState = (requester, res) async {
-
+      assistCtr.clearStates();
+      assistCtr.addStateAndUpdate(AssistController.state$error);
     };
 
     requester.httpRequestEvents.onStatusOk = (requester, js) async {
-
+      assistCtr.clearStates();
     };
 
     //showLoading();

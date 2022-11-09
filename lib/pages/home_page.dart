@@ -57,7 +57,6 @@ class HomePageState extends StateBase<HomePage> {
       builder: (_, ctr, data) {
         if(assistCtr.hasState(state$error)){
           return ErrorOccur(
-            fullScreen: false,
             onRefresh: onRefresh,
           );
         }
@@ -641,13 +640,13 @@ class HomePageState extends StateBase<HomePage> {
   void requestLessons(){
 
     requester.httpRequestEvents.onFailState = (req, res) async {
-      assistCtr.removeState(state$loading);
+      assistCtr.clearStates();
       assistCtr.addStateAndUpdate(state$error);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
-      assistCtr.removeState(state$loading);
-      assistCtr.removeState(state$error);
+      assistCtr.clearStates();
+      lessons.clear();
 
       final List? data = res['data'];
 

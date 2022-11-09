@@ -1,3 +1,4 @@
+import 'package:app/tools/app/appImages.dart';
 import 'package:flutter/material.dart';
 
 
@@ -17,10 +18,25 @@ class EmptyData extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('داده ای یافت نشد',
-            style: textStyle?? const TextStyle(fontWeight: FontWeight.bold),
+          const SizedBox(height: 40),
+
+          Flexible(
+            flex: 2,
+              child: AspectRatio(
+                  aspectRatio: 3/5,
+                  child: Image.asset(AppImages.notFound)
+              )
           ),
-          const SizedBox(height: 5),
+
+          Flexible(
+            flex: 1,
+            child: Center(
+              child: Text('داده ای یافت نشد',
+                style: textStyle?? const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
         ],
       ),
     );
