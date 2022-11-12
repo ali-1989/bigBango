@@ -5,7 +5,6 @@ import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
-import 'package:app/views/components/examBlankSpase.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -13,6 +12,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 class ExamPageInjector {
   late LessonModel lessonModel;
   late ISegmentModel segment;
+  late Widget exam;
   late String description;
 }
 ///-----------------------------------------------------
@@ -29,14 +29,10 @@ class ExamPage extends StatefulWidget {
 }
 ///======================================================================================================================
 class _ExamPageState extends StateBase<ExamPage> {
-  ExamBlankSpaceInjector injector = ExamBlankSpaceInjector();
 
   @override
   void initState(){
     super.initState();
-
-    injector.lessonModel = widget.injector.lessonModel;
-    injector.segment = widget.injector.segment;
   }
 
   @override
@@ -117,7 +113,7 @@ class _ExamPageState extends StateBase<ExamPage> {
           SizedBox(height: 14),
 
           /// exam
-          Expanded(child: ExamBlankSpacePage(injector: injector)),
+          Expanded(child: widget.injector.exam),
         ],
       ),
     );

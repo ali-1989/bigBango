@@ -1,10 +1,11 @@
 import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/examBlankSpaceModel.dart';
+import 'package:app/models/examSelectWordModel.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appOverlay.dart';
+import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/widgets/animationPositionScale.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/gestures.dart';
@@ -12,25 +13,26 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-class ExamBlankSpaceInjector {
+class ExamSelectWordInjector {
   late LessonModel lessonModel;
   late ISegmentModel segment;
 }
 ///-----------------------------------------------------
-class ExamBlankSpacePage extends StatefulWidget {
-  final ExamBlankSpaceInjector injector;
+class ExamSelectWordPage extends StatefulWidget {
+  final ExamSelectWordInjector injector;
 
-  const ExamBlankSpacePage({
+  const ExamSelectWordPage({
     required this.injector,
     Key? key
   }) : super(key: key);
 
   @override
-  State<ExamBlankSpacePage> createState() => _ExamBlankSpacePageState();
+  State<ExamSelectWordPage> createState() => _ExamSelectWordPageState();
 }
 ///======================================================================================================================
-class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
-  List<ExamBlankSpaceModel> examItems = [];
+class _ExamSelectWordPageState extends StateBase<ExamSelectWordPage> {
+  List<ExamSelectWordModel> examItems = [];
+  Map<int, List<int>> selectedWords = {};
   bool showAnswers = false;
   late TextStyle questionNormalStyle;
 
@@ -41,15 +43,16 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
 
     List.generate(10, (index) {
-      final m = ExamBlankSpaceModel()..id = index;
-      m.question = Generator.generateWords(20, 2, 10);
-      //m.question = '*****${m.question}';
+      final m = ExamSelectWordModel()..id = index;
+      m.question = Generator.generateWords(10, 3, 10);
+      m.words = List.generate(4, (index) {return Generator.generateWords(1, 3, 8);});
 
       examItems.add(m);
     });
 
     for(final k in examItems){
       k.doSplitQuestion();
+      selectedWords[k.id] = [];
     }
   }
 
@@ -110,16 +113,6 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
                 ],
               )
           ),
-
-        /*
-        ListView.separated(
-                itemCount: examItems.length,
-                itemBuilder: listItemBuilder,
-                separatorBuilder: (ctx, idx){
-                  return Divider(color: Colors.black, height: 2);
-                },
-              )
-         */
         ],
       ),
     );
@@ -153,23 +146,23 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
           ),
 
           SizedBox(height: 15),
+          ///=== question
           RichText(
             text: TextSpan(children: spans),
             textDirection: TextDirection.ltr,
           ),
 
+          SizedBox(height: 10),
+
+          ///=== words
+          buildWords(item),
           SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  void onCheckClick(){
-    showAnswers = !showAnswers;
-    assistCtr.updateMain();
-  }
-
-  List<InlineSpan> generateSpans(ExamBlankSpaceModel model){
+  List<InlineSpan> generateSpans(ExamSelectWordModel model){
     final List<InlineSpan> spans = [];
 
     for(int i = 0; i < model.questionSplit.length; i++) {
@@ -294,11 +287,10 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
             blankColor = Colors.blue;
           }
           else {
-            blankText = ' [\u00A0____\u00A0] '; // \u202F , \u2007
+            blankText = '\u00A0_____\u00A0';
             blankColor = Colors.blue.shade200;
           }
 
-          /// blank space ==> []
           blankSpan = TextSpan(
             text: blankText,
             style: questionNormalStyle.copyWith(color: blankColor),
@@ -311,6 +303,68 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
     }
 
     return spans;
+  }
+
+  Widget buildWords(ExamSelectWordModel model){
+    int lastIndex = -1;
+
+    return Row(
+      children: [
+        ...model.shuffleWords.map((w){
+          final idx = model.shuffleWords.indexOf(w, lastIndex);
+          final isSelected = selectedWords[model.id]!.contains(idx);
+          lastIndex++;
+
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: GestureDetector(
+              onTap: (){
+                onWordClick(model.id, idx);
+              },
+              child: CustomCard(
+                color: isSelected? Colors.lightBlueAccent : Colors.grey.shade200,
+                  radius: 2,
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                  child: Text(w)
+              ),
+            ),
+          );
+        }),
+      ],
+    );
+
+  }
+
+  void onWordClick(int questionId, int wordIdx){
+    if(selectedWords[questionId]!.contains(wordIdx)) {
+      selectedWords[questionId]!.remove(wordIdx);
+    }
+    else {
+      selectedWords[questionId]!.add(wordIdx);
+    }
+
+    assistCtr.updateMain();
+  }
+
+  void onCheckClick(){
+    bool isAllSelected = true;
+
+    for(final exam in examItems){
+      final selected = selectedWords[exam.id]!;
+
+      if(exam.words.length > selected.length){
+        isAllSelected = false;
+        break;
+      }
+    }
+
+    if(!isAllSelected){
+      AppSnack.showError(context, 'لطفا همه ی گزینه ها را انتخاب کنید');
+      return;
+    }
+
+    showAnswers = !showAnswers;
+    assistCtr.updateMain();
   }
 }
 

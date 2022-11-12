@@ -1,21 +1,21 @@
-
 import 'package:iris_tools/api/converter.dart';
 
-class ExamBlankModel {
+class ExamSelectWordModel {
   late int id;
   late String question;
-  List<String> answers = [];
+  List<String> words = [];
 
   //----------- local
   List<String> userAnswers = [];
   List<String> questionSplit = [];
+  List<String> shuffleWords = [];
 
-  ExamBlankModel();
+  ExamSelectWordModel();
 
-  ExamBlankModel.fromMap(Map js){
+  ExamSelectWordModel.fromMap(Map js){
     id = js['id'];
     question = js['question'];
-    answers = Converter.correctList<String>(js['answers'])?? [];
+    words = Converter.correctList<String>(js['words'])?? [];
 
     userAnswers = Converter.correctList<String>(js['userAnswers'])?? [];
   }
@@ -25,7 +25,7 @@ class ExamBlankModel {
 
     js['id'] = id;
     js['question'] = question;
-    js['answers'] = answers;
+    js['words'] = words;
 
     js['userAnswers'] = userAnswers;
 
@@ -43,5 +43,8 @@ class ExamBlankModel {
     for(int i = 1; i < questionSplit.length; i++) {
       userAnswers.add('');
     }
+
+    shuffleWords = [...words];
+    shuffleWords.shuffle();
   }
 }
