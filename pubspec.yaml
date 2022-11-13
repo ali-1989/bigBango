@@ -57,6 +57,7 @@ dependencies:
   shamsi_date: ^1.0.1
   simple_html_css: ^4.0.0
   just_audio: ^0.9.30
+  just_waveform: ^0.0.3
   image_picker: ^0.8.6
   firebase_messaging: ^14.0.4
   firebase_core: ^2.1.1

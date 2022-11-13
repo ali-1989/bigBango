@@ -1,3 +1,4 @@
+import 'package:animator/animator.dart';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/examOptionsModel.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
@@ -27,7 +28,7 @@ class ExamOptionPage extends StatefulWidget {
 ///======================================================================================================================
 class _ExamOptionPageState extends StateBase<ExamOptionPage> {
   List<ExamOptionsModel> examItems = [];
-  Map<int, List<int>> selectedAnswer = {};
+  Map<int, int?> selectedAnswer = {};
   bool showAnswers = false;
   int currentExamIdx = 0;
   late TextStyle questionNormalStyle;
@@ -48,10 +49,6 @@ class _ExamOptionPageState extends StateBase<ExamOptionPage> {
 
       examItems.add(m);
     });
-
-    for(final k in examItems){
-      selectedAnswer[k.id] = [];
-    }
   }
 
   @override
@@ -135,7 +132,7 @@ class _ExamOptionPageState extends StateBase<ExamOptionPage> {
               style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
               ),
-              onPressed: onCheckClick,
+              onPressed: isAllAnswer()? onCheckClick : null,
               child: Text('ثبت و بررسی'),
             ),
           ),
@@ -152,17 +149,18 @@ class _ExamOptionPageState extends StateBase<ExamOptionPage> {
     final q = DecoratedBox(
       decoration: BoxDecoration(
         color: Colors.grey.shade300,
-          borderRadius: BorderRadius.circular(10)
+          borderRadius: BorderRadius.circular(5)
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: Text(
             itm.question,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w200),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w200, height: 1.7),
           textAlign: TextAlign.justify,
         ),
       ).wrapDotBorder(
         color: Colors.grey.shade600,
+        radius: 5,
       ),
     );
 
@@ -170,73 +168,90 @@ class _ExamOptionPageState extends StateBase<ExamOptionPage> {
     res.add(q);
     res.add(SizedBox(height: 20));
 
-    int num = 1;
-
     for(final a in itm.options){
-      final idx = itm.options.indexOf(a);
-      bool isSelected = selectedAnswer[itm.id]!.contains(idx);
 
       final w = GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: (){
-          isSelected = selectedAnswer[itm.id]!.contains(idx);
+          final idx = itm.options.indexOf(a);
+          bool isSelected = selectedAnswer[itm.id] == idx;
+
+          isSelected = selectedAnswer[itm.id] == idx;
+
           if(isSelected){
-            selectedAnswer[itm.id]!.remove(idx);
+            selectedAnswer[itm.id] = null;
           }
           else {
-            selectedAnswer[itm.id]!.add(idx);
+            selectedAnswer[itm.id] = idx;
           }
 
           assistCtr.updateMain();
         },
-        child: Container(
-          color: isSelected? Colors.lightBlueAccent : Colors.transparent,
-          child: Row(
-            children: [
-              Text('  $num    '),
-              Text(a),
-            ],
-          ).wrapBoxBorder(
-            color: Colors.black54,
-            radius: 5,
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5)
-          ),
+        child: AnimateWidget(
+          resetOnRebuild: true,
+          triggerOnRebuild: true,
+          duration: Duration(milliseconds: 400),
+          cycles: 1,
+          builder: (_, animate){
+            final idx = itm.options.indexOf(a);
+            bool isSelected = selectedAnswer[itm.id] == idx;
+
+            Color c = animate.fromTween((v) => ColorTween(begin: Colors.teal, end:Colors.lightBlueAccent))!;
+            TextStyle selectStl = TextStyle(color: Colors.white, fontWeight: FontWeight.w700);
+            TextStyle unSelectStl = TextStyle(color: Colors.black87);
+
+            return  DecoratedBox(
+              decoration: BoxDecoration(
+                  color: isSelected? c : Colors.transparent,
+                  borderRadius: BorderRadius.circular(5)
+              ),
+              child: Row(
+                children: [
+                  Text('  ${idx+1} -  ', style: isSelected? selectStl : unSelectStl).englishFont(),
+                  Text(a, style: isSelected? selectStl : unSelectStl).englishFont(),
+                ],
+              ).wrapBoxBorder(
+                  color: Colors.black,
+                  alpha: 100,
+                  radius: 5,
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 5)
+              ),
+            );
+          },
         ),
       );
 
-      res.add(SizedBox(height: 20));
+      res.add(SizedBox(height: 10));
       res.add(w);
-
-      num++;
     }
 
     return res;
+  }
+
+  bool isAllAnswer(){
+    for(final k in examItems){
+      if(selectedAnswer[k.id] == null){
+        return false;
+      }
+    }
+
+    return true;
   }
 
   void onNextClick(){
     if(currentExamIdx < examItems.length-1) {
       currentExamIdx++;
     }
-    else {
-      //showGreeting = true;
-    }
 
     assistCtr.updateMain();
   }
 
   void onPreClick(){
-    /*if(showGreeting){
-      showGreeting = false;
-    }
-    else {
-      currentExamIdx--;
-    }*/
 
     if(currentExamIdx > 0) {
       currentExamIdx--;
+      assistCtr.updateMain();
     }
-
-    assistCtr.updateMain();
   }
 
   double calcProgress(){

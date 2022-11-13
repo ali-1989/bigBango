@@ -103,7 +103,6 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
     }
 
     currentVocab = vocabList[currentVocabIdx];
-    showTranslate = currentVocab.showTranslation;
     Color preColor = Colors.black;
     Color nextColor = Colors.black;
 
@@ -651,6 +650,9 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
 
     if(currentVocabIdx < vocabList.length-1) {
       currentVocabIdx++;
+
+      currentVocab = vocabList[currentVocabIdx];
+      showTranslate = currentVocab.showTranslation;
     }
     else {
       showGreeting = true;
@@ -667,6 +669,9 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
       AudioPlayerService.getAudioPlayer().stop();
       assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
       currentVocabIdx--;
+
+      currentVocab = vocabList[currentVocabIdx];
+      showTranslate = currentVocab.showTranslation;
     }
 
     assistCtr.updateMain();
@@ -700,6 +705,9 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
           vocabList.add(vo);
         }
       }
+
+      currentVocab = vocabList[currentVocabIdx];
+      showTranslate = currentVocab.showTranslation;
 
       assistCtr.clearStates();
       assistCtr.updateMain();

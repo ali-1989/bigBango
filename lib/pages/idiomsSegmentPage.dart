@@ -90,8 +90,6 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
       return WaitToLoad();
     }
 
-    currentIdiom = idiomsList[currentIdiomIdx];
-    showTranslate = currentIdiom.showTranslation;
     Color preColor = Colors.black;
     Color nextColor = Colors.black;
     initVideo();
@@ -345,6 +343,9 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
 
     if(currentIdiomIdx < idiomsList.length-1) {
       currentIdiomIdx++;
+
+      currentIdiom = idiomsList[currentIdiomIdx];
+      showTranslate = currentIdiom.showTranslation;
     }
     else {
       showGreeting = true;
@@ -360,6 +361,9 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
     else {
       chewieVideoController?.pause();
       currentIdiomIdx--;
+
+      currentIdiom = idiomsList[currentIdiomIdx];
+      showTranslate = currentIdiom.showTranslation;
     }
 
     assistCtr.updateMain();
@@ -427,6 +431,9 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
           idiomsList.add(vo);
         }
       }
+
+      currentIdiom = idiomsList[currentIdiomIdx];
+      showTranslate = currentIdiom.showTranslation;
 
       assistCtr.clearStates();
       assistCtr.updateMain();
