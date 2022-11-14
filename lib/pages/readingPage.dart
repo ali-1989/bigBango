@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/models/lessonModels/readingModel.dart';
@@ -8,6 +11,9 @@ import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_audio_visualizer/audio_visualizer.dart';
+import 'package:iris_audio_visualizer/visualizers/visualizer.dart';
+import 'package:iris_tools/api/managers/assetManager.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 class ReadingPageInjector {
@@ -29,10 +35,17 @@ class ReadingPage extends StatefulWidget {
 ///======================================================================================================================
 class _ReadingPageState extends StateBase<ReadingPage> {
   Requester requester = Requester();
+  StreamController? audioFFT = StreamController<List<double>>();
+  List<double> values = [];
 
   @override
   void initState(){
     super.initState();
+
+    var rng =  Random();
+    for (var i = 0; i < 100; i++) {
+      values.add(rng.nextInt(70) * 1.0);
+    }
 
     assistCtr.addState(AssistController.state$loading);
     requestReading();
@@ -84,7 +97,10 @@ class _ReadingPageState extends StateBase<ReadingPage> {
                 borderRadius: BorderRadius.circular(15)
               ),
             child: Center(
-              child: Text('Reading').color(Colors.white),
+              child: GestureDetector(
+                onTap: (){toWave();},
+                  child: Text('Reading').color(Colors.white)
+              ),
             ),
           ),
 
@@ -128,10 +144,25 @@ class _ReadingPageState extends StateBase<ReadingPage> {
               child: Row(
                 children: [
                   Icon(AppIcons.playArrow),
+
+
                 ],
               ),
             )
-          )
+          ),
+
+          WaveProgressBar(
+            progressPercentage: 0,
+            listOfHeights: values,
+            width: 10,
+            height: 50,
+            initialColor: Colors.grey,
+            backgroundColor: Colors.transparent,
+            progressColor: Colors.red,
+            timeInMilliSeconds: 200,
+            isHorizontallyAnimated: false,
+            isVerticallyAnimated: false,
+          ),
         ],
       ),
     );
@@ -139,6 +170,29 @@ class _ReadingPageState extends StateBase<ReadingPage> {
 
   void playSound(String sectionId){
     // currentVocab.americanVoiceId
+  }
+
+  void toWave() async {
+    final sampleAudio = (await AssetsManager.load('assets/audio/ss.wav'))!
+        .buffer.asUint8List().toList();
+
+    final visualizer = AudioVisualizer(
+      bandType: BandType.TenBand,
+      /*sampleRate: 44100,
+      zeroHzScale: 1.0,
+      fallSpeed: 100.0,
+      sensibility: 3.0,*/
+    );
+
+    int start = 0;
+    int end = 2000;
+
+    while(end < sampleAudio.length && start < sampleAudio.length) {
+      audioFFT!.sink.add(visualizer.transform(sampleAudio.sublist(start, end)));
+      start = end;
+      end += 2000;
+      await Future.delayed(Duration(milliseconds: 50), (){});
+    }
   }
 
   void onRefresh(){

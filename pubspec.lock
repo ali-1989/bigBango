@@ -134,6 +134,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.9.55"
+  complex:
+    dependency: transitive
+    description:
+      name: complex
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.2"
   connectivity_plus:
     dependency: transitive
     description:
@@ -581,6 +588,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.17.0"
+  iris_audio_visualizer:
+    dependency: "direct main"
+    description:
+      path: "../thParty/audio_visualizer-master"
+      relative: true
+    source: path
+    version: "1.0.1"
   iris_db:
     dependency: "direct main"
     description:
