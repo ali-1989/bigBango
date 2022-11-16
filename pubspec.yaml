@@ -6,6 +6,7 @@
 
 name: app         # BigBango
 description: A system to learn languages
+#repository: https://github.com/...
 
 publish_to: 'none'
 

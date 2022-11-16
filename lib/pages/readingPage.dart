@@ -10,6 +10,7 @@ import 'package:app/tools/app/appIcons.dart';
 import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
+import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_audio_visualizer/audio_visualizer.dart';
 import 'package:iris_audio_visualizer/visualizers/visualizer.dart';
@@ -43,9 +44,9 @@ class _ReadingPageState extends StateBase<ReadingPage> {
     super.initState();
 
     var rng =  Random();
-    for (var i = 0; i < 100; i++) {
-      values.add(rng.nextInt(70) * 1.0);
-    }
+    /*for (var i = 0; i < 150; i++) {
+      values.add(rng.nextInt(25) * 1.0);
+    }*/
 
     assistCtr.addState(AssistController.state$loading);
     requestReading();
@@ -64,11 +65,11 @@ class _ReadingPageState extends StateBase<ReadingPage> {
   Widget build(BuildContext context) {
     return Assist(
       controller: assistCtr,
-        builder: (ctx, ctr, data){
+        builder: (ctx, ctr, data) {
           return Scaffold(
-            body: SafeArea(
-                child: buildBody()
-            ),
+              body: SafeArea(
+                  child: buildBody()
+              )
           );
         }
     );
@@ -142,26 +143,33 @@ class _ReadingPageState extends StateBase<ReadingPage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
+                textDirection: TextDirection.ltr,
                 children: [
-                  Icon(AppIcons.playArrow),
+                  CustomCard(
+                    color: Colors.white,
+                      radius: 25,
+                      padding: EdgeInsets.all(5),
+                      child: Icon(AppIcons.playArrow, size: 15)
+                  ),
 
+                  SizedBox(width: 10),
 
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (_, siz) {
+                        return WaveProgressBar(
+                          progressPercentage: 0,
+                          listOfHeights: values,
+                          width: siz.maxWidth,
+                          initialColor: Colors.grey.withAlpha(150),
+                          progressColor: Colors.red,
+                        );
+                      }
+                    ),
+                  ),
                 ],
               ),
             )
-          ),
-
-          WaveProgressBar(
-            progressPercentage: 0,
-            listOfHeights: values,
-            width: 10,
-            height: 50,
-            initialColor: Colors.grey,
-            backgroundColor: Colors.transparent,
-            progressColor: Colors.red,
-            timeInMilliSeconds: 200,
-            isHorizontallyAnimated: false,
-            isVerticallyAnimated: false,
           ),
         ],
       ),
@@ -173,26 +181,56 @@ class _ReadingPageState extends StateBase<ReadingPage> {
   }
 
   void toWave() async {
-    final sampleAudio = (await AssetsManager.load('assets/audio/ss.wav'))!
+    final audioBytes = (await AssetsManager.load('assets/audio/a2.mp3'))!
         .buffer.asUint8List().toList();
 
+    //final buffer = snapshot.data as List<double>;
+    //final wave = buffer.map((e) {return e;}).toList();
+
     final visualizer = AudioVisualizer(
-      bandType: BandType.TenBand,
-      /*sampleRate: 44100,
+      bandType: BandType.FourBand,
+      sampleRate: 44100,
       zeroHzScale: 1.0,
       fallSpeed: 100.0,
-      sensibility: 3.0,*/
+      sensibility: 10.0,
     );
 
     int start = 0;
-    int end = 2000;
+    int step = audioBytes.length ~/ 100;
+    int end = step;
 
-    while(end < sampleAudio.length && start < sampleAudio.length) {
-      audioFFT!.sink.add(visualizer.transform(sampleAudio.sublist(start, end)));
-      start = end;
-      end += 2000;
-      await Future.delayed(Duration(milliseconds: 50), (){});
+    if(audioBytes.length < 100){
+      step = 4;
+      end = 4;
     }
+
+    print('->>>>>>>>>>>> len: ${audioBytes.length}    $step');
+
+    while(end <= audioBytes.length && start < audioBytes.length) {
+      final lis = visualizer.transform(audioBytes.sublist(start, end));
+      //audioFFT!.sink.add(lis);
+      //for(final k in lis){}
+
+      if(lis[1] == 0.0){
+        values.add(0);
+      }
+      else {
+        values.add(lis[1] * 100);
+      }
+
+      start = end;
+      end += step;
+
+
+      if(end > audioBytes.length){
+        end = audioBytes.length;
+      }
+
+      print('------start ${start} end: ${end}');
+    }
+
+    print('------ len: ${values.length}');
+    assistCtr.updateMain();
   }
 
   void onRefresh(){
