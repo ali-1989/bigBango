@@ -1,4 +1,3 @@
-import 'package:app/maxHeight.dart';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lessonModels/grammarModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
@@ -11,6 +10,7 @@ import 'package:app/views/states/waitToLoad.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/maxHeight.dart';
 import 'package:video_player/video_player.dart';
 
 class GrammarPageInjector {

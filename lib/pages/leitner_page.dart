@@ -1,6 +1,6 @@
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lightnerModel.dart';
-import 'package:app/pages/lightner_detail_page.dart';
+import 'package:app/pages/leitner_detail_page.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appThemes.dart';
