@@ -61,6 +61,7 @@ dependencies:
   image_picker: ^0.8.6
   firebase_messaging: ^14.0.4
   firebase_core: ^2.1.1
+  # last size: v7a-release.apk (9.9MB)
 
 
   iris_tools:
@@ -69,8 +70,8 @@ dependencies:
     git: https://github.com/ali-1989/IrisDB.git
   iris_pic_editor:
     git: https://github.com/ali-1989/IrisPicEditor.git
-  iris_audio_visualizer:
-    path: ../thParty/audio_visualizer-master
+  #iris_audio_visualizer:
+    #path: ../thParty/audio_visualizer-master
 
 
   # packages that for iOS needs additional code:

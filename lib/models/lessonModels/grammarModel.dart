@@ -3,6 +3,7 @@ import 'package:app/models/mediaModel.dart';
 import 'package:app/tools/app/appImages.dart';
 
 class GrammarModel extends ISegmentModel {
+  int order = 0;
   MediaModel? media;
 
   GrammarModel(){
@@ -16,16 +17,20 @@ class GrammarModel extends ISegmentModel {
   }
 
   GrammarModel.fromMap(Map map):super.fromMap(map) {
-    _init();
+    title = map['title'];
+    order = map['order']?? 0;
+    final video = map['video'];
 
-    media = MediaModel();
+    if(video != null) {
+      media = MediaModel.fromMap(video);
+    }
   }
 
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
 
-    map[''] = media?.toMap();
+    map['video'] = media?.toMap();
 
     return map;
   }

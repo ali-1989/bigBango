@@ -5,6 +5,7 @@ import 'package:app/system/requester.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/components/appbarLesson.dart';
+import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:chewie/chewie.dart';
@@ -32,6 +33,8 @@ class GrammarPage extends StatefulWidget {
 ///======================================================================================================================
 class _GrammarPageState extends StateBase<GrammarPage> {
   Requester requester = Requester();
+  List<GrammarModel> grammarList = [];
+  GrammarModel? currentGrammar;
   VideoPlayerController? playerController;
   ChewieController? chewieVideoController;
   bool isVideoInit = false;
@@ -76,6 +79,20 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       return WaitToLoad();
     }
 
+    if(assistCtr.hasState(AssistController.state$emptyData)){
+      return Column(
+        children: [
+          Align(
+            alignment: Alignment.centerRight,
+              child: BackButton()
+          ),
+          Expanded(
+              child: EmptyData()
+          ),
+        ],
+      );
+    }
+
     return ListView(
       children: [
         Padding(
@@ -92,7 +109,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Chip(
-                      label: Text('ضمایر شخصی در زبان انگلیسی', style:TextStyle(color: Colors.black)),
+                      label: Text('${currentGrammar?.title}', style:TextStyle(color: Colors.black)),//'ضمایر شخصی در زبان انگلیسی'
                       backgroundColor: Colors.grey.shade400,
                       elevation: 0,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -110,6 +127,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                     ),
                   ],
                 ),
+
                 SizedBox(height: 14),
 
                Builder(
@@ -268,13 +286,28 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       final List? data = res['data'];
 
+      if(data is List){
+        for(final m in data){
+          final g = GrammarModel.fromMap(m);
+          grammarList.add(g);
+        }
+      }
+
       assistCtr.clearStates();
-      assistCtr.updateMain();
-      initVideo();
+
+      if(grammarList.isEmpty){
+        assistCtr.addStateAndUpdate(AssistController.state$emptyData);
+      }
+      else {
+        currentGrammar = grammarList[0];
+
+        assistCtr.updateMain();
+        initVideo();
+      }
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/idioms?LessonId=${widget.injection.lessonModel.id}');
+    requester.prepareUrl(pathUrl: '/grammars?LessonId=${widget.injection.lessonModel.id}');
     requester.request(context);
   }
 }

@@ -12,8 +12,6 @@ import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_audio_visualizer/audio_visualizer.dart';
-import 'package:iris_audio_visualizer/visualizers/visualizer.dart';
 import 'package:iris_tools/api/managers/assetManager.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
@@ -98,10 +96,7 @@ class _ReadingPageState extends StateBase<ReadingPage> {
                 borderRadius: BorderRadius.circular(15)
               ),
             child: Center(
-              child: GestureDetector(
-                onTap: (){toWave();},
-                  child: Text('Reading').color(Colors.white)
-              ),
+              child: Text('Reading').color(Colors.white),
             ),
           ),
 
@@ -157,12 +152,17 @@ class _ReadingPageState extends StateBase<ReadingPage> {
                   Expanded(
                     child: LayoutBuilder(
                       builder: (_, siz) {
-                        return WaveProgressBar(
-                          progressPercentage: 0,
-                          listOfHeights: values,
-                          width: siz.maxWidth,
-                          initialColor: Colors.grey.withAlpha(150),
-                          progressColor: Colors.red,
+                        return Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: SliderTheme(
+                            data: SliderThemeData(
+
+                            ),
+                            child: Slider(
+                              value: 0,
+                              onChanged: (v){},
+                            ),
+                          ),
                         );
                       }
                     ),
@@ -180,7 +180,7 @@ class _ReadingPageState extends StateBase<ReadingPage> {
     // currentVocab.americanVoiceId
   }
 
-  void toWave() async {
+  /*void toWave() async {
     final audioBytes = (await AssetsManager.load('assets/audio/a2.mp3'))!
         .buffer.asUint8List().toList();
 
@@ -231,7 +231,7 @@ class _ReadingPageState extends StateBase<ReadingPage> {
 
     print('------ len: ${values.length}');
     assistCtr.updateMain();
-  }
+  }*/
 
   void onRefresh(){
     assistCtr.clearStates();
