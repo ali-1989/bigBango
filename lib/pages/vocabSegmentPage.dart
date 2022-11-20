@@ -2,7 +2,7 @@ import 'package:animator/animator.dart';
 import 'package:app/managers/fontManager.dart';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
-import 'package:app/models/lessonModels/lessonVocabularyModel.dart';
+import 'package:app/models/lessonModels/vocabularySegmentModel.dart';
 import 'package:app/models/vocabModels/vocabModel.dart';
 import 'package:app/pages/idiomsSegmentPage.dart';
 import 'package:app/services/audioPplayerService.dart';
@@ -25,7 +25,7 @@ import 'package:iris_tools/widgets/irisImageView.dart';
 
 class VocabSegmentPageInjector {
   late LessonModel lessonModel;
-  late LessonVocabularyModel segment;
+  late VocabularySegmentModel segment;
 }
 ///-----------------------------------------------------
 class VocabSegmentPage extends StatefulWidget {

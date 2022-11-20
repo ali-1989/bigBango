@@ -1,8 +1,8 @@
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/tools/app/appImages.dart';
 
-class SpeakingModel extends ISegmentModel {
-  SpeakingModel(){
+class SpeakingSegmentModel extends ISegmentModel {
+  SpeakingSegmentModel(){
     _init();
   }
 
@@ -12,7 +12,7 @@ class SpeakingModel extends ISegmentModel {
     icon = AppImages.speakerIco;
   }
 
-  SpeakingModel.fromMap(Map map):super.fromMap(map) {
+  SpeakingSegmentModel.fromMap(Map map):super.fromMap(map) {
     _init();
   }
 

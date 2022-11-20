@@ -83,6 +83,7 @@ class AppImages {
   static const drawerWalletIco = 'assets/images/drawer_walletIco.png';
   static const marketIco = 'assets/images/marketIco.png';
   static const changeImage = 'assets/images/changeImage.png';
+  static const pauseIco = 'assets/images/pauseIco.png';
 }
 
 

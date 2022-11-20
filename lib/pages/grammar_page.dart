@@ -1,7 +1,9 @@
 import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/lessonModels/grammarModel.dart';
+import 'package:app/models/grammarModel.dart';
+import 'package:app/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/system/requester.dart';
+import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/components/appbarLesson.dart';
@@ -16,7 +18,7 @@ import 'package:video_player/video_player.dart';
 
 class GrammarPageInjector {
   late LessonModel lessonModel;
-  late GrammarModel segment;
+  late GrammarSegmentModel segment;
 }
 ///-----------------------------------------------------
 class GrammarPage extends StatefulWidget {
@@ -33,11 +35,12 @@ class GrammarPage extends StatefulWidget {
 ///======================================================================================================================
 class _GrammarPageState extends StateBase<GrammarPage> {
   Requester requester = Requester();
-  List<GrammarModel> grammarList = [];
-  GrammarModel? currentGrammar;
+  List<GrammarModel> itemList = [];
+  GrammarModel? currentItem;
   VideoPlayerController? playerController;
   ChewieController? chewieVideoController;
   bool isVideoInit = false;
+  int currentItemIdx = 0;
 
   @override
   void initState(){
@@ -93,132 +96,195 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       );
     }
 
-    return ListView(
+    Color preColor = Colors.black;
+    Color nextColor = Colors.black;
+
+    if(currentItemIdx == 0){
+      preColor = Colors.grey;
+    }
+
+    if(currentItemIdx == itemList.length-1){
+      nextColor = Colors.grey;
+    }
+
+    return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 20),
-
-                AppbarLesson(title: widget.injection.lessonModel.title),
-
-                SizedBox(height: 14),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Chip(
-                      label: Text('${currentGrammar?.title}', style:TextStyle(color: Colors.black)),//'ضمایر شخصی در زبان انگلیسی'
-                      backgroundColor: Colors.grey.shade400,
-                      elevation: 0,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                      visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                    ),
-
-                    Chip(
-                      label: Text('گرامر'),
-                      backgroundColor: Colors.red,
-                      elevation: 0,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                      visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 14),
-
-               Builder(
-                   builder: (ctx){
-                     if(widget.injection.segment.media?.fileLocation != null){
-                       if(isVideoInit){
-                         return Chewie(controller: chewieVideoController!);
-                       }
-                       else {
-                         return SizedBox(
-                             height: 190,
-                             child: const Center(child: CircularProgressIndicator())
-                         );
-                       }
-                     }
-                     else {
-                       return Image.asset(AppImages.noImage);
-                     }
-                   }
-               ),
-              ],
-            ),
-          ),
-        ),
-
-        SizedBox(height: 30),
-
-        ColoredBox(
-          color: Colors.grey.shade200,
-          child: Row(
+        Expanded(
+          child: ListView(
             children: [
-              SizedBox(width: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10),
 
-              SizedBox(
-                height: 30,
-                width: 3,
-                child: ColoredBox(
-                  color: Colors.red,
+                      AppbarLesson(title: widget.injection.lessonModel.title),
+
+                      SizedBox(height: 14),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Chip(
+                            label: Text('${currentItem?.title}', style:TextStyle(color: Colors.black)),
+                            backgroundColor: Colors.grey.shade400,
+                            elevation: 0,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                            visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                          ),
+
+                          Chip(
+                            label: Text('گرامر'),
+                            backgroundColor: Colors.red,
+                            elevation: 0,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                            visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 20),
+
+                     SizedBox(
+                       height: 200,
+                       child: Builder(
+                           builder: (ctx){
+                             if(currentItem?.media?.fileLocation != null){
+                               if(isVideoInit){
+                                 return Chewie(controller: chewieVideoController!);
+                               }
+                               else {
+                                 return const Center(child: CircularProgressIndicator());
+                               }
+                             }
+                             else {
+                               return Image.asset(AppImages.noImage);
+                             }
+                           }
+                       ),
+                     ),
+                    ],
+                  ),
                 ),
               ),
 
-              SizedBox(width: 5),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              SizedBox(height: 30),
+
+              ColoredBox(
+                color: Colors.grey.shade200,
+                child: Row(
                   children: [
-                    Text('تمرین', style: TextStyle(fontSize: 14)),
-                    SizedBox(height: 4),
-                    Text('بعد از نمایش ویدیو ، شروع به تمرین کنید و خودتون را محک بزنید',
-                        style: TextStyle(fontSize: 10, color: Colors.grey.shade600)
+                    SizedBox(width: 16),
+
+                    SizedBox(
+                      height: 30,
+                      width: 3,
+                      child: ColoredBox(
+                        color: Colors.red,
+                      ),
+                    ),
+
+                    SizedBox(width: 5),
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('تمرین', style: TextStyle(fontSize: 14)),
+                          SizedBox(height: 4),
+                          Text('بعد از نمایش ویدیو ، شروع به تمرین کنید و خودتون را محک بزنید',
+                              style: TextStyle(fontSize: 10, color: Colors.grey.shade600)
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
+
+              SizedBox(height: 20),
+              Stack(
+                children: [
+                  MaxHeight(
+                    maxHeight: 150,
+                      child: AspectRatio(
+                        aspectRatio: 2/1,
+                          child: Image.asset(AppImages.examManMen)
+                      )
+                  ),
+
+                  Positioned(
+                    bottom: 16,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: Chip(
+                          backgroundColor: Colors.red,
+                            elevation: 0,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                            visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                            label: Text('شروع تمرین', style: TextStyle(fontSize: 14))
+                        ),
+                      ),
+                  )
+                ],
+              ),
+
+              SizedBox(height: 14),
             ],
           ),
         ),
 
-        SizedBox(height: 20),
-        Stack(
-          children: [
-            MaxHeight(
-              maxHeight: 150,
-                child: AspectRatio(
-                  aspectRatio: 2/1,
-                    child: Image.asset(AppImages.examManMen)
-                )
-            ),
-
-            Positioned(
-              bottom: 16,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Chip(
-                    backgroundColor: Colors.red,
-                      elevation: 0,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                      visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                      label: Text('شروع تمرین', style: TextStyle(fontSize: 14))
+        Visibility(
+          visible: itemList.length > 1,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton.icon(
+                  onPressed: onNextClick,
+                  icon: RotatedBox(
+                      quarterTurns: 2,
+                      child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
                   ),
-                ),
-            )
-          ],
-        ),
+                  label: Text('next').englishFont().color(nextColor)
+              ),
 
-        SizedBox(height: 14),
+              TextButton.icon(
+                  style: TextButton.styleFrom(),
+                  onPressed: onPreClick,
+                  icon: Text('pre').englishFont().color(preColor),
+                  label: Image.asset(AppImages.arrowLeftIco, color: preColor)
+              ),
+            ],
+          ),
+        ),
       ],
     );
+  }
+
+  void onNextClick(){
+    if(currentItemIdx < itemList.length-1) {
+      chewieVideoController?.pause();
+      currentItemIdx++;
+
+      currentItem = itemList[currentItemIdx];
+      initVideo();
+      assistCtr.updateMain();
+    }
+  }
+
+  void onPreClick(){
+    if(currentItemIdx > -1){
+      chewieVideoController?.pause();
+      currentItemIdx--;
+
+      currentItem = itemList[currentItemIdx];
+      initVideo();
+      assistCtr.updateMain();
+    }
   }
 
   void gotoNextPart(){
@@ -233,7 +299,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
   void initVideo() async {
     isVideoInit = false;
-    playerController = VideoPlayerController.network(widget.injection.segment.media?.fileLocation?? '');
+    playerController = VideoPlayerController.network(currentItem?.media?.fileLocation?? '');
 
     await playerController!.initialize();
     isVideoInit = playerController!.value.isInitialized;
@@ -289,17 +355,17 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       if(data is List){
         for(final m in data){
           final g = GrammarModel.fromMap(m);
-          grammarList.add(g);
+          itemList.add(g);
         }
       }
 
       assistCtr.clearStates();
 
-      if(grammarList.isEmpty){
+      if(itemList.isEmpty){
         assistCtr.addStateAndUpdate(AssistController.state$emptyData);
       }
       else {
-        currentGrammar = grammarList[0];
+        currentItem = itemList[0];
 
         assistCtr.updateMain();
         initVideo();

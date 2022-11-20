@@ -1,9 +1,9 @@
 import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/lessonModels/grammarModel.dart';
+import 'package:app/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
-import 'package:app/models/lessonModels/lessonVocabularyModel.dart';
-import 'package:app/models/lessonModels/readingModel.dart';
+import 'package:app/models/lessonModels/vocabularySegmentModel.dart';
+import 'package:app/models/lessonModels/readingSegmentModel.dart';
 import 'package:app/pages/exam_page.dart';
 import 'package:app/pages/grammar_page.dart';
 import 'package:app/pages/reading_page.dart';
@@ -628,7 +628,7 @@ class HomePageState extends StateBase<HomePage> {
   void onLessonSegmentClick(LessonModel lesson, ISegmentModel section){
     Widget page = SizedBox();
 
-    if(section is LessonVocabularyModel){
+    if(section is VocabularySegmentModel){
       if(!section.hasIdioms){
         final inject = VocabSegmentPageInjector();
         inject.lessonModel = lesson;
@@ -644,14 +644,14 @@ class HomePageState extends StateBase<HomePage> {
 
       page = LessonSegmentView(injection: inject);
     }
-    else if (section is GrammarModel){
+    else if (section is GrammarSegmentModel){
       final inject = GrammarPageInjector();
       inject.lessonModel = lesson;
       inject.segment = section;
 
       page = GrammarPage(injection: inject);
     }
-    else if (section is ReadingModel){
+    else if (section is ReadingSegmentModel){
       final inject = ReadingPageInjector();
       inject.lessonModel = lesson;
       inject.segment = section;

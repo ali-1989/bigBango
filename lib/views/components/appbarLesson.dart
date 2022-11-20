@@ -26,7 +26,7 @@ class AppbarLesson extends StatelessWidget {
             child: ColoredBox(
               color: Colors.white,
               child: Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -48,8 +48,8 @@ class AppbarLesson extends StatelessWidget {
                           SizedBox(width: 10),
                           CustomCard(
                               color: Colors.grey.shade200,
-                              padding: EdgeInsets.all(5),
-                              child: Image.asset(AppImages.arrowLeftIco)
+                              padding: EdgeInsets.all(4),
+                              child: Image.asset(AppImages.arrowLeftIco, width: 12, height: 12)
                           ),
                         ],
                       ),

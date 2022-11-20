@@ -1,19 +1,19 @@
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/tools/app/appImages.dart';
 
-class ReadingModel extends ISegmentModel {
+class GrammarSegmentModel extends ISegmentModel {
 
-  ReadingModel(){
+  GrammarSegmentModel(){
     _init();
   }
 
   void _init(){
-    title = 'خواندن';
-    engTitle = 'Reading';
-    icon = AppImages.readingIco;
+    title = 'گرامر';
+    engTitle = 'Grammar';
+    icon = AppImages.grammarIco;
   }
 
-  ReadingModel.fromMap(Map map):super.fromMap(map) {
+  GrammarSegmentModel.fromMap(Map map):super.fromMap(map) {
     _init();
   }
 
