@@ -1,6 +1,7 @@
 import 'package:animator/animator.dart';
 import 'package:app/pages/invite_page.dart';
 import 'package:app/pages/profile_page.dart';
+import 'package:app/pages/support_page.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/tools/app/appSizes.dart';
@@ -184,7 +185,7 @@ class DrawerMenuBuilder {
                 ListTile(
                   title: Text('پشتیبانی'),
                   leading: Image.asset(AppImages.drawerSupportIco, width: 16, height: 16),
-                  onTap: gotoProfilePage,
+                  onTap: gotoSupportPage,
                   dense: true,
                   horizontalTitleGap: 0,
                   visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
@@ -312,6 +313,11 @@ class DrawerMenuBuilder {
   static void gotoProfilePage() async {
     await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext());
     AppRoute.push(AppRoute.getLastContext(), ProfilePage(userModel: Session.getLastLoginUser()!));
+  }
+
+  static void gotoSupportPage() async {
+    await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext());
+    AppRoute.push(AppRoute.getLastContext(), SupportPage());
   }
 
   static void gotoInvitePage() async {

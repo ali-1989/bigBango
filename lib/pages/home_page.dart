@@ -2,10 +2,12 @@ import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
+import 'package:app/models/lessonModels/listeningSegmentModel.dart';
 import 'package:app/models/lessonModels/vocabularySegmentModel.dart';
 import 'package:app/models/lessonModels/readingSegmentModel.dart';
 import 'package:app/pages/exam_page.dart';
 import 'package:app/pages/grammar_page.dart';
+import 'package:app/pages/listening_page.dart';
 import 'package:app/pages/reading_page.dart';
 import 'package:app/pages/select_language_level_page.dart';
 import 'package:app/pages/vocabSegmentPage.dart';
@@ -657,6 +659,13 @@ class HomePageState extends StateBase<HomePage> {
       inject.segment = section;
 
       page = ReadingPage(injector: inject);
+    }
+    else if (section is ListeningSegmentModel){
+      final inject = ListeningPageInjector();
+      inject.lessonModel = lesson;
+      inject.segment = section;
+
+      page = ListeningPage(injector: inject);
     }
 
 

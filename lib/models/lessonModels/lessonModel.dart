@@ -1,6 +1,6 @@
 import 'package:app/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/models/lessonModels/readingSegmentModel.dart';
-import 'package:app/models/lessonModels/speakingSegmentModel.dart';
+import 'package:app/models/lessonModels/listeningSegmentModel.dart';
 import 'package:app/models/lessonModels/vocabularySegmentModel.dart';
 import 'package:app/system/keys.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
@@ -14,7 +14,7 @@ class LessonModel {
   VocabularySegmentModel? vocabModel;
   GrammarSegmentModel? grammarModel;
   ReadingSegmentModel? readingModel;
-  SpeakingSegmentModel? speakingModel;
+  ListeningSegmentModel? speakingModel;
 
   LessonModel();
 
@@ -38,7 +38,7 @@ class LessonModel {
     }
 
     if(map['vocabulary'] is Map) {
-      speakingModel = SpeakingSegmentModel.fromMap(map['vocabulary']);
+      speakingModel = ListeningSegmentModel.fromMap(map['vocabulary']);
     }
   }
 

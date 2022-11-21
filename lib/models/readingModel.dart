@@ -1,6 +1,5 @@
 import 'package:app/models/mediaModel.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/dateSection/dateHelper.dart';
 
 
 class ReadingModel {
@@ -20,7 +19,7 @@ class ReadingModel {
   ReadingModel.fromMap(Map map) {
     id = map['id'];
     title = map['title'];
-    //titleTranslation = map['titleTranslation'];
+    titleTranslation = map['translation']?? '';
     order = map['order']?? 0;
 
     final video = map['voice'];
@@ -28,10 +27,6 @@ class ReadingModel {
 
     if(video != null) {
       media = MediaModel.fromMap(video);
-    }
-    else {//todo del
-      media = MediaModel();
-      media?.fileLocation = 'https://download.samplelib.com/mp3/sample-15s.mp3';
     }
 
     if(segment is List) {
@@ -47,7 +42,7 @@ class ReadingModel {
 
     map['id'] = id;
     map['title'] = title;
-    map['titleTranslation'] = titleTranslation;
+    map['translation'] = titleTranslation;
     map['voice'] = media?.toMap();
     map['segments'] = segments.map((e) => e.toMap()).toList();
 
@@ -61,8 +56,8 @@ class ReadingModel {
     for(int i=0; i<segments.length; i++){
       final k = segments[i];
 
-      final s = TextSpan(text: k.text, style: i == readIndex ? readStyle : normalStyle);
-      final st = TextSpan(text: k.translation, style: i == readIndex ? readStyle : normalStyle);
+      final s = TextSpan(text: '${k.text} ', style: i == readIndex ? readStyle : normalStyle);
+      final st = TextSpan(text: '${k.translation} ', style: i == readIndex ? readStyle : normalStyle);
 
       spans.add(s);
       spansTranslate.add(st);
@@ -79,8 +74,9 @@ class SegmentOfReadingModel {
 
   SegmentOfReadingModel.fromMap(Map map) {
     id = map['id'];
-    start = Duration(milliseconds: ((DateHelper.tsToSystemDate('1970-01-01 ${map['start']}.0')?.millisecondsSinceEpoch)?? 0) +12600000);
-    end = Duration(milliseconds: ((DateHelper.tsToSystemDate('1970-01-01 ${map['end']}.0')?.millisecondsSinceEpoch)?? 0) +12600000);
+    //start = Duration(milliseconds: ((DateHelper.tsToSystemDate('1970-01-01 ${map['start']}.0')?.millisecondsSinceEpoch)?? 0) +12600000);
+    start = Duration(milliseconds: map['startMilliSeconds']);
+    end = Duration(milliseconds: map['endMilliSeconds']);
     text = map['text'];
     translation = map['translation'];
   }
@@ -89,7 +85,8 @@ class SegmentOfReadingModel {
     final map = <String, dynamic>{};
 
     map['id'] = id;
-    map['start'] = start;
+    map['startMilliSeconds'] = start?.inMilliseconds;
+    map['endMilliSeconds'] = end?.inMilliseconds;
     map['text'] = text;
     map['translation'] = translation;
 

@@ -1,18 +1,18 @@
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/tools/app/appImages.dart';
 
-class SpeakingSegmentModel extends ISegmentModel {
-  SpeakingSegmentModel(){
+class ListeningSegmentModel extends ISegmentModel {
+  ListeningSegmentModel(){
     _init();
   }
 
   void _init(){
     title = 'شنیدن';
-    engTitle = 'Speaking';
+    engTitle = 'Listening';
     icon = AppImages.speakerIco;
   }
 
-  SpeakingSegmentModel.fromMap(Map map):super.fromMap(map) {
+  ListeningSegmentModel.fromMap(Map map):super.fromMap(map) {
     _init();
   }
 

@@ -1,7 +1,6 @@
-
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
-import 'package:app/models/lessonModels/readingSegmentModel.dart';
+import 'package:app/models/lessonModels/listeningSegmentModel.dart';
 import 'package:app/models/readingModel.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/extensions.dart';
@@ -18,24 +17,24 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:iris_tools/api/duration/durationFormater.dart';
 
-class ReadingPageInjector {
+class ListeningPageInjector {
   late LessonModel lessonModel;
-  late ReadingSegmentModel segment;
+  late ListeningSegmentModel segment;
 }
 ///-----------------------------------------------------
-class ReadingPage extends StatefulWidget {
-  final ReadingPageInjector injector;
+class ListeningPage extends StatefulWidget {
+  final ListeningPageInjector injector;
 
-  const ReadingPage({
+  const ListeningPage({
     required this.injector,
     Key? key
   }) : super(key: key);
 
   @override
-  State<ReadingPage> createState() => _ReadingPageState();
+  State<ListeningPage> createState() => _ListeningPageState();
 }
 ///======================================================================================================================
-class _ReadingPageState extends StateBase<ReadingPage> {
+class _ListeningPageState extends StateBase<ListeningPage> {
   Requester requester = Requester();
   int currentItemIdx = 0;
   int currentSegmentIdx = 0;
@@ -124,7 +123,7 @@ class _ReadingPageState extends StateBase<ReadingPage> {
                     borderRadius: BorderRadius.circular(15)
                   ),
                 child: Center(
-                  child: Text('Reading').color(Colors.white),
+                  child: Text('Listening').color(Colors.white),
                 ),
               ),
 
@@ -461,12 +460,13 @@ class _ReadingPageState extends StateBase<ReadingPage> {
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       final List? data = res['data'];
 
-      if(data is List){
+      print(res);
+      /*if(data is List){
         for(final m in data){
           final g = ReadingModel.fromMap(m);
           itemList.add(g);
         }
-      }
+      }*/
 
       assistCtr.clearStates();
 
@@ -481,28 +481,8 @@ class _ReadingPageState extends StateBase<ReadingPage> {
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/reading?LessonId=${widget.injector.lessonModel.id}');
+    requester.prepareUrl(pathUrl: '/listening?LessonId=${widget.injector.lessonModel.id}');
     requester.request(context);
   }
 }
 
-
-/*
-htmlText = '''
-    <body>
-    <p>verb (used with object)</p>
-    <p><strong>1 ali bagheri is very good:</strong></p>
-    <p><span style="color: #ff0000;">&nbsp; &nbsp; she is not good</span></p>
-    <p>noun</p>
-    <p><strong>2 ali bagheri is very good ali bagheri is very good ali bagheri is very good:</strong></p>
-    <p><span style="color: #ff0000;">&nbsp; &nbsp; she is not good</span></p>
-    <p><strong>&nbsp;&nbsp;</strong></p>
-    </body>
-''';
-
-
-Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: HTML.toRichText(context, htmlText, defaultTextStyle: AppThemes.body2TextStyle())
-                    ),
-* */
