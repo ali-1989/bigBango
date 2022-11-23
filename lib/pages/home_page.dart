@@ -13,6 +13,7 @@ import 'package:app/pages/select_language_level_page.dart';
 import 'package:app/pages/vocabSegmentPage.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/session.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/system/extensions.dart';
@@ -247,11 +248,11 @@ class HomePageState extends StateBase<HomePage> {
               padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 3),
               child: Row(
                 children: [
-                  const SizedBox(
+                   SizedBox(
                     width: 1.5,
                     height: 20,
                     child: ColoredBox(
-                      color: Colors.red,
+                      color: AppColors.red,
                     ),
                   ),
 
@@ -321,7 +322,7 @@ class HomePageState extends StateBase<HomePage> {
 
   Widget buildSecondStateOfLesson(LessonModel lesson){
     return ColoredBox(
-      color: Colors.red,
+      color: AppColors.red,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
         child: ClipRRect(
@@ -335,18 +336,18 @@ class HomePageState extends StateBase<HomePage> {
 
                   Row(
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         width: 1.5,
                         height: 20,
                         child: ColoredBox(
-                          color: Colors.red,
+                          color: AppColors.red,
                         ),
                       ),
 
                       const SizedBox(width: 12),
                       Card(
                           elevation: 0,
-                          color: Colors.red,
+                          color: AppColors.red,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),

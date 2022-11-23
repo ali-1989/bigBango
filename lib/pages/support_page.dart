@@ -1,17 +1,26 @@
 import 'dart:async';
 
 import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/models/ticketModel.dart';
+import 'package:app/models/ticketRole.dart';
+import 'package:app/pages/ticket_detail_page.dart';
+import 'package:app/system/publicAccess.dart';
 import 'package:app/system/requester.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:app/tools/app/appSnack.dart';
+import 'package:app/tools/dateTools.dart';
+import 'package:app/views/components/addTicketPage.dart';
+import 'package:app/views/components/supportPlanPage.dart';
+import 'package:app/views/states/errorOccur.dart';
+import 'package:app/views/states/waitToLoad.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:app/system/extensions.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class SupportPage extends StatefulWidget {
   const SupportPage({Key? key}) : super(key: key);
@@ -21,41 +30,26 @@ class SupportPage extends StatefulWidget {
 }
 ///========================================================================================
 class _SupportPageState extends StateBase<SupportPage> with SingleTickerProviderStateMixin {
+  Requester requester = Requester();
+  RefreshController refreshController = RefreshController(initialRefresh: false);
   late TabController tabCtr;
   late TextStyle tabBarStyle;
-  int optionSelectedIdx = 0;
-  int timeSelectedIdx = 0;
-  late ScrollController srcCtr;
-  String buySheetId = 'buySheetId';
-  String addTicketSheetId = 'addTicketSheetId';
-  final List<DropdownMenuItem<String>> dropList = [];
-  String dropSelectedValue = '';
-  Requester requester = Requester();
+  int ticketPage = 1;
+  List<TicketRole> ticketRoles = [];
+  List<TicketModel> ticketList = [];
 
   @override
   void initState(){
     super.initState();
 
     tabCtr = TabController(length: 2, vsync: this);
-    srcCtr = ScrollController();
-    srcCtr.addListener(scrollListener);
 
     tabBarStyle = TextStyle(
-      color: Colors.red,
+      color: AppColors.red,
       fontWeight: FontWeight.w900
     );
 
-    final dList = {};
-    dList['0'] = 'مدیریت';
-    dList['1'] = 'فنی';
-
-    dropSelectedValue = '1';
-
-    for (final element in dList.entries) {
-      final h = DropdownMenuItem<String>(value: element.key, child: Text(element.value));
-
-      dropList.add(h);
-    }
+    requestTickets();
   }
 
   @override
@@ -67,6 +61,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Assist(
+      controller: assistCtr,
         builder: (_, ctr, data){
           return Scaffold(
             body: SafeArea(
@@ -78,6 +73,14 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   }
 
   Widget buildBody(){
+    if(assistCtr.hasState(AssistController.state$error)){
+      return ErrorOccur(onRefresh: tryAgain);
+    }
+
+    if(assistCtr.hasState(AssistController.state$loading)){
+      return WaitToLoad();
+    }
+
     return Column(
       children: [
         Row(
@@ -102,7 +105,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
               TabBar(
                 controller: tabCtr,
-                  indicatorColor: Colors.red,
+                  indicatorColor: AppColors.red,
                   labelColor: Colors.yellow,
                   overlayColor: MaterialStateProperty.all(Colors.transparent),
                   tabs: [
@@ -182,7 +185,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                               height: 30,
                               child: FloatingActionButton(
                                 onPressed: showBuySessionTimeSheet,
-                                backgroundColor: Colors.red,
+                                backgroundColor: AppColors.red,
                                 elevation: 0,
                                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 child: Icon(AppIcons.add, size: 15, color: Colors.white),
@@ -266,9 +269,29 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     return Column(
       children: [
         Expanded(
-            child: ListView.builder(
-              itemCount: 20,
-                itemBuilder: listBuilderForTicket
+            child: RefreshConfiguration(
+              headerBuilder: () => MaterialClassicHeader(),
+              footerBuilder:  () => PublicAccess.classicFooter,
+              //headerTriggerDistance: 80.0,
+              //maxOverScrollExtent :100,
+              //maxUnderScrollExtent:0,
+              //springDescription: SpringDescription(stiffness: 170, damping: 16, mass: 1.9),
+              enableScrollWhenRefreshCompleted: true,
+              enableLoadingWhenFailed : true,
+              hideFooterWhenNotFull: true,
+              enableBallisticLoad: true,
+              enableLoadingWhenNoData: false,
+              child: SmartRefresher(
+                enablePullDown: false,
+                enablePullUp: true,
+                controller: refreshController,
+                onRefresh: (){},
+                onLoading: onLoadingMoreCall,
+                child: ListView.builder(
+                  itemCount: ticketList.length,
+                  itemBuilder: listBuilderForTicket,
+                ),
+              ),
             )
         ),
 
@@ -287,279 +310,62 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   }
 
   Widget listBuilderForTicket(_, idx){
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('عنوان درس'),
+    final tik = ticketList[idx];
 
-              Row(
-                children: [
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                        color: Colors.greenAccent.withAlpha(40),
-                        borderRadius: BorderRadius.circular(4)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
-                      child: Text('باز', style: TextStyle(color: Color(0xFF0ECF73), fontSize: 10)),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Text('2020/10/10'),
-                  SizedBox(width: 5),
-                  Icon(AppIcons.calendar, size: 14, color: Colors.grey.shade700),
-                ],
-              ),
-            ],
-          ),
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: (){
+        AppRoute.push(context, TicketDetailPage(ticketModel: tik));
+      },
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(tik.title),
 
-          SizedBox(height: 6),
-          Divider(color: Colors.grey.shade700),
-          SizedBox(height: 2),
-        ],
+                Row(
+                  children: [
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                          color: Colors.greenAccent.withAlpha(40),
+                          borderRadius: BorderRadius.circular(4)
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
+                        child: Text(tik.status == 1 ? 'باز' : 'بسته',
+                            style: TextStyle(color: Color(0xFF0ECF73), fontSize: 10)
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Text(DateTools.dateOnlyRelative(tik.createdAt)),
+                    SizedBox(width: 5),
+                    Icon(AppIcons.calendar, size: 14, color: Colors.grey.shade700),
+                  ],
+                ),
+              ],
+            ),
+
+            SizedBox(height: 6),
+            Divider(color: Colors.grey.shade700),
+            SizedBox(height: 2),
+          ],
+        ),
       ),
     );
   }
 
+  void tryAgain(){
+
+  }
+
   void showBuySessionTimeSheet(){
-    builder(sheetContext){
-      return Assist(
-          controller: assistCtr,
-          id: buySheetId,
-          builder: (_, ctr, data) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 14),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 20),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(AppImages.selectLevelIco2, width: 18),
-                            SizedBox(width: 8),
-                            Text('پنل\u200cهای پشتیبانی', style: TextStyle(fontWeight: FontWeight.w700)),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Text('لطفا یکی از پنل های زیر را انتخاب کنید یا مدت زمان مورد نیاز خود را جهت خرید انتخاب کنید',
-                              style: TextStyle(fontSize: 12, height: 1.4)),
-                        ),
-
-                        SizedBox(height: 10),
-                        GestureDetector(
-                          onTap: (){
-                            srcCtr.jumpTo(1*18);
-                            optionSelectedIdx = 0;
-                            assistCtr.update(buySheetId);
-                          },
-                          child: Card(
-                            color: Colors.grey.shade100,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
-                              child: Row(
-                                children: [
-                                  Builder(
-                                      builder: (ctx){
-                                        if(optionSelectedIdx == 0){
-                                          return getSelectedBox();
-                                        }
-
-                                        return getEmptyBox();
-                                      }
-                                  ),
-
-                                  const SizedBox(width: 18),
-                                  Text('پلن 10 دقیقه ای'),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        GestureDetector(
-                          onTap: (){
-                            srcCtr.jumpTo(3*18);
-                            optionSelectedIdx = 1;
-                            assistCtr.update(buySheetId);
-                          },
-                          child: Card(
-                            color: Colors.grey.shade100,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
-                              child: Row(
-                                children: [
-                                  Builder(
-                                      builder: (ctx){
-                                        if(optionSelectedIdx == 1){
-                                          return getSelectedBox();
-                                        }
-
-                                        return getEmptyBox();
-                                      }
-                                  ),
-
-                                  const SizedBox(width: 18),
-                                  Text('پلن 20 دقیقه ای'),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        GestureDetector(
-                          onTap: (){
-                            srcCtr.jumpTo(5*18);
-                            optionSelectedIdx = 2;
-                            assistCtr.update(buySheetId);
-                          },
-                          child: Card(
-                            color: Colors.grey.shade100,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
-                              child: Row(
-                                children: [
-                                  Builder(
-                                      builder: (ctx){
-                                        if(optionSelectedIdx == 2){
-                                          return getSelectedBox();
-                                        }
-
-                                        return getEmptyBox();
-                                      }
-                                  ),
-
-                                  const SizedBox(width: 18),
-                                  Text('پلن 30 دقیقه ای'),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Text('  یا  ').color(Colors.red),
-                            Expanded(child: Divider(endIndent: 6, color: Colors.black)),
-                          ],
-                        ),
-
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(width: 6),
-                                Image.asset(AppImages.watchIco, width: 14),
-                                SizedBox(width: 6),
-                                Text('زمان مورد نظر خود را انتخاب کنید', style: TextStyle(fontSize: 12)),
-                              ],
-                            ),
-
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 40,
-                                  height: 50,
-                                  child: Stack(
-                                    children: [
-                                      Center(
-                                        child: DecoratedBox(
-                                          decoration: BoxDecoration(
-                                              color: Colors.red.withAlpha(50),
-                                              borderRadius: BorderRadius.circular(4)
-                                          ),
-                                          child: SizedBox(
-                                            width: 50,
-                                            height: 20,
-                                          ),
-                                        ),
-                                      ),
-                                      ListWheelScrollView.useDelegate(
-                                        controller: srcCtr,
-                                        useMagnifier: true,
-                                        magnification: 1.4,
-                                        itemExtent: 18,
-                                        onSelectedItemChanged: (x){
-                                          timeSelectedIdx = x;
-                                          optionSelectedIdx = -1;
-
-                                          assistCtr.update(buySheetId);
-                                        },
-                                        childDelegate: ListWheelChildBuilderDelegate(
-                                          childCount: 12,
-                                          builder: (_, index) {
-                                            return Padding(
-                                              padding: const EdgeInsets.only(top: 3),
-                                              child: Text('${(index+1)*5}',
-                                                style: TextStyle(
-                                                    fontSize: 10,
-                                                    color: timeSelectedIdx == index? Colors.red : Colors.black
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                SizedBox(width: 4),
-                                Text('دقیقه'),
-
-                                SizedBox(width: 10),
-                              ],
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                                onPressed: (){},
-                                child: Text('ادامه خرید')
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }
-      );
-    }
-
     AppSheet.showSheetCustom(
         context,
-        builder: builder,
+        builder: (_) => SupportPlanPage(),
         routeName: 'showBuySessionTimeSheet',
       isDismissible: true,
       isScrollControlled: true,
@@ -568,158 +374,19 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     );
   }
 
-  Widget getEmptyBox(){
-    return Image.asset(AppImages.emptyBoxIco, height: 15);
-  }
-
-  Widget getSelectedBox(){
-    return Image.asset(AppImages.selectLevelIco, height: 15);
-  }
-
-  void scrollListener() {
-    optionSelectedIdx = -1;
-    final a2 = srcCtr.offset / 18;
-
-    if(a2.round() <= (a2+0.15).round()){
-        timeSelectedIdx = a2.round();
-      }
-      else {
-        timeSelectedIdx = -1;
-      }
-
-    assistCtr.update(buySheetId);
-  }
-
   void showAddTicketSheet() async {
-    builder(sheetContext){
-      return Assist(
-          controller: assistCtr,
-          id: addTicketSheetId,
-          builder: (_, ctr, data) {
-            final boldStyle = TextStyle(fontWeight: FontWeight.w700, fontSize: 11);
-            final inputDecoration = InputDecoration(
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
-              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
-              disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
-              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-              isDense: true,
-              filled: true,
-              fillColor: Colors.grey.shade100,
-            );
-
-
-            final x = MediaQuery.of(sheetContext).viewInsets;
-
-            return SizedBox(
-              width: double.infinity,
-              height: x.collapsedSize.height < 10 ? sh *3/4 : sh - x.collapsedSize.height,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 14),
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 20),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(AppIcons.addCircle, color: Colors.red,),
-                                SizedBox(width: 6),
-                                Text('ایجاد تیکت', style: TextStyle(fontWeight: FontWeight.w700)),
-                              ],
-                            ),
-
-                            GestureDetector(
-                              onTap: (){
-                                AppRoute.popTopView(context);
-                              },
-                              child: CustomCard(
-                                  color: Colors.grey.shade200,
-                                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-                                  radius: 4,
-                                  child: Icon(AppIcons.close, size: 10,)
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        Expanded(
-                            child: ListView(
-                              shrinkWrap: true,
-                              children: [
-                                SizedBox(height: 20),
-                                Text('موضوع', style: boldStyle),
-                                TextField(
-                                  decoration: inputDecoration,
-                                ),
-
-                                SizedBox(height: 10),
-                                Text('بخش مربوطه', style: boldStyle),
-
-                                DecoratedBox(
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey.shade100,
-                                    borderRadius: BorderRadius.circular(6)
-                                  ),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton2<String>(
-                                      items: dropList,
-                                      value: dropSelectedValue,
-                                      offset: Offset(0,0),
-                                      buttonPadding: EdgeInsets.symmetric(horizontal: 5),
-                                      itemHeight: 30,
-                                      buttonHeight: 50,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          dropSelectedValue = value as String;
-                                          assistCtr.update(addTicketSheetId);
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-
-                                SizedBox(height: 10),
-                                Text('توضیحات', style: boldStyle),
-                                TextField(
-                                  minLines: 5,
-                                  maxLines: 5,
-                                  decoration: inputDecoration,
-                                ),
-
-                                SizedBox(height: 15),
-                                ElevatedButton(
-                                    onPressed: requestSendTicket,
-                                    child: Text('ارسال')
-                                )
-                              ],
-                            )
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }
-      );
-    }
-
     showLoading();
     await requestRoles();
     await hideLoading();
 
+    if(ticketRoles.isEmpty){
+      AppSnack.showError(context, 'متاسفانه خطایی رخ داده است');
+      return;
+    }
+
     AppSheet.showSheetCustom(
       context,
-      builder: builder,
+      builder: (_) => AddTicketPage(ticketRoles: ticketRoles),
       routeName: 'showAddTicketSheet',
       isDismissible: true,
       isScrollControlled: true,
@@ -728,7 +395,19 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     );
   }
 
+  void tryLoadClick() async {
+    assistCtr.addStateAndUpdate(AssistController.state$loading);
+
+    requestTickets();
+  }
+
+  void onLoadingMoreCall(){
+    ticketPage++;
+    requestTickets();
+  }
+
   Future<void> requestRoles() async {
+    ticketRoles.clear();
     Completer co = Completer();
 
     requester.httpRequestEvents.onFailState = (req, res) async {
@@ -736,11 +415,16 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
-      print(res);
+      final data = res['data'];
+
+      if(data is List){
+        for(final t in data){
+          final tr = TicketRole.fromMap(t);
+          ticketRoles.add(tr);
+        }
+      }
 
       co.complete(null);
-      assistCtr.clearStates();
-      assistCtr.updateMain();
     };
 
     requester.methodType = MethodType.get;
@@ -750,7 +434,42 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     return co.future;
   }
 
-  void requestSendTicket(){
-    FocusHelper.hideKeyboardByUnFocus(context);
+  Future<void> requestTickets() async {
+    ticketRoles.clear();
+    Completer co = Completer();
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      co.complete(null);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
+      final data = res['data'];
+      final hasNextPage = res['hasNextPage']?? true;
+      ticketPage = res['pageIndex']?? ticketPage;
+
+      if(data is List){
+        for(final t in data){
+          final tik = TicketModel.fromMap(t);
+          ticketList.add(tik);
+        }
+      }
+
+      if(refreshController.isLoading) {
+        refreshController.loadComplete();
+      }
+
+      if(!hasNextPage){
+        refreshController.loadNoData();
+      }
+      co.complete(null);
+
+      assistCtr.updateMain();
+    };
+
+    requester.methodType = MethodType.get;
+    requester.prepareUrl(pathUrl: '/tickets?Page=$ticketPage');
+    requester.request(context);
+
+    return co.future;
   }
 }

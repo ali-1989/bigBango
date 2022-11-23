@@ -1,5 +1,6 @@
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/system/requester.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/system/extensions.dart';
@@ -72,7 +73,7 @@ class _InvitePageState extends StateBase<InvitePage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(width: 10),
-                Image.asset(AppImages.drawerSendIco, color: Colors.red),
+                Image.asset(AppImages.drawerSendIco, color: AppColors.red),
                 const SizedBox(width: 8),
                 Text('دعوت از دوستان', style: const TextStyle(fontSize: 17)),
               ],
@@ -94,7 +95,7 @@ class _InvitePageState extends StateBase<InvitePage> {
               height: 16,
               width: 1.5,
               child: ColoredBox(
-                color: Colors.red,
+                color: AppColors.red,
               ),
             ),
             const SizedBox(width: 8),
@@ -143,7 +144,7 @@ class _InvitePageState extends StateBase<InvitePage> {
                 onTap: copyCodeCall,
                 child: Row(
                   children: [
-                    Text('09139277303').color(Colors.red),
+                    Text('09139277303').color(AppColors.red),
                     const SizedBox(width: 6),
                     Icon(AppIcons.copy,
                         size: 15,

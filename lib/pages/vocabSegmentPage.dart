@@ -8,6 +8,7 @@ import 'package:app/pages/idiomsSegmentPage.dart';
 import 'package:app/services/audioPplayerService.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/requester.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -179,7 +180,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                       /// progressbar
                       Directionality(
                           textDirection: TextDirection.ltr,
-                          child: LinearProgressIndicator(value: calcProgress(), backgroundColor: Colors.red.shade50)
+                          child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
                       ),
 
                       SizedBox(height: 14),
@@ -216,7 +217,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                                               SizedBox(width: 30),
                                               OutlinedButton.icon(
                                                 style: OutlinedButton.styleFrom(
-                                                  side: BorderSide(color: Colors.red)
+                                                  side: BorderSide(color: AppColors.red)
                                                 ),
                                                   onPressed: resetVocab,
                                                   label: Image.asset(AppImages.returnArrow),
@@ -296,10 +297,10 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                                                           builder: (_, animate){
                                                             Color color = Colors.grey.shade200;
                                                             if(data == 'prepare'){
-                                                              color = animate.fromTween((v) => ColorTween(begin: Colors.red, end:Colors.red.withAlpha(50)))!;
+                                                              color = animate.fromTween((v) => ColorTween(begin: AppColors.red, end: AppColors.red.withAlpha(50)))!;
                                                             }
                                                             else if(data == 'play'){
-                                                              color = Colors.red;
+                                                              color = AppColors.red;
                                                             }
 
                                                             return CustomCard(
@@ -339,10 +340,10 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                                                           builder: (_, animate){
                                                             Color color = Colors.grey.shade200;
                                                             if(data == 'prepare'){
-                                                              color = animate.fromTween((v) => ColorTween(begin: Colors.red, end:Colors.red.withAlpha(50)))!;
+                                                              color = animate.fromTween((v) => ColorTween(begin: AppColors.red, end: AppColors.red.withAlpha(50)))!;
                                                             }
                                                             else if(data == 'play'){
-                                                              color = Colors.red;
+                                                              color = AppColors.red;
                                                             }
 
                                                             return CustomCard(

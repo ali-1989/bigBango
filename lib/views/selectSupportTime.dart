@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/dayWeekModel.dart';
 import 'package:app/models/supportTimeModel.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:flutter/material.dart';
@@ -159,7 +160,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: ColoredBox(
-              color: model.isBlock ? Colors.grey[200]! : (model.id == timeSelectId? Colors.red: Colors.transparent),
+              color: model.isBlock ? Colors.grey[200]! : (model.id == timeSelectId? AppColors.red: Colors.transparent),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -221,7 +222,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: ColoredBox(
-            color: dModel.isBlock ? Colors.grey[200]! : (dModel.dayNumber == currentDay? Colors.red: Colors.transparent),
+            color: dModel.isBlock ? Colors.grey[200]! : (dModel.dayNumber == currentDay? AppColors.red: Colors.transparent),
             child: SizedBox.expand(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

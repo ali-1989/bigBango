@@ -7,6 +7,7 @@ import 'package:app/system/keys.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
@@ -147,7 +148,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const SizedBox(width: 10),
-                        Image.asset(AppImages.changeImage, color: Colors.red),
+                        Image.asset(AppImages.changeImage, color: AppColors.red),
                         const SizedBox(width: 8),
                         Text('پروفایل و اطلاعات', style: const TextStyle(fontSize: 17)),
                       ],

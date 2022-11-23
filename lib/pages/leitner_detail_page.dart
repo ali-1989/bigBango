@@ -1,6 +1,7 @@
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lightnerModel.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
@@ -63,7 +64,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
             ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(12)),
               child: ColoredBox(
-                color: Colors.red,
+                color: AppColors.red,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 1.5),
                   child: ClipRRect(
@@ -144,7 +145,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
             /// progressbar
             Directionality(
                 textDirection: TextDirection.ltr,
-                child: LinearProgressIndicator(value: 0.3, backgroundColor: Colors.red.shade50)
+                child: LinearProgressIndicator(value: 0.3, backgroundColor: AppColors.red.withAlpha(50))
             ),
 
             SizedBox(height: 60),
@@ -166,7 +167,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                         children:[
                           /*CustomCard(
                             padding: EdgeInsets.all(5),
-                              color: Colors.red,
+                              color: AppColors.red,
                               child: Image.asset(AppImages.lightnerIcoBlack, width: 20, color: Colors.white)
                           ),*/
 

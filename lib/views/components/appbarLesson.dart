@@ -1,3 +1,4 @@
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
@@ -18,7 +19,7 @@ class AppbarLesson extends StatelessWidget {
     return  ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(12)),
       child: ColoredBox(
-        color: Colors.red,
+        color: AppColors.red,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 1.5),
           child: ClipRRect(

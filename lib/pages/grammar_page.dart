@@ -4,6 +4,7 @@ import 'package:app/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/components/appbarLesson.dart';
@@ -136,7 +137,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
                           Chip(
                             label: Text('گرامر'),
-                            backgroundColor: Colors.red,
+                            backgroundColor: AppColors.red,
                             elevation: 0,
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
@@ -182,7 +183,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                       height: 30,
                       width: 3,
                       child: ColoredBox(
-                        color: Colors.red,
+                        color: AppColors.red,
                       ),
                     ),
 
@@ -221,7 +222,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                       right: 0,
                       child: Center(
                         child: Chip(
-                          backgroundColor: Colors.red,
+                          backgroundColor: AppColors.red,
                             elevation: 0,
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),

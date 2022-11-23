@@ -4,6 +4,7 @@ import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/models/vocabModels/idiomModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/requester.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/components/appbarLesson.dart';
@@ -159,7 +160,7 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
                       /// progressbar
                       Directionality(
                           textDirection: TextDirection.ltr,
-                          child: LinearProgressIndicator(value: calcProgress(), backgroundColor: Colors.red.shade50)
+                          child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
                       ),
 
                       SizedBox(height: 14),
@@ -196,7 +197,7 @@ class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
                                              SizedBox(width: 30),
                                              OutlinedButton.icon(
                                                  style: OutlinedButton.styleFrom(
-                                                     side: BorderSide(color: Colors.red)
+                                                     side: BorderSide(color: AppColors.red)
                                                  ),
                                                  onPressed: resetVocab,
                                                  label: Image.asset(AppImages.returnArrow),

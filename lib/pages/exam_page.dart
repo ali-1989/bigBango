@@ -2,6 +2,7 @@ import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
@@ -75,7 +76,7 @@ class _ExamPageState extends StateBase<ExamPage> {
                       SizedBox(
                         width: 4,
                         height: 26,
-                        child: ColoredBox(color: Colors.red),
+                        child: ColoredBox(color: AppColors.red),
                       ),
 
                       SizedBox(width: 7),

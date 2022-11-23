@@ -1,6 +1,7 @@
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/lightnerModel.dart';
 import 'package:app/pages/leitner_detail_page.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appThemes.dart';
@@ -125,7 +126,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
                         ),
 
                         SizedBox(height: 8),
-                        Text('آماده یادگیری').color(Colors.red).fsR(-2),
+                        Text('آماده یادگیری').color(AppColors.red).fsR(-2),
                       ],
                     ),
                   ],
@@ -135,7 +136,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
                   children: [
                     Text('${itm.count}').bold().fsR(1),
                     SizedBox(height: 8),
-                    Text('0').color(Colors.red).fsR(-2),
+                    Text('0').color(AppColors.red).fsR(-2),
                   ],
                 ),
               ],

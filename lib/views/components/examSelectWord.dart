@@ -3,6 +3,7 @@ import 'package:app/models/examSelectWordModel.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/tools/app/appSnack.dart';
@@ -265,7 +266,7 @@ class _ExamSelectWordPageState extends StateBase<ExamSelectWordPage> {
             );
           }
           else {
-            blankColor = Colors.red;
+            blankColor = AppColors.red;
             blankText = model.userAnswers[i].isNotEmpty? model.userAnswers[i]: '[\u00A0_\u00A0]';
             /// wrong span
             blankSpan = WidgetSpan(

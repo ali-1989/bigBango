@@ -4,6 +4,7 @@ import 'package:app/models/lessonModels/listeningSegmentModel.dart';
 import 'package:app/models/readingModel.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -119,7 +120,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
               DecoratedBox(
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: AppColors.red,
                     borderRadius: BorderRadius.circular(15)
                   ),
                 child: Center(

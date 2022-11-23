@@ -1,4 +1,5 @@
 import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,7 @@ class _ChangeLevelState extends StateBase<ChangeLevel> {
                                   children: [
                                     Image.asset(AppImages.atentionIco),
                                     const SizedBox(width: 12),
-                                    Text(AppMessages.selectLevelTerm1, style: const TextStyle(color: Colors.red),),
+                                    Text(AppMessages.selectLevelTerm1, style: TextStyle(color: AppColors.red)),
                                   ],
                                 ),
                               ),

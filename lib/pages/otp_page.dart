@@ -5,6 +5,7 @@ import 'package:app/services/login_service.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
@@ -133,7 +134,7 @@ class _OtpPageState extends StateBase<OtpPage> {
                                       ),
                                       children: [
                                         TextSpan(text: AppMessages.otpDescriptionMobile),
-                                        TextSpan(text: ' ${widget.phoneNumber} ', style: const TextStyle(color: Colors.red)),
+                                        TextSpan(text: ' ${widget.phoneNumber} ', style: TextStyle(color: AppColors.red)),
                                         TextSpan(text: AppMessages.otpDescriptionMobile2),
                                       ]
                                   )

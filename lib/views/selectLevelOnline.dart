@@ -1,6 +1,7 @@
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +99,7 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
               borderRadius: BorderRadius.circular(5),
               child: LinearProgressIndicator(
                 backgroundColor: Colors.red.withAlpha(30),
-                color: Colors.red,
+                color: AppColors.red,
                 value: 0.5,
                 minHeight: 5,
               ),

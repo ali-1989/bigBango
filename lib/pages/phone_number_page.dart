@@ -6,6 +6,7 @@ import 'package:app/system/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/publicAccess.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
@@ -88,8 +89,8 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
                                       waveFall: 10.0,
                                       waveMotionEffect: Curves.linear,
                                       waveMotion: WaveMotion.synced,
-                                      innerWaveColor: Colors.red.withAlpha(100),
-                                      middleWaveColor: Colors.red.withAlpha(50),
+                                      innerWaveColor: AppColors.red.withAlpha(100),
+                                      middleWaveColor: AppColors.red.withAlpha(50),
                                       outerWaveColor: Colors.transparent,
                                       duration: const Duration(seconds: 2),
                                       child: Image.asset(AppImages.playIcon, width: 40)

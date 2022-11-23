@@ -4,6 +4,7 @@ import 'package:app/models/examOptionsModel.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/generator.dart';
@@ -85,7 +86,7 @@ class _ExamOptionPageState extends StateBase<ExamOptionPage> {
           /// progress bar
           Directionality(
               textDirection: TextDirection.ltr,
-              child: LinearProgressIndicator(value: calcProgress(), backgroundColor: Colors.red.shade50)
+              child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
           ),
 
           /// exam

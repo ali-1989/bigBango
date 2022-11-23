@@ -65,7 +65,7 @@ class Requester {
     }
 
     if(!_http.fullUrl.contains(pathUrl)) {
-      _http.fullUrl += pathUrl;
+      _http.fullUrl = SettingsManager.settingsModel.httpAddress + pathUrl;
     }
   }
 

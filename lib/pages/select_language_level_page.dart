@@ -5,6 +5,7 @@ import 'package:app/system/publicAccess.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/views/components/videoPlayer.dart';
@@ -73,8 +74,8 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                                       waveFall: 10.0,
                                       waveMotionEffect: Curves.linear,
                                       waveMotion: WaveMotion.synced,
-                                      innerWaveColor: Colors.red.withAlpha(100),
-                                      middleWaveColor: Colors.red.withAlpha(50),
+                                      innerWaveColor: AppColors.red.withAlpha(100),
+                                      middleWaveColor: AppColors.red.withAlpha(50),
                                       outerWaveColor: Colors.transparent,
                                       duration: const Duration(seconds: 2),
                                       child: Image.asset(AppImages.playIcon, width: 40)
@@ -122,7 +123,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                                   children: [
                                     Image.asset(AppImages.atentionIco),
                                     const SizedBox(width: 12),
-                                    Text(AppMessages.selectLevelTerm1, style: const TextStyle(color: Colors.red),),
+                                    Text(AppMessages.selectLevelTerm1, style: TextStyle(color: AppColors.red),),
                                   ],
                                 ),
                               ),
