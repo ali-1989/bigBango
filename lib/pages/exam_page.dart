@@ -13,7 +13,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 class ExamPageInjector {
   late LessonModel lessonModel;
   late ISegmentModel segment;
-  late Widget exam;
+  late Widget examPage;
   late String description;
 }
 ///-----------------------------------------------------
@@ -114,7 +114,7 @@ class _ExamPageState extends StateBase<ExamPage> {
           SizedBox(height: 14),
 
           /// exam
-          Expanded(child: widget.injector.exam),
+          Expanded(child: widget.injector.examPage),
         ],
       ),
     );

@@ -1,5 +1,5 @@
 import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/examBlankSpaceModel.dart';
+import 'package:app/models/examModel.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
@@ -18,20 +18,20 @@ class ExamBlankSpaceInjector {
   late ISegmentModel segment;
 }
 ///-----------------------------------------------------
-class ExamBlankSpacePage extends StatefulWidget {
+class ExamBlankSpaceComponent extends StatefulWidget {
   final ExamBlankSpaceInjector injector;
 
-  const ExamBlankSpacePage({
+  const ExamBlankSpaceComponent({
     required this.injector,
     Key? key
   }) : super(key: key);
 
   @override
-  State<ExamBlankSpacePage> createState() => _ExamBlankSpacePageState();
+  State<ExamBlankSpaceComponent> createState() => _ExamBlankSpaceComponentState();
 }
 ///======================================================================================================================
-class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
-  List<ExamBlankSpaceModel> examItems = [];
+class _ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> {
+  List<ExamModel> examItems = [];
   bool showAnswers = false;
   late TextStyle questionNormalStyle;
 
@@ -42,7 +42,7 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
 
     List.generate(10, (index) {
-      final m = ExamBlankSpaceModel()..id = index;
+      final m = ExamModel()..id = index;
       m.question = Generator.generateWords(20, 2, 10);
       //m.question = '*****${m.question}';
 
@@ -170,7 +170,7 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
     assistCtr.updateMain();
   }
 
-  List<InlineSpan> generateSpans(ExamBlankSpaceModel model){
+  List<InlineSpan> generateSpans(ExamModel model){
     final List<InlineSpan> spans = [];
 
     for(int i = 0; i < model.questionSplit.length; i++) {
@@ -180,7 +180,7 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
         InlineSpan blankSpan;
         String blankText = '';
         Color blankColor;
-        bool hasUserAnswer = model.userAnswers[i].isNotEmpty;
+        bool hasUserAnswer = model.userAnswers[i].text.isNotEmpty;
         final tapRecognizer = TapGestureRecognizer()..onTapUp = (gesDetail){
 
           if(showAnswers){
@@ -189,7 +189,7 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
 
           TextEditingController tControl = TextEditingController();
           FocusNode focusNode = FocusNode();
-          tControl.text = model.userAnswers[i];
+          tControl.text = model.userAnswers[i].text;
           late final OverlayEntry over;
 
           over = OverlayEntry(
@@ -228,7 +228,7 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
                                     focusNode: focusNode,
                                     style: TextStyle(fontSize: 16),
                                     onChanged: (t){
-                                      model.userAnswers[i] = t.trim();
+                                      model.userAnswers[i].text = t.trim();
                                       assistCtr.updateMain();
                                     },
                                     onSubmitted: (t){
@@ -251,13 +251,13 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
 
           AppOverlay.showOverlay(context, over);
           Future.delayed(Duration(milliseconds: 600), (){
-            tControl.selection = TextSelection.collapsed(offset: model.userAnswers[i].length);
+            tControl.selection = TextSelection.collapsed(offset: model.userAnswers[i].text.length);
             focusNode.requestFocus();
           });
         };
 
         if(showAnswers){
-          if(model.userAnswers[i] == 'hi'){
+          if(model.userAnswers[i].text == model.choices[i].text){
             blankColor = Colors.green;
             /// correct span
             blankSpan = WidgetSpan(
@@ -267,14 +267,14 @@ class _ExamBlankSpacePageState extends StateBase<ExamBlankSpacePage> {
                   children: [
                     Image.asset(AppImages.trueCheckIco),
                     SizedBox(width: 5),
-                    Text(model.userAnswers[i], style: questionNormalStyle.copyWith(color: blankColor))
+                    Text(model.userAnswers[i].text, style: questionNormalStyle.copyWith(color: blankColor))
                   ],
                 )
             );
           }
           else {
             blankColor = AppColors.red;
-            blankText = model.userAnswers[i].isNotEmpty? model.userAnswers[i]: '[\u00A0_\u00A0]';
+            blankText = model.userAnswers[i].text.isNotEmpty? model.userAnswers[i].text: '[\u00A0_\u00A0]';
             /// wrong span
             blankSpan = WidgetSpan(
                 alignment: PlaceholderAlignment.middle,

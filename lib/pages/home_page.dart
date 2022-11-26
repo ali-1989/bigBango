@@ -19,9 +19,9 @@ import 'package:app/tools/app/appMessages.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/views/components/examBlankSpase.dart';
-import 'package:app/views/components/examOption.dart';
-import 'package:app/views/components/examSelectWord.dart';
+import 'package:app/views/components/examBlankSpaseComponent.dart';
+import 'package:app/views/components/examOptionComponent.dart';
+import 'package:app/views/components/examSelectWordComponent.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/components/lessonSegmentView.dart';
@@ -476,7 +476,7 @@ class HomePageState extends StateBase<HomePage> {
                                         left: 5,
                                         child: GestureDetector(
                                           onTap: (){
-                                            gotoExam(lesson);
+                                            //gotoExam(lesson);
                                           },
                                           child: CustomCard(
                                             padding: EdgeInsets.all(10),
@@ -592,40 +592,6 @@ class HomePageState extends StateBase<HomePage> {
           ),
         )
     );
-  }
-
-  void gotoExam(LessonModel lessonModel){
-    final injector = ExamPageInjector();
-    injector.lessonModel = lessonModel;
-    injector.segment = lessonModel.grammarModel!;
-
-    /* final injector1 = ExamBlankSpaceInjector();
-    final exam = ExamBlankSpacePage(injector: injector1);
-    injector1.lessonModel = lessonModel;
-    injector1.segment = lessonModel.grammarModel!;
-
-    injector.description = 'جای خالی را پر کنید';
-    */
-
-
-    /*final injector1 = ExamSelectWordInjector();
-    final exam = ExamSelectWordPage(injector: injector1);
-    injector1.lessonModel = lessonModel;
-    injector1.segment = lessonModel.grammarModel!;
-
-    injector.description = 'کلمه ی مناسب را انتخاب کنید';*/
-
-    final injector1 = ExamOptionInjector();
-    final exam = ExamOptionPage(injector: injector1);
-    injector1.lessonModel = lessonModel;
-    injector1.segment = lessonModel.grammarModel!;
-
-    injector.description = 'گزینه ی مناسب را انتخاب کنید';
-
-    injector.exam = exam;
-    final examPage = ExamPage(injector: injector);
-
-    AppRoute.push(context, examPage);
   }
 
   void onLessonSegmentClick(LessonModel lesson, ISegmentModel section){

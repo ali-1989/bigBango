@@ -105,7 +105,7 @@ class _AddTicketPageState extends StateBase<AddTicketPage> {
                                 color: Colors.grey.shade200,
                                 padding: EdgeInsets.symmetric(horizontal: 7, vertical: 6),
                                 radius: 4,
-                                child: Icon(AppIcons.close, size: 10,)
+                                child: Icon(AppIcons.close, size: 10)
                             ),
                           ),
                         ],

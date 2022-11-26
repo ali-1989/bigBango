@@ -1,5 +1,5 @@
 import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/examSelectWordModel.dart';
+import 'package:app/models/examModel.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
@@ -11,7 +11,6 @@ import 'package:app/views/widgets/animationPositionScale.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 class ExamSelectWordInjector {
@@ -19,20 +18,20 @@ class ExamSelectWordInjector {
   late ISegmentModel segment;
 }
 ///-----------------------------------------------------
-class ExamSelectWordPage extends StatefulWidget {
+class ExamSelectWordComponent extends StatefulWidget {
   final ExamSelectWordInjector injector;
 
-  const ExamSelectWordPage({
+  const ExamSelectWordComponent({
     required this.injector,
     Key? key
   }) : super(key: key);
 
   @override
-  State<ExamSelectWordPage> createState() => _ExamSelectWordPageState();
+  State<ExamSelectWordComponent> createState() => _ExamSelectWordComponentState();
 }
 ///======================================================================================================================
-class _ExamSelectWordPageState extends StateBase<ExamSelectWordPage> {
-  List<ExamSelectWordModel> examItems = [];
+class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> {
+  List<ExamModel> examItems = [];
   Map<int, List<int>> selectedWords = {};
   bool showAnswers = false;
   late TextStyle questionNormalStyle;
@@ -42,14 +41,6 @@ class _ExamSelectWordPageState extends StateBase<ExamSelectWordPage> {
     super.initState();
 
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
-
-    List.generate(10, (index) {
-      final m = ExamSelectWordModel()..id = index;
-      m.question = Generator.generateWords(10, 3, 10);
-      m.words = List.generate(4, (index) {return Generator.generateWords(1, 3, 8);});
-
-      examItems.add(m);
-    });
 
     for(final k in examItems){
       k.doSplitQuestion();
@@ -163,7 +154,7 @@ class _ExamSelectWordPageState extends StateBase<ExamSelectWordPage> {
     );
   }
 
-  List<InlineSpan> generateSpans(ExamSelectWordModel model){
+  List<InlineSpan> generateSpans(ExamModel model){
     final List<InlineSpan> spans = [];
 
     for(int i = 0; i < model.questionSplit.length; i++) {
@@ -173,7 +164,7 @@ class _ExamSelectWordPageState extends StateBase<ExamSelectWordPage> {
         InlineSpan blankSpan;
         String blankText = '';
         Color blankColor;
-        bool hasUserAnswer = model.userAnswers[i].isNotEmpty;
+        bool hasUserAnswer = model.userAnswers[i].text.isNotEmpty;
         final tapRecognizer = TapGestureRecognizer()..onTapUp = (gesDetail){
 
           if(showAnswers){
@@ -182,7 +173,7 @@ class _ExamSelectWordPageState extends StateBase<ExamSelectWordPage> {
 
           TextEditingController tControl = TextEditingController();
           FocusNode focusNode = FocusNode();
-          tControl.text = model.userAnswers[i];
+          tControl.text = model.userAnswers[i].text;
           late final OverlayEntry over;
 
           over = OverlayEntry(
@@ -221,7 +212,7 @@ class _ExamSelectWordPageState extends StateBase<ExamSelectWordPage> {
                                     focusNode: focusNode,
                                     style: TextStyle(fontSize: 16),
                                     onChanged: (t){
-                                      model.userAnswers[i] = t.trim();
+                                      model.userAnswers[i].text = t.trim();
                                       assistCtr.updateMain();
                                     },
                                     onSubmitted: (t){
@@ -244,13 +235,13 @@ class _ExamSelectWordPageState extends StateBase<ExamSelectWordPage> {
 
           AppOverlay.showOverlay(context, over);
           Future.delayed(Duration(milliseconds: 600), (){
-            tControl.selection = TextSelection.collapsed(offset: model.userAnswers[i].length);
+            tControl.selection = TextSelection.collapsed(offset: model.userAnswers[i].text.length);
             focusNode.requestFocus();
           });
         };
 
         if(showAnswers){
-          if(model.userAnswers[i] == 'hi'){
+          if(model.userAnswers[i].text == model.choices[i].text){
             blankColor = Colors.green;
             /// correct span
             blankSpan = WidgetSpan(
@@ -260,14 +251,14 @@ class _ExamSelectWordPageState extends StateBase<ExamSelectWordPage> {
                   children: [
                     Image.asset(AppImages.trueCheckIco),
                     SizedBox(width: 5),
-                    Text(model.userAnswers[i], style: questionNormalStyle.copyWith(color: blankColor))
+                    Text(model.userAnswers[i].text, style: questionNormalStyle.copyWith(color: blankColor))
                   ],
                 )
             );
           }
           else {
             blankColor = AppColors.red;
-            blankText = model.userAnswers[i].isNotEmpty? model.userAnswers[i]: '[\u00A0_\u00A0]';
+            blankText = model.userAnswers[i].text.isNotEmpty? model.userAnswers[i].text: '[\u00A0_\u00A0]';
             /// wrong span
             blankSpan = WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
@@ -306,7 +297,7 @@ class _ExamSelectWordPageState extends StateBase<ExamSelectWordPage> {
     return spans;
   }
 
-  Widget buildWords(ExamSelectWordModel model){
+  Widget buildWords(ExamModel model){
     int lastIndex = -1;
 
     return Row(
@@ -326,7 +317,7 @@ class _ExamSelectWordPageState extends StateBase<ExamSelectWordPage> {
                 color: isSelected? Colors.lightBlueAccent : Colors.grey.shade200,
                   radius: 2,
                   padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                  child: Text(w)
+                  child: Text(w.text)
               ),
             ),
           );
@@ -353,7 +344,7 @@ class _ExamSelectWordPageState extends StateBase<ExamSelectWordPage> {
     for(final exam in examItems){
       final selected = selectedWords[exam.id]!;
 
-      if(exam.words.length > selected.length){
+      if(exam.shuffleWords.length > selected.length){
         isAllSelected = false;
         break;
       }

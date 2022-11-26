@@ -1,13 +1,22 @@
+import 'dart:async';
+
 import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/models/examModel.dart';
 import 'package:app/models/grammarModel.dart';
 import 'package:app/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
+import 'package:app/pages/exam_page.dart';
+import 'package:app/system/enums.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/components/appbarLesson.dart';
+import 'package:app/views/components/examBlankSpaseComponent.dart';
+import 'package:app/views/components/examOptionComponent.dart';
+import 'package:app/views/components/examSelectWordComponent.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
@@ -221,13 +230,16 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                       left: 0,
                       right: 0,
                       child: Center(
-                        child: Chip(
-                          backgroundColor: AppColors.red,
-                            elevation: 0,
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                            visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                            label: Text('شروع تمرین', style: TextStyle(fontSize: 14))
+                        child: GestureDetector(
+                          onTap: startExercise,
+                          child: Chip(
+                            backgroundColor: AppColors.red,
+                              elevation: 0,
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                              visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                              label: Text('شروع تمرین', style: TextStyle(fontSize: 14))
+                          ),
                         ),
                       ),
                   )
@@ -298,6 +310,12 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     }*/
   }
 
+  void startExercise() async{
+    showLoading();
+    await requestExercise();
+    await hideLoading();
+  }
+
   void initVideo() async {
     isVideoInit = false;
     playerController = VideoPlayerController.network(currentItem?.media?.fileLocation?? '');
@@ -338,6 +356,42 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     assistCtr.updateMain();
   }
 
+  void gotoExam(ExamModel examModel){
+    final pageInjector = ExamPageInjector();
+    pageInjector.lessonModel = widget.injection.lessonModel;
+    pageInjector.segment = widget.injection.lessonModel.grammarModel!;
+
+    var subPageInjector;
+    Widget subPage = SizedBox();
+
+    if(examModel.quizType == QuizType.fillInBlank){
+      subPageInjector = ExamBlankSpaceInjector();
+      subPage = ExamBlankSpaceComponent(injector: subPageInjector);
+
+      pageInjector.description = 'جای خالی را پر کنید';
+    }
+    else if(examModel.quizType == QuizType.recorder){
+      subPageInjector = ExamSelectWordInjector();
+      subPage = ExamSelectWordComponent(injector: subPageInjector);
+
+      pageInjector.description = 'کلمه ی مناسب را انتخاب کنید';
+    }
+    else if(examModel.quizType == QuizType.multipleChoice){
+      subPageInjector = ExamOptionInjector();
+      subPage = ExamOptionComponent(injector: subPageInjector);
+
+      pageInjector.description = 'گزینه ی مناسب را انتخاب کنید';
+    }
+
+    subPageInjector.lessonModel = widget.injection.lessonModel;
+    subPageInjector.segment = widget.injection.lessonModel.grammarModel!;
+
+    pageInjector.examPage = subPage;
+    final examPage = ExamPage(injector: pageInjector);
+
+    AppRoute.push(context, examPage);
+  }
+
   void onRefresh(){
     assistCtr.clearStates();
     assistCtr.addStateAndUpdate(AssistController.state$loading);
@@ -376,5 +430,33 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/grammars?LessonId=${widget.injection.lessonModel.id}');
     requester.request(context);
+  }
+
+  Future<void> requestExercise() async {
+    Completer c = Completer();
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      c.complete(null);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
+      final List? data = res['data'];
+print(res);
+      if(data is List){
+        for(final m in data){
+          final g = GrammarModel.fromMap(m);
+          itemList.add(g);
+        }
+      }
+
+      c.complete();
+    };
+
+    requester.methodType = MethodType.get;
+    requester.prepareUrl(pathUrl: '/grammars/quizzes?GrammarId=${currentItem!.id}');
+    requester.debug = true;
+    requester.request(context);
+
+    return c.future;
   }
 }

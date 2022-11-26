@@ -1,6 +1,6 @@
 import 'package:animator/animator.dart';
 import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/examOptionsModel.dart';
+import 'package:app/models/examModel.dart';
 import 'package:app/models/lessonModels/iSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
@@ -15,20 +15,20 @@ class ExamOptionInjector {
   late ISegmentModel segment;
 }
 ///-----------------------------------------------------
-class ExamOptionPage extends StatefulWidget {
+class ExamOptionComponent extends StatefulWidget {
   final ExamOptionInjector injector;
 
-  const ExamOptionPage({
+  const ExamOptionComponent({
     required this.injector,
     Key? key
   }) : super(key: key);
 
   @override
-  State<ExamOptionPage> createState() => _ExamOptionPageState();
+  State<ExamOptionComponent> createState() => _ExamOptionComponentState();
 }
 ///======================================================================================================================
-class _ExamOptionPageState extends StateBase<ExamOptionPage> {
-  List<ExamOptionsModel> examItems = [];
+class _ExamOptionComponentState extends StateBase<ExamOptionComponent> {
+  List<ExamModel> examItems = [];
   Map<int, int?> selectedAnswer = {};
   bool showAnswers = false;
   int currentExamIdx = 0;
@@ -41,11 +41,14 @@ class _ExamOptionPageState extends StateBase<ExamOptionPage> {
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
 
     List.generate(10, (index) {
-      final m = ExamOptionsModel()..id = index;
+      final m = ExamModel()..id = index;
       m.question = Generator.generateWords(20, 2, 10);
 
       for(int i=0; i<4; i++){
-        m.options.add(Generator.generateWords(5, 2, 7));
+        final ec = ExamChoiceModel();
+        ec.text = Generator.generateWords(5, 2, 7);
+
+        m.choices.add(ec);
       }
 
       examItems.add(m);
@@ -169,12 +172,12 @@ class _ExamOptionPageState extends StateBase<ExamOptionPage> {
     res.add(q);
     res.add(SizedBox(height: 20));
 
-    for(final a in itm.options){
+    for(final a in itm.choices){
 
       final w = GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: (){
-          final idx = itm.options.indexOf(a);
+          final idx = itm.choices.indexOf(a);
           bool isSelected = selectedAnswer[itm.id] == idx;
 
           isSelected = selectedAnswer[itm.id] == idx;
@@ -194,7 +197,7 @@ class _ExamOptionPageState extends StateBase<ExamOptionPage> {
           duration: Duration(milliseconds: 400),
           cycles: 1,
           builder: (_, animate){
-            final idx = itm.options.indexOf(a);
+            final idx = itm.choices.indexOf(a);
             bool isSelected = selectedAnswer[itm.id] == idx;
 
             Color c = animate.fromTween((v) => ColorTween(begin: Colors.teal, end:Colors.lightBlueAccent))!;
@@ -209,7 +212,7 @@ class _ExamOptionPageState extends StateBase<ExamOptionPage> {
               child: Row(
                 children: [
                   Text('  ${idx+1} -  ', style: isSelected? selectStl : unSelectStl).englishFont(),
-                  Text(a, style: isSelected? selectStl : unSelectStl).englishFont(),
+                  Text(a.text, style: isSelected? selectStl : unSelectStl).englishFont(),
                 ],
               ).wrapBoxBorder(
                   color: Colors.black,
