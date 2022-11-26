@@ -476,7 +476,7 @@ class HomePageState extends StateBase<HomePage> {
                                         left: 5,
                                         child: GestureDetector(
                                           onTap: (){
-                                            //gotoExam(lesson);
+                                            gotoExam(lesson);
                                           },
                                           child: CustomCard(
                                             padding: EdgeInsets.all(10),
@@ -705,6 +705,10 @@ class HomePageState extends StateBase<HomePage> {
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/lessons?CourseLevelId=${Session.getLastLoginUser()?.courseLevelId}');
     requester.request(context);
+  }
+
+  void gotoExam(LessonModel model){
+
   }
 }
 

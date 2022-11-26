@@ -1,7 +1,9 @@
 import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/models/injectors/examInjector.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/models/lessonModels/listeningSegmentModel.dart';
-import 'package:app/models/readingModel.dart';
+import 'package:app/models/listeningModel.dart';
+import 'package:app/system/enums.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
@@ -9,11 +11,13 @@ import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/appbarLesson.dart';
+import 'package:app/views/components/examBlankSpaseComponent.dart';
+import 'package:app/views/components/examOptionComponent.dart';
+import 'package:app/views/components/examSelectWordComponent.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:iris_tools/api/duration/durationFormater.dart';
@@ -38,19 +42,15 @@ class ListeningPage extends StatefulWidget {
 class _ListeningPageState extends StateBase<ListeningPage> {
   Requester requester = Requester();
   int currentItemIdx = 0;
-  int currentSegmentIdx = 0;
-  bool showTranslate = false;
   bool voiceIsOk = false;
   bool isInPlaying = false;
-  List<ReadingModel> itemList = [];
-  ReadingModel? currentItem;
-  String timerViewId = 'timerViewId';
-  String playIconViewId = 'playIconViewId';
-  TextStyle normalStyle = TextStyle(height: 1.7, color: Colors.black);
-  TextStyle readStyle = TextStyle(height: 1.7, color: Colors.deepOrange);
+  List<ListeningModel> itemList = [];
+  ListeningModel? currentItem;
   AudioPlayer player = AudioPlayer();
   Duration totalTime = Duration();
   Duration currentTime = Duration();
+  String timerViewId = 'timerViewId';
+  String playIconViewId = 'playIconViewId';
 
   @override
   void initState(){
@@ -61,7 +61,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     player.playbackEventStream.listen(eventListener);
     player.positionStream.listen(durationListener);
 
-    requestReading();
+    requestListening();
   }
 
   @override
@@ -106,8 +106,6 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       nextColor = Colors.grey;
     }
 
-    currentItem?.prepareSpans(currentSegmentIdx, normalStyle, readStyle);
-
     return Column(
       children: [
         Expanded(
@@ -130,25 +128,6 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
               SizedBox(height: 20),
 
-              Visibility(
-                visible: currentItem?.title != null,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Chip(
-                      label: Text('${showTranslate? currentItem?.titleTranslation: currentItem?.title}', style:TextStyle(color: Colors.black)),
-                      backgroundColor: Colors.grey.shade400,
-                      elevation: 0,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                      visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 10),
-
               Directionality(
                 textDirection: TextDirection.ltr,
                 child: SizedBox(
@@ -160,12 +139,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: RichText(
-                        key: ValueKey(Generator.generateKey(4)),
-                        text: TextSpan(
-                            children: currentItem?.spans
-                        ),
-                      ),
+                      child: Text('777'),
                     ).wrapDotBorder(
                       padding: EdgeInsets.zero,
                       color: Colors.black12,
@@ -230,19 +204,6 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                                   children: [
                                     SizedBox(width: 14),
 
-                                    GestureDetector(
-                                      onTap: onPreSegmentClick,
-                                      child: CustomCard(
-                                          color: Colors.white,
-                                          radius: 25,
-                                          padding: EdgeInsets.all(5),
-                                          child: RotatedBox(
-                                              quarterTurns: 2,
-                                              child: Icon(AppIcons.playArrow, size: 15)
-                                          )
-                                      ),
-                                    ),
-
                                     SizedBox(width: 10),
 
                                     GestureDetector(
@@ -258,31 +219,9 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                                     ),
 
                                     SizedBox(width: 10),
-                                    GestureDetector(
-                                      onTap: onNextSegmentClick,
-                                      child: CustomCard(
-                                          color: Colors.white,
-                                          radius: 25,
-                                          padding: EdgeInsets.all(5),
-                                          child: Icon(AppIcons.playArrow, size: 15)
-                                      ),
-                                    ),
                                   ],
                                 );
                               }
-                            ),
-                          ),
-
-                          Expanded(
-                            flex: 2,
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: CustomCard(
-                                  color: Colors.deepOrange,
-                                  radius: 4,
-                                  padding: EdgeInsets.all(2),
-                                  child: Text('${currentSegmentIdx+1}/${currentItem?.segments.length}', style: TextStyle(fontSize: 11, color: Colors.white))
-                              ),
                             ),
                           ),
                         ],
@@ -290,6 +229,12 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                     ),
                   )
               ),
+
+              SizedBox(height: 20),
+
+              Text('با توجه به فایل صوتی به سوالات جواب دهید. '),
+
+              buildExamView()
             ],
           ),
         ),
@@ -321,6 +266,30 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     );
   }
 
+  Widget buildExamView(){
+    ExamInjector examComponentInjector = ExamInjector();
+    examComponentInjector.lessonModel = widget.injector.lessonModel;
+    examComponentInjector.segment = widget.injector.lessonModel.grammarModel!;
+
+    Widget component = SizedBox();
+    String desc = '';
+print('==========${currentItem!.quiz.choices.length}');
+    if(currentItem!.quiz.quizType == QuizType.fillInBlank){
+      component = ExamBlankSpaceComponent(injector: examComponentInjector);
+      desc = 'جای خالی را پر کنید';
+    }
+    else if(currentItem!.quiz.quizType == QuizType.recorder){
+      component = ExamSelectWordComponent(injector: examComponentInjector);
+      desc = 'کلمه ی مناسب را انتخاب کنید';
+    }
+    else if(currentItem!.quiz.quizType == QuizType.multipleChoice){
+      component = ExamOptionComponent(injector: examComponentInjector);
+      desc = 'گزینه ی مناسب را انتخاب کنید';
+    }
+
+    return component;
+  }
+
   void playSound() async {
     if(!voiceIsOk){
       AppToast.showToast(context, 'در حال آماده سازی صوت');
@@ -342,38 +311,9 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     }
   }
 
-  void onNextSegmentClick() async {
-    if(!voiceIsOk){
-      AppToast.showToast(context, 'در حال آماده سازی صوت');
-      return;
-    }
-
-    if(currentSegmentIdx < currentItem!.segments.length-1) {
-      currentSegmentIdx++;
-      await player.seek(currentItem!.segments[currentSegmentIdx].start);
-
-      assistCtr.updateMain();
-    }
-  }
-
-  void onPreSegmentClick() async {
-    if(!voiceIsOk){
-      AppToast.showToast(context, 'در حال آماده سازی صوت');
-      return;
-    }
-
-    if(currentSegmentIdx > 0) {
-      currentSegmentIdx--;
-      await player.seek(currentItem!.segments[currentSegmentIdx].start);
-
-      assistCtr.updateMain();
-    }
-  }
-
   void onNextClick() async {
     if(currentItemIdx < itemList.length-1) {
       currentItemIdx++;
-      currentSegmentIdx = 0;
       currentItem = itemList[currentItemIdx];
 
       await player.stop();
@@ -385,7 +325,6 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
   void onPreClick() async {
     if(currentItemIdx > -1){
-      currentSegmentIdx = 0;
       currentItemIdx--;
       currentItem = itemList[currentItemIdx];
 
@@ -403,17 +342,6 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   void durationListener(Duration dur) {
     currentTime = dur;
     assistCtr.update(timerViewId);
-
-    if(currentItem == null  || currentSegmentIdx >= currentItem!.segments.length){
-      return;
-    }
-
-    final segment = currentItem!.segments[currentSegmentIdx];
-
-    if(dur > segment.end!){
-      currentSegmentIdx++;
-      assistCtr.updateMain();
-    }
   }
 
   void eventListener(PlaybackEvent event){
@@ -423,16 +351,16 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   Future<void> prepareVoice() async {
     voiceIsOk = false;
 
-    if(currentItem?.media?.fileLocation == null){
+    if(currentItem?.voice?.fileLocation == null){
       return;
     }
 
-    return player.setUrl(currentItem?.media?.fileLocation?? '').then((dur) {
+    return player.setUrl(currentItem?.voice?.fileLocation?? '').then((dur) {
       voiceIsOk = true;
 
       if(dur != null){
         totalTime = dur;
-        assistCtr.update(timerViewId);
+        //assistCtr.update(timerViewId);
       }
 
     }).onError((error, stackTrace) {
@@ -449,10 +377,10 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     voiceIsOk = false;
     assistCtr.clearStates();
     assistCtr.addStateAndUpdate(AssistController.state$loading);
-    requestReading();
+    requestListening();
   }
 
-  void requestReading(){
+  void requestListening(){
     requester.httpRequestEvents.onFailState = (req, res) async {
       assistCtr.clearStates();
       assistCtr.addStateAndUpdate(AssistController.state$error);
@@ -461,13 +389,12 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       final List? data = res['data'];
 
-      print(res);
-      /*if(data is List){
+      if(data is List){
         for(final m in data){
-          final g = ReadingModel.fromMap(m);
+          final g = ListeningModel.fromMap(m);
           itemList.add(g);
         }
-      }*/
+      }
 
       assistCtr.clearStates();
 

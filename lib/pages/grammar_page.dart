@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/examModel.dart';
 import 'package:app/models/grammarModel.dart';
+import 'package:app/models/injectors/examInjector.dart';
 import 'package:app/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/models/lessonModels/lessonModel.dart';
 import 'package:app/pages/exam_page.dart';
@@ -357,36 +358,32 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   }
 
   void gotoExam(ExamModel examModel){
+    ExamInjector examComponentInjector = ExamInjector();
+    examComponentInjector.lessonModel = widget.injection.lessonModel;
+    examComponentInjector.segment = widget.injection.lessonModel.grammarModel!;
+
+    Widget component = SizedBox();
+    String desc = '';
+
+    if(examModel.quizType == QuizType.fillInBlank){
+      component = ExamBlankSpaceComponent(injector: examComponentInjector);
+      desc = 'جای خالی را پر کنید';
+    }
+    else if(examModel.quizType == QuizType.recorder){
+      component = ExamSelectWordComponent(injector: examComponentInjector);
+      desc = 'کلمه ی مناسب را انتخاب کنید';
+    }
+    else if(examModel.quizType == QuizType.multipleChoice){
+      component = ExamOptionComponent(injector: examComponentInjector);
+      desc = 'گزینه ی مناسب را انتخاب کنید';
+    }
+
+
     final pageInjector = ExamPageInjector();
     pageInjector.lessonModel = widget.injection.lessonModel;
     pageInjector.segment = widget.injection.lessonModel.grammarModel!;
-
-    var subPageInjector;
-    Widget subPage = SizedBox();
-
-    if(examModel.quizType == QuizType.fillInBlank){
-      subPageInjector = ExamBlankSpaceInjector();
-      subPage = ExamBlankSpaceComponent(injector: subPageInjector);
-
-      pageInjector.description = 'جای خالی را پر کنید';
-    }
-    else if(examModel.quizType == QuizType.recorder){
-      subPageInjector = ExamSelectWordInjector();
-      subPage = ExamSelectWordComponent(injector: subPageInjector);
-
-      pageInjector.description = 'کلمه ی مناسب را انتخاب کنید';
-    }
-    else if(examModel.quizType == QuizType.multipleChoice){
-      subPageInjector = ExamOptionInjector();
-      subPage = ExamOptionComponent(injector: subPageInjector);
-
-      pageInjector.description = 'گزینه ی مناسب را انتخاب کنید';
-    }
-
-    subPageInjector.lessonModel = widget.injection.lessonModel;
-    subPageInjector.segment = widget.injection.lessonModel.grammarModel!;
-
-    pageInjector.examPage = subPage;
+    pageInjector.examPage = component;
+    pageInjector.description = desc;
     final examPage = ExamPage(injector: pageInjector);
 
     AppRoute.push(context, examPage);

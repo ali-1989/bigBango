@@ -2,7 +2,7 @@ import 'package:app/system/enums.dart';
 
 
 class ExamModel {
-  late int id;
+  late String id;
   late String question;
   QuizType quizType = QuizType.unKnow;
   List<ExamChoiceModel> choices = [];
@@ -19,7 +19,7 @@ class ExamModel {
     final choicesTemp = js['choices'];
     final userAnswersTemp = js['userAnswers'];
 
-    id = js['id'];
+    id = js['id']?? '';
     question = js['question'];
     quizType = QuizType.from(js['quizType']);
 
@@ -49,12 +49,17 @@ class ExamModel {
   }
 
   void doSplitQuestion(){
-    if(question.startsWith('**')){
+    if(question.startsWith('*****')){
       /// this trick used if question start with ** for correct splitting
       question = '\u2060$question';
     }
 
-    questionSplit = question.split('**');
+    if(!question.contains('*****')){
+      question += '*****\u2060';
+    }
+
+    questionSplit = question.split('*****');
+
     userAnswers.clear();
 
     for(int i = 1; i < questionSplit.length; i++) {
@@ -79,15 +84,13 @@ class ExamModel {
 }
 ///==================================================================================================
 class ExamChoiceModel {
-  late int id;
-  late String text;
+  String text = '';
   bool isCorrect = false;
   int order = 0;
 
   ExamChoiceModel();
 
   ExamChoiceModel.fromMap(Map js){
-    id = js['id'];
     text = js['text'];
     isCorrect = js['isCorrect']?? false;
     order = js['order']?? 0;
@@ -96,7 +99,6 @@ class ExamChoiceModel {
   Map<String, dynamic> toMap(){
     final js = <String, dynamic>{};
 
-    js['id'] = id;
     js['text'] = text;
     js['isCorrect'] = isCorrect;
     js['order'] = order;

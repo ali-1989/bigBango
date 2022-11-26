@@ -1,7 +1,6 @@
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/examModel.dart';
-import 'package:app/models/lessonModels/iSegmentModel.dart';
-import 'package:app/models/lessonModels/lessonModel.dart';
+import 'package:app/models/injectors/examInjector.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -13,13 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-class ExamBlankSpaceInjector {
-  late LessonModel lessonModel;
-  late ISegmentModel segment;
-}
-///-----------------------------------------------------
+
 class ExamBlankSpaceComponent extends StatefulWidget {
-  final ExamBlankSpaceInjector injector;
+  final ExamInjector injector;
 
   const ExamBlankSpaceComponent({
     required this.injector,
@@ -42,7 +37,7 @@ class _ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> {
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
 
     List.generate(10, (index) {
-      final m = ExamModel()..id = index;
+      final m = ExamModel()..id = '$index';
       m.question = Generator.generateWords(20, 2, 10);
       //m.question = '*****${m.question}';
 
@@ -72,55 +67,39 @@ class _ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> {
   Widget buildBody(){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-
-          /// exam
-          Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                        listItemBuilder,
-                      childCount: examItems.length *2 -1,
-                    ),
-                  ),
-
-                  SliverToBoxAdapter(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(height: 20),
-
-                        SizedBox(
-                          width: double.infinity,
-                          height: 46,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
-                            ),
-                            onPressed: onCheckClick,
-                            child: Text('ثبت و بررسی'),
-                          ),
-                        ),
-
-                        SizedBox(height: 20),
-                      ],
-                    ),
-                  )
-                ],
-              )
+      child: CustomScrollView(
+        shrinkWrap: true,
+        physics: const ScrollPhysics(),
+        slivers: [
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              listItemBuilder,
+              childCount: examItems.length *2 -1,
+            ),
           ),
 
-        /*
-        ListView.separated(
-                itemCount: examItems.length,
-                itemBuilder: listItemBuilder,
-                separatorBuilder: (ctx, idx){
-                  return Divider(color: Colors.black, height: 2);
-                },
-              )
-         */
+          SliverToBoxAdapter(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 20),
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 46,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
+                    ),
+                    onPressed: onCheckClick,
+                    child: Text('ثبت و بررسی'),
+                  ),
+                ),
+
+                SizedBox(height: 20),
+              ],
+            ),
+          )
         ],
       ),
     );

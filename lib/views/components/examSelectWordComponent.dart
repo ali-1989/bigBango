@@ -1,7 +1,6 @@
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/examModel.dart';
-import 'package:app/models/lessonModels/iSegmentModel.dart';
-import 'package:app/models/lessonModels/lessonModel.dart';
+import 'package:app/models/injectors/examInjector.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -13,13 +12,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-class ExamSelectWordInjector {
-  late LessonModel lessonModel;
-  late ISegmentModel segment;
-}
-///-----------------------------------------------------
+
 class ExamSelectWordComponent extends StatefulWidget {
-  final ExamSelectWordInjector injector;
+  final ExamInjector injector;
 
   const ExamSelectWordComponent({
     required this.injector,
@@ -29,10 +24,10 @@ class ExamSelectWordComponent extends StatefulWidget {
   @override
   State<ExamSelectWordComponent> createState() => _ExamSelectWordComponentState();
 }
-///======================================================================================================================
+///===============================================================================================================
 class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> {
   List<ExamModel> examItems = [];
-  Map<int, List<int>> selectedWords = {};
+  Map<String, List<int>> selectedWords = {};
   bool showAnswers = false;
   late TextStyle questionNormalStyle;
 
@@ -327,7 +322,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> {
 
   }
 
-  void onWordClick(int questionId, int wordIdx){
+  void onWordClick(String questionId, int wordIdx){
     if(selectedWords[questionId]!.contains(wordIdx)) {
       selectedWords[questionId]!.remove(wordIdx);
     }

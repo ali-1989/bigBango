@@ -1,8 +1,7 @@
 import 'package:animator/animator.dart';
 import 'package:app/models/abstract/stateBase.dart';
 import 'package:app/models/examModel.dart';
-import 'package:app/models/lessonModels/iSegmentModel.dart';
-import 'package:app/models/lessonModels/lessonModel.dart';
+import 'package:app/models/injectors/examInjector.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -10,13 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-class ExamOptionInjector {
-  late LessonModel lessonModel;
-  late ISegmentModel segment;
-}
-///-----------------------------------------------------
+
 class ExamOptionComponent extends StatefulWidget {
-  final ExamOptionInjector injector;
+  final ExamInjector injector;
 
   const ExamOptionComponent({
     required this.injector,
@@ -29,7 +24,7 @@ class ExamOptionComponent extends StatefulWidget {
 ///======================================================================================================================
 class _ExamOptionComponentState extends StateBase<ExamOptionComponent> {
   List<ExamModel> examItems = [];
-  Map<int, int?> selectedAnswer = {};
+  Map<String, int?> selectedAnswer = {};
   bool showAnswers = false;
   int currentExamIdx = 0;
   late TextStyle questionNormalStyle;
@@ -41,7 +36,7 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> {
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
 
     List.generate(10, (index) {
-      final m = ExamModel()..id = index;
+      final m = ExamModel()..id = '$index';
       m.question = Generator.generateWords(20, 2, 10);
 
       for(int i=0; i<4; i++){
