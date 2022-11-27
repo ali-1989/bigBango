@@ -1,4 +1,4 @@
-import 'package:app/models/mediaModel.dart';
+import 'package:app/structures/models/mediaModel.dart';
 
 
 class GrammarModel {

@@ -1,8 +1,8 @@
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/injectors/examInjector.dart';
-import 'package:app/models/lessonModels/lessonModel.dart';
-import 'package:app/models/lessonModels/listeningSegmentModel.dart';
-import 'package:app/models/listeningModel.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/injectors/examInjector.dart';
+import 'package:app/structures/models/lessonModels/lessonModel.dart';
+import 'package:app/structures/models/lessonModels/listeningSegmentModel.dart';
+import 'package:app/structures/models/listeningModel.dart';
 import 'package:app/system/enums.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/extensions.dart';
@@ -17,6 +17,7 @@ import 'package:app/views/components/examSelectWordComponent.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
+import 'package:app/views/widgets/sliders.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:just_audio/just_audio.dart';
@@ -41,16 +42,19 @@ class ListeningPage extends StatefulWidget {
 ///======================================================================================================================
 class _ListeningPageState extends StateBase<ListeningPage> {
   Requester requester = Requester();
+  AudioPlayer player = AudioPlayer();
+  Duration totalTime = Duration();
+  Duration currentTime = Duration();
+  ExamInjector examComponentInjector = ExamInjector();
   int currentItemIdx = 0;
   bool voiceIsOk = false;
   bool isInPlaying = false;
   List<ListeningModel> itemList = [];
   ListeningModel? currentItem;
-  AudioPlayer player = AudioPlayer();
-  Duration totalTime = Duration();
-  Duration currentTime = Duration();
-  String timerViewId = 'timerViewId';
-  String playIconViewId = 'playIconViewId';
+  String playViewId = 'playViewId';
+  String? description;
+  Widget examComponent = SizedBox();
+  double playerSliderValue = 0;
 
   @override
   void initState(){
@@ -60,6 +64,9 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
     player.playbackEventStream.listen(eventListener);
     player.positionStream.listen(durationListener);
+
+    examComponentInjector.lessonModel = widget.injector.lessonModel;
+    examComponentInjector.segmentModel = widget.injector.lessonModel.grammarModel!;
 
     requestListening();
   }
@@ -128,24 +135,28 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
               SizedBox(height: 20),
 
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: SizedBox(
-                  width: sw,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(6)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text('777'),
-                    ).wrapDotBorder(
-                      padding: EdgeInsets.zero,
-                      color: Colors.black12,
-                      alpha: 120,
-                      radius: 6,
-                      dashPattern: [5, 7]
+              /// title
+              Visibility(
+                visible: currentItem?.title != null,
+                child: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: SizedBox(
+                    width: sw,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(6)
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('${currentItem?.title}'),
+                      ).wrapDotBorder(
+                        padding: EdgeInsets.zero,
+                        color: Colors.black12,
+                        alpha: 120,
+                        radius: 6,
+                        dashPattern: [5, 7]
+                      ),
                     ),
                   ),
                 ),
@@ -158,83 +169,113 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                       color: Colors.grey.shade300,
                       borderRadius: BorderRadius.circular(10)
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: IntrinsicHeight(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Assist(
-                                      controller: assistCtr,
-                                      id: timerViewId,
-                                      builder: (_, ctr, data) {
-                                        return CustomCard(
-                                            color: Colors.pinkAccent,
-                                            radius: 4,
-                                            padding: EdgeInsets.symmetric(horizontal: 14, vertical:4),
-                                            child: Column(
-                                              children: [
-                                                Text(DurationFormatter.duration(currentTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
-                                                Text(DurationFormatter.duration(totalTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
-                                              ],
-                                            )
-                                        );
-                                      }
-                                    ),
-                                  ],
-                                ),
-                              )
-                          ),
+                  child: Assist(
+                      controller: assistCtr,
+                      id: playViewId,
+                      builder: (_, ctr, data) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: IntrinsicHeight(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CustomCard(
+                                      color: Colors.pinkAccent,
+                                      radius: 4,
+                                      padding: EdgeInsets.symmetric(horizontal: 14, vertical:4),
+                                      child: Column(
+                                        children: [
+                                          Text(DurationFormatter.duration(currentTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
+                                          Text(DurationFormatter.duration(totalTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
+                                        ],
+                                      )
+                                  ),
+                                ],
+                              ),
 
-                          Expanded(
-                            flex: 3,
-                            child: Assist(
-                              controller: assistCtr,
-                              id: playIconViewId,
-                              builder: (_, ctr, data) {
-                                return Row(
+                              Expanded(
+                                child: Directionality(
                                   textDirection: TextDirection.ltr,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(width: 14),
-
-                                    SizedBox(width: 10),
-
-                                    GestureDetector(
-                                      onTap: playSound,
-                                      child: CustomCard(
-                                          color: Colors.white,
-                                          radius: 25,
-                                          padding: EdgeInsets.all(5),
-                                          child: isPlaying() ?
-                                            Icon(AppIcons.pause, size: 35)
-                                          : Icon(AppIcons.playArrow, size: 35)
-                                      ),
+                                  child: SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(
+                                      thumbShape: CustomThumb(),
+                                      valueIndicatorShape: CustomThumb(),
+                                      valueIndicatorColor: Colors.transparent,
+                                      overlayColor: Colors.transparent,
                                     ),
+                                    child: Slider(
+                                      value: playerSliderValue,
+                                      max: 100,
+                                      min: 0,
+                                      onChanged: (double value) {
+                                        if(totalTime.inMilliseconds < 2){
+                                          return;
+                                        }
 
-                                    SizedBox(width: 10),
-                                  ],
-                                );
-                              }
-                            ),
+                                        int sec = totalTime.inSeconds * value ~/100;
+                                        player.seek(Duration(seconds: sec));
+                                        playerSliderValue = value;
+                                        assistCtr.update(playViewId);
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ),
+
+                              Row(
+                                textDirection: TextDirection.ltr,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(width: 14),
+
+                                  GestureDetector(
+                                    onTap: playSound,
+                                    child: CustomCard(
+                                        color: Colors.white,
+                                        radius: 20,
+                                        padding: EdgeInsets.all(5),
+                                        child: isPlaying() ?
+                                        Icon(AppIcons.pause, size: 20)
+                                            : Icon(AppIcons.playArrow, size: 20)
+                                    ),
+                                  ),
+
+                                  SizedBox(width: 10),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    }
                   )
               ),
 
               SizedBox(height: 20),
 
-              Text('با توجه به فایل صوتی به سوالات جواب دهید. '),
+              Visibility(
+                visible: description != null,
+                  child: Text('$description')
+              ),
 
-              buildExamView()
+              examComponent,
+
+              SizedBox(height: 20,),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
+                    ),
+                    onPressed: (){
+                      examComponentInjector.state.checkAnswers();
+                    },
+                    child: Text('ثبت')
+                ),
+              )
             ],
           ),
         ),
@@ -266,28 +307,19 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     );
   }
 
-  Widget buildExamView(){
-    ExamInjector examComponentInjector = ExamInjector();
-    examComponentInjector.lessonModel = widget.injector.lessonModel;
-    examComponentInjector.segment = widget.injector.lessonModel.grammarModel!;
-
-    Widget component = SizedBox();
-    String desc = '';
-print('==========${currentItem!.quiz.choices.length}');
+  void buildExamView(){
     if(currentItem!.quiz.quizType == QuizType.fillInBlank){
-      component = ExamBlankSpaceComponent(injector: examComponentInjector);
-      desc = 'جای خالی را پر کنید';
+      examComponent = ExamBlankSpaceComponent(injector: examComponentInjector);
+      description = 'با توجه به صوت جای خالی را پر کنید';
     }
     else if(currentItem!.quiz.quizType == QuizType.recorder){
-      component = ExamSelectWordComponent(injector: examComponentInjector);
-      desc = 'کلمه ی مناسب را انتخاب کنید';
+      examComponent = ExamSelectWordComponent(injector: examComponentInjector);
+      description = 'با توجه به صوت کلمه ی مناسب را انتخاب کنید';
     }
     else if(currentItem!.quiz.quizType == QuizType.multipleChoice){
-      component = ExamOptionComponent(injector: examComponentInjector);
-      desc = 'گزینه ی مناسب را انتخاب کنید';
+      examComponent = ExamOptionComponent(injector: examComponentInjector);
+      description = 'با توجه به صوت گزینه ی مناسب را انتخاب کنید';
     }
-
-    return component;
   }
 
   void playSound() async {
@@ -319,6 +351,9 @@ print('==========${currentItem!.quiz.choices.length}');
       await player.stop();
       await prepareVoice();
 
+      examComponentInjector.prepareExamList([currentItem!.quiz]);
+      buildExamView();
+
       assistCtr.updateMain();
     }
   }
@@ -331,6 +366,9 @@ print('==========${currentItem!.quiz.choices.length}');
       await player.stop();
       await prepareVoice();
 
+      examComponentInjector.prepareExamList([currentItem!.quiz]);
+      buildExamView();
+
       assistCtr.updateMain();
     }
   }
@@ -341,11 +379,16 @@ print('==========${currentItem!.quiz.choices.length}');
 
   void durationListener(Duration dur) {
     currentTime = dur;
-    assistCtr.update(timerViewId);
+
+    if(totalTime.inMilliseconds > 100 && dur.inMilliseconds > 100) {
+      playerSliderValue = dur.inSeconds * 100 / totalTime.inSeconds;
+    }
+
+    assistCtr.update(playViewId);
   }
 
   void eventListener(PlaybackEvent event){
-    assistCtr.update(playIconViewId);
+    assistCtr.update(playViewId);
   }
 
   Future<void> prepareVoice() async {
@@ -404,6 +447,8 @@ print('==========${currentItem!.quiz.choices.length}');
       else {
         currentItem = itemList[0];
         prepareVoice();
+        examComponentInjector.prepareExamList([currentItem!.quiz]);
+        buildExamView();
         assistCtr.updateMain();
       }
     };

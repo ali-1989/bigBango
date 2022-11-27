@@ -1,5 +1,5 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/pages/otp_page.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/system/enums.dart';

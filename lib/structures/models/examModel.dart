@@ -30,7 +30,7 @@ class ExamModel {
     if(userAnswersTemp is List){
       userAnswers = choicesTemp.map((e) => ExamChoiceModel.fromMap(e)).toList();
     }
-
+    //----------- local
     userSelectedOptionIndex = js['userSelectedOptionIndex']?? -1;
   }
 
@@ -42,6 +42,7 @@ class ExamModel {
     js['quizType'] = quizType.type();
     js['choices'] = choices;
 
+    //----------- local
     js['userAnswers'] = userAnswers;
     js['userSelectedOptionIndex'] = userSelectedOptionIndex;
 
@@ -49,16 +50,12 @@ class ExamModel {
   }
 
   void doSplitQuestion(){
-    if(question.startsWith('*****')){
+    if(question.startsWith('**')){
       /// this trick used if question start with ** for correct splitting
       question = '\u2060$question';
     }
 
-    if(!question.contains('*****')){
-      question += '*****\u2060';
-    }
-
-    questionSplit = question.split('*****');
+    questionSplit = question.split('**');
 
     userAnswers.clear();
 

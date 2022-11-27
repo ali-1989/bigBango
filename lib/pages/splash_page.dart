@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:app/managers/fontManager.dart';
-import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/pages/layout_page.dart';
 import 'package:app/pages/phone_number_page.dart';
 import 'package:app/pages/register_form_page.dart';

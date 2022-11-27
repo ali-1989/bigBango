@@ -1,4 +1,4 @@
-import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/pages/home_page.dart';
 import 'package:app/pages/leitner_page.dart';
 import 'package:app/views/homeComponents/appBarBuilder.dart';

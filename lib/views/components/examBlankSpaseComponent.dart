@@ -1,15 +1,14 @@
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/examModel.dart';
-import 'package:app/models/injectors/examInjector.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/interfaces/examStateInterface.dart';
+import 'package:app/structures/models/examModel.dart';
+import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/views/widgets/animationPositionScale.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 
@@ -22,11 +21,10 @@ class ExamBlankSpaceComponent extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ExamBlankSpaceComponent> createState() => _ExamBlankSpaceComponentState();
+  State<ExamBlankSpaceComponent> createState() => ExamBlankSpaceComponentState();
 }
 ///======================================================================================================================
-class _ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> {
-  List<ExamModel> examItems = [];
+class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> implements ExamStateInterface {
   bool showAnswers = false;
   late TextStyle questionNormalStyle;
 
@@ -34,19 +32,8 @@ class _ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> {
   void initState(){
     super.initState();
 
+    widget.injector.state = this;
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
-
-    List.generate(10, (index) {
-      final m = ExamModel()..id = '$index';
-      m.question = Generator.generateWords(20, 2, 10);
-      //m.question = '*****${m.question}';
-
-      examItems.add(m);
-    });
-
-    for(final k in examItems){
-      k.doSplitQuestion();
-    }
   }
 
   @override
@@ -74,11 +61,11 @@ class _ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               listItemBuilder,
-              childCount: examItems.length *2 -1,
+              childCount: widget.injector.examList.length *2 -1,
             ),
           ),
 
-          SliverToBoxAdapter(
+          /*SliverToBoxAdapter(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -99,7 +86,7 @@ class _ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> {
                 SizedBox(height: 20),
               ],
             ),
-          )
+          )*/
         ],
       ),
     );
@@ -111,7 +98,7 @@ class _ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> {
       return Divider(color: Colors.black, height: 2);
     }
 
-    final item = examItems[idx~/2];
+    final item = widget.injector.examList[idx~/2];
     final List<InlineSpan> spans = generateSpans(item);
 
     return Directionality(
@@ -144,31 +131,26 @@ class _ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> {
     );
   }
 
-  void onCheckClick(){
-    showAnswers = !showAnswers;
-    assistCtr.updateMain();
-  }
-
-  List<InlineSpan> generateSpans(ExamModel model){
+  List<InlineSpan> generateSpans(ExamModel exam){
     final List<InlineSpan> spans = [];
 
-    for(int i = 0; i < model.questionSplit.length; i++) {
-      spans.add(TextSpan(text: model.questionSplit[i], style: questionNormalStyle));
+    for(int i = 0; i < exam.questionSplit.length; i++) {
+      spans.add(TextSpan(text: exam.questionSplit[i], style: questionNormalStyle));
 
-      if(i < model.questionSplit.length-1) {
+      if(i < exam.questionSplit.length-1) {
         InlineSpan blankSpan;
+        InlineSpan? correctSpan;
         String blankText = '';
-        Color blankColor;
-        bool hasUserAnswer = model.userAnswers[i].text.isNotEmpty;
-        final tapRecognizer = TapGestureRecognizer()..onTapUp = (gesDetail){
+        bool hasUserAnswer = exam.userAnswers[i].text.isNotEmpty;
 
+        final tapRecognizer = TapGestureRecognizer()..onTapUp = (gesDetail){
           if(showAnswers){
             return;
           }
 
           TextEditingController tControl = TextEditingController();
           FocusNode focusNode = FocusNode();
-          tControl.text = model.userAnswers[i].text;
+          tControl.text = exam.userAnswers[i].text;
           late final OverlayEntry over;
 
           over = OverlayEntry(
@@ -207,7 +189,7 @@ class _ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> {
                                     focusNode: focusNode,
                                     style: TextStyle(fontSize: 16),
                                     onChanged: (t){
-                                      model.userAnswers[i].text = t.trim();
+                                      exam.userAnswers[i].text = t.trim();
                                       assistCtr.updateMain();
                                     },
                                     onSubmitted: (t){
@@ -228,57 +210,102 @@ class _ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> {
               }
           );
 
+          /// show TextField
           AppOverlay.showOverlay(context, over);
+
+          /// request focus
           Future.delayed(Duration(milliseconds: 600), (){
-            tControl.selection = TextSelection.collapsed(offset: model.userAnswers[i].text.length);
+            tControl.selection = TextSelection.collapsed(offset: exam.userAnswers[i].text.length);
             focusNode.requestFocus();
           });
         };
 
         if(showAnswers){
-          if(model.userAnswers[i].text == model.choices[i].text){
-            blankColor = Colors.green;
-            /// correct span
+          Color trueColor = Colors.green;
+          Color falseColor = Colors.red;
+
+          if(exam.userAnswers[i].text == exam.choices[i].text){
+
+            ///answer is correct
             blankSpan = WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Image.asset(AppImages.trueCheckIco),
-                    SizedBox(width: 5),
-                    Text(model.userAnswers[i].text, style: questionNormalStyle.copyWith(color: blankColor))
+                    SizedBox(width: 2),
+                    Text(exam.userAnswers[i].text, style: questionNormalStyle.copyWith(color: trueColor))
                   ],
                 )
             );
           }
           else {
-            blankColor = AppColors.red;
-            blankText = model.userAnswers[i].text.isNotEmpty? model.userAnswers[i].text: '[\u00A0_\u00A0]';
-            /// wrong span
-            blankSpan = WidgetSpan(
-                alignment: PlaceholderAlignment.middle,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.asset(AppImages.falseCheckIco),
-                    SizedBox(width: 5),
-                    Text(blankText, style: questionNormalStyle.copyWith(color: blankColor))
-                  ],
-                )
-            );
+            if(hasUserAnswer) {
+              blankText = exam.userAnswers[i].text;
+
+              /// answer is wrong
+              blankSpan = WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(AppImages.falseCheckIco),
+                      SizedBox(width: 2),
+                      Text(blankText, style: questionNormalStyle.copyWith(color: falseColor))
+                    ],
+                  )
+              );
+
+              correctSpan = WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(width: 4),
+                      //Image.asset(AppImages.trueCheckIco),
+                      SizedBox(width: 2),
+                      Text(exam.choices[i].text,
+                          style: questionNormalStyle.copyWith(
+                              color: trueColor,
+                              decorationStyle: TextDecorationStyle.solid,
+                            decoration: TextDecoration.underline,
+                            decorationColor: trueColor,
+                          )
+                      )
+                    ],
+                  )
+              );
+            }
+            else {
+              blankText = exam.choices[i].text;// '[\u00A0_\u00A0]';
+
+              /// answer is wrong
+              blankSpan = WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(AppImages.falseCheckIco),
+                      SizedBox(width: 2),
+                      Text(blankText, style: questionNormalStyle.copyWith(color: falseColor))
+                    ],
+                  )
+              );
+            }
           }
         }
         else {
+          Color blankColor = Colors.blue;
+
           if(hasUserAnswer){
-            blankText = ' ${model.userAnswers[i]} ';
-            blankColor = Colors.blue;
+            blankText = ' ${exam.userAnswers[i].text} ';
           }
           else {
             blankText = ' [\u00A0____\u00A0] '; // \u202F , \u2007
             blankColor = Colors.blue.shade200;
           }
 
-          /// blank space ==> []
+          /// blank space ==> [xxx]
           blankSpan = TextSpan(
             text: blankText,
             style: questionNormalStyle.copyWith(color: blankColor),
@@ -287,10 +314,20 @@ class _ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> {
         }
 
         spans.add(blankSpan);
+
+        if(correctSpan != null){
+          spans.add(correctSpan);
+        }
       }
     }
 
     return spans;
+  }
+
+  @override
+  void checkAnswers() {
+    showAnswers = !showAnswers;
+    assistCtr.updateMain();
   }
 }
 

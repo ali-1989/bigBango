@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:app/constants.dart';
 import 'package:app/managers/versionManager.dart';
-import 'package:app/models/versionModel.dart';
+import 'package:app/structures/models/versionModel.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:dio/dio.dart';
 
-import 'package:app/models/countryModel.dart';
+import 'package:app/structures/models/countryModel.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appHttpDio.dart';

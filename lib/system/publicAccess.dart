@@ -1,5 +1,5 @@
-import 'package:app/models/mixin/dateFieldMixin.dart';
-import 'package:app/models/userModel.dart';
+import 'package:app/structures/mixin/dateFieldMixin.dart';
+import 'package:app/structures/models/userModel.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';

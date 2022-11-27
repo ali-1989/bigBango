@@ -1,4 +1,4 @@
-import 'package:app/models/lessonModels/iSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/tools/app/appImages.dart';
 
 class VocabularySegmentModel extends ISegmentModel {

@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/ticketModel.dart';
-import 'package:app/models/ticketRole.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/models/ticketModel.dart';
+import 'package:app/structures/models/ticketRole.dart';
 import 'package:app/pages/ticket_detail_page.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/system/requester.dart';

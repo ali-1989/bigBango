@@ -1,6 +1,6 @@
-import 'package:app/models/lessonModels/iSegmentModel.dart';
-import 'package:app/models/lessonModels/lessonModel.dart';
-import 'package:app/models/lessonModels/vocabularySegmentModel.dart';
+import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/lessonModel.dart';
+import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
 import 'package:app/pages/idiomsSegmentPage.dart';
 import 'package:app/pages/vocabSegmentPage.dart';
 import 'package:app/tools/app/appImages.dart';

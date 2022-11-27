@@ -1,6 +1,6 @@
 import 'package:android_sms_retriever/android_sms_retriever.dart';
 import 'package:app/managers/fontManager.dart';
-import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';

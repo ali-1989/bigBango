@@ -1,6 +1,7 @@
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/examModel.dart';
-import 'package:app/models/injectors/examInjector.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/interfaces/examStateInterface.dart';
+import 'package:app/structures/models/examModel.dart';
+import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -25,8 +26,7 @@ class ExamSelectWordComponent extends StatefulWidget {
   State<ExamSelectWordComponent> createState() => _ExamSelectWordComponentState();
 }
 ///===============================================================================================================
-class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> {
-  List<ExamModel> examItems = [];
+class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> implements ExamStateInterface {
   Map<String, List<int>> selectedWords = {};
   bool showAnswers = false;
   late TextStyle questionNormalStyle;
@@ -37,8 +37,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> {
 
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
 
-    for(final k in examItems){
-      k.doSplitQuestion();
+    for(final k in widget.injector.examList){
       selectedWords[k.id] = [];
     }
   }
@@ -67,36 +66,15 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> {
           /// exam
           Expanded(
               child: CustomScrollView(
+                shrinkWrap: true,
+                physics: ScrollPhysics(),
                 slivers: [
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                         listItemBuilder,
-                      childCount: examItems.length *2 -1,
+                      childCount: widget.injector.examList.length *2 -1,
                     ),
                   ),
-
-                  SliverToBoxAdapter(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(height: 20),
-
-                        SizedBox(
-                          width: double.infinity,
-                          height: 46,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
-                            ),
-                            onPressed: onCheckClick,
-                            child: Text('ثبت و بررسی'),
-                          ),
-                        ),
-
-                        SizedBox(height: 20),
-                      ],
-                    ),
-                  )
                 ],
               )
           ),
@@ -111,7 +89,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> {
       return Divider(color: Colors.black, height: 2);
     }
 
-    final item = examItems[idx~/2];
+    final item = widget.injector.examList[idx~/2];
     final List<InlineSpan> spans = generateSpans(item);
 
     return Directionality(
@@ -333,10 +311,11 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> {
     assistCtr.updateMain();
   }
 
-  void onCheckClick(){
+  @override
+  void checkAnswers() {
     bool isAllSelected = true;
 
-    for(final exam in examItems){
+    for(final exam in widget.injector.examList){
       final selected = selectedWords[exam.id]!;
 
       if(exam.shuffleWords.length > selected.length){

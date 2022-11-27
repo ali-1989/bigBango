@@ -1,4 +1,4 @@
-import 'package:app/services/jwtService.dart';
+import 'package:app/services/jwt_service.dart';
 import 'package:app/system/httpProcess.dart';
 import 'package:app/system/session.dart';
 import 'package:dio/dio.dart';

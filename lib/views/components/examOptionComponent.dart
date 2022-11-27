@@ -1,12 +1,11 @@
 import 'package:animator/animator.dart';
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/examModel.dart';
-import 'package:app/models/injectors/examInjector.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/interfaces/examStateInterface.dart';
+import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 
@@ -22,9 +21,8 @@ class ExamOptionComponent extends StatefulWidget {
   State<ExamOptionComponent> createState() => _ExamOptionComponentState();
 }
 ///======================================================================================================================
-class _ExamOptionComponentState extends StateBase<ExamOptionComponent> {
-  List<ExamModel> examItems = [];
-  Map<String, int?> selectedAnswer = {};
+class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implements ExamStateInterface {
+  Map<String, int?> selectedAnswers = {};
   bool showAnswers = false;
   int currentExamIdx = 0;
   late TextStyle questionNormalStyle;
@@ -33,21 +31,8 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> {
   void initState(){
     super.initState();
 
+    widget.injector.state = this;
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
-
-    List.generate(10, (index) {
-      final m = ExamModel()..id = '$index';
-      m.question = Generator.generateWords(20, 2, 10);
-
-      for(int i=0; i<4; i++){
-        final ec = ExamChoiceModel();
-        ec.text = Generator.generateWords(5, 2, 7);
-
-        m.choices.add(ec);
-      }
-
-      examItems.add(m);
-    });
   }
 
   @override
@@ -73,7 +58,7 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> {
       preColor = Colors.grey;
     }
 
-    if(currentExamIdx >= examItems.length-1){
+    if(currentExamIdx >= widget.injector.examList.length-1){
       nextColor = Colors.grey;
     }
 
@@ -81,80 +66,74 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
+
           /// progress bar
-          Directionality(
-              textDirection: TextDirection.ltr,
-              child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
+          Visibility(
+            visible: widget.injector.examList.length > 1,
+            child: Directionality(
+                textDirection: TextDirection.ltr,
+                child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
+            ),
           ),
 
           /// exam
-          Expanded(
-              child: Directionality(
-                textDirection: TextDirection.ltr,
-                child: ListView(
-                  children: [
-                    ...buildQuestion()
-                  ],
-                ),
-              )
-          ),
-
-
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton.icon(
-                  onPressed: onNextClick,
-                  icon: RotatedBox(
-                      quarterTurns: 2,
-                      child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
-                  ),
-                  label: Text('next').englishFont().color(nextColor)
-              ),
-
-              TextButton.icon(
-                  style: TextButton.styleFrom(),
-                  onPressed: onPreClick,
-                  icon: Text('pre').englishFont().color(preColor),
-                  label: Image.asset(AppImages.arrowLeftIco, color: preColor)
-              ),
-            ],
-          ),
-
-          SizedBox(height: 2),
-
-          SizedBox(
-            width: double.infinity,
-            height: 32,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
-              ),
-              onPressed: isAllAnswer()? onCheckClick : null,
-              child: Text('ثبت و بررسی'),
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: ListView(
+              shrinkWrap: true,
+              physics: const ScrollPhysics(),
+              children: [
+                ...buildQuestionAndOptions()
+              ],
             ),
           ),
+
+
           SizedBox(height: 10),
+
+          /// next, pre buttons
+          Visibility(
+            visible: widget.injector.examList.length > 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton.icon(
+                    onPressed: onNextClick,
+                    icon: RotatedBox(
+                        quarterTurns: 2,
+                        child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
+                    ),
+                    label: Text('next').englishFont().color(nextColor)
+                ),
+
+                TextButton.icon(
+                    style: TextButton.styleFrom(),
+                    onPressed: onPreClick,
+                    icon: Text('pre').englishFont().color(preColor),
+                    label: Image.asset(AppImages.arrowLeftIco, color: preColor)
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  List<Widget> buildQuestion(){
+  List<Widget> buildQuestionAndOptions(){
     final res = <Widget>[];
-    final itm = examItems[currentExamIdx];
+    final curExam = widget.injector.examList[currentExamIdx];
 
-    final q = DecoratedBox(
+    final questionWidget = DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.grey.shade300,
+        color: Colors.grey.shade200,
           borderRadius: BorderRadius.circular(5)
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: Text(
-            itm.question,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w200, height: 1.7),
+            curExam.question,
+            style: TextStyle(fontSize: 12, height: 1.7),
           textAlign: TextAlign.justify,
         ),
       ).wrapDotBorder(
@@ -164,24 +143,26 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> {
     );
 
     res.add(SizedBox(height: 20));
-    res.add(q);
+    res.add(questionWidget);
     res.add(SizedBox(height: 20));
 
-    for(final a in itm.choices){
 
+    for(final opt in curExam.choices){
       final w = GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: (){
-          final idx = itm.choices.indexOf(a);
-          bool isSelected = selectedAnswer[itm.id] == idx;
+          if(showAnswers){
+            return;
+          }
 
-          isSelected = selectedAnswer[itm.id] == idx;
+          final optionIdx = curExam.choices.indexOf(opt);
+          bool isSelected = selectedAnswers[curExam.id] == optionIdx;
 
           if(isSelected){
-            selectedAnswer[itm.id] = null;
+            selectedAnswers[curExam.id] = null;
           }
           else {
-            selectedAnswer[itm.id] = idx;
+            selectedAnswers[curExam.id] = optionIdx;
           }
 
           assistCtr.updateMain();
@@ -192,22 +173,36 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> {
           duration: Duration(milliseconds: 400),
           cycles: 1,
           builder: (_, animate){
-            final idx = itm.choices.indexOf(a);
-            bool isSelected = selectedAnswer[itm.id] == idx;
+            final optionIdx = curExam.choices.indexOf(opt);
+            bool isSelected = selectedAnswers[curExam.id] == optionIdx;
+            bool isCorrect = optionIdx == widget.injector.examList[currentExamIdx].getCorrectChoiceIndex();
 
-            Color c = animate.fromTween((v) => ColorTween(begin: Colors.teal, end:Colors.lightBlueAccent))!;
+            Color backColor;
+
+            if(showAnswers){
+              if(isCorrect){
+                backColor = Colors.green;
+              }
+              else {
+                backColor = Colors.redAccent;
+              }
+            }
+            else {
+              backColor = animate.fromTween((v) => ColorTween(begin: Colors.teal, end:Colors.lightBlueAccent))!;
+            }
+
             TextStyle selectStl = TextStyle(color: Colors.white, fontWeight: FontWeight.w700);
             TextStyle unSelectStl = TextStyle(color: Colors.black87);
 
-            return  DecoratedBox(
+            return DecoratedBox(
               decoration: BoxDecoration(
-                  color: isSelected? c : Colors.transparent,
+                  color: (isSelected || (!isSelected && showAnswers && isCorrect))? backColor : Colors.transparent,
                   borderRadius: BorderRadius.circular(5)
               ),
               child: Row(
                 children: [
-                  Text('  ${idx+1} -  ', style: isSelected? selectStl : unSelectStl).englishFont(),
-                  Text(a.text, style: isSelected? selectStl : unSelectStl).englishFont(),
+                  Text('  ${optionIdx+1} -  ', style: (isSelected || (!isSelected && showAnswers && isCorrect))? selectStl : unSelectStl).englishFont(),
+                  Text(opt.text, style: (isSelected || (!isSelected && showAnswers && isCorrect))? selectStl : unSelectStl).englishFont(),
                 ],
               ).wrapBoxBorder(
                   color: Colors.black,
@@ -228,8 +223,8 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> {
   }
 
   bool isAllAnswer(){
-    for(final k in examItems){
-      if(selectedAnswer[k.id] == null){
+    for(final k in widget.injector.examList){
+      if(selectedAnswers[k.id] == null){
         return false;
       }
     }
@@ -238,7 +233,7 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> {
   }
 
   void onNextClick(){
-    if(currentExamIdx < examItems.length-1) {
+    if(currentExamIdx < widget.injector.examList.length-1) {
       currentExamIdx++;
     }
 
@@ -246,7 +241,6 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> {
   }
 
   void onPreClick(){
-
     if(currentExamIdx > 0) {
       currentExamIdx--;
       assistCtr.updateMain();
@@ -254,11 +248,12 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> {
   }
 
   double calcProgress(){
-    int r = ((currentExamIdx+1) * 100) ~/ examItems.length;
+    int r = ((currentExamIdx+1) * 100) ~/ widget.injector.examList.length;
     return r/100;
   }
 
-  void onCheckClick(){
+  @override
+  void checkAnswers() {
     showAnswers = !showAnswers;
     assistCtr.updateMain();
   }

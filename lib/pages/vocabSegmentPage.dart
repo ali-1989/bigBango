@@ -1,11 +1,11 @@
 import 'package:animator/animator.dart';
 import 'package:app/managers/fontManager.dart';
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/lessonModels/lessonModel.dart';
-import 'package:app/models/lessonModels/vocabularySegmentModel.dart';
-import 'package:app/models/vocabModels/vocabModel.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/models/lessonModels/lessonModel.dart';
+import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
+import 'package:app/structures/models/vocabModels/vocabModel.dart';
 import 'package:app/pages/idiomsSegmentPage.dart';
-import 'package:app/services/audioPplayerService.dart';
+import 'package:app/services/audio_player_service.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/tools/app/appColors.dart';

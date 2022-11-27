@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/userModel.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/enums.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/requester.dart';

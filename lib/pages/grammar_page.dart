@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/examModel.dart';
-import 'package:app/models/grammarModel.dart';
-import 'package:app/models/injectors/examInjector.dart';
-import 'package:app/models/lessonModels/grammarSegmentModel.dart';
-import 'package:app/models/lessonModels/lessonModel.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/models/examModel.dart';
+import 'package:app/structures/models/grammarModel.dart';
+import 'package:app/structures/injectors/examInjector.dart';
+import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/pages/exam_page.dart';
 import 'package:app/system/enums.dart';
 import 'package:app/system/requester.dart';
@@ -360,7 +360,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   void gotoExam(ExamModel examModel){
     ExamInjector examComponentInjector = ExamInjector();
     examComponentInjector.lessonModel = widget.injection.lessonModel;
-    examComponentInjector.segment = widget.injection.lessonModel.grammarModel!;
+    examComponentInjector.segmentModel = widget.injection.lessonModel.grammarModel!;
 
     Widget component = SizedBox();
     String desc = '';

@@ -1,5 +1,5 @@
 
-import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/system/enums.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/system/requester.dart';

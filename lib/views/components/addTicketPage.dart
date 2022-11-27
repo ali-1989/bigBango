@@ -1,5 +1,5 @@
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/ticketRole.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/models/ticketRole.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';

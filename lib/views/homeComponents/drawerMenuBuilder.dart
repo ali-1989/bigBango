@@ -15,7 +15,7 @@ import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/notifyRefresh.dart';
 import 'package:iris_tools/modules/stateManagers/refresh.dart';
 
-import 'package:app/models/userModel.dart';
+import 'package:app/structures/models/userModel.dart';
 
 import 'package:app/system/enums.dart';
 import 'package:app/system/extensions.dart';

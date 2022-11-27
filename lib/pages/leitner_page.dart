@@ -1,5 +1,5 @@
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/lightnerModel.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/models/lightnerModel.dart';
 import 'package:app/pages/leitner_detail_page.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';

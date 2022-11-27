@@ -1,4 +1,4 @@
-import 'package:app/models/abstract/stateBase.dart';
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/session.dart';

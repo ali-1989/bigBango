@@ -6,7 +6,7 @@ import 'package:iris_tools/api/generator.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appDb.dart';
 import '/constants.dart';
-import '/models/notificationModel.dart' as nm;
+import 'package:app/structures/models/notificationModel.dart' as nm;
 
 // https://github.com/rafaelsetragni/awesome_notifications/blob/master/example/lib/utils/notification_util.dart
 

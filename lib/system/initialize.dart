@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app/services/audioPplayerService.dart';
+import 'package:app/services/audio_player_service.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/userLoginTools.dart';
 import 'package:flutter/foundation.dart';

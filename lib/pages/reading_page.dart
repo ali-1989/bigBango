@@ -1,8 +1,8 @@
 
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/lessonModels/lessonModel.dart';
-import 'package:app/models/lessonModels/readingSegmentModel.dart';
-import 'package:app/models/readingModel.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/models/lessonModels/lessonModel.dart';
+import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
+import 'package:app/structures/models/readingModel.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';

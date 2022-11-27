@@ -1,4 +1,4 @@
-import 'package:app/services/jwtService.dart';
+import 'package:app/services/jwt_service.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:iris_tools/models/dataModels/mediaModel.dart';
 

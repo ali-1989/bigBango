@@ -1,5 +1,5 @@
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/versionModel.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/models/versionModel.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appNavigator.dart';

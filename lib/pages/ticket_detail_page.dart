@@ -1,5 +1,5 @@
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/ticketModel.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/models/ticketModel.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 

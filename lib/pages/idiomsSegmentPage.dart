@@ -1,7 +1,7 @@
-import 'package:app/models/abstract/stateBase.dart';
-import 'package:app/models/lessonModels/iSegmentModel.dart';
-import 'package:app/models/lessonModels/lessonModel.dart';
-import 'package:app/models/vocabModels/idiomModel.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/lessonModel.dart';
+import 'package:app/structures/models/vocabModels/idiomModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/requester.dart';
 import 'package:app/tools/app/appColors.dart';
