@@ -215,7 +215,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
           AppOverlay.showOverlay(context, over);
 
           /// request focus
-          Future.delayed(Duration(milliseconds: 600), (){
+          Future.delayed(Duration(milliseconds: 400), (){
             tControl.selection = TextSelection.collapsed(offset: exam.userAnswers[i].text.length);
             focusNode.requestFocus();
           });

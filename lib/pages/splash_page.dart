@@ -22,7 +22,6 @@ import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/components/splashScreen.dart';
 import 'package:app/views/states/waitToLoad.dart';
 

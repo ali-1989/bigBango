@@ -50,8 +50,8 @@ class AppbarLesson extends StatelessWidget {
                           SizedBox(width: 10),
                           CustomCard(
                               color: Colors.grey.shade200,
-                              padding: EdgeInsets.all(4),
-                              child: Image.asset(AppImages.arrowLeftIco, width: 12, height: 12)
+                              padding: EdgeInsets.all(6),
+                              child: Image.asset(AppImages.arrowLeftIco, width: 13, height: 13)
                           ),
                         ],
                       ),

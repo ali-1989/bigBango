@@ -39,6 +39,9 @@ class ReadingPage extends StatefulWidget {
 ///======================================================================================================================
 class _ReadingPageState extends StateBase<ReadingPage> {
   Requester requester = Requester();
+  AudioPlayer player = AudioPlayer();
+  Duration totalTime = Duration();
+  Duration currentTime = Duration();
   int currentItemIdx = 0;
   int currentSegmentIdx = 0;
   bool showTranslate = false;
@@ -46,13 +49,10 @@ class _ReadingPageState extends StateBase<ReadingPage> {
   bool isInPlaying = false;
   List<ReadingModel> itemList = [];
   ReadingModel? currentItem;
-  String timerViewId = 'timerViewId';
-  String playIconViewId = 'playIconViewId';
+  String playerViewId = 'playerViewId';
   TextStyle normalStyle = TextStyle(height: 1.7, color: Colors.black);
   TextStyle readStyle = TextStyle(height: 1.7, color: Colors.deepOrange);
-  AudioPlayer player = AudioPlayer();
-  Duration totalTime = Duration();
-  Duration currentTime = Duration();
+
 
   @override
   void initState(){
@@ -138,13 +138,17 @@ class _ReadingPageState extends StateBase<ReadingPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Chip(
-                      label: Text('${showTranslate? currentItem?.titleTranslation: currentItem?.title}', style:TextStyle(color: Colors.black)),
+                      label: Text('${showTranslate? currentItem?.titleTranslation: currentItem?.title}',
+                          style:TextStyle(color: Colors.black)
+                      ),
                       backgroundColor: Colors.grey.shade400,
                       elevation: 0,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                       visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                     ),
+
+                    Icon(AppIcons)
                   ],
                 ),
               ),
@@ -189,20 +193,20 @@ class _ReadingPageState extends StateBase<ReadingPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: IntrinsicHeight(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Assist(
-                                      controller: assistCtr,
-                                      id: timerViewId,
-                                      builder: (_, ctr, data) {
-                                        return CustomCard(
+                      child: Assist(
+                          controller: assistCtr,
+                          id: playerViewId,
+                          builder: (_, ctr, data) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        CustomCard(
                                             color: Colors.pinkAccent,
                                             radius: 4,
                                             padding: EdgeInsets.symmetric(horizontal: 14, vertical:4),
@@ -212,21 +216,15 @@ class _ReadingPageState extends StateBase<ReadingPage> {
                                                 Text(DurationFormatter.duration(totalTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
                                               ],
                                             )
-                                        );
-                                      }
+                                        )
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              )
-                          ),
+                                  )
+                              ),
 
-                          Expanded(
-                            flex: 3,
-                            child: Assist(
-                              controller: assistCtr,
-                              id: playIconViewId,
-                              builder: (_, ctr, data) {
-                                return Row(
+                              Expanded(
+                                flex: 3,
+                                child: Row(
                                   textDirection: TextDirection.ltr,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -254,8 +252,8 @@ class _ReadingPageState extends StateBase<ReadingPage> {
                                           radius: 25,
                                           padding: EdgeInsets.all(5),
                                           child: isPlaying() ?
-                                            Icon(AppIcons.pause, size: 35)
-                                          : Icon(AppIcons.playArrow, size: 35)
+                                          Icon(AppIcons.pause, size: 35)
+                                              : Icon(AppIcons.playArrow, size: 35)
                                       ),
                                     ),
 
@@ -270,24 +268,24 @@ class _ReadingPageState extends StateBase<ReadingPage> {
                                       ),
                                     ),
                                   ],
-                                );
-                              }
-                            ),
-                          ),
-
-                          Expanded(
-                            flex: 2,
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: CustomCard(
-                                  color: Colors.deepOrange,
-                                  radius: 4,
-                                  padding: EdgeInsets.all(2),
-                                  child: Text('${currentSegmentIdx+1}/${currentItem?.segments.length}', style: TextStyle(fontSize: 11, color: Colors.white))
+                                ),
                               ),
-                            ),
-                          ),
-                        ],
+
+                              Expanded(
+                                flex: 2,
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: CustomCard(
+                                      color: Colors.deepOrange,
+                                      radius: 4,
+                                      padding: EdgeInsets.all(2),
+                                      child: Text('${currentSegmentIdx+1}/${currentItem?.segments.length}', style: TextStyle(fontSize: 11, color: Colors.white))
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
                       ),
                     ),
                   )
@@ -404,7 +402,7 @@ class _ReadingPageState extends StateBase<ReadingPage> {
 
   void durationListener(Duration dur) {
     currentTime = dur;
-    assistCtr.update(timerViewId);
+    assistCtr.update(playerViewId);
 
     if(currentItem == null  || currentSegmentIdx >= currentItem!.segments.length){
       return;
@@ -419,7 +417,7 @@ class _ReadingPageState extends StateBase<ReadingPage> {
   }
 
   void eventListener(PlaybackEvent event){
-    assistCtr.update(playIconViewId);
+    assistCtr.update(playerViewId);
   }
 
   Future<void> prepareVoice() async {
@@ -434,7 +432,7 @@ class _ReadingPageState extends StateBase<ReadingPage> {
 
       if(dur != null){
         totalTime = dur;
-        assistCtr.update(timerViewId);
+        assistCtr.update(playerViewId);
       }
 
     }).onError((error, stackTrace) {
@@ -484,7 +482,6 @@ class _ReadingPageState extends StateBase<ReadingPage> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/reading?LessonId=${widget.injector.lessonModel.id}');
-    requester.debug = true;
     requester.request(context);
   }
 }

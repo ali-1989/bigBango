@@ -9,7 +9,6 @@ import 'package:iris_tools/api/system.dart';
 import 'package:iris_tools/net/trustSsl.dart';
 
 import 'package:app/constants.dart';
-import 'package:app/managers/settingsManager.dart';
 import 'package:app/services/audio_player_service.dart';
 import 'package:app/system/applicationLifeCycle.dart';
 import 'package:app/system/publicAccess.dart';
@@ -72,7 +71,6 @@ class ApplicationInitial {
       AudioPlayerService.init();
 
       if (!kIsWeb) {
-        AppThemes.prepareFonts(SettingsManager.settingsModel.appLocale.languageCode);
         await AppNotification.initial();
         AppNotification.startListenTap();
       }
