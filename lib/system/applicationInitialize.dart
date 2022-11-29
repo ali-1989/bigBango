@@ -12,7 +12,7 @@ import 'package:iris_tools/api/logger/reporter.dart';
 import 'package:iris_tools/api/system.dart';
 
 import 'package:app/constants.dart';
-import 'package:app/system/lifeCycleApplication.dart';
+import 'package:app/system/applicationLifeCycle.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
@@ -22,8 +22,8 @@ import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/deviceInfoTools.dart';
 import 'package:iris_tools/net/trustSsl.dart';
 
-class InitialApplication {
-  InitialApplication._();
+class ApplicationInitial {
+  ApplicationInitial._();
 
   static bool _callLaunchUpInit = false;
   static bool _isInitialOk = false;
@@ -91,9 +91,9 @@ class InitialApplication {
 
     //VersionManager.checkAppHasNewVersion(AppRoute.getContext()); // this is check in splash
     final eventListener = AppEventListener();
-    eventListener.addResumeListener(LifeCycleApplication.onResume);
-    eventListener.addPauseListener(LifeCycleApplication.onPause);
-    eventListener.addDetachListener(LifeCycleApplication.onDetach);
+    eventListener.addResumeListener(ApplicationLifeCycle.onResume);
+    eventListener.addPauseListener(ApplicationLifeCycle.onPause);
+    eventListener.addDetachListener(ApplicationLifeCycle.onDetach);
     WidgetsBinding.instance.addObserver(eventListener);
 
     //WebsocketService.prepareWebSocket(SettingsManager.settingsModel.wsAddress);

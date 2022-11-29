@@ -19,7 +19,7 @@ import 'package:iris_tools/api/system.dart';
 import 'package:app/constants.dart';
 import 'package:app/managers/settingsManager.dart';
 import 'package:app/managers/versionManager.dart';
-import 'package:app/system/initialize.dart';
+import 'package:app/system/applicationInitialize.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appDb.dart';
@@ -125,6 +125,10 @@ class SplashScreenState extends StateBase<SplashPage> {
   Widget getFirstPage(){
     return Builder(
       builder: (ctx){
+        var x = DefaultTextStyle.of(context).style.fontFamily;
+        print('\n ---------- x3 :$x');
+        x = DefaultTextStyle.of(ctx).style.fontFamily;
+        print('\n ---------- x4 :$x');
         if(Session.hasAnyLogin()){
           System.showBothStatusBar();
 
@@ -176,16 +180,19 @@ class SplashScreenState extends StateBase<SplashPage> {
     _isInit = true;
 
     await AppDB.init();
+
     AppThemes.initial();
+    var x = DefaultTextStyle.of(context).style.fontFamily;
+    print('\n ---------- x1 :$x');
     final settingsLoad = SettingsManager.loadSettings();
 
     if (settingsLoad) {
       await Session.fetchLoginUsers();
       await VersionManager.checkInstallVersion();
-      await InitialApplication.launchUpInit();
+      await ApplicationInitial.launchUpInit();
       connectToServer();
 
-      InitialApplication.appLazyInit();
+      ApplicationInitial.appLazyInit();
       _isInLoadingSettings = false;
 
       AppBroadcast.reBuildMaterialBySetTheme();

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:app/constants.dart';
 import 'package:app/pages/splash_page.dart';
-import 'package:app/system/initialize.dart';
+import 'package:app/system/applicationInitialize.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appThemes.dart';
@@ -28,7 +28,7 @@ Future<void> main() async {
   }
 
   WidgetsFlutterBinding.ensureInitialized();
-  final initOk = await InitialApplication.importantInit();
+  final initOk = await ApplicationInitial.importantInit();
 
   if(!initOk){
     runApp(const MyErrorApp());
@@ -66,6 +66,8 @@ class MyApp extends StatelessWidget {
   ///============ call on any hot reload
   @override
   Widget build(BuildContext context) {
+    var x = DefaultTextStyle.of(context).style.fontFamily;
+    print('\n ---------- start :$x');
     return MaterialApp(
       key: AppBroadcast.materialAppKey,
       navigatorKey: AppBroadcast.rootNavigatorKey,
@@ -86,6 +88,8 @@ class MyApp extends StatelessWidget {
       home: materialHomeBuilder(null),
       builder: (subContext, home) {
         AppRoute.materialContext = subContext;
+        var x = DefaultTextStyle.of(subContext).style.fontFamily;
+        print('\n ---------- subContext :: $x ${AppThemes.instance.themeData.textTheme.bodyText1?.fontFamily}');
 
         return Directionality(
             textDirection: AppThemes.instance.textDirection,

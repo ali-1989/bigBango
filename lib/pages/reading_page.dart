@@ -3,7 +3,7 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
 import 'package:app/structures/models/readingModel.dart';
-import 'package:app/system/requester.dart';
+import 'package:app/system/requesterMiddleWare.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
@@ -483,6 +483,7 @@ class _ReadingPageState extends StateBase<ReadingPage> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/reading?LessonId=${widget.injector.lessonModel.id}');
+    requester.debug = true;
     requester.request(context);
   }
 }

@@ -11,7 +11,7 @@ import 'package:app/pages/listening_page.dart';
 import 'package:app/pages/reading_page.dart';
 import 'package:app/pages/select_language_level_page.dart';
 import 'package:app/pages/vocabSegmentPage.dart';
-import 'package:app/system/requester.dart';
+import 'package:app/system/requesterMiddleWare.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -63,6 +63,8 @@ class HomePageState extends StateBase<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var x = DefaultTextStyle.of(context).style.fontFamily;
+    print('\n ---------- home :$x');
     return Assist(
       controller: assistCtr,
       builder: (_, ctr, data) {

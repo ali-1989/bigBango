@@ -7,7 +7,7 @@ import 'package:app/structures/models/vocabModels/vocabModel.dart';
 import 'package:app/pages/idiomsSegmentPage.dart';
 import 'package:app/services/audio_player_service.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/requester.dart';
+import 'package:app/system/requesterMiddleWare.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';

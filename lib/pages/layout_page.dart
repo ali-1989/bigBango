@@ -19,9 +19,13 @@ class LayoutPageState extends StateBase<LayoutPage> {
 
   @override
   Widget build(BuildContext context) {
+    var x = DefaultTextStyle.of(context).style.fontFamily;
+    print('\n ---------- layout :$x');
     return Assist(
       controller: assistCtr,
       builder: (ctx, ctr, data) {
+        var x = DefaultTextStyle.of(ctx).style.fontFamily;
+        print('\n ---------- layout2 :$x');
         return SafeArea(
           top: true,
           child: Scaffold(
