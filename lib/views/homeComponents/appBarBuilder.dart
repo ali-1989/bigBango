@@ -1,12 +1,14 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import 'package:iris_tools/api/helpers/mathHelper.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/views/components/changeLevel.dart';
 import 'package:app/views/homeComponents/drawerMenuBuilder.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:iris_tools/api/helpers/mathHelper.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AppBarCustom2 extends AppBar {
 

@@ -1,7 +1,15 @@
+import 'package:flutter/material.dart';
+
 import 'package:android_sms_retriever/android_sms_retriever.dart';
+import 'package:iris_tools/api/helpers/localeHelper.dart';
+import 'package:iris_tools/api/helpers/mathHelper.dart';
+import 'package:iris_tools/dateSection/dateHelper.dart';
+import 'package:pinput/pinput.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
+
 import 'package:app/managers/fontManager.dart';
-import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/services/login_service.dart';
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
@@ -11,13 +19,6 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSnack.dart';
-import 'package:flutter/material.dart';
-import 'package:iris_tools/api/helpers/localeHelper.dart';
-import 'package:iris_tools/api/helpers/mathHelper.dart';
-import 'package:iris_tools/dateSection/dateHelper.dart';
-import 'package:pinput/pinput.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart';
-
 
 class OtpPage extends StatefulWidget {
   final String phoneNumber;

@@ -1,6 +1,5 @@
-import 'package:app/structures/mixin/dateFieldMixin.dart';
-import 'package:app/structures/models/userModel.dart';
 import 'package:flutter/material.dart';
+
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
 import 'package:iris_tools/api/system.dart';
@@ -9,10 +8,11 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:app/constants.dart';
 import 'package:app/managers/settingsManager.dart';
+import 'package:app/structures/mixin/dateFieldMixin.dart';
+import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appRoute.dart';
-
 
 class PublicAccess {
   PublicAccess._();

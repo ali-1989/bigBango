@@ -1,6 +1,5 @@
 import 'package:app/system/enums.dart';
 
-
 class ExamModel {
   late String id;
   late String question;

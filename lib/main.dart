@@ -1,19 +1,18 @@
 import 'dart:async';
 
-import 'package:app/constants.dart';
-import 'package:app/pages/splash_page.dart';
-import 'package:app/system/applicationInitialize.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appThemes.dart';
-import 'package:app/tools/app/appToast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import 'package:app/constants.dart';
+import 'package:app/pages/splash_page.dart';
+import 'package:app/system/applicationInitialize.dart';
+import 'package:app/system/publicAccess.dart';
+import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appRoute.dart';
-
+import 'package:app/tools/app/appThemes.dart';
+import 'package:app/tools/app/appToast.dart';
 
 ///================ call on any hot restart
 Future<void> main() async {

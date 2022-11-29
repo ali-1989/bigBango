@@ -1,27 +1,27 @@
 import 'dart:async';
 
-import 'package:app/managers/settingsManager.dart';
-import 'package:app/services/audio_player_service.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/tools/app/appDb.dart';
-import 'package:app/tools/app/appThemes.dart';
-import 'package:app/tools/userLoginTools.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
 import 'package:iris_tools/api/system.dart';
+import 'package:iris_tools/net/trustSsl.dart';
 
 import 'package:app/constants.dart';
+import 'package:app/managers/settingsManager.dart';
+import 'package:app/services/audio_player_service.dart';
 import 'package:app/system/applicationLifeCycle.dart';
+import 'package:app/system/publicAccess.dart';
+import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appNotification.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSizes.dart';
+import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/deviceInfoTools.dart';
-import 'package:iris_tools/net/trustSsl.dart';
+import 'package:app/tools/userLoginTools.dart';
 
 class ApplicationInitial {
   ApplicationInitial._();

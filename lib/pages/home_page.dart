@@ -1,33 +1,34 @@
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/lessonModel.dart';
-import 'package:app/structures/models/lessonModels/listeningSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
-import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
+import 'package:flutter/material.dart';
+
+import 'package:extended_sliver/extended_sliver.dart';
+import 'package:iris_tools/features/overlayDialog.dart';
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/searchBar.dart';
+
 import 'package:app/pages/grammar_page.dart';
 import 'package:app/pages/listening_page.dart';
 import 'package:app/pages/reading_page.dart';
 import 'package:app/pages/select_language_level_page.dart';
 import 'package:app/pages/vocabSegmentPage.dart';
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/lessonModel.dart';
+import 'package:app/structures/models/lessonModels/listeningSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
+import 'package:app/system/extensions.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
-import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/views/widgets/customCard.dart';
-import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/components/lessonSegmentView.dart';
+import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:extended_sliver/extended_sliver.dart';
-import 'package:flutter/material.dart';
-import 'package:iris_tools/features/overlayDialog.dart';
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/searchBar.dart';
-
+import 'package:app/views/widgets/customCard.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

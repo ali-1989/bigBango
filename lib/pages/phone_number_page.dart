@@ -1,7 +1,17 @@
+import 'package:flutter/material.dart';
+
+import 'package:android_sms_retriever/android_sms_retriever.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:im_animations/im_animations.dart';
+import 'package:iris_tools/api/checker.dart';
+import 'package:iris_tools/api/helpers/inputFormatter.dart';
+import 'package:iris_tools/api/helpers/mathHelper.dart';
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/attribute.dart';
+
 import 'package:app/pages/otp_page.dart';
 import 'package:app/services/login_service.dart';
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/system/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
@@ -12,14 +22,6 @@ import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/components/videoPlayer.dart';
-import 'package:flutter/material.dart';
-import 'package:im_animations/im_animations.dart';
-import 'package:iris_tools/api/checker.dart';
-import 'package:iris_tools/api/helpers/inputFormatter.dart';
-import 'package:iris_tools/api/helpers/mathHelper.dart';
-import 'package:android_sms_retriever/android_sms_retriever.dart';
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/attribute.dart';
 
 class PhoneNumberPage extends StatefulWidget {
   PhoneNumberPage({Key? key}) : super(key: key);

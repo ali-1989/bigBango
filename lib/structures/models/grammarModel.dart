@@ -1,6 +1,5 @@
 import 'package:app/structures/models/mediaModel.dart';
 
-
 class GrammarModel {
   String id = '';
   String title = '';

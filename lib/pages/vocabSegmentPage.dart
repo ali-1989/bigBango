@@ -1,28 +1,30 @@
-import 'package:animator/animator.dart';
-import 'package:app/managers/fontManager.dart';
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/models/lessonModels/lessonModel.dart';
-import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
-import 'package:app/structures/models/vocabModels/vocabModel.dart';
-import 'package:app/pages/idiomsSegmentPage.dart';
-import 'package:app/services/audio_player_service.dart';
-import 'package:app/system/extensions.dart';
-import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/tools/app/appColors.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/views/components/appbarLesson.dart';
-import 'package:app/views/widgets/customCard.dart';
-import 'package:app/views/states/errorOccur.dart';
-import 'package:app/views/components/greetingView.dart';
-import 'package:app/views/states/waitToLoad.dart';
 import 'package:flutter/material.dart';
+
+import 'package:animator/animator.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/api/taskQueueCaller.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/attribute.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
+
+import 'package:app/managers/fontManager.dart';
+import 'package:app/pages/idiomsSegmentPage.dart';
+import 'package:app/services/audio_player_service.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/lessonModels/lessonModel.dart';
+import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
+import 'package:app/structures/models/vocabModels/vocabModel.dart';
+import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/app/appToast.dart';
+import 'package:app/views/components/appbarLesson.dart';
+import 'package:app/views/components/greetingView.dart';
+import 'package:app/views/states/errorOccur.dart';
+import 'package:app/views/states/waitToLoad.dart';
+import 'package:app/views/widgets/customCard.dart';
 
 class VocabSegmentPageInjector {
   late LessonModel lessonModel;

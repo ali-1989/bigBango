@@ -1,6 +1,17 @@
+import 'package:flutter/material.dart';
+
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:iris_tools/api/checker.dart';
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
+import 'package:iris_tools/api/helpers/mathHelper.dart';
+import 'package:iris_tools/dateSection/dateHelper.dart';
+import 'package:persian_modal_date_picker/button.dart';
+import 'package:persian_modal_date_picker/persian_date_picker.dart';
+import 'package:shamsi_date/shamsi_date.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/system/keys.dart';
 import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appDb.dart';
@@ -11,15 +22,6 @@ import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/dateTools.dart';
 import 'package:app/tools/deviceInfoTools.dart';
-import 'package:flutter/material.dart';
-import 'package:iris_tools/api/checker.dart';
-import 'package:iris_tools/api/helpers/jsonHelper.dart';
-import 'package:iris_tools/api/helpers/mathHelper.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:iris_tools/dateSection/dateHelper.dart';
-import 'package:persian_modal_date_picker/button.dart';
-import 'package:persian_modal_date_picker/persian_date_picker.dart';
-import 'package:shamsi_date/shamsi_date.dart';
 
 class RegisterFormPage extends StatefulWidget {
   final String phoneNumber;

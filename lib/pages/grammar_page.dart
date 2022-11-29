@@ -1,14 +1,21 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+
+import 'package:chewie/chewie.dart';
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/maxHeight.dart';
+import 'package:video_player/video_player.dart';
+
+import 'package:app/pages/exam_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/injectors/examInjector.dart';
+import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/examModel.dart';
 import 'package:app/structures/models/grammarModel.dart';
-import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
-import 'package:app/pages/exam_page.dart';
 import 'package:app/system/enums.dart';
-import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -21,11 +28,6 @@ import 'package:app/views/components/examSelectWordComponent.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:chewie/chewie.dart';
-import 'package:flutter/material.dart';
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/maxHeight.dart';
-import 'package:video_player/video_player.dart';
 
 class GrammarPageInjector {
   late LessonModel lessonModel;

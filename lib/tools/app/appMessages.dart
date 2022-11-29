@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 
 import 'package:app/tools/app/appRoute.dart';
-import 'package:flutter/material.dart';
 
 class AppMessages {
   AppMessages._();

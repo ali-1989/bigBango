@@ -1,31 +1,30 @@
 import 'dart:async';
 
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import 'package:iris_tools/api/system.dart';
+import 'package:iris_tools/dateSection/dateHelper.dart';
+
+import 'package:app/managers/settingsManager.dart';
+import 'package:app/managers/versionManager.dart';
 import 'package:app/pages/layout_page.dart';
 import 'package:app/pages/phone_number_page.dart';
 import 'package:app/pages/register_form_page.dart';
 import 'package:app/pages/select_language_level_page.dart';
 import 'package:app/services/login_service.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/system/applicationInitialize.dart';
 import 'package:app/system/keys.dart';
+import 'package:app/system/session.dart';
+import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appMessages.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/components/splashScreen.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-
-import 'package:iris_tools/api/system.dart';
-
-import 'package:app/managers/settingsManager.dart';
-import 'package:app/managers/versionManager.dart';
-import 'package:app/system/applicationInitialize.dart';
-import 'package:app/system/session.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appDb.dart';
-import 'package:app/tools/app/appRoute.dart';
-import 'package:iris_tools/dateSection/dateHelper.dart';
-
 
 bool _isInit = false;
 bool _isInLoadingSettings = true;

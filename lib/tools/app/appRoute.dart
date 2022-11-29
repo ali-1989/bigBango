@@ -1,6 +1,6 @@
-import 'package:app/tools/app/appNavigator.dart';
 import 'package:flutter/material.dart';
 
+import 'package:app/tools/app/appNavigator.dart';
 
 class AppRoute {
   static BuildContext? materialContext;

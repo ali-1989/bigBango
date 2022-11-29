@@ -1,6 +1,6 @@
+import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 import 'package:app/system/keys.dart';
-import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 abstract class ISegmentModel {
   int? id;

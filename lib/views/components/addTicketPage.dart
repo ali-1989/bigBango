@@ -1,16 +1,18 @@
+import 'package:flutter/material.dart';
+
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:iris_tools/api/helpers/focusHelper.dart';
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/models/ticketRole.dart';
 import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/ticketRole.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/views/widgets/customCard.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/material.dart';
-import 'package:iris_tools/api/helpers/focusHelper.dart';
-import 'package:iris_tools/api/helpers/jsonHelper.dart';
-import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 class AddTicketPage extends StatefulWidget {
   final List<TicketRole> ticketRoles;

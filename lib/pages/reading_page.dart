@@ -1,9 +1,15 @@
+import 'package:flutter/material.dart';
+
+import 'package:iris_tools/api/duration/durationFormater.dart';
+import 'package:iris_tools/api/generator.dart';
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:just_audio/just_audio.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
 import 'package:app/structures/models/readingModel.dart';
-import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
@@ -13,11 +19,6 @@ import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
-import 'package:flutter/material.dart';
-import 'package:iris_tools/api/generator.dart';
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:iris_tools/api/duration/durationFormater.dart';
 
 class ReadingPageInjector {
   late LessonModel lessonModel;

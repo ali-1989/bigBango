@@ -1,13 +1,6 @@
-import 'package:animator/animator.dart';
-import 'package:app/pages/invite_page.dart';
-import 'package:app/pages/profile_page.dart';
-import 'package:app/pages/support_page.dart';
-import 'package:app/tools/app/appDialogIris.dart';
-import 'package:app/tools/app/appOverlay.dart';
-import 'package:app/tools/app/appSizes.dart';
-import 'package:app/tools/userLoginTools.dart';
 import 'package:flutter/material.dart';
 
+import 'package:animator/animator.dart';
 import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/api/helpers/fileHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
@@ -15,16 +8,22 @@ import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/notifyRefresh.dart';
 import 'package:iris_tools/modules/stateManagers/refresh.dart';
 
+import 'package:app/pages/invite_page.dart';
+import 'package:app/pages/profile_page.dart';
+import 'package:app/pages/support_page.dart';
 import 'package:app/structures/models/userModel.dart';
-
 import 'package:app/system/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
+import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/app/appSizes.dart';
+import 'package:app/tools/userLoginTools.dart';
 
 class DrawerMenuBuilder {
   static bool _isOpen = false;

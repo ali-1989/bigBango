@@ -1,16 +1,17 @@
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/structures/interfaces/examStateInterface.dart';
 import 'package:app/structures/models/examModel.dart';
-import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/views/widgets/animationPositionScale.dart';
 import 'package:app/views/widgets/customCard.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-
 
 class ExamBlankSpaceComponent extends StatefulWidget {
   final ExamInjector injector;

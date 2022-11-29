@@ -1,6 +1,6 @@
-import 'package:app/structures/models/mediaModel.dart';
 import 'package:flutter/material.dart';
 
+import 'package:app/structures/models/mediaModel.dart';
 
 class ReadingModel {
   String id = '';

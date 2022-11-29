@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
-import 'package:app/system/enums.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/system/enums.dart';
 import 'package:app/tools/app/appThemes.dart';
 
 /// has usage in below

@@ -1,13 +1,14 @@
+import 'package:flutter/material.dart';
+
+import 'package:app/pages/idiomsSegmentPage.dart';
+import 'package:app/pages/vocabSegmentPage.dart';
 import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
-import 'package:app/pages/idiomsSegmentPage.dart';
-import 'package:app/pages/vocabSegmentPage.dart';
-import 'package:app/tools/app/appImages.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/views/widgets/customCard.dart';
-import 'package:flutter/material.dart';
 
 class LessonSegmentViewInjection {
   late LessonModel lessonModel;

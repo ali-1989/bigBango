@@ -1,9 +1,10 @@
+import 'package:iris_tools/api/helpers/mathHelper.dart';
+
 import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/listeningSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
 import 'package:app/system/keys.dart';
-import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 class LessonModel {
   late int id;

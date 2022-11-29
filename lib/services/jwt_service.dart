@@ -1,3 +1,6 @@
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/system/session.dart';
@@ -5,8 +8,6 @@ import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appToast.dart';
-import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 
 class JwtService {
   JwtService._();

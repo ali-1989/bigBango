@@ -1,13 +1,14 @@
+import 'package:flutter/material.dart';
+
 import 'package:animator/animator.dart';
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/interfaces/examStateInterface.dart';
 import 'package:app/structures/injectors/examInjector.dart';
+import 'package:app/structures/interfaces/examStateInterface.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:flutter/material.dart';
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-
 
 class ExamOptionComponent extends StatefulWidget {
   final ExamInjector injector;

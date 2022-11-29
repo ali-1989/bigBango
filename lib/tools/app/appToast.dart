@@ -1,9 +1,9 @@
 // ignore_for_file: file_names
 
-import 'package:app/tools/app/appThemes.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/tools/app/appSizes.dart';
+import 'package:app/tools/app/appThemes.dart';
 
 class AppToast {
   AppToast._();

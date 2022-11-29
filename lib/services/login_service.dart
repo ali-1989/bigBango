@@ -1,19 +1,19 @@
 import 'dart:async';
 
-import 'package:app/constants.dart';
-import 'package:app/managers/versionManager.dart';
-import 'package:app/structures/models/versionModel.dart';
-import 'package:app/tools/app/appRoute.dart';
 import 'package:dio/dio.dart';
-
-import 'package:app/structures/models/countryModel.dart';
-import 'package:app/system/keys.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/tools/app/appHttpDio.dart';
-import 'package:app/tools/deviceInfoTools.dart';
 import 'package:iris_tools/api/converter.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/system.dart';
+
+import 'package:app/constants.dart';
+import 'package:app/managers/versionManager.dart';
+import 'package:app/structures/models/countryModel.dart';
+import 'package:app/structures/models/versionModel.dart';
+import 'package:app/system/keys.dart';
+import 'package:app/system/publicAccess.dart';
+import 'package:app/tools/app/appHttpDio.dart';
+import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/deviceInfoTools.dart';
 
 class LoginService {
   LoginService._();
