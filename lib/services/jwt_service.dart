@@ -98,22 +98,22 @@ class JwtService {
       final dataJs = a.getBodyAsJson()!;
       final message = dataJs['message'];
 
-      AppToast.showToast(AppRoute.getBaseContext(), message);
+      AppToast.showToast(AppRoute.getBaseContext()!, message);
 
       await Session.logoff(um.userId);
       AppBroadcast.reBuildMaterial();
-      AppRoute.backToRoot(AppRoute.getLastContext());
+      AppRoute.backToRoot(AppRoute.getLastContext()!);
     }
 
     else if(a.responseData?.statusCode == 307){
       final dataJs = a.getBodyAsJson()!;
       final message = dataJs['message'];
 
-      AppToast.showToast(AppRoute.getBaseContext(), message);
+      AppToast.showToast(AppRoute.getBaseContext()!, message);
 
       await Session.logoff(um.userId);
       AppBroadcast.reBuildMaterial();
-      AppRoute.backToRoot(AppRoute.getLastContext());
+      AppRoute.backToRoot(AppRoute.getLastContext()!);
     }
 
     return false;

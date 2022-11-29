@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:app/managers/fontManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/pages/layout_page.dart';
 import 'package:app/pages/phone_number_page.dart';
@@ -8,15 +7,16 @@ import 'package:app/pages/register_form_page.dart';
 import 'package:app/pages/select_language_level_page.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSheet.dart';
+import 'package:app/tools/app/appThemes.dart';
+import 'package:app/views/components/splashScreen.dart';
+import 'package:app/views/states/waitToLoad.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/system.dart';
 
-import 'package:app/constants.dart';
 import 'package:app/managers/settingsManager.dart';
 import 'package:app/managers/versionManager.dart';
 import 'package:app/system/applicationInitialize.dart';
@@ -24,7 +24,6 @@ import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/tools/app/appThemes.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
 
@@ -65,70 +64,16 @@ class SplashScreenState extends StateBase<SplashPage> {
   }
   ///==================================================================================================
   Widget getSplashView() {
-    if (kIsWeb) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+    if(kIsWeb){
+      return const WaitToLoad();
     }
 
-    return Material(
-      child: Stack(
-        children: [
-          const DecoratedBox(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Color(0xFFF0A17D), Color(0xFFFFFFFF)],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                )
-            ),
-            child: SizedBox.expand(),
-          ),
-
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            //child: SvgPicture.asset('assets/images/splash.svg', fit: BoxFit.fill, allowDrawingOutsideViewBox: true)
-            child: SizedBox(height: sh * 0.75, child: Image.asset(AppImages.logoSplash, fit: BoxFit.fill)
-            ),
-          ),
-
-          Positioned(
-            bottom: 40,
-            left: 43,
-            right: 43,
-            child: Image.asset(AppImages.keyboard, fit: BoxFit.scaleDown),
-          ),
-
-          Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: ColoredBox(
-                color: Colors.white,
-                child: SizedBox(
-                    height: 30,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      child: Text(' نسخه ی ${Constants.appVersionName}',
-                          style: TextStyle(fontFamily: FontManager.instance.defaultFontFor('fa', FontUsage.bold).family)
-                      ),
-                    )
-                ),
-              )),
-        ],
-      ),
-    );
+    return SplashScreen();
   }
   ///==================================================================================================
   Widget getFirstPage(){
     return Builder(
       builder: (ctx){
-        var x = DefaultTextStyle.of(context).style.fontFamily;
-        print('\n ---------- x3 :$x');
-        x = DefaultTextStyle.of(ctx).style.fontFamily;
-        print('\n ---------- x4 :$x');
         if(Session.hasAnyLogin()){
           System.showBothStatusBar();
 
@@ -164,8 +109,7 @@ class SplashScreenState extends StateBase<SplashPage> {
     if(splashWaitingMil > 0){
       Timer(Duration(milliseconds: splashWaitingMil), (){
         isInSplashTimer = false;
-
-        AppBroadcast.reBuildMaterial();
+        callState();
       });
 
       splashWaitingMil = 0;
@@ -179,17 +123,13 @@ class SplashScreenState extends StateBase<SplashPage> {
 
     _isInit = true;
 
-    await AppDB.init();
-
-    AppThemes.initial();
-    var x = DefaultTextStyle.of(context).style.fontFamily;
-    print('\n ---------- x1 :$x');
+    await ApplicationInitial.inSplashInit();
+    await ApplicationInitial.inSplashInitWithContext(AppRoute.getLastContext()!);
     final settingsLoad = SettingsManager.loadSettings();
 
     if (settingsLoad) {
       await Session.fetchLoginUsers();
       await VersionManager.checkInstallVersion();
-      await ApplicationInitial.launchUpInit();
       connectToServer();
 
       ApplicationInitial.appLazyInit();
@@ -204,7 +144,7 @@ class SplashScreenState extends StateBase<SplashPage> {
 
     if(serverData == null){
       AppSheet.showSheetOneAction(
-        AppRoute.materialContext,
+        AppRoute.materialContext!,
         AppMessages.errorCommunicatingServer, (){
         AppBroadcast.gotoSplash(2000);
         connectToServer();
@@ -215,7 +155,7 @@ class SplashScreenState extends StateBase<SplashPage> {
     }
     else {
       _isConnectToServer = true;
-      AppBroadcast.reBuildMaterial();
+      callState();
     }
   }
 }

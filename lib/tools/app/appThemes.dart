@@ -57,11 +57,19 @@ class AppThemes {
 			_instance = AppThemes._();
 
 			_instance.baseFont = Font();
-			_instance.subFont = Font();
 			_instance.boldFont = Font();
+			_instance.subFont = Font();
 
 			prepareThemes();
 			applyDefaultTheme();
+		}
+	}
+
+	static void prepareFonts(String language) {
+		if(_isInit) {
+			_instance.baseFont = FontManager.instance.defaultFontFor(language, FontUsage.normal);
+			_instance.boldFont = FontManager.instance.defaultFontFor(language, FontUsage.bold);
+			_instance.subFont = FontManager.instance.defaultFontFor(language, FontUsage.sub);
 		}
 	}
 
@@ -81,6 +89,8 @@ class AppThemes {
 			mainTheme.buttonBackColor = mainTheme.primaryColor;
 
 			AppThemes._instance.themeList[mainTheme.themeName] = mainTheme;
+
+			/// set default
 			AppThemes._instance.defaultTheme = mainTheme;
 		}
 	}
@@ -123,7 +133,7 @@ class AppThemes {
 			brightness: _instance.currentBrightness,
 		);
 
-		th.fontSize = _instance.baseFont.size ??  FontManager.instance.getPlatformFont().size!;
+		th.fontSize = _instance.baseFont.size ?? FontManager.instance.getPlatformFont().size!;
 
 		final raw = FontManager.instance.rawTextTheme;
 
@@ -140,6 +150,7 @@ class AppThemes {
 			height: _instance.subFont.height,
 			color: th.textColor,
 		);
+
 		th.boldTextStyle = raw.headline1!.copyWith(
 			fontSize: _instance.boldFont.size,
 			fontFamily: _instance.boldFont.family,

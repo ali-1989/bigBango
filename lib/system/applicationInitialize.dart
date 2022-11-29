@@ -1,19 +1,20 @@
 import 'dart:async';
 
+import 'package:app/managers/settingsManager.dart';
 import 'package:app/services/audio_player_service.dart';
 import 'package:app/system/publicAccess.dart';
+import 'package:app/tools/app/appDb.dart';
+import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/userLoginTools.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:iris_tools/api/appEventListener.dart';
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
 import 'package:iris_tools/api/system.dart';
 
 import 'package:app/constants.dart';
 import 'package:app/system/applicationLifeCycle.dart';
-import 'package:app/system/session.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appNotification.dart';
@@ -25,91 +26,126 @@ import 'package:iris_tools/net/trustSsl.dart';
 class ApplicationInitial {
   ApplicationInitial._();
 
-  static bool _callLaunchUpInit = false;
+  static bool _importantInit = false;
+  static bool _callInSplashInit = false;
   static bool _isInitialOk = false;
   static bool _callLazyInit = false;
 
-  static Future<bool> importantInit() async {
+  static bool isInit() {
+    return _isInitialOk;
+  }
+
+  static Future<bool> prepareDirectoriesAndLogger() async {
+    if (_importantInit) {
+      return true;
+    }
+
     try {
+      _importantInit = true;
       await AppDirectories.prepareStoragePaths(Constants.appName);
+      PublicAccess.logger = Logger('${AppDirectories.getTempDir$ex()}/logs');
 
       if (!kIsWeb) {
         PublicAccess.reporter = Reporter(AppDirectories.getAppFolderInExternalStorage(), 'report');
       }
 
-      PublicAccess.logger = Logger('${AppDirectories.getTempDir$ex()}/logs');
-
       return true;
     }
     catch (e){
+      _importantInit = false;
       return false;
     }
   }
 
-  static Future<void> launchUpInit() async {
-    if (_callLaunchUpInit) {
+  static Future<void> inSplashInit() async {
+    if (_callInSplashInit) {
       return;
     }
 
-    _callLaunchUpInit = true;
-    TrustSsl.acceptBadCertificate();
-    await DeviceInfoTools.prepareDeviceInfo();
-    await DeviceInfoTools.prepareDeviceId();
+    try {
+      _callInSplashInit = true;
+      await AppDB.init();
+      AppThemes.initial();
+      TrustSsl.acceptBadCertificate();
+      await DeviceInfoTools.prepareDeviceInfo();
+      await DeviceInfoTools.prepareDeviceId();
+      AudioPlayerService.init();
 
-    AppRoute.init();
-    AudioPlayerService.init();
+      if (!kIsWeb) {
+        AppThemes.prepareFonts(SettingsManager.settingsModel.appLocale.languageCode);
+        await AppNotification.initial();
+        AppNotification.startListenTap();
+      }
 
-    if (!kIsWeb) {
-      await AppNotification.initial();
-      AppNotification.startListenTap();
+      _isInitialOk = true;
+    }
+    catch (e){
+      PublicAccess.logger.logToAll('error in launchUpInit >> $e');
     }
 
-    _isInitialOk = true;
     return;
   }
 
-  static void appLazyInit() {
-    if (!_callLazyInit) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        Timer.periodic(const Duration(milliseconds: 50), (Timer timer) {
-          if (_isInitialOk) {
-            timer.cancel();
-
-            _lazyInitCommands();
-          }
-        });
-      });
-    }
+  static Future<void> inSplashInitWithContext(BuildContext context) async {
+    AppRoute.init();
   }
 
-  static void _lazyInitCommands() {
+  static Future<void> appLazyInit() {
+    final c = Completer<void>();
+
+    if (!_callLazyInit) {
+      Timer.periodic(const Duration(milliseconds: 50), (Timer timer) async {
+        if (_isInitialOk) {
+          timer.cancel();
+          await _lazyInitCommands();
+          c.complete();
+        }
+      });
+    }
+    else {
+      c.complete();
+    }
+
+    return c.future;
+  }
+
+  static Future<void> _lazyInitCommands() async {
     if (_callLazyInit) {
       return;
     }
 
-    _callLazyInit = true;
+    try {
+      _callLazyInit = true;
 
-    //VersionManager.checkAppHasNewVersion(AppRoute.getContext()); // this is check in splash
-    final eventListener = AppEventListener();
-    eventListener.addResumeListener(ApplicationLifeCycle.onResume);
-    eventListener.addPauseListener(ApplicationLifeCycle.onPause);
-    eventListener.addDetachListener(ApplicationLifeCycle.onDetach);
-    WidgetsBinding.instance.addObserver(eventListener);
+      /// net & websocket
+      //NetManager.addChangeListener(NetListenerTools.onNetListener);
+      //WebsocketService.prepareWebSocket(SettingsManager.settingsModel.wsAddress);
 
-    //WebsocketService.prepareWebSocket(SettingsManager.settingsModel.wsAddress);
-		
-		// ignore: unawaited_futures
-		//CountryTools.fetchCountries();
-    if (System.isWeb()) {
-      void onSizeCheng(oldW, oldH, newW, newH) {
-        AppDialogIris.prepareDialogDecoration();
+      /// life cycle
+      ApplicationLifeCycle.init();
+
+      /// login & logoff
+      UserLoginTools.init();
+
+      if (System.isWeb()) {
+        void onSizeCheng(oldW, oldH, newW, newH) {
+          AppDialogIris.prepareDialogDecoration();
+        }
+
+        AppSizes.instance.addMetricListener(onSizeCheng);
       }
 
-      AppSizes.instance.addMetricListener(onSizeCheng);
-    }
+      /*await FireBaseService.init();
+      FireBaseService.getToken().then((value) {
+        FireBaseService.subscribeToTopic(PublicAccess.fcmTopic);
+      });*/
 
-    Session.addLoginListener(UserLoginTools.onLogin);
-    Session.addLogoffListener(UserLoginTools.onLogoff);
-    Session.addProfileChangeListener(UserLoginTools.onProfileChange);
-	}
+      /*if(AppRoute.materialContext != null) {
+      }*/
+    }
+    catch (e){
+      _callLazyInit = false;
+      PublicAccess.logger.logToAll('error in lazyInitCommands >> $e');
+    }
+  }
 }

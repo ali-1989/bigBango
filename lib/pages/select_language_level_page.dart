@@ -2,7 +2,7 @@
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/system/enums.dart';
 import 'package:app/system/publicAccess.dart';
-import 'package:app/system/requesterMiddleWare.dart';
+import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appColors.dart';

@@ -38,7 +38,7 @@ class PublicAccess {
   );
 
   static Map addLanguageIso(Map src, [BuildContext? ctx]) {
-    src[Keys.languageIso] = System.getLocalizationsLanguageCode(ctx ?? AppRoute.getLastContext());
+    src[Keys.languageIso] = System.getLocalizationsLanguageCode(ctx ?? AppRoute.getLastContext()!);
 
     return src;
   }
@@ -110,7 +110,7 @@ class PublicAccess {
     final heart = <String, dynamic>{
       'heart': 'Heart',
       //Keys.deviceId: DeviceInfoTools.deviceId,
-      Keys.languageIso: System.getLocalizationsLanguageCode(AppRoute.getLastContext()),
+      Keys.languageIso: System.getLocalizationsLanguageCode(AppRoute.getLastContext()!),
       'app_version_code': Constants.appVersionCode,
       'app_version_name': Constants.appVersionName,
       'app_name': Constants.appName,

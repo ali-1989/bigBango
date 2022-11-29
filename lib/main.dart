@@ -7,7 +7,6 @@ import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/app/appToast.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -18,17 +17,8 @@ import 'package:app/tools/app/appRoute.dart';
 
 ///================ call on any hot restart
 Future<void> main() async {
-
-  Future<void> mainInitialize() async {
-    SchedulerBinding.instance.ensureVisualUpdate();
-    SchedulerBinding.instance.window.scheduleFrame();
-
-    FlutterError.onError = onErrorCatch;
-    //FireBaseService.init();
-  }
-
   WidgetsFlutterBinding.ensureInitialized();
-  final initOk = await ApplicationInitial.importantInit();
+  final initOk = await ApplicationInitial.prepareDirectoriesAndLogger();
 
   if(!initOk){
     runApp(const MyErrorApp());
@@ -46,11 +36,7 @@ Future<void> main() async {
               return DefaultTextHeightBehavior(
                 textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false),
                 child: Toaster(
-                  child: DevicePreview(
-                      enabled: false,
-                      builder: (ctx){
-                        return MyApp();
-                      }),
+                  child: MyApp(),
                 ),
               );
             }
@@ -59,6 +45,13 @@ Future<void> main() async {
     }, zonedGuardedCatch);
   }
 }
+
+Future<void> mainInitialize() async {
+  SchedulerBinding.instance.ensureVisualUpdate();
+  SchedulerBinding.instance.window.scheduleFrame();
+
+  FlutterError.onError = onErrorCatch;
+}
 ///==============================================================================================
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -66,8 +59,6 @@ class MyApp extends StatelessWidget {
   ///============ call on any hot reload
   @override
   Widget build(BuildContext context) {
-    var x = DefaultTextStyle.of(context).style.fontFamily;
-    print('\n ---------- start :$x');
     return MaterialApp(
       key: AppBroadcast.materialAppKey,
       navigatorKey: AppBroadcast.rootNavigatorKey,
@@ -86,14 +77,16 @@ class MyApp extends StatelessWidget {
         },
       ),
       home: materialHomeBuilder(null),
-      builder: (subContext, home) {
-        AppRoute.materialContext = subContext;
-        var x = DefaultTextStyle.of(subContext).style.fontFamily;
-        print('\n ---------- subContext :: $x ${AppThemes.instance.themeData.textTheme.bodyText1?.fontFamily}');
+      builder: (localContext, home) {
+        AppRoute.materialContext = localContext;
 
-        return Directionality(
-            textDirection: AppThemes.instance.textDirection,
-            child: DevicePreview.appBuilder(subContext, home)// home! //materialHomeBuilder(home)
+        return DefaultTextStyle(
+          style: AppThemes.instance.themeData.textTheme.bodyText1?? TextStyle(),
+          child: Directionality(
+              textDirection: AppThemes.instance.textDirection,
+              child: home! //materialHomeBuilder(home)
+              //child: DevicePreview.appBuilder(subContext, home)
+          ),
         );
       },
     );
@@ -101,17 +94,16 @@ class MyApp extends StatelessWidget {
 
   Widget materialHomeBuilder(Widget? firstPage){
     return Builder(
-      builder: (subContext){
-        AppRoute.materialContext = subContext;
-        final mediaQueryData = MediaQuery.of(subContext);
+      builder: (localContext){
+        AppRoute.materialContext = localContext;
 
         /// detect orientation change and rotate screen
         return MediaQuery(
-          data: mediaQueryData.copyWith(textScaleFactor: 1.0),
+          data: MediaQuery.of(localContext).copyWith(textScaleFactor: 1.0),
           child: OrientationBuilder(builder: (context, orientation) {
             testCodes(context);
 
-            return SplashPage();
+            return SplashPage(firstPage: firstPage);
           }),
         );
       },
@@ -134,7 +126,7 @@ class MyErrorApp extends StatelessWidget {
         child: SizedBox.expand(
           child: ColoredBox(
               color: Colors.brown,
-            child: Center(child: Text('Error in init.')),
+            child: Center(child: Text('Error in app initialization')),
           ),
         ),
       ),
@@ -143,14 +135,25 @@ class MyErrorApp extends StatelessWidget {
 }
 ///==============================================================================================
 void onErrorCatch(FlutterErrorDetails errorDetails) {
-  var data = 'on Error catch: ${errorDetails.exception.toString()}';
-  data += '\n stack: ${errorDetails.stack}\n==========================================';
+  var txt = 'AN ERROR HAS OCCURRED:: ${errorDetails.exception.toString()}';
 
-  PublicAccess.logger.logToAll(data);
+  if(!kIsWeb) {
+    txt += '\n STACK TRACE:: ${errorDetails.stack}';
+  }
+
+  txt += '\n**************************************** [END CATCH]';
+
+  PublicAccess.logger.logToAll(txt);
 }
 ///==============================================================================================
-zonedGuardedCatch(error, sTrace) {
-  final txt = 'on ZonedGuarded catch: ${error.toString()}\n==========================================';
+void zonedGuardedCatch(error, sTrace) {
+  var txt = 'ZONED-GUARDED CAUGHT AN ERROR:: ${error.toString()}';
+
+  if(!kIsWeb && !kDebugMode) {
+    txt += '\n STACK TRACE:: $sTrace';
+  }
+
+  txt += '\n**************************************** [END ZONED-GUARDED]';
   PublicAccess.logger.logToAll(txt);
 
   if(kDebugMode) {

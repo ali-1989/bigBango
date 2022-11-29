@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 
 
 class AppRoute {
-  AppRoute._();
+  static BuildContext? materialContext;
 
-  static late BuildContext materialContext;
+  AppRoute._();
 
   static void init() {
   }
 
-  static BuildContext getLastContext() {
+  static BuildContext? getLastContext() {
     var res = WidgetsBinding.instance.focusManager.rootScope.focusedChild?.context;//deep: 50
     res ??= WidgetsBinding.instance.focusManager.primaryFocus?.context; //deep: 71
 
     return res?? getBaseContext();
   }
 
-  static BuildContext getBaseContext() {
+  static BuildContext? getBaseContext() {
     return materialContext;
   }
 
@@ -38,7 +38,7 @@ class AppRoute {
   }*/
 
   static void backRoute() {
-    final lastCtx = AppNavigator.getLastRouteContext(getLastContext());
+    final lastCtx = AppNavigator.getLastRouteContext(getLastContext()!);
     AppNavigator.backRoute(lastCtx);
   }
 
@@ -52,6 +52,7 @@ class AppRoute {
 
   static bool canPop(BuildContext context) {
     return AppNavigator.canPop(context);
+    //return GoRouter.of(context).canPop();
   }
 
   static void popTopView(BuildContext context) {

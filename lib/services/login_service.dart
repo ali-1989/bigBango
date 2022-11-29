@@ -120,7 +120,7 @@ class LoginService {
       versionModel.restricted = false;
       versionModel.newVersionName = '2.0.1';*/
 
-      VersionManager.checkAppHasNewVersion(AppRoute.getLastContext(), versionModel);
+      VersionManager.checkAppHasNewVersion(AppRoute.getLastContext()!, versionModel);
 
       result.complete(request);
       return null;

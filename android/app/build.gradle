@@ -60,6 +60,13 @@ android {
     }
 
     signingConfigs {
+        debug {
+            storeFile file('E:\\FlutterProjects\\BigBango\\android\\key.jks')
+            keyAlias 'app_alias'
+            keyPassword '123456@aA'
+            storePassword '123456@aA'
+        }
+
         release {
             storeFile file('E:\\FlutterProjects\\BigBango\\android\\key.jks')
             keyAlias 'app_alias'
@@ -100,14 +107,15 @@ android {
             zipAlignEnabled true
             ext.enableCrashlytics = false
             ext.alwaysUpdateBuildId = false
+            signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         release {
-            signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
             zipAlignEnabled true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

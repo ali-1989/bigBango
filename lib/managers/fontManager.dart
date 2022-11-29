@@ -97,6 +97,10 @@ class FontManager {
     return _platformDefaultFont.clone();
   }
 
+  String defaultFontFamilyFor(String language, FontUsage usage) {
+    return defaultFontFor(language, usage).family!;
+  }
+
   Font getPlatformFont(){
     return _platformDefaultFont.clone();
   }
@@ -127,7 +131,7 @@ class FontManager {
     //------------- fa -------------------------------------------------
     final shabnamBold = Font.bySize()
       ..family = 'shabnam_bold'
-      ..fileName = 'Shabnam-Bold-FD.ttf'
+      ..fileName = 'ShabnamBoldFD.ttf'
       ..defaultLanguage = 'fa'
       ..defaultUsage = FontUsage.bold
       ..usages = [FontUsage.bold, FontUsage.normal]
@@ -135,7 +139,7 @@ class FontManager {
 
     final shabnam = Font.bySize()
       ..family = 'shabnam'
-      ..fileName = 'Shabnam-Medium-FD.ttf'
+      ..fileName = 'ShabnamMediumFD.ttf'
       ..defaultLanguage = 'fa'
       ..defaultUsage = FontUsage.normal
       ..usages = [FontUsage.sub]

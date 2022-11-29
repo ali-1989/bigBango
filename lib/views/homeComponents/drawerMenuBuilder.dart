@@ -79,13 +79,13 @@ class DrawerMenuBuilder {
     final siz = MathHelper.minDouble(250, MathHelper.percent(AppSizes.instance.appWidth, 60));
     final child = WillPopScope(
       onWillPop: () async {
-        DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext());
+        DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext()!);
         return false;
       },
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: (){
-          DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext());
+          DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext()!);
         },
           child: _buildDrawer()
       ),
@@ -145,7 +145,7 @@ class DrawerMenuBuilder {
                     alignment: Alignment.topRight,
                     child: IconButton(
                       onPressed: (){
-                        DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext());
+                        DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext()!);
                       },
                       icon: Image.asset(AppImages.arrowRightIco, color: Colors.black),
                     )
@@ -311,29 +311,29 @@ class DrawerMenuBuilder {
   }*/
 
   static void gotoProfilePage() async {
-    await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext());
-    AppRoute.push(AppRoute.getLastContext(), ProfilePage(userModel: Session.getLastLoginUser()!));
+    await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext()!);
+    AppRoute.push(AppRoute.getLastContext()!, ProfilePage(userModel: Session.getLastLoginUser()!));
   }
 
   static void gotoSupportPage() async {
-    await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext());
-    AppRoute.push(AppRoute.getLastContext(), SupportPage());
+    await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext()!);
+    AppRoute.push(AppRoute.getLastContext()!, SupportPage());
   }
 
   static void gotoInvitePage() async {
-    await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext());
-    AppRoute.push(AppRoute.getLastContext(), InvitePage());
+    await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext()!);
+    AppRoute.push(AppRoute.getLastContext()!, InvitePage());
   }
 
   static void onLogoffCall() async {
-    await DrawerMenuBuilder.hideDrawer(AppRoute.getLastContext(), millSec: 100);
+    await DrawerMenuBuilder.hideDrawer(AppRoute.getLastContext()!, millSec: 100);
 
     void yesFn(){
       UserLoginTools.forceLogoff(Session.getLastLoginUser()!.userId);
     }
 
     AppDialogIris.instance.showYesNoDialog(
-      AppRoute.getBaseContext(),
+      AppRoute.getBaseContext()!,
       desc: AppMessages.doYouWantLogoutYourAccount,
       dismissOnButtons: true,
       yesText: AppMessages.yes,

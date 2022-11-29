@@ -109,15 +109,15 @@ flutter:
     - assets/images/
     - assets/audio/
 
+  #style: normal  # normal, italic
+  #weight: 500
   fonts:
     - family: shabnam
       fonts:
-        - asset: assets/fonts/Shabnam-Medium-FD.ttf
-          #style: normal  # normal, italic
-          #weight: 500
+      - asset: assets/fonts/ShabnamMediumFD.ttf
     - family: shabnam_bold
       fonts:
-        - asset: assets/fonts/Shabnam-Bold-FD.ttf
+      - asset: assets/fonts/ShabnamBoldFD.ttf
 
 
 

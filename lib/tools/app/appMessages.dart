@@ -1,9 +1,15 @@
 
+import 'package:app/tools/app/appRoute.dart';
+import 'package:flutter/material.dart';
+
 class AppMessages {
   AppMessages._();
 
-  static const _noText = 'n_n';
+  static const _noText = 'NaT';
 
+  static BuildContext _getContext(){
+    return AppRoute.getLastContext()!;
+  }
   static String get ok {
     return 'بله';
   }

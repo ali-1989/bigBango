@@ -8,7 +8,7 @@ import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/pages/exam_page.dart';
 import 'package:app/system/enums.dart';
-import 'package:app/system/requesterMiddleWare.dart';
+import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -438,7 +438,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       final List? data = res['data'];
-print(res);
+
       if(data is List){
         for(final m in data){
           final g = GrammarModel.fromMap(m);
