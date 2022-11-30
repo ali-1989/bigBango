@@ -53,7 +53,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   bool isInPlaying = false;
   List<ListeningModel> itemList = [];
   ListeningModel? currentItem;
-  String playViewId = 'playViewId';
+  String id$playViewId = 'playViewId';
   String? description;
   Widget examComponent = SizedBox();
   double playerSliderValue = 0;
@@ -173,7 +173,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                   ),
                   child: Assist(
                       controller: assistCtr,
-                      id: playViewId,
+                      id: id$playViewId,
                       builder: (_, ctr, data) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -220,7 +220,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                                         int sec = totalTime.inSeconds * value ~/100;
                                         player.seek(Duration(seconds: sec));
                                         playerSliderValue = value;
-                                        assistCtr.update(playViewId);
+                                        assistCtr.update(id$playViewId);
                                       },
                                     ),
                                   ),
@@ -352,6 +352,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
       await player.stop();
       await prepareVoice();
+      playerSliderValue = 0;
 
       examComponentInjector.prepareExamList([currentItem!.quiz]);
       buildExamView();
@@ -367,6 +368,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
       await player.stop();
       await prepareVoice();
+      playerSliderValue = 0;
 
       examComponentInjector.prepareExamList([currentItem!.quiz]);
       buildExamView();
@@ -386,11 +388,11 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       playerSliderValue = dur.inSeconds * 100 / totalTime.inSeconds;
     }
 
-    assistCtr.update(playViewId);
+    assistCtr.update(id$playViewId);
   }
 
   void eventListener(PlaybackEvent event){
-    assistCtr.update(playViewId);
+    assistCtr.update(id$playViewId);
   }
 
   Future<void> prepareVoice() async {

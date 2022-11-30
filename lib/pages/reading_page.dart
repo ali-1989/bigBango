@@ -37,7 +37,7 @@ class ReadingPage extends StatefulWidget {
   State<ReadingPage> createState() => _ReadingPageState();
 }
 ///======================================================================================================================
-class _ReadingPageState extends StateBase<ReadingPage> {
+class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateMixin {
   Requester requester = Requester();
   AudioPlayer player = AudioPlayer();
   Duration totalTime = Duration();
@@ -47,9 +47,11 @@ class _ReadingPageState extends StateBase<ReadingPage> {
   bool showTranslate = false;
   bool voiceIsOk = false;
   bool isInPlaying = false;
+  late AnimationController anim1Ctr;
+  late AnimationController anim2Ctr;
   List<ReadingModel> itemList = [];
   ReadingModel? currentItem;
-  String playerViewId = 'playerViewId';
+  String id$playerViewId = 'playerViewId';
   TextStyle normalStyle = TextStyle(height: 1.7, color: Colors.black);
   TextStyle readStyle = TextStyle(height: 1.7, color: Colors.deepOrange);
 
@@ -57,6 +59,12 @@ class _ReadingPageState extends StateBase<ReadingPage> {
   @override
   void initState(){
     super.initState();
+
+    anim1Ctr = AnimationController(vsync: this, lowerBound: 0, upperBound: 30.0);
+    anim2Ctr = AnimationController(vsync: this, lowerBound: 0, upperBound: 30.0);
+    anim1Ctr.duration = Duration(milliseconds: 400);
+    anim2Ctr.duration = Duration(milliseconds: 400);
+    anim2Ctr.animateTo(30);
 
     assistCtr.addState(AssistController.state$loading);
 
@@ -107,7 +115,7 @@ class _ReadingPageState extends StateBase<ReadingPage> {
     if(currentItemIdx == itemList.length-1){
       nextColor = Colors.grey;
     }
-
+    
     currentItem?.prepareSpans(currentSegmentIdx, normalStyle, readStyle);
 
     return Column(
@@ -148,28 +156,88 @@ class _ReadingPageState extends StateBase<ReadingPage> {
                       visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                     ),
 
-                    Icon(AppIcons)
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: (){
+                        showTranslate = !showTranslate;
+
+                        if(anim1Ctr.isCompleted){
+                          anim1Ctr.reverse();
+                        }
+                        else {
+                          anim1Ctr.forward();
+                        }
+
+                        if(anim2Ctr.isCompleted){
+                          anim2Ctr.reverse();
+                        }
+                        else {
+                          anim2Ctr.forward();
+                        }
+
+                        assistCtr.updateMain();
+                      },
+                        child: Icon(AppIcons.translate, color: Colors.red, size: 20)
+                    )
                   ],
                 ),
               ),
 
               SizedBox(height: 10),
 
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: SizedBox(
-                  width: sw,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(6)
-                    ),
+              SizedBox(
+                width: sw,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(6)
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: RichText(
-                        key: ValueKey(Generator.generateKey(4)),
-                        text: TextSpan(
-                            children: currentItem?.spans
+                      child: Directionality(
+                        textDirection: showTranslate? TextDirection.rtl : TextDirection.ltr,
+                        child: Stack(
+                          children: [
+                            AnimatedBuilder(
+                              animation: anim1Ctr,
+                              builder: (_, c){
+                                return Transform.translate(
+                                  offset: Offset(0, anim1Ctr.value),
+                                  child: Opacity(
+                                    opacity: (anim1Ctr.value/30 -1).abs(),
+                                    child: RichText(
+                                      key: ValueKey(Generator.generateKey(4)),
+                                      text: TextSpan(
+                                          children: currentItem?.spans
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+
+                            AnimatedBuilder(
+                              animation: anim2Ctr,
+                              builder: (_, c){
+                                return Transform.translate(
+                                  offset: Offset(0, anim2Ctr.value),
+                                  child: Opacity(
+                                    opacity: (anim2Ctr.value/30 -1).abs(),
+                                    child: RichText(
+                                      key: ValueKey(Generator.generateKey(4)),
+                                      text: TextSpan(
+                                          children: currentItem?.spansTranslate
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+
+
+                          ],
                         ),
                       ),
                     ).wrapDotBorder(
@@ -195,7 +263,7 @@ class _ReadingPageState extends StateBase<ReadingPage> {
                     child: IntrinsicHeight(
                       child: Assist(
                           controller: assistCtr,
-                          id: playerViewId,
+                          id: id$playerViewId,
                           builder: (_, ctr, data) {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -373,10 +441,10 @@ class _ReadingPageState extends StateBase<ReadingPage> {
   void onNextClick() async {
     if(currentItemIdx < itemList.length-1) {
       currentItemIdx++;
-      currentSegmentIdx = 0;
       currentItem = itemList[currentItemIdx];
 
       await player.stop();
+      currentSegmentIdx = 0;
       await prepareVoice();
 
       assistCtr.updateMain();
@@ -385,11 +453,11 @@ class _ReadingPageState extends StateBase<ReadingPage> {
 
   void onPreClick() async {
     if(currentItemIdx > -1){
-      currentSegmentIdx = 0;
       currentItemIdx--;
       currentItem = itemList[currentItemIdx];
 
       await player.stop();
+      currentSegmentIdx = 0;
       await prepareVoice();
 
       assistCtr.updateMain();
@@ -402,9 +470,9 @@ class _ReadingPageState extends StateBase<ReadingPage> {
 
   void durationListener(Duration dur) {
     currentTime = dur;
-    assistCtr.update(playerViewId);
+    assistCtr.update(id$playerViewId);
 
-    if(currentItem == null  || currentSegmentIdx >= currentItem!.segments.length){
+    if(currentItem == null || currentSegmentIdx >= currentItem!.segments.length){
       return;
     }
 
@@ -417,7 +485,7 @@ class _ReadingPageState extends StateBase<ReadingPage> {
   }
 
   void eventListener(PlaybackEvent event){
-    assistCtr.update(playerViewId);
+    assistCtr.update(id$playerViewId);
   }
 
   Future<void> prepareVoice() async {
@@ -432,7 +500,7 @@ class _ReadingPageState extends StateBase<ReadingPage> {
 
       if(dur != null){
         totalTime = dur;
-        assistCtr.update(playerViewId);
+        assistCtr.update(id$playerViewId);
       }
 
     }).onError((error, stackTrace) {

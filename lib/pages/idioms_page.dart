@@ -1,3 +1,4 @@
+import 'package:app/structures/injectors/idiomsPageInjector.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
@@ -7,8 +8,6 @@ import 'package:video_player/video_player.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/vocabModels/idiomModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
@@ -20,24 +19,20 @@ import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 
-class IdiomsSegmentPageInjector {
-  late LessonModel lessonModel;
-  late ISegmentModel segment;
-}
-///-----------------------------------------------------
-class IdiomsSegmentPage extends StatefulWidget {
-  final IdiomsSegmentPageInjector injection;
 
-  const IdiomsSegmentPage({
+class IdiomsPage extends StatefulWidget {
+  final IdiomsPageInjector injection;
+
+  const IdiomsPage({
     required this.injection,
     Key? key
   }) : super(key: key);
 
   @override
-  State<IdiomsSegmentPage> createState() => _IdiomsSegmentPageState();
+  State<IdiomsPage> createState() => _IdiomsPageState();
 }
 ///======================================================================================================================
-class _IdiomsSegmentPageState extends StateBase<IdiomsSegmentPage> {
+class _IdiomsPageState extends StateBase<IdiomsPage> {
   Requester requester = Requester();
   bool showTranslate = false;
   List<IdiomModel> idiomsList = [];

@@ -29,7 +29,7 @@ import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 
-class GrammarPageInjector {
+class GrammarPageInjector{
   late LessonModel lessonModel;
   late GrammarSegmentModel segment;
 }

@@ -1,33 +1,30 @@
+import 'package:app/structures/injectors/idiomsPageInjector.dart';
+import 'package:app/structures/injectors/lessonComponentInjector.dart';
+import 'package:app/structures/injectors/vocabPageInjector.dart';
 import 'package:flutter/material.dart';
 
-import 'package:app/pages/idiomsSegmentPage.dart';
-import 'package:app/pages/vocabSegmentPage.dart';
-import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/lessonModel.dart';
+import 'package:app/pages/idioms_page.dart';
+import 'package:app/pages/vocab_page.dart';
 import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/views/widgets/customCard.dart';
 
-class LessonSegmentViewInjection {
-  late LessonModel lessonModel;
-  late ISegmentModel segment;
-}
 
-class LessonSegmentView extends StatefulWidget {
-  final LessonSegmentViewInjection injection;
+class LessonComponent extends StatefulWidget {
+  final LessonComponentInjector injection;
 
-  const LessonSegmentView({
+  const LessonComponent({
     required this.injection,
     Key? key
   }) : super(key: key);
 
   @override
-  State<LessonSegmentView> createState() => _LessonSegmentViewState();
+  State<LessonComponent> createState() => _LessonComponentState();
 }
-
-class _LessonSegmentViewState extends State<LessonSegmentView> {
+///=================================================================================================
+class _LessonComponentState extends State<LessonComponent> {
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -69,11 +66,11 @@ class _LessonSegmentViewState extends State<LessonSegmentView> {
                           child: GestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onTap: (){
-                              final inject = VocabSegmentPageInjector();
+                              final inject = VocabPageInjector();
                               inject.lessonModel = widget.injection.lessonModel;
                               inject.segment = widget.injection.segment as VocabularySegmentModel;
 
-                              AppRoute.push(context, VocabSegmentPage(injection: inject));
+                              AppRoute.push(context, VocabPage(injection: inject));
                             },
                             child: CustomCard(
                               color: Colors.grey.shade300,
@@ -101,11 +98,11 @@ class _LessonSegmentViewState extends State<LessonSegmentView> {
                       Expanded(
                           child: GestureDetector(
                             onTap: (){
-                              final inject = IdiomsSegmentPageInjector();
+                              final inject = IdiomsPageInjector();
                               inject.lessonModel = widget.injection.lessonModel;
                               inject.segment = widget.injection.segment;
 
-                              AppRoute.push(context, IdiomsSegmentPage(injection: inject));
+                              AppRoute.push(context, IdiomsPage(injection: inject));
                             },
                             child: CustomCard(
                               color: Colors.grey.shade300,

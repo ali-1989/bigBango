@@ -94,4 +94,5 @@ class AppIcons {
   static const IconData cashMultiple = CommunityMaterialIcons.cash_multiple;
   static const IconData medicalBag = CommunityMaterialIcons.medical_bag;
   static const IconData focus = CommunityMaterialIcons.image_filter_center_focus;
+  static const IconData translate = CommunityMaterialIcons.translate;
 }

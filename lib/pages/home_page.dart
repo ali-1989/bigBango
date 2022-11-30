@@ -1,3 +1,5 @@
+import 'package:app/structures/injectors/lessonComponentInjector.dart';
+import 'package:app/structures/injectors/vocabPageInjector.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
@@ -9,7 +11,7 @@ import 'package:app/pages/grammar_page.dart';
 import 'package:app/pages/listening_page.dart';
 import 'package:app/pages/reading_page.dart';
 import 'package:app/pages/select_language_level_page.dart';
-import 'package:app/pages/vocabSegmentPage.dart';
+import 'package:app/pages/vocab_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
@@ -25,7 +27,7 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/views/components/lessonSegmentView.dart';
+import 'package:app/views/components/lessonComponent.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
@@ -596,19 +598,19 @@ class HomePageState extends StateBase<HomePage> {
 
     if(section is VocabularySegmentModel){
       if(!section.hasIdioms){
-        final inject = VocabSegmentPageInjector();
+        final inject = VocabPageInjector();
         inject.lessonModel = lesson;
         inject.segment = section;
 
-        AppRoute.push(context, VocabSegmentPage(injection: inject));
+        AppRoute.push(context, VocabPage(injection: inject));
         return;
       }
 
-      final inject = LessonSegmentViewInjection();
+      final inject = LessonComponentInjector();
       inject.lessonModel = lesson;
       inject.segment = section;
 
-      page = LessonSegmentView(injection: inject);
+      page = LessonComponent(injection: inject);
     }
     else if (section is GrammarSegmentModel){
       final inject = GrammarPageInjector();

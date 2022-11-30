@@ -123,7 +123,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
           SizedBox(height: 15),
           RichText(
             text: TextSpan(children: spans),
-            textDirection: TextDirection.ltr,
+            //textDirection: TextDirection.rtl,
           ),
 
           SizedBox(height: 20),
@@ -152,9 +152,9 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
           TextEditingController tControl = TextEditingController();
           FocusNode focusNode = FocusNode();
           tControl.text = exam.userAnswers[i].text;
-          late final OverlayEntry over;
+          late final OverlayEntry txtFieldOver;
 
-          over = OverlayEntry(
+          txtFieldOver = OverlayEntry(
               builder: (_) {
                 return Stack(
                   fit: StackFit.expand,
@@ -162,8 +162,8 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
                     Positioned.fill(
                       child: GestureDetector(
                         onTap: (){
-                          over.remove();
-                          over.dispose();
+                          txtFieldOver.remove();
+                          txtFieldOver.dispose();
                           focusNode.dispose();
                           tControl.dispose();
                         },
@@ -194,8 +194,8 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
                                       assistCtr.updateMain();
                                     },
                                     onSubmitted: (t){
-                                      over.remove();
-                                      over.dispose();
+                                      txtFieldOver.remove();
+                                      txtFieldOver.dispose();
                                       focusNode.dispose();
                                       //tControl.dispose();
                                     },
@@ -212,7 +212,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
           );
 
           /// show TextField
-          AppOverlay.showOverlay(context, over);
+          AppOverlay.showOverlay(context, txtFieldOver);
 
           /// request focus
           Future.delayed(Duration(milliseconds: 400), (){
@@ -225,9 +225,8 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
           Color trueColor = Colors.green;
           Color falseColor = Colors.red;
 
+          ///answer is correct
           if(exam.userAnswers[i].text == exam.choices[i].text){
-
-            ///answer is correct
             blankSpan = WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: Row(
@@ -240,11 +239,10 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
                 )
             );
           }
+          /// answer is wrong
           else {
             if(hasUserAnswer) {
               blankText = exam.userAnswers[i].text;
-
-              /// answer is wrong
               blankSpan = WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
                   child: Row(
@@ -288,7 +286,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
                     children: [
                       Image.asset(AppImages.falseCheckIco),
                       SizedBox(width: 2),
-                      Text(blankText, style: questionNormalStyle.copyWith(color: falseColor))
+                      Text(blankText, style: questionNormalStyle.copyWith(color: falseColor), )
                     ],
                   )
               );

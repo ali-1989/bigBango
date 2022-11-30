@@ -1,3 +1,4 @@
+import 'package:app/tools/app/appToast.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -255,6 +256,11 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
 
   @override
   void checkAnswers() {
+    if(selectedAnswers.isEmpty || selectedAnswers.length < currentExamIdx){
+      AppToast.showToast(context, 'لطفا یک گزینه را انتخاب کنید');
+      return;
+    }
+
     showAnswers = !showAnswers;
     assistCtr.updateMain();
   }

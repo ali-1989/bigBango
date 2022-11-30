@@ -1,3 +1,5 @@
+import 'package:app/structures/injectors/idiomsPageInjector.dart';
+import 'package:app/structures/injectors/vocabPageInjector.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -8,12 +10,10 @@ import 'package:iris_tools/widgets/attribute.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
 
 import 'package:app/managers/fontManager.dart';
-import 'package:app/pages/idiomsSegmentPage.dart';
+import 'package:app/pages/idioms_page.dart';
 import 'package:app/services/audio_player_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/models/lessonModels/lessonModel.dart';
-import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
 import 'package:app/structures/models/vocabModels/vocabModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
@@ -26,24 +26,20 @@ import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 
-class VocabSegmentPageInjector {
-  late LessonModel lessonModel;
-  late VocabularySegmentModel segment;
-}
-///-----------------------------------------------------
-class VocabSegmentPage extends StatefulWidget {
-  final VocabSegmentPageInjector injection;
 
-  const VocabSegmentPage({
+class VocabPage extends StatefulWidget {
+  final VocabPageInjector injection;
+
+  const VocabPage({
     required this.injection,
     Key? key
   }) : super(key: key);
 
   @override
-  State<VocabSegmentPage> createState() => _VocabSegmentPageState();
+  State<VocabPage> createState() => _VocabPageState();
 }
 ///======================================================================================================================
-class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
+class _VocabPageState extends StateBase<VocabPage> {
   bool showTranslate = false;
   Requester requester = Requester();
   List<VocabModel> vocabList = [];
@@ -65,7 +61,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
     super.initState();
 
     taskQue.setFn((VocabModel voc, value){
-      requestLeitner(voc, voc.inLeitner);
+      requestSetLeitner(voc, voc.inLeitner);
     });
 
     assistCtr.addState(AssistController.state$loading);
@@ -106,15 +102,15 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
     }
 
     currentVocab = vocabList[currentVocabIdx];
-    Color preColor = Colors.black;
-    Color nextColor = Colors.black;
+    Color preBtnColor = Colors.black;
+    Color nextBtnColor = Colors.black;
 
     if(currentVocabIdx == 0){
-      preColor = Colors.grey;
+      preBtnColor = Colors.grey;
     }
 
     if(currentVocabIdx == vocabList.length){
-      nextColor = Colors.grey;
+      nextBtnColor = Colors.grey;
     }
 
     return Column(
@@ -270,7 +266,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                                                 children: [
                                                   GestureDetector(
                                                     onTap: (){
-                                                      leitnerClick();
+                                                      //leitnerClick();
                                                     },
                                                     child: CustomCard(
                                                       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 7),
@@ -441,16 +437,16 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
                 onPressed: onNextClick,
                 icon: RotatedBox(
                     quarterTurns: 2,
-                    child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
+                    child: Image.asset(AppImages.arrowLeftIco, color: nextBtnColor)
                 ),
-                label: Text('next').englishFont().color(nextColor)
+                label: Text('next').englishFont().color(nextBtnColor)
             ),
 
             TextButton.icon(
                 style: TextButton.styleFrom(),
                 onPressed: onPreClick,
-                icon: Text('pre').englishFont().color(preColor),
-                label: Image.asset(AppImages.arrowLeftIco, color: preColor)
+                icon: Text('pre').englishFont().color(preBtnColor),
+                label: Image.asset(AppImages.arrowLeftIco, color: preBtnColor)
             ),
           ],
         ),
@@ -639,11 +635,11 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
 
   void gotoNextPart(){
     if(widget.injection.segment.hasIdioms){
-      final inject = IdiomsSegmentPageInjector();
+      final inject = IdiomsPageInjector();
       inject.lessonModel = widget.injection.lessonModel;
       inject.segment = widget.injection.segment;
 
-      AppRoute.replace(context, IdiomsSegmentPage(injection: inject));
+      AppRoute.replace(context, IdiomsPage(injection: inject));
     }
   }
 
@@ -721,7 +717,7 @@ class _VocabSegmentPageState extends StateBase<VocabSegmentPage> {
     requester.request(context);
   }
 
-  void requestLeitner(VocabModel vocab, bool state){
+  void requestSetLeitner(VocabModel vocab, bool state){
     requester.httpRequestEvents.onFailState = (req, res) async {
       AppToast.showToast(context, 'خطا در ارتباط با سرور');
       vocab.inLeitner = !state;
