@@ -1,3 +1,4 @@
+import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormater.dart';
@@ -7,8 +8,6 @@ import 'package:just_audio/just_audio.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/models/lessonModels/lessonModel.dart';
-import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
 import 'package:app/structures/models/readingModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
@@ -20,11 +19,6 @@ import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 
-class ReadingPageInjector {
-  late LessonModel lessonModel;
-  late ReadingSegmentModel segment;
-}
-///-----------------------------------------------------
 class ReadingPage extends StatefulWidget {
   final ReadingPageInjector injector;
 

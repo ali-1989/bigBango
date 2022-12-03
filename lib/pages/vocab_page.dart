@@ -1,5 +1,10 @@
-import 'package:app/structures/injectors/idiomsPageInjector.dart';
-import 'package:app/structures/injectors/vocabPageInjector.dart';
+import 'package:app/pages/grammar_page.dart';
+import 'package:app/pages/listening_page.dart';
+import 'package:app/pages/reading_page.dart';
+import 'package:app/structures/injectors/grammarPagesInjector.dart';
+import 'package:app/structures/injectors/listeningPagesInjector.dart';
+import 'package:app/structures/injectors/readingPagesInjector.dart';
+import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -28,10 +33,10 @@ import 'package:app/views/widgets/customCard.dart';
 
 
 class VocabPage extends StatefulWidget {
-  final VocabPageInjector injection;
+  final VocabPageInjector injector;
 
   const VocabPage({
-    required this.injection,
+    required this.injector,
     Key? key
   }) : super(key: key);
 
@@ -127,7 +132,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                     children: [
                       SizedBox(height: 20),
 
-                      AppbarLesson(title: widget.injection.lessonModel.title),
+                      AppbarLesson(title: widget.injector.lessonModel.title),
 
                       SizedBox(height: 14),
 
@@ -138,7 +143,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                           Row(
                             children: [
                               Chip(
-                                label: Text(widget.injection.segment.title).bold().color(Colors.white),
+                                label: Text(widget.injector.segment.title).bold().color(Colors.white),
                                 padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
                                 visualDensity: VisualDensity.compact,
                               ),
@@ -634,12 +639,23 @@ class _VocabPageState extends StateBase<VocabPage> {
   }
 
   void gotoNextPart(){
-    if(widget.injection.segment.hasIdioms){
-      final inject = IdiomsPageInjector();
-      inject.lessonModel = widget.injection.lessonModel;
-      inject.segment = widget.injection.segment;
+    Widget? page;
 
-      AppRoute.replace(context, IdiomsPage(injection: inject));
+    if(widget.injector.segment.hasIdioms){
+      page = IdiomsPage(injector: widget.injector);
+    }
+    else if (widget.injector.lessonModel.grammarModel != null){
+      page = GrammarPage(injection: GrammarPageInjector(widget.injector.lessonModel));
+    }
+    else if (widget.injector.lessonModel.readingModel != null){
+      page = ReadingPage(injector: ReadingPageInjector(widget.injector.lessonModel));
+    }
+    else if (widget.injector.lessonModel.listeningModel != null){
+      page = ListeningPage(injector: ListeningPageInjector(widget.injector.lessonModel));
+    }
+
+    if(page != null) {
+      AppRoute.replace(context, page);
     }
   }
 
@@ -713,7 +729,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/vocabularies?LessonId=${widget.injection.lessonModel.id}');
+    requester.prepareUrl(pathUrl: '/vocabularies?LessonId=${widget.injector.lessonModel.id}');
     requester.request(context);
   }
 
@@ -731,7 +747,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     };
 
     requester.methodType = MethodType.post;
-    requester.prepareUrl(pathUrl: '/setLeitner?vocabId=${widget.injection.lessonModel.id}?state=$state');
+    requester.prepareUrl(pathUrl: '/setLeitner?vocabId=${widget.injector.lessonModel.id}?state=$state');
     requester.request(context);
   }
 }

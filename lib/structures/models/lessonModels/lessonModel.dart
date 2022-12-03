@@ -15,7 +15,7 @@ class LessonModel {
   VocabularySegmentModel? vocabModel;
   GrammarSegmentModel? grammarModel;
   ReadingSegmentModel? readingModel;
-  ListeningSegmentModel? speakingModel;
+  ListeningSegmentModel? listeningModel;
 
   LessonModel();
 
@@ -39,7 +39,7 @@ class LessonModel {
     }
 
     if(map['vocabulary'] is Map) {
-      speakingModel = ListeningSegmentModel.fromMap(map['vocabulary']);
+      listeningModel = ListeningSegmentModel.fromMap(map['vocabulary']);
     }
   }
 

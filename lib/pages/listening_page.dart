@@ -1,3 +1,4 @@
+import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormater.dart';
@@ -7,8 +8,6 @@ import 'package:just_audio/just_audio.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/models/lessonModels/lessonModel.dart';
-import 'package:app/structures/models/lessonModels/listeningSegmentModel.dart';
 import 'package:app/structures/models/listeningModel.dart';
 import 'package:app/system/enums.dart';
 import 'package:app/system/extensions.dart';
@@ -25,11 +24,6 @@ import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:app/views/widgets/sliders.dart';
 
-class ListeningPageInjector {
-  late LessonModel lessonModel;
-  late ListeningSegmentModel segment;
-}
-///-----------------------------------------------------
 class ListeningPage extends StatefulWidget {
   final ListeningPageInjector injector;
 

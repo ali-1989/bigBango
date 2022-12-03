@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
@@ -13,8 +14,6 @@ import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/examModel.dart';
 import 'package:app/structures/models/grammarModel.dart';
-import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/system/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
@@ -29,11 +28,7 @@ import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 
-class GrammarPageInjector{
-  late LessonModel lessonModel;
-  late GrammarSegmentModel segment;
-}
-///-----------------------------------------------------
+
 class GrammarPage extends StatefulWidget {
   final GrammarPageInjector injection;
 
@@ -88,7 +83,17 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onRefresh: onRefresh);
+      return Column(
+        children: [
+          Align(
+              alignment: Alignment.topRight,
+              child: BackButton()
+          ),
+          Expanded(
+              child: ErrorOccur(onRefresh: onRefresh)
+          ),
+        ],
+      );
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
@@ -99,7 +104,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       return Column(
         children: [
           Align(
-            alignment: Alignment.centerRight,
+            alignment: Alignment.topRight,
               child: BackButton()
           ),
           Expanded(
@@ -320,14 +325,24 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   }
 
   void initVideo() async {
+    if(currentItem?.media?.fileLocation == null){
+      return;
+    }
+
+    print(currentItem!.media!.fileLocation);
     isVideoInit = false;
-    playerController = VideoPlayerController.network(currentItem?.media?.fileLocation?? '');
+    playerController = VideoPlayerController.network(currentItem!.media!.fileLocation!);
 
     await playerController!.initialize();
     isVideoInit = playerController!.value.isInitialized;
 
     if(mounted) {
-      onVideoInit();
+      if(isVideoInit) {
+        onVideoInit();
+      }
+      else {
+        assistCtr.updateMain();
+      }
     }
   }
 
@@ -405,6 +420,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       final List? data = res['data'];
+      assistCtr.clearStates();
 
       if(data is List){
         for(final m in data){
@@ -412,8 +428,10 @@ class _GrammarPageState extends StateBase<GrammarPage> {
           itemList.add(g);
         }
       }
-
-      assistCtr.clearStates();
+      else {
+        assistCtr.addStateAndUpdate(AssistController.state$error);
+        return;
+      }
 
       if(itemList.isEmpty){
         assistCtr.addStateAndUpdate(AssistController.state$emptyData);

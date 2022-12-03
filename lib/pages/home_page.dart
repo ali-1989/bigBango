@@ -1,5 +1,8 @@
-import 'package:app/structures/injectors/lessonComponentInjector.dart';
-import 'package:app/structures/injectors/vocabPageInjector.dart';
+import 'package:app/structures/injectors/segmentInjector.dart';
+import 'package:app/structures/injectors/grammarPagesInjector.dart';
+import 'package:app/structures/injectors/listeningPagesInjector.dart';
+import 'package:app/structures/injectors/readingPagesInjector.dart';
+import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
@@ -422,11 +425,11 @@ class HomePageState extends StateBase<HomePage> {
                           padding: const EdgeInsets.symmetric(vertical: 7),
                           child: Row(
                             children: [
-                              buildSegment(lesson, lesson.readingModel ?? lesson.speakingModel),
+                              buildSegment(lesson, lesson.readingModel ?? lesson.listeningModel),
 
                               SizedBox(width: 8),
 
-                              buildSegment(lesson, lesson.readingModel != null ? lesson.speakingModel : null),
+                              buildSegment(lesson, lesson.readingModel != null ? lesson.listeningModel : null),
                             ],
                           ),
                         ),
@@ -595,43 +598,26 @@ class HomePageState extends StateBase<HomePage> {
 
   void onLessonSegmentClick(LessonModel lesson, ISegmentModel section){
     Widget page = SizedBox();
+    final inject = SegmentInjector();
+    inject.lessonModel = lesson;
+    inject.segment = section;
 
     if(section is VocabularySegmentModel){
       if(!section.hasIdioms){
-        final inject = VocabPageInjector();
-        inject.lessonModel = lesson;
-        inject.segment = section;
-
-        AppRoute.push(context, VocabPage(injection: inject));
+        AppRoute.push(context, VocabPage(injector: VocabPageInjector.from(inject)));
         return;
       }
 
-      final inject = LessonComponentInjector();
-      inject.lessonModel = lesson;
-      inject.segment = section;
-
-      page = LessonComponent(injection: inject);
+      page = LessonComponent(injector: VocabPageInjector.from(inject));
     }
     else if (section is GrammarSegmentModel){
-      final inject = GrammarPageInjector();
-      inject.lessonModel = lesson;
-      inject.segment = section;
-
-      page = GrammarPage(injection: inject);
+      page = GrammarPage(injection: GrammarPageInjector.from(inject));
     }
     else if (section is ReadingSegmentModel){
-      final inject = ReadingPageInjector();
-      inject.lessonModel = lesson;
-      inject.segment = section;
-
-      page = ReadingPage(injector: inject);
+      page = ReadingPage(injector: ReadingPageInjector.from(inject));
     }
     else if (section is ListeningSegmentModel){
-      final inject = ListeningPageInjector();
-      inject.lessonModel = lesson;
-      inject.segment = section;
-
-      page = ListeningPage(injector: inject);
+      page = ListeningPage(injector: ListeningPageInjector.from(inject));
     }
 
 

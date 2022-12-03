@@ -1,4 +1,12 @@
-import 'package:app/structures/injectors/idiomsPageInjector.dart';
+import 'package:app/pages/grammar_page.dart';
+import 'package:app/pages/listening_page.dart';
+import 'package:app/pages/reading_page.dart';
+import 'package:app/structures/injectors/grammarPagesInjector.dart';
+import 'package:app/structures/injectors/listeningPagesInjector.dart';
+import 'package:app/structures/injectors/readingPagesInjector.dart';
+import 'package:app/structures/injectors/vocabPagesInjector.dart';
+import 'package:app/tools/app/appRoute.dart';
+import 'package:app/views/states/emptyData.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
@@ -21,10 +29,10 @@ import 'package:app/views/widgets/customCard.dart';
 
 
 class IdiomsPage extends StatefulWidget {
-  final IdiomsPageInjector injection;
+  final VocabPageInjector injector;
 
   const IdiomsPage({
-    required this.injection,
+    required this.injector,
     Key? key
   }) : super(key: key);
 
@@ -35,14 +43,14 @@ class IdiomsPage extends StatefulWidget {
 class _IdiomsPageState extends StateBase<IdiomsPage> {
   Requester requester = Requester();
   bool showTranslate = false;
+  bool isVideoInit = false;
+  bool showGreeting = false;
+  bool regulatorIsCall = false;
   List<IdiomModel> idiomsList = [];
   int currentIdiomIdx = 0;
   late IdiomModel currentIdiom;
   VideoPlayerController? playerController;
   ChewieController? chewieVideoController;
-  bool isVideoInit = false;
-  bool showGreeting = false;
-  bool regulatorIsCall = false;
   AttributeController atrCtr1 = AttributeController();
   AttributeController atrCtr2 = AttributeController();
   double regulator = 200;
@@ -81,11 +89,35 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onRefresh: onRefresh);
+      return Column(
+        children: [
+          Align(
+              alignment: Alignment.topRight,
+              child: BackButton()
+          ),
+          Expanded(
+              child: ErrorOccur(onRefresh: onRefresh)
+          ),
+        ],
+      );
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
       return WaitToLoad();
+    }
+
+    if(assistCtr.hasState(AssistController.state$emptyData)){
+      return Column(
+        children: [
+          Align(
+              alignment: Alignment.topRight,
+              child: BackButton()
+          ),
+          Expanded(
+              child: EmptyData()
+          ),
+        ],
+      );
     }
 
     Color preColor = Colors.black;
@@ -114,7 +146,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                     children: [
                       SizedBox(height: 20),
 
-                      AppbarLesson(title: widget.injection.lessonModel.title),
+                      AppbarLesson(title: widget.injector.lessonModel.title),
 
                       SizedBox(height: 14),
 
@@ -315,13 +347,21 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
   }
 
   void gotoNextPart(){
-    /*if(widget.injection.segment.hasIdioms){
-      final inject = IdiomsSegmentPageInjector();
-      inject.lessonModel = widget.injection.lessonModel;
-      inject.segment = widget.injection.segment;
+    Widget? page;
 
-      AppRoute.replace(context, IdiomsSegmentPage(injection: inject));
-    }*/
+    if (widget.injector.lessonModel.grammarModel != null){
+      page = GrammarPage(injection: GrammarPageInjector(widget.injector.lessonModel));
+    }
+    else if (widget.injector.lessonModel.readingModel != null){
+      page = ReadingPage(injector: ReadingPageInjector(widget.injector.lessonModel));
+    }
+    else if (widget.injector.lessonModel.listeningModel != null){
+      page = ListeningPage(injector: ListeningPageInjector(widget.injector.lessonModel));
+    }
+
+    if(page != null) {
+      AppRoute.replace(context, page);
+    }
   }
 
   void resetVocab(){
@@ -368,14 +408,24 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
   }
 
   void initVideo() async {
+    if(currentIdiom.video?.fileLocation == null){
+      return;
+    }
+
     isVideoInit = false;
-    playerController = VideoPlayerController.network(currentIdiom.video?.fileLocation?? '');
+    //playerController = VideoPlayerController.network(currentIdiom.video!.fileLocation!);
+    playerController = VideoPlayerController.network('https://bigbangofiles.nicode.org/2022/11/a2e160133ef64cc1b9f6c7dcf885fba8.mp4');
 
     await playerController!.initialize();
     isVideoInit = playerController!.value.isInitialized;
 
     if(mounted) {
-      onVideoInit();
+      if(isVideoInit) {
+        onVideoInit();
+      }
+      else {
+        assistCtr.updateMain();
+      }
     }
   }
 
@@ -421,6 +471,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       final List? data = res['data'];
+      assistCtr.clearStates();
 
       if(data is List){
         for(final k in data){
@@ -429,16 +480,26 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
           idiomsList.add(vo);
         }
       }
+      else {
+        assistCtr.addStateAndUpdate(AssistController.state$error);
+        return;
+      }
 
-      currentIdiom = idiomsList[currentIdiomIdx];
-      showTranslate = currentIdiom.showTranslation;
+      if(idiomsList.isEmpty){
+        assistCtr.addStateAndUpdate(AssistController.state$emptyData);
+      }
+      else {
+        //todo currentIdiom = idiomsList[0];
+        currentIdiom = idiomsList[1];
+        showTranslate = currentIdiom.showTranslation;
 
-      assistCtr.clearStates();
-      assistCtr.updateMain();
+        assistCtr.updateMain();
+        initVideo();
+      }
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/idioms?LessonId=${widget.injection.lessonModel.id}');
+    requester.prepareUrl(pathUrl: '/idioms?LessonId=${widget.injector.lessonModel.id}');
     requester.request(context);
   }
 }
