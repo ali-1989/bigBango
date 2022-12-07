@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:app/services/pages_event_service.dart';
+import 'package:app/tools/app/appToast.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -25,6 +27,9 @@ import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 
 class SupportPage extends StatefulWidget {
+  static final pageEventId = 'SupportPageEvent';
+  static final eventId$addTicket = 'eventIdAddTicket';
+
   const SupportPage({Key? key}) : super(key: key);
 
   @override
@@ -39,10 +44,14 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   int ticketPage = 1;
   List<TicketRole> ticketRoles = [];
   List<TicketModel> ticketList = [];
+  String assistId$TicketPart = 'assistId_TicketPart';
+  String stateId$ticketLoading = 'stateId_ticketLoading';
 
   @override
   void initState(){
     super.initState();
+
+    assistCtr.addState(stateId$ticketLoading);
 
     tabCtr = TabController(length: 2, vsync: this);
 
@@ -57,6 +66,8 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   @override
   void dispose(){
     requester.dispose();
+    PagesEventService.removeFor(SupportPage.pageEventId);
+
     super.dispose();
   }
 
@@ -76,11 +87,17 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onRefresh: tryAgain);
-    }
-
-    if(assistCtr.hasState(AssistController.state$loading)){
-      return WaitToLoad();
+      return Column(
+        children: [
+          Align(
+              alignment: Alignment.topRight,
+              child: BackButton()
+          ),
+          Expanded(
+              child: ErrorOccur()
+          ),
+        ],
+      );
     }
 
     return Column(
@@ -268,46 +285,56 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   }
   ///----------------------------------------------------
   Widget buildTicketPart(){
-    return Column(
-      children: [
-        Expanded(
-            child: RefreshConfiguration(
-              headerBuilder: () => MaterialClassicHeader(),
-              footerBuilder:  () => PublicAccess.classicFooter,
-              //headerTriggerDistance: 80.0,
-              //maxOverScrollExtent :100,
-              //maxUnderScrollExtent:0,
-              //springDescription: SpringDescription(stiffness: 170, damping: 16, mass: 1.9),
-              enableScrollWhenRefreshCompleted: true,
-              enableLoadingWhenFailed : true,
-              hideFooterWhenNotFull: true,
-              enableBallisticLoad: true,
-              enableLoadingWhenNoData: false,
-              child: SmartRefresher(
-                enablePullDown: false,
-                enablePullUp: true,
-                controller: refreshController,
-                onRefresh: (){},
-                onLoading: onLoadingMoreCall,
-                child: ListView.builder(
-                  itemCount: ticketList.length,
-                  itemBuilder: listBuilderForTicket,
+    return Assist(
+        controller: assistCtr,
+        id: assistId$TicketPart,
+        builder: (_, ctr, data){
+          if(assistCtr.hasState(stateId$ticketLoading)){
+            return WaitToLoad();
+          }
+
+          return Column(
+            children: [
+              Expanded(
+                  child: RefreshConfiguration(
+                    headerBuilder: () => MaterialClassicHeader(),
+                    footerBuilder:  () => PublicAccess.classicFooter,
+                    //headerTriggerDistance: 80.0,
+                    //maxOverScrollExtent :100,
+                    //maxUnderScrollExtent:0,
+                    //springDescription: SpringDescription(stiffness: 170, damping: 16, mass: 1.9),
+                    enableScrollWhenRefreshCompleted: true,
+                    enableLoadingWhenFailed : true,
+                    hideFooterWhenNotFull: true,
+                    enableBallisticLoad: true,
+                    enableLoadingWhenNoData: false,
+                    child: SmartRefresher(
+                      enablePullDown: false,
+                      enablePullUp: true,
+                      controller: refreshController,
+                      onRefresh: (){},
+                      onLoading: onLoadingMoreCall,
+                      child: ListView.builder(
+                        itemCount: ticketList.length,
+                        itemBuilder: listBuilderForTicket,
+                      ),
+                    ),
+                  )
+              ),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: showAddTicketSheet,
+                    child: Text('ایجاد تیکت'),
+                  ),
                 ),
               ),
-            )
-        ),
-
-        Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: showAddTicketSheet,
-              child: Text('ایجاد تیکت'),
-            ),
-          ),
-        ),
-      ],
+            ],
+          );
+        }
     );
   }
 
@@ -336,7 +363,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                           borderRadius: BorderRadius.circular(4)
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
                         child: Text(tik.status == 1 ? 'باز' : 'بسته',
                             style: TextStyle(color: Color(0xFF0ECF73), fontSize: 10)
                         ),
@@ -351,6 +378,13 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
               ],
             ),
 
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('تیکت شماره : ${tik.number}').alpha(),
+                Text(tik.trackingRoleName).alpha(),
+              ],
+            ),
             SizedBox(height: 6),
             Divider(color: Colors.grey.shade700),
             SizedBox(height: 2),
@@ -395,6 +429,14 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       contentColor: Colors.transparent,
       backgroundColor: Colors.transparent,
     );
+
+    PagesEventService.getEventBus(SupportPage.pageEventId).addEvent(SupportPage.eventId$addTicket, onAddTicketEventCall);
+  }
+
+  void onAddTicketEventCall(param){
+    ticketList.add(param);
+
+    assistCtr.updateMain();
   }
 
   void tryLoadClick() async {
@@ -441,11 +483,13 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     Completer co = Completer();
 
     requester.httpRequestEvents.onFailState = (req, res) async {
+      AppToast.showToast(context, 'ارتباط با سرور برقرار نشد');
       co.complete(null);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       final data = res['data'];
+
       final hasNextPage = res['hasNextPage']?? true;
       ticketPage = res['pageIndex']?? ticketPage;
 
@@ -465,6 +509,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       }
       co.complete(null);
 
+      assistCtr.clearStates();
       assistCtr.updateMain();
     };
 

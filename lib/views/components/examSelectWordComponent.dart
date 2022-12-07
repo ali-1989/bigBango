@@ -1,3 +1,4 @@
+import 'package:app/tools/app/appThemes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -10,9 +11,7 @@ import 'package:app/structures/models/examModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/tools/app/appSnack.dart';
-import 'package:app/views/widgets/animationPositionScale.dart';
 import 'package:app/views/widgets/customCard.dart';
 
 class ExamSelectWordComponent extends StatefulWidget {
@@ -28,37 +27,33 @@ class ExamSelectWordComponent extends StatefulWidget {
 }
 ///===============================================================================================================
 class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> implements ExamStateInterface {
-  Map<String, List<int>> selectedWords = {};
   bool showAnswers = false;
   late TextStyle questionNormalStyle;
+  int currentSelectIndex = -1;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
-
-    for(final k in widget.injector.examList){
-      selectedWords[k.id] = [];
-    }
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Assist(
-      controller: assistCtr,
-        builder: (ctx, ctr, data){
+        controller: assistCtr,
+        builder: (ctx, ctr, data) {
           return buildBody();
         }
     );
   }
 
-  Widget buildBody(){
+  Widget buildBody() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -72,8 +67,8 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
                 slivers: [
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
-                        listItemBuilder,
-                      childCount: widget.injector.examList.length *2 -1,
+                      listItemBuilder,
+                      childCount: widget.injector.examList.length * 2 - 1,
                     ),
                   ),
                 ],
@@ -84,13 +79,13 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
     );
   }
 
-  Widget listItemBuilder(ctx, idx){
+  Widget listItemBuilder(ctx, idx) {
     ///=== Divider
-    if(idx % 2 != 0){
+    if (idx % 2 != 0) {
       return Divider(color: Colors.black, height: 2);
     }
 
-    final item = widget.injector.examList[idx~/2];
+    final item = widget.injector.examList[idx ~/ 2];
     final List<InlineSpan> spans = generateSpans(item);
 
     return Directionality(
@@ -99,19 +94,24 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 20),
+
           ///=== number box
-          CustomCard(
-            color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            child: Text('${idx~/2 + 1}').bold(weight: FontWeight.w900).fsR(1),
-          ).wrapBoxBorder(
-            padding: EdgeInsets.all(2),
-            radius: 9,
-            stroke: 1.0,
-            color: Colors.black
+          Visibility(
+            visible: widget.injector.examList.length > 1,
+            child: CustomCard(
+              color: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              child: Text('${idx ~/ 2 + 1}').bold(weight: FontWeight.w900).fsR(1),
+            ).wrapBoxBorder(
+                padding: EdgeInsets.all(2),
+                radius: 9,
+                stroke: 1.0,
+                color: Colors.black
+            ),
           ),
 
           SizedBox(height: 15),
+
           ///=== question
           RichText(
             text: TextSpan(children: spans),
@@ -128,204 +128,224 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
     );
   }
 
-  List<InlineSpan> generateSpans(ExamModel model){
+  List<InlineSpan> generateSpans(ExamModel model) {
     final List<InlineSpan> spans = [];
 
-    for(int i = 0; i < model.questionSplit.length; i++) {
-      spans.add(TextSpan(text: model.questionSplit[i], style: questionNormalStyle));
+    for (int i = 0; i < model.questionSplit.length; i++) {
+      final q = TextSpan(text: model.questionSplit[i], style: questionNormalStyle);
+      spans.add(q);
 
-      if(i < model.questionSplit.length-1) {
-        InlineSpan blankSpan;
-        String blankText = '';
-        Color blankColor;
-        bool hasUserAnswer = model.userAnswers[i].text.isNotEmpty;
-        final tapRecognizer = TapGestureRecognizer()..onTapUp = (gesDetail){
+      if (i < model.questionSplit.length - 1) {
+        InlineSpan choiceSpan;
+        String choiceText = '';
+        Color choiceColor;
 
-          if(showAnswers){
-            return;
-          }
+        final tapRecognizer = TapGestureRecognizer()
+          ..onTapUp = (gesDetail) {
+            if (showAnswers) {
+              return;
+            }
 
-          TextEditingController tControl = TextEditingController();
-          FocusNode focusNode = FocusNode();
-          tControl.text = model.userAnswers[i].text;
-          late final OverlayEntry over;
+            setUserAnswer(model, i, null);
 
-          over = OverlayEntry(
-              builder: (_) {
-                return Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Positioned.fill(
-                      child: GestureDetector(
-                        onTap: (){
-                          over.remove();
-                          over.dispose();
-                          focusNode.dispose();
-                          tControl.dispose();
-                        },
-                      ),
-                    ),
-
-                    Positioned(
-                      top: 60,
-                      left: 0,
-                      right: 0,
-                      child: AnimationPositionScale(
-                        x: gesDetail.globalPosition.dx,
-                        y: gesDetail.globalPosition.dy,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 14.0),
-                          child: Card(
-                              color: Colors.blue.shade200,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                                child: Directionality(
-                                  textDirection: TextDirection.ltr,
-                                  child: TextField(
-                                    controller: tControl,
-                                    focusNode: focusNode,
-                                    style: TextStyle(fontSize: 16),
-                                    onChanged: (t){
-                                      model.userAnswers[i].text = t.trim();
-                                      assistCtr.updateMain();
-                                    },
-                                    onSubmitted: (t){
-                                      over.remove();
-                                      over.dispose();
-                                      focusNode.dispose();
-                                      //tControl.dispose();
-                                    },
-                                  ),
-                                ),
-                              )
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
+            if (currentSelectIndex > -1) {
+              if (currentSelectIndex == i) {
+                currentSelectIndex = -1;
               }
-          );
+              else {
+                currentSelectIndex = i;
+              }
+            }
+            else {
+              currentSelectIndex = i;
+            }
 
-          AppOverlay.showOverlay(context, over);
-          Future.delayed(Duration(milliseconds: 600), (){
-            tControl.selection = TextSelection.collapsed(offset: model.userAnswers[i].text.length);
-            focusNode.requestFocus();
-          });
-        };
+            assistCtr.updateMain();
+          };
 
-        if(showAnswers){
-          if(model.userAnswers[i].text == model.choices[i].text){
-            blankColor = Colors.green;
+        if (showAnswers) {
+          final correctAnswer = model.getChoiceByOrder(i)!.text;
+          final userAnswer = model.getUserChoiceByOrder(i)!.text;
+
+          if (correctAnswer == userAnswer) {
             /// correct span
-            blankSpan = WidgetSpan(
+            choiceSpan = WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Image.asset(AppImages.trueCheckIco),
                     SizedBox(width: 5),
-                    Text(model.userAnswers[i].text, style: questionNormalStyle.copyWith(color: blankColor))
+                    Text(userAnswer, style: questionNormalStyle.copyWith(color: Colors.green))
                   ],
                 )
             );
           }
           else {
-            blankColor = AppColors.red;
-            blankText = model.userAnswers[i].text.isNotEmpty? model.userAnswers[i].text: '[\u00A0_\u00A0]';
             /// wrong span
-            blankSpan = WidgetSpan(
+            choiceSpan = WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Image.asset(AppImages.falseCheckIco),
                     SizedBox(width: 5),
-                    Text(blankText, style: questionNormalStyle.copyWith(color: blankColor))
+                    Text(userAnswer, style: questionNormalStyle.copyWith(color: AppColors.red)),
+                    SizedBox(width: 5),
+                    Text('[$correctAnswer]', style: questionNormalStyle.copyWith(color: Colors.green))
                   ],
                 )
             );
           }
         }
         else {
-          if(hasUserAnswer){
-            blankText = ' ${model.userAnswers[i]} ';
-            blankColor = Colors.blue;
+          final userAnswer = model.getUserChoiceByOrder(i)!.text;
+
+          if (userAnswer.isNotEmpty) {
+            choiceText = userAnswer;
+            choiceColor = Colors.blue;
           }
           else {
-            blankText = '\u00A0_____\u00A0';
-            blankColor = Colors.blue.shade200;
+            choiceText = '\u00A0_____\u00A0';
+            choiceColor = Colors.blue.shade200;
           }
 
-          blankSpan = TextSpan(
-            text: blankText,
-            style: questionNormalStyle.copyWith(color: blankColor),
-            recognizer: tapRecognizer,
+          choiceSpan = WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: CustomCard(
+                radius: 4,
+                color: currentSelectIndex == i ? Colors.blue.withAlpha(40) : Colors.transparent,
+                child: RichText(
+                  text: TextSpan(
+                    text: choiceText,
+                    style: questionNormalStyle.copyWith(color: choiceColor),
+                    recognizer: tapRecognizer,
+                  ),
+                ),
+              )
           );
         }
 
-        spans.add(blankSpan);
+        spans.add(choiceSpan);
       }
     }
 
     return spans;
   }
 
-  Widget buildWords(ExamModel model){
-    int lastIndex = -1;
+  void onWordClick(ExamModel model, ExamChoiceModel ec) {
+    if (currentSelectIndex < 0) {
+      return;
+    }
 
+    setUserAnswer(model, currentSelectIndex, ec);
+    currentSelectIndex = -1;
+
+    List<String> selectedWordIds = [];
+
+    for (final k in model.userAnswers) {
+      if (k.id.isNotEmpty) {
+        selectedWordIds.add(k.id);
+      }
+    }
+
+    if (selectedWordIds.length + 1 == model.choices.length) {
+      for (final k in model.userAnswers) {
+        if (k.id.isEmpty) {
+          ExamChoiceModel? examChoiceModel;
+
+          for (final kk in model.choices) {
+            if (!selectedWordIds.contains(kk.id)) {
+              examChoiceModel = kk;
+              break;
+            }
+          }
+
+          k.id = examChoiceModel!.id;
+          k.text = examChoiceModel.text;
+          break;
+        }
+      }
+    }
+
+    assistCtr.updateMain();
+  }
+
+  void setUserAnswer(ExamModel model, int order, ExamChoiceModel? ec) {
+    if (ec != null) {
+      model.getUserChoiceByOrder(order)!.text = ec.text;
+      model.getUserChoiceByOrder(order)!.id = ec.id;
+    }
+    else {
+      model.getUserChoiceByOrder(order)!.text = '';
+      model.getUserChoiceByOrder(order)!.id = '';
+    }
+  }
+
+  Widget buildWords(ExamModel model) {
     return Row(
       children: [
-        ...model.shuffleWords.map((w){
-          final idx = model.shuffleWords.indexOf(w, lastIndex);
-          final isSelected = selectedWords[model.id]!.contains(idx);
-          lastIndex++;
+        ...model.shuffleWords.map((w) {
+          var isSelected = false;
+
+          for (final k in model.userAnswers) {
+            if (k.id == w.id) {
+              isSelected = true;
+              break;
+            }
+          }
+
+          Color bColor = Colors.grey.shade200;
+
+          if (currentSelectIndex > -1 && !isSelected) {
+            bColor = Colors.lightBlueAccent;
+          }
 
           return Padding(
             padding: const EdgeInsets.only(right: 8),
             child: GestureDetector(
-              onTap: (){
-                onWordClick(model.id, idx);
+              onTap: () {
+                onWordClick(model, w);
               },
               child: CustomCard(
-                color: isSelected? Colors.lightBlueAccent : Colors.grey.shade200,
+                  color: bColor,
                   radius: 2,
                   padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                  child: Text(w.text)
+                  child: Text(w.text,
+                    style: isSelected
+                        ? TextStyle(
+                      decorationStyle: TextDecorationStyle.solid,
+                      decoration: TextDecoration.lineThrough,
+                      decorationColor: Colors.red,
+                    )
+                        : AppThemes.baseTextStyle(),
+                  )
               ),
             ),
           );
         }),
       ],
     );
-
-  }
-
-  void onWordClick(String questionId, int wordIdx){
-    if(selectedWords[questionId]!.contains(wordIdx)) {
-      selectedWords[questionId]!.remove(wordIdx);
-    }
-    else {
-      selectedWords[questionId]!.add(wordIdx);
-    }
-
-    assistCtr.updateMain();
   }
 
   @override
   void checkAnswers() {
     bool isAllSelected = true;
 
-    for(final exam in widget.injector.examList){
-      final selected = selectedWords[exam.id]!;
+    for (final model in widget.injector.examList) {
+      for (final k in model.userAnswers) {
+        if (k.id.isEmpty) {
+          isAllSelected = false;
+          break;
+        }
+      }
 
-      if(exam.shuffleWords.length > selected.length){
-        isAllSelected = false;
+      if (!isAllSelected) {
         break;
       }
     }
 
-    if(!isAllSelected){
+    if (!isAllSelected) {
       AppSnack.showError(context, 'لطفا همه ی گزینه ها را انتخاب کنید');
       return;
     }
@@ -336,3 +356,36 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
 }
 
 
+
+/*
+void gotoExam(LessonModel model){
+
+    ExamModel ee = ExamModel();
+    ee.question = 'gggggg ** ffff ** ssss ** dddd';
+    ee.id = 'fdfff fgfg ffgg';
+    ee.quizType = QuizType.recorder;
+
+    ee.choices = [
+      ExamChoiceModel()..text = 'yes'..order=2,
+      ExamChoiceModel()..text = 'no'..order = 1,
+      ExamChoiceModel()..text = 'ok'..order = 0,
+    ];
+
+    ee.doSplitQuestion();
+    ExamInjector examComponentInjector = ExamInjector();
+    examComponentInjector.lessonModel = model;
+    examComponentInjector.segmentModel = model.grammarModel!;
+    examComponentInjector.examList.add(ee);
+
+    final component = ExamSelectWordComponent(injector: examComponentInjector);
+
+    final pageInjector = ExamPageInjector();
+    pageInjector.lessonModel = model;
+    pageInjector.segment = model.grammarModel!;
+    pageInjector.examPage = component;
+    pageInjector.description = 'ddd dff dfdf';
+    final examPage = ExamPage(injector: pageInjector);
+
+    AppRoute.push(context, examPage);
+  }
+ */

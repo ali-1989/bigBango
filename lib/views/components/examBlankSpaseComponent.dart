@@ -109,15 +109,18 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
         children: [
           SizedBox(height: 20),
           ///=== number box
-          CustomCard(
-            color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            child: Text('${idx~/2 + 1}').bold(weight: FontWeight.w900).fsR(1),
-          ).wrapBoxBorder(
-            padding: EdgeInsets.all(2),
-            radius: 9,
-            stroke: 1.0,
-            color: Colors.black
+          Visibility(
+            visible: widget.injector.examList.length > 1,
+            child: CustomCard(
+              color: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              child: Text('${idx~/2 + 1}').bold(weight: FontWeight.w900).fsR(1),
+            ).wrapBoxBorder(
+              padding: EdgeInsets.all(2),
+              radius: 9,
+              stroke: 1.0,
+              color: Colors.black
+            ),
           ),
 
           SizedBox(height: 15),

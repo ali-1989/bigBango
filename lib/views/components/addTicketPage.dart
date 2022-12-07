@@ -1,8 +1,12 @@
+import 'package:app/pages/support_page.dart';
+import 'package:app/services/pages_event_service.dart';
+import 'package:app/structures/models/ticketModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
+import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
@@ -208,6 +212,18 @@ class _AddTicketPageState extends StateBase<AddTicketPage> {
       hideLoading();
 
       final data = res['data'];
+      final id = data['id'];
+      final number = data['number']?? 0;
+
+      final tik = TicketModel();
+      tik.id = id;
+      tik.number = number;
+      tik.title = titleCtr.text.trim();
+      tik.trackingRoleName = widget.ticketRoles.firstWhere((element) => element.id == selectedTicketRoleId).name;
+      tik.createdAt = DateHelper.getNowAsUtcZ();
+
+      PagesEventService.getEventBus(SupportPage.pageEventId).callEvent(SupportPage.eventId$addTicket, tik);
+
       final message = res['message']?? 'تیکت ثبت شد';
 
       AppSheet.showSheetOneAction(context, message, (){AppRoute.popTopView(context);},
@@ -220,7 +236,6 @@ class _AddTicketPageState extends StateBase<AddTicketPage> {
     requester.methodType = MethodType.post;
     requester.prepareUrl(pathUrl: '/tickets/add');
     requester.bodyJson = body;
-    requester.debug = true;
     requester.request(context);
   }
 }

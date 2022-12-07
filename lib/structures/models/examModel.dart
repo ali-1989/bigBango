@@ -1,4 +1,5 @@
 import 'package:app/system/enums.dart';
+import 'package:iris_tools/api/generator.dart';
 
 class ExamModel {
   late String id;
@@ -58,8 +59,8 @@ class ExamModel {
 
     userAnswers.clear();
 
-    for(int i = 1; i < questionSplit.length; i++) {
-      userAnswers.add(ExamChoiceModel());
+    for(int i = 0; i < questionSplit.length-1; i++) {
+      userAnswers.add(ExamChoiceModel()..order = i..id = '');
     }
 
     if(quizType == QuizType.recorder){
@@ -77,16 +78,38 @@ class ExamModel {
 
     return -1;
   }
+
+  ExamChoiceModel? getChoiceByOrder(int order){
+    for(int i = 0; i< choices.length; i++){
+      if(choices[i].order == order){
+        return choices[i];
+      }
+    }
+
+    return null;
+  }
+
+  ExamChoiceModel? getUserChoiceByOrder(int order){
+    for(int i = 0; i< userAnswers.length; i++){
+      if(userAnswers[i].order == order){
+        return userAnswers[i];
+      }
+    }
+
+    return null;
+  }
 }
 ///==================================================================================================
 class ExamChoiceModel {
+  String id = '';
   String text = '';
   bool isCorrect = false;
   int order = 0;
 
-  ExamChoiceModel();
+  ExamChoiceModel(): id = Generator.generateKey(5);
 
   ExamChoiceModel.fromMap(Map js){
+    id = js['id']?? Generator.generateKey(5);
     text = js['text'];
     isCorrect = js['isCorrect']?? false;
     order = js['order']?? 0;
@@ -95,6 +118,7 @@ class ExamChoiceModel {
   Map<String, dynamic> toMap(){
     final js = <String, dynamic>{};
 
+    js['id'] = id;
     js['text'] = text;
     js['isCorrect'] = isCorrect;
     js['order'] = order;

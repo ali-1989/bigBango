@@ -1,3 +1,14 @@
+import 'dart:async';
+
+import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/tools/app/appColors.dart';
+import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/appMessages.dart';
+import 'package:app/tools/app/appNavigator.dart';
+import 'package:app/views/states/errorOccur.dart';
+import 'package:app/views/states/waitToLoad.dart';
+import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -18,14 +29,19 @@ class TicketDetailPage extends StatefulWidget {
 }
 ///=================================================================================================
 class _TicketDetailPageState extends StateBase<TicketDetailPage> {
+  Requester requester = Requester();
 
   @override
   void initState(){
     super.initState();
+
+    assistCtr.addState(AssistController.state$loading);
+    requestTicketDetail();
   }
 
   @override
   void dispose(){
+    requester.dispose();
     super.dispose();
   }
 
@@ -42,6 +58,130 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
   }
 
   Widget buildBody(){
-    return Center();
+    if(assistCtr.hasState(AssistController.state$error)){
+      return Column(
+        children: [
+          Align(
+              alignment: Alignment.topRight,
+              child: BackButton()
+          ),
+          Expanded(
+              child: ErrorOccur(onRefresh: onRefresh)
+          ),
+        ],
+      );
+    }
+
+    if(assistCtr.hasState(AssistController.state$loading)){
+      return WaitToLoad();
+    }
+
+    return Column(
+      children: [
+        SizedBox(height: 20),
+
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 18),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 4,
+                    height: 36,
+                    child: ColoredBox(color: AppColors.red),
+                  ),
+
+                  SizedBox(width: 7),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(widget.ticketModel.title).bold().fsR(1),
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                            color: Colors.greenAccent.withAlpha(40),
+                            borderRadius: BorderRadius.circular(4)
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
+                          child: Text(widget.ticketModel.status == 1 ? 'باز' : 'بسته',
+                              style: TextStyle(color: Color(0xFF0ECF73), fontSize: 10)
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+
+              GestureDetector(
+                onTap: (){
+                  AppNavigator.pop(context);
+                },
+                child: Row(
+                  children: [
+                    //Text(AppMessages.back),
+                    SizedBox(width: 10),
+                    CustomCard(
+                        color: Colors.grey.shade200,
+                        padding: EdgeInsets.all(5),
+                        child: Image.asset(AppImages.arrowLeftIco)
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        Divider(indent: 15, endIndent: 15, color: Colors.black54,),
+        SizedBox(height: 20),
+
+        Expanded(child: Text('f')),
+      ],
+    );
+  }
+
+  void onRefresh(){
+    assistCtr.clearStates();
+    assistCtr.addStateAndUpdate(AssistController.state$loading);
+    requestTicketDetail();
+  }
+
+  void requestTicketDetail() async {
+    requester.httpRequestEvents.onFailState = (req, res) async {
+
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
+      print(res);
+      final data = res['data'];
+      final hasNextPage = res['hasNextPage']?? true;
+      //ticketPage = res['pageIndex']?? ticketPage;
+
+      /*if(data is List){
+        for(final t in data){
+          final tik = TicketModel.fromMap(t);
+          ticketList.add(tik);
+        }
+      }
+
+      if(refreshController.isLoading) {
+        refreshController.loadComplete();
+      }
+
+      if(!hasNextPage){
+        refreshController.loadNoData();
+      }
+      co.complete(null);*/
+
+      assistCtr.clearStates();
+      assistCtr.updateMain();
+    };
+
+    requester.methodType = MethodType.get;
+    requester.prepareUrl(pathUrl: '/tickets/details?Id=${widget.ticketModel.id}');
+    requester.request(context);
   }
 }

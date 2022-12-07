@@ -16,7 +16,6 @@ class TicketModel {
     number = map['number'];
     status = map['status']?? 0;
     trackingRoleName = map['trackingRoleName']?? '';
-
     createdAt = DateHelper.tsToSystemDate(map['createdAt'])!;
   }
 

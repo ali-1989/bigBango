@@ -122,7 +122,6 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
 
     Color preColor = Colors.black;
     Color nextColor = Colors.black;
-    initVideo();
 
     if(currentIdiomIdx == 0){
       preColor = Colors.grey;
@@ -242,23 +241,23 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                            else {
                              return Column(
                                children: [
-                                 Builder(
-                                   builder: (_){
-                                     if(currentIdiom.video?.fileLocation != null){
-                                       if(isVideoInit){
-                                         return Chewie(controller: chewieVideoController!);
+                                 SizedBox(
+                                   height: 200,
+                                   child: Builder(
+                                     builder: (_){
+                                       if(currentIdiom.video?.fileLocation != null){
+                                         if(isVideoInit){
+                                           return Chewie(controller: chewieVideoController!);
+                                         }
+                                         else {
+                                           return const Center(child: CircularProgressIndicator());
+                                         }
                                        }
                                        else {
-                                         return SizedBox(
-                                             height: 190,
-                                             child: const Center(child: CircularProgressIndicator())
-                                         );
+                                         return Image.asset(AppImages.noImage);
                                        }
-                                     }
-                                     else {
-                                       return Image.asset(AppImages.noImage);
-                                     }
-                                   },
+                                     },
+                                   ),
                                  ),
 
                                  SizedBox(height: 14),
@@ -367,8 +366,12 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
   void resetVocab(){
     showGreeting = false;
     currentIdiomIdx = 0;
+    isVideoInit = false;
 
+    currentIdiom = idiomsList[currentIdiomIdx];
+    showTranslate = currentIdiom.showTranslation;
     assistCtr.updateMain();
+    initVideo();
   }
 
   double calcProgress(){
@@ -390,6 +393,8 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
     }
 
     assistCtr.updateMain();
+    isVideoInit = false;
+    initVideo();
   }
 
   void onPreClick(){
@@ -405,20 +410,20 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
     }
 
     assistCtr.updateMain();
+    isVideoInit = false;
+    initVideo();
   }
 
   void initVideo() async {
-    if(currentIdiom.video?.fileLocation == null){
+    if(isVideoInit || currentIdiom.video?.fileLocation == null){
       return;
     }
 
     isVideoInit = false;
-    //playerController = VideoPlayerController.network(currentIdiom.video!.fileLocation!);
-    playerController = VideoPlayerController.network('https://bigbangofiles.nicode.org/2022/11/a2e160133ef64cc1b9f6c7dcf885fba8.mp4');
+    playerController = VideoPlayerController.network(currentIdiom.video!.fileLocation!);
 
     await playerController!.initialize();
     isVideoInit = playerController!.value.isInitialized;
-
     if(mounted) {
       if(isVideoInit) {
         onVideoInit();
@@ -489,8 +494,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
         assistCtr.addStateAndUpdate(AssistController.state$emptyData);
       }
       else {
-        //todo currentIdiom = idiomsList[0];
-        currentIdiom = idiomsList[1];
+        currentIdiom = idiomsList[0];
         showTranslate = currentIdiom.showTranslation;
 
         assistCtr.updateMain();
