@@ -10,8 +10,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:app/pages/ticket_detail_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/models/ticketModel.dart';
-import 'package:app/structures/models/ticketRole.dart';
+import 'package:app/structures/models/ticketModels/ticketModel.dart';
+import 'package:app/structures/models/ticketModels/ticketRole.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appColors.dart';
@@ -28,7 +28,7 @@ import 'package:app/views/states/waitToLoad.dart';
 
 class SupportPage extends StatefulWidget {
   static final pageEventId = 'SupportPageEvent';
-  static final eventId$addTicket = 'eventIdAddTicket';
+  static final eventFnId$addTicket = 'eventIdAddTicket';
 
   const SupportPage({Key? key}) : super(key: key);
 
@@ -273,7 +273,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                   ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
-                  child: Text('10', style: TextStyle(color: Color(0xFF0ECF73), fontSize: 10)),
+                  child: Text('10', style: TextStyle(color: AppColors.red, fontSize: 10)),
                 ),
               )
             ],
@@ -358,13 +358,13 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                   children: [
                     DecoratedBox(
                       decoration: BoxDecoration(
-                          color: Colors.greenAccent.withAlpha(40),
+                          color: AppColors.greenTint,
                           borderRadius: BorderRadius.circular(4)
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
                         child: Text(tik.status == 1 ? 'باز' : 'بسته',
-                            style: TextStyle(color: Color(0xFF0ECF73), fontSize: 10)
+                            style: TextStyle(color: AppColors.green, fontSize: 10)
                         ),
                       ),
                     ),
@@ -391,10 +391,6 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
         ),
       ),
     );
-  }
-
-  void tryAgain(){
-
   }
 
   void showBuySessionTimeSheet(){
@@ -429,7 +425,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       backgroundColor: Colors.transparent,
     );
 
-    PagesEventService.getEventBus(SupportPage.pageEventId).addEvent(SupportPage.eventId$addTicket, onAddTicketEventCall);
+    PagesEventService.getEventBus(SupportPage.pageEventId).addEvent(SupportPage.eventFnId$addTicket, onAddTicketEventCall);
   }
 
   void onAddTicketEventCall(param){
@@ -479,7 +475,6 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   }
 
   Future<void> requestTickets() async {
-    ticketRoles.clear();
     Completer co = Completer();
 
     requester.httpRequestEvents.onFailState = (req, res) async {

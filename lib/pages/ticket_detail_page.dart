@@ -1,10 +1,8 @@
-import 'dart:async';
 
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
@@ -14,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/models/ticketModel.dart';
+import 'package:app/structures/models/ticketModels/ticketModel.dart';
 
 class TicketDetailPage extends StatefulWidget {
   final TicketModel ticketModel;
@@ -155,26 +153,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
-      print(res);
       final data = res['data'];
-      final hasNextPage = res['hasNextPage']?? true;
-      //ticketPage = res['pageIndex']?? ticketPage;
-
-      /*if(data is List){
-        for(final t in data){
-          final tik = TicketModel.fromMap(t);
-          ticketList.add(tik);
-        }
-      }
-
-      if(refreshController.isLoading) {
-        refreshController.loadComplete();
-      }
-
-      if(!hasNextPage){
-        refreshController.loadNoData();
-      }
-      co.complete(null);*/
 
       assistCtr.clearStates();
       assistCtr.updateHead();

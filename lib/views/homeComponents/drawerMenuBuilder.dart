@@ -1,3 +1,4 @@
+import 'package:app/pages/wallet_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -166,7 +167,7 @@ class DrawerMenuBuilder {
                 ListTile(
                   title: Text('کیف پول'),
                   leading: Image.asset(AppImages.drawerWalletIco, width: 16, height: 16),
-                  onTap: gotoProfilePage,
+                  onTap: gotoTransactionPage,
                   dense: true,
                   horizontalTitleGap: 0,
                   visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
@@ -312,6 +313,11 @@ class DrawerMenuBuilder {
   static void gotoProfilePage() async {
     await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext()!);
     AppRoute.push(AppRoute.getLastContext()!, ProfilePage(userModel: Session.getLastLoginUser()!));
+  }
+
+  static void gotoTransactionPage() async {
+    await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext()!);
+    AppRoute.push(AppRoute.getLastContext()!, WalletPage());
   }
 
   static void gotoSupportPage() async {
