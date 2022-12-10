@@ -52,6 +52,6 @@ class LayoutPageState extends StateBase<LayoutPage> {
   void onPageItemSelect(int idx){
     selectedPageIndex = idx;
     pageController.jumpToPage(idx);
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 }

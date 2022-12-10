@@ -152,6 +152,6 @@ class _LightnerPageState extends StateBase<LightnerPage> {
   void onItemClick(LightnerModel itm, idx) async {
     await AppRoute.push(context, LightnerDetailPage(lightnerModel: itm, index: idx));
 
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 }

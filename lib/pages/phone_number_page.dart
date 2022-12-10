@@ -42,7 +42,7 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
     addPostOrCall(fn: () {
       if(atrCtr.getHeight()! < sh){
         regulator = sh - atrCtr.getHeight()!;
-        assistCtr.updateMain();
+        assistCtr.updateHead();
       }
     });
   }

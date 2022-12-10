@@ -563,7 +563,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
     hideLoading();
     Session.sinkUserInfo(user);
-    assistCtr.updateMain();
+    assistCtr.updateHead();
 
     //after load image, auto will call: OverlayCenter().hideLoading(context);
     AppSnack.showSnack$operationSuccess(context);

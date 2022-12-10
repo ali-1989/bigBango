@@ -1,7 +1,7 @@
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:flutter/material.dart';
 
-import 'package:iris_tools/api/duration/durationFormater.dart';
+import 'package:iris_tools/api/duration/durationFormatter.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:just_audio/just_audio.dart';
@@ -169,7 +169,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                           anim2Ctr.forward();
                         }
 
-                        assistCtr.updateMain();
+                        assistCtr.updateHead();
                       },
                         child: Icon(AppIcons.translate, color: Colors.red, size: 20)
                     )
@@ -414,7 +414,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
       currentSegmentIdx++;
       await player.seek(currentItem!.segments[currentSegmentIdx].start);
 
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     }
   }
 
@@ -428,7 +428,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
       currentSegmentIdx--;
       await player.seek(currentItem!.segments[currentSegmentIdx].start);
 
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     }
   }
 
@@ -441,7 +441,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
       currentSegmentIdx = 0;
       await prepareVoice();
 
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     }
   }
 
@@ -454,7 +454,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
       currentSegmentIdx = 0;
       await prepareVoice();
 
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     }
   }
 
@@ -464,7 +464,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
   void durationListener(Duration dur) {
     currentTime = dur;
-    assistCtr.update(id$playerViewId);
+    assistCtr.updateAssist(id$playerViewId);
 
     if(currentItem == null || currentSegmentIdx >= currentItem!.segments.length){
       return;
@@ -474,12 +474,12 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
     if(dur > segment.end!){
       currentSegmentIdx++;
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     }
   }
 
   void eventListener(PlaybackEvent event){
-    assistCtr.update(id$playerViewId);
+    assistCtr.updateAssist(id$playerViewId);
   }
 
   Future<void> prepareVoice() async {
@@ -494,7 +494,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
       if(dur != null){
         totalTime = dur;
-        assistCtr.update(id$playerViewId);
+        assistCtr.updateAssist(id$playerViewId);
       }
 
     }).onError((error, stackTrace) {
@@ -510,14 +510,14 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
   void onRefresh(){
     voiceIsOk = false;
     assistCtr.clearStates();
-    assistCtr.addStateAndUpdate(AssistController.state$loading);
+    assistCtr.addStateAndUpdateHead(AssistController.state$loading);
     requestReading();
   }
 
   void requestReading(){
     requester.httpRequestEvents.onFailState = (req, res) async {
       assistCtr.clearStates();
-      assistCtr.addStateAndUpdate(AssistController.state$error);
+      assistCtr.addStateAndUpdateHead(AssistController.state$error);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
@@ -533,12 +533,12 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
       assistCtr.clearStates();
 
       if(itemList.isEmpty){
-        assistCtr.addStateAndUpdate(AssistController.state$emptyData);
+        assistCtr.addStateAndUpdateHead(AssistController.state$emptyData);
       }
       else {
         currentItem = itemList[0];
         prepareVoice();
-        assistCtr.updateMain();
+        assistCtr.updateHead();
       }
     };
 

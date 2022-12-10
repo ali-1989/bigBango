@@ -1,7 +1,7 @@
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:flutter/material.dart';
 
-import 'package:iris_tools/api/duration/durationFormater.dart';
+import 'package:iris_tools/api/duration/durationFormatter.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -214,7 +214,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                                         int sec = totalTime.inSeconds * value ~/100;
                                         player.seek(Duration(seconds: sec));
                                         playerSliderValue = value;
-                                        assistCtr.update(id$playViewId);
+                                        assistCtr.updateAssist(id$playViewId);
                                       },
                                     ),
                                   ),
@@ -351,7 +351,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       examComponentInjector.prepareExamList([currentItem!.quiz]);
       buildExamView();
 
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     }
   }
 
@@ -367,7 +367,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       examComponentInjector.prepareExamList([currentItem!.quiz]);
       buildExamView();
 
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     }
   }
 
@@ -382,11 +382,11 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       playerSliderValue = dur.inSeconds * 100 / totalTime.inSeconds;
     }
 
-    assistCtr.update(id$playViewId);
+    assistCtr.updateAssist(id$playViewId);
   }
 
   void eventListener(PlaybackEvent event){
-    assistCtr.update(id$playViewId);
+    assistCtr.updateAssist(id$playViewId);
   }
 
   Future<void> prepareVoice() async {
@@ -417,14 +417,14 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   void onRefresh(){
     voiceIsOk = false;
     assistCtr.clearStates();
-    assistCtr.addStateAndUpdate(AssistController.state$loading);
+    assistCtr.addStateAndUpdateHead(AssistController.state$loading);
     requestListening();
   }
 
   void requestListening(){
     requester.httpRequestEvents.onFailState = (req, res) async {
       assistCtr.clearStates();
-      assistCtr.addStateAndUpdate(AssistController.state$error);
+      assistCtr.addStateAndUpdateHead(AssistController.state$error);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
@@ -440,14 +440,14 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       assistCtr.clearStates();
 
       if(itemList.isEmpty){
-        assistCtr.addStateAndUpdate(AssistController.state$emptyData);
+        assistCtr.addStateAndUpdateHead(AssistController.state$emptyData);
       }
       else {
         currentItem = itemList[0];
         prepareVoice();
         examComponentInjector.prepareExamList([currentItem!.quiz]);
         buildExamView();
-        assistCtr.updateMain();
+        assistCtr.updateHead();
       }
     };
 

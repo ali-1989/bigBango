@@ -194,7 +194,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
                                     style: TextStyle(fontSize: 16),
                                     onChanged: (t){
                                       exam.userAnswers[i].text = t.trim();
-                                      assistCtr.updateMain();
+                                      assistCtr.updateHead();
                                     },
                                     onSubmitted: (t){
                                       txtFieldOver.remove();
@@ -329,7 +329,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
   @override
   void checkAnswers() {
     showAnswers = !showAnswers;
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 }
 

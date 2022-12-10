@@ -655,12 +655,12 @@ class HomePageState extends StateBase<HomePage> {
       openedLessonsIds.add(model.id);
     }
 
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 
   void onRefresh(){
     assistCtr.removeState(state$error);
-    assistCtr.addStateAndUpdate(state$loading);
+    assistCtr.addStateAndUpdateHead(state$loading);
     requestLessons();
   }
 
@@ -668,7 +668,7 @@ class HomePageState extends StateBase<HomePage> {
 
     requester.httpRequestEvents.onFailState = (req, res) async {
       assistCtr.clearStates();
-      assistCtr.addStateAndUpdate(state$error);
+      assistCtr.addStateAndUpdateHead(state$error);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
@@ -684,7 +684,7 @@ class HomePageState extends StateBase<HomePage> {
         }
       }
 
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     };
 
     requester.methodType = MethodType.get;

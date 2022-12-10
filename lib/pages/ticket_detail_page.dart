@@ -145,7 +145,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
 
   void onRefresh(){
     assistCtr.clearStates();
-    assistCtr.addStateAndUpdate(AssistController.state$loading);
+    assistCtr.addStateAndUpdateHead(AssistController.state$loading);
     requestTicketDetail();
   }
 
@@ -177,7 +177,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
       co.complete(null);*/
 
       assistCtr.clearStates();
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     };
 
     requester.methodType = MethodType.get;

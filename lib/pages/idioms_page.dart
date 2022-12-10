@@ -202,7 +202,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                                if(dif > 0 && !regulatorIsCall) {
                                  regulatorIsCall = true;
                                  regulator += dif;
-                                 assistCtr.updateMain();
+                                 assistCtr.updateHead();
                                }});
 
                              return SizedBox(
@@ -285,7 +285,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                                              firstChild: InputChip(
                                                onPressed: (){
                                                  showTranslate = !showTranslate;
-                                                 assistCtr.updateMain();
+                                                 assistCtr.updateHead();
                                                },
                                                label: Text('مشاهده ترجمه'),
                                              ),
@@ -370,7 +370,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
 
     currentIdiom = idiomsList[currentIdiomIdx];
     showTranslate = currentIdiom.showTranslation;
-    assistCtr.updateMain();
+    assistCtr.updateHead();
     initVideo();
   }
 
@@ -392,7 +392,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
       showGreeting = true;
     }
 
-    assistCtr.updateMain();
+    assistCtr.updateHead();
     isVideoInit = false;
     initVideo();
   }
@@ -409,7 +409,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
       showTranslate = currentIdiom.showTranslation;
     }
 
-    assistCtr.updateMain();
+    assistCtr.updateHead();
     isVideoInit = false;
     initVideo();
   }
@@ -429,7 +429,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
         onVideoInit();
       }
       else {
-        assistCtr.updateMain();
+        assistCtr.updateHead();
       }
     }
   }
@@ -459,19 +459,19 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
       ),
     );
 
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 
   void onRefresh(){
     assistCtr.clearStates();
-    assistCtr.addStateAndUpdate(AssistController.state$loading);
+    assistCtr.addStateAndUpdateHead(AssistController.state$loading);
     requestIdioms();
   }
 
   void requestIdioms(){
     requester.httpRequestEvents.onFailState = (req, res) async {
       assistCtr.clearStates();
-      assistCtr.addStateAndUpdate(AssistController.state$error);
+      assistCtr.addStateAndUpdateHead(AssistController.state$error);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
@@ -486,18 +486,18 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
         }
       }
       else {
-        assistCtr.addStateAndUpdate(AssistController.state$error);
+        assistCtr.addStateAndUpdateHead(AssistController.state$error);
         return;
       }
 
       if(idiomsList.isEmpty){
-        assistCtr.addStateAndUpdate(AssistController.state$emptyData);
+        assistCtr.addStateAndUpdateHead(AssistController.state$emptyData);
       }
       else {
         currentIdiom = idiomsList[0];
         showTranslate = currentIdiom.showTranslation;
 
-        assistCtr.updateMain();
+        assistCtr.updateHead();
         initVideo();
       }
     };

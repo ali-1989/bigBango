@@ -134,7 +134,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                           GestureDetector(
                             onTap: (){
                               selectValue = 0;
-                              assistCtr.updateMain();
+                              assistCtr.updateHead();
                             },
                             child: Card(
                               color: Colors.grey.shade100,
@@ -179,7 +179,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                           GestureDetector(
                             onTap: (){
                               /*selectValue = 1;
-                              assistCtr.updateMain();*/
+                              assistCtr.updateHead();*/
                             },
                             child: Card(
                               color: Colors.grey.shade100,
@@ -224,7 +224,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                           GestureDetector(
                             onTap: (){
                               /*selectValue = 2;
-                              assistCtr.updateMain();*/
+                              assistCtr.updateHead();*/
                             },
                             child: Card(
                               color: Colors.grey.shade100,

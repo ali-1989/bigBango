@@ -41,7 +41,7 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
     addPostOrCall(fn: (){
       srcCtr.jumpTo(timeSelectedIdx * 18);
       optionSelectedIdx = 0;
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     });
   }
 
@@ -84,7 +84,7 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
                         onTap: (){
                           srcCtr.jumpTo(1*18);
                           optionSelectedIdx = 0;
-                          assistCtr.updateMain();
+                          assistCtr.updateHead();
                         },
                         child: Card(
                           color: Colors.grey.shade100,
@@ -116,7 +116,7 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
                         onTap: (){
                           srcCtr.jumpTo(3*18);
                           optionSelectedIdx = 1;
-                          assistCtr.updateMain();
+                          assistCtr.updateHead();
                         },
                         child: Card(
                           color: Colors.grey.shade100,
@@ -148,7 +148,7 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
                         onTap: (){
                           srcCtr.jumpTo(5*18);
                           optionSelectedIdx = 2;
-                          assistCtr.updateMain();
+                          assistCtr.updateHead();
                         },
                         child: Card(
                           color: Colors.grey.shade100,
@@ -225,7 +225,7 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
                                         timeSelectedIdx = x;
                                         optionSelectedIdx = -1;
 
-                                        assistCtr.updateMain();
+                                        assistCtr.updateHead();
                                       },
                                       childDelegate: ListWheelChildBuilderDelegate(
                                         childCount: 12,
@@ -311,6 +311,6 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
       timeSelectedIdx = -1;
     }
 
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 }

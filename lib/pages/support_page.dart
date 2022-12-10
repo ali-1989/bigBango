@@ -44,14 +44,13 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   int ticketPage = 1;
   List<TicketRole> ticketRoles = [];
   List<TicketModel> ticketList = [];
-  String assistId$TicketPart = 'assistId_TicketPart';
-  String stateId$ticketLoading = 'stateId_ticketLoading';
+  String assistId$Ticketing = 'assistId_Ticketing';
 
   @override
   void initState(){
     super.initState();
 
-    assistCtr.addState(stateId$ticketLoading);
+    assistCtr.addState(AssistController.state$loading, sectionId: assistId$Ticketing);
 
     tabCtr = TabController(length: 2, vsync: this);
 
@@ -287,9 +286,9 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   Widget buildTicketPart(){
     return Assist(
         controller: assistCtr,
-        id: assistId$TicketPart,
+        id: assistId$Ticketing,
         builder: (_, ctr, data){
-          if(assistCtr.hasState(stateId$ticketLoading)){
+          if(assistCtr.hasState(AssistController.state$loading, sectionId: assistId$Ticketing)){
             return WaitToLoad();
           }
 
@@ -313,7 +312,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                       enablePullUp: true,
                       controller: refreshController,
                       onRefresh: (){},
-                      onLoading: onLoadingMoreCall,
+                      onLoading: onLoadingMoreTicketCall,
                       child: ListView.builder(
                         itemCount: ticketList.length,
                         itemBuilder: listBuilderForTicket,
@@ -436,16 +435,17 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   void onAddTicketEventCall(param){
     ticketList.add(param);
 
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 
   void tryLoadClick() async {
-    assistCtr.addStateAndUpdate(AssistController.state$loading);
+    assistCtr.addStateAndUpdateHead(AssistController.state$loading);
 
     requestTickets();
+    //todo request
   }
 
-  void onLoadingMoreCall(){
+  void onLoadingMoreTicketCall(){
     ticketPage++;
     requestTickets();
   }
@@ -509,8 +509,8 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       }
       co.complete(null);
 
-      assistCtr.clearStates();
-      assistCtr.updateMain();
+      assistCtr.clearStates(sectionId: assistId$Ticketing);
+      assistCtr.updateAssist(assistId$Ticketing);
     };
 
     requester.methodType = MethodType.get;

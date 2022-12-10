@@ -207,7 +207,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                               ),
                               onPressed: (){
                                 showTranslate = !showTranslate;
-                                assistCtr.updateMain();
+                                assistCtr.updateHead();
                               },
                               child: Text('نمایش معنی')
                           ),
@@ -229,7 +229,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                                 ),
                                 onPressed: (){
                                   showTranslate = !showTranslate;
-                                  assistCtr.updateMain();
+                                  assistCtr.updateHead();
                                 },
                                 child: Text('بلدم'),
                               )
@@ -251,7 +251,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                               child: ElevatedButton(
                                 onPressed: (){
                                   showTranslate = !showTranslate;
-                                  assistCtr.updateMain();
+                                  assistCtr.updateHead();
                                 },
                                 child: Text('بلد نیستم'),
                               )

@@ -256,7 +256,7 @@ class _InvitePageState extends StateBase<InvitePage> {
 
   void onRefresh(){
     assistCtr.clearStates();
-    assistCtr.addStateAndUpdate(AssistController.state$loading);
+    assistCtr.addStateAndUpdateHead(AssistController.state$loading);
 
     requestData();
   }
@@ -268,7 +268,7 @@ class _InvitePageState extends StateBase<InvitePage> {
 
     requester.httpRequestEvents.onFailState = (requester, res) async {
       assistCtr.clearStates();
-      assistCtr.addStateAndUpdate(AssistController.state$error);
+      assistCtr.addStateAndUpdateHead(AssistController.state$error);
     };
 
     requester.httpRequestEvents.onStatusOk = (requester, js) async {

@@ -150,7 +150,7 @@ class _AddTicketPageState extends StateBase<AddTicketPage> {
                                     onChanged: (value) {
                                       setState(() {
                                         selectedTicketRoleId = value as String;
-                                        assistCtr.updateMain();
+                                        assistCtr.updateHead();
                                       });
                                     },
                                   ),

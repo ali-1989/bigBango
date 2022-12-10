@@ -197,7 +197,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                 if(dif > 0 && !regulatorIsCall) {
                                   regulatorIsCall = true;
                                   regulator += dif;
-                                  assistCtr.updateMain();
+                                  assistCtr.updateHead();
                                 }});
 
                               return SizedBox(
@@ -400,7 +400,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                               firstChild: InputChip(
                                                 onPressed: (){
                                                   showTranslate = !showTranslate;
-                                                  assistCtr.updateMain();
+                                                  assistCtr.updateHead();
                                                 },
                                                 label: Text('مشاهده ترجمه'),
                                               ),
@@ -618,15 +618,15 @@ class _VocabPageState extends StateBase<VocabPage> {
   void playSound(String sectionId){
     // currentVocab.americanVoiceId
     assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
-    assistCtr.update(sectionId, stateData: 'prepare');
+    assistCtr.updateAssist(sectionId, stateData: 'prepare');
     AudioPlayerService.networkVoicePlayer('https://download.samplelib.com/mp3/sample-3s.mp3').then((p) async {
       if(sectionId != selectedPlayerId){
         return;
       }
 
-      assistCtr.update(sectionId, stateData: 'play');
+      assistCtr.updateAssist(sectionId, stateData: 'play');
       await p.play();
-      assistCtr.update(sectionId, stateData: null);
+      assistCtr.updateAssist(sectionId, stateData: null);
       p.stop();
     });
   }
@@ -635,7 +635,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     showGreeting = false;
     currentVocabIdx = 0;
 
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 
   void gotoNextPart(){
@@ -673,7 +673,7 @@ class _VocabPageState extends StateBase<VocabPage> {
       showGreeting = true;
     }
 
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 
   void onPreClick(){
@@ -689,18 +689,18 @@ class _VocabPageState extends StateBase<VocabPage> {
       showTranslate = currentVocab.showTranslation;
     }
 
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 
   void onRefresh(){
     assistCtr.clearStates();
-    assistCtr.addStateAndUpdate(AssistController.state$loading);
+    assistCtr.addStateAndUpdateHead(AssistController.state$loading);
     requestVocabs();
   }
 
   void leitnerClick() async {
     currentVocab.inLeitner = !currentVocab.inLeitner;
-    assistCtr.updateMain();
+    assistCtr.updateHead();
 
     taskQue.addObject(currentVocab);
   }
@@ -708,7 +708,7 @@ class _VocabPageState extends StateBase<VocabPage> {
   void requestVocabs(){
     requester.httpRequestEvents.onFailState = (req, res) async {
       assistCtr.clearStates();
-      assistCtr.addStateAndUpdate(AssistController.state$error);
+      assistCtr.addStateAndUpdateHead(AssistController.state$error);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
@@ -725,7 +725,7 @@ class _VocabPageState extends StateBase<VocabPage> {
       showTranslate = currentVocab.showTranslation;
 
       assistCtr.clearStates();
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     };
 
     requester.methodType = MethodType.get;
@@ -738,12 +738,12 @@ class _VocabPageState extends StateBase<VocabPage> {
       AppToast.showToast(context, 'خطا در ارتباط با سرور');
       vocab.inLeitner = !state;
       taskQue.callNext(null);
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       taskQue.callNext(null);
-      //assistCtr.updateMain();
+      //assistCtr.updateHead();
     };
 
     requester.methodType = MethodType.post;

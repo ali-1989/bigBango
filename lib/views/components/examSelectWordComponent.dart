@@ -160,7 +160,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
               currentSelectIndex = i;
             }
 
-            assistCtr.updateMain();
+            assistCtr.updateHead();
           };
 
         if (showAnswers) {
@@ -268,7 +268,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
       }
     }
 
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 
   void setUserAnswer(ExamModel model, int order, ExamChoiceModel? ec) {
@@ -351,7 +351,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
     }
 
     showAnswers = !showAnswers;
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 }
 

@@ -167,7 +167,7 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
             selectedAnswers[curExam.id] = optionIdx;
           }
 
-          assistCtr.updateMain();
+          assistCtr.updateHead();
         },
         child: AnimateWidget(
           resetOnRebuild: true,
@@ -239,13 +239,13 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
       currentExamIdx++;
     }
 
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 
   void onPreClick(){
     if(currentExamIdx > 0) {
       currentExamIdx--;
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     }
   }
 
@@ -262,7 +262,7 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
     }
 
     showAnswers = !showAnswers;
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 }
 

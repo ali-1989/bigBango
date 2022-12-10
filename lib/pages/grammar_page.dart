@@ -293,7 +293,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
       currentItem = itemList[currentItemIdx];
       initVideo();
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     }
   }
 
@@ -304,7 +304,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
       currentItem = itemList[currentItemIdx];
       initVideo();
-      assistCtr.updateMain();
+      assistCtr.updateHead();
     }
   }
 
@@ -341,7 +341,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
         onVideoInit();
       }
       else {
-        assistCtr.updateMain();
+        assistCtr.updateHead();
       }
     }
   }
@@ -371,7 +371,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       ),
     );
 
-    assistCtr.updateMain();
+    assistCtr.updateHead();
   }
 
   void gotoExam(ExamModel examModel){
@@ -408,14 +408,14 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
   void onRefresh(){
     assistCtr.clearStates();
-    assistCtr.addStateAndUpdate(AssistController.state$loading);
+    assistCtr.addStateAndUpdateHead(AssistController.state$loading);
     requestIdioms();
   }
 
   void requestIdioms(){
     requester.httpRequestEvents.onFailState = (req, res) async {
       assistCtr.clearStates();
-      assistCtr.addStateAndUpdate(AssistController.state$error);
+      assistCtr.addStateAndUpdateHead(AssistController.state$error);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
@@ -429,17 +429,17 @@ class _GrammarPageState extends StateBase<GrammarPage> {
         }
       }
       else {
-        assistCtr.addStateAndUpdate(AssistController.state$error);
+        assistCtr.addStateAndUpdateHead(AssistController.state$error);
         return;
       }
 
       if(itemList.isEmpty){
-        assistCtr.addStateAndUpdate(AssistController.state$emptyData);
+        assistCtr.addStateAndUpdateHead(AssistController.state$emptyData);
       }
       else {
         currentItem = itemList[0];
 
-        assistCtr.updateMain();
+        assistCtr.updateHead();
         initVideo();
       }
     };
