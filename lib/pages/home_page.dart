@@ -1,8 +1,12 @@
+import 'package:app/pages/exam_page.dart';
+import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/structures/injectors/segmentInjector.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
+import 'package:app/structures/models/examModel.dart';
+import 'package:app/tools/app/appSheet.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
@@ -665,8 +669,8 @@ class HomePageState extends StateBase<HomePage> {
   }
 
   void requestLessons(){
-
     requester.httpRequestEvents.onFailState = (req, res) async {
+      print('================= ee ');
       assistCtr.clearStates();
       assistCtr.addStateAndUpdateHead(state$error);
     };
@@ -693,8 +697,44 @@ class HomePageState extends StateBase<HomePage> {
   }
 
   void gotoExam(LessonModel model){
+    requester.httpRequestEvents.onFailState = (req, res) async {
+     AppSheet.showSheetNotice(context, AppMessages.errorCommunicatingServer);
+    };
 
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
 
+      final data = res['data'];
+
+      if(data is Map){
+        final quizzes = data['quizzes'];
+        final autodidacts = data['autodidacts'];
+
+        if(quizzes is List) {
+          for (final k in quizzes) {
+            final exam = ExamModel.fromMap(k);
+            //lessons.add(les);
+          }
+        }
+
+        if(autodidacts is List) {
+          for (final k in autodidacts) {
+            //final les = LessonModel.fromMap(k);
+          }
+        }
+      }
+
+      final examComponentInjector = ExamInjector();
+      examComponentInjector.lessonModel = model;
+      examComponentInjector.examList = [];
+
+      final examPage = ExamPage(injector: examComponentInjector);
+
+      AppRoute.push(context, examPage);
+    };
+
+    requester.methodType = MethodType.get;
+    requester.prepareUrl(pathUrl: '/quizzes?LessonId=${model.id}');
+    requester.request(context);
   }
 }
 

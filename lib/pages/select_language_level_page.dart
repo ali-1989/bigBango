@@ -7,7 +7,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/system/enums.dart';
+import 'package:app/structures/enums/enums.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';

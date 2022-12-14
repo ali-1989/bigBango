@@ -1,11 +1,9 @@
 import 'package:app/structures/interfaces/examStateInterface.dart';
 import 'package:app/structures/models/examModel.dart';
-import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 
 class ExamInjector {
-  LessonModel? lessonModel;
-  ISegmentModel? segmentModel;
+  late LessonModel lessonModel;
   List<ExamModel> examList = [];
   late ExamStateInterface state;
 
@@ -19,3 +17,8 @@ class ExamInjector {
     }
   }
 }
+/*///-----------------------------------------------------
+class ExamPageInjector {
+  late LessonModel lessonModel;
+  List<ExamInjector> exams = [];
+}*/

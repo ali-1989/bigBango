@@ -57,11 +57,11 @@ class VocabModel {
     map['pronunciation'] = pronunciation;
     map['order'] = order;
     map['inLeitner'] = inLeitner;
-    map['descriptions'] = descriptions.map((e) => e.toMap()).toList();
     map['image'] = image?.toMap();
     map['britishVoice'] = britishVoice?.toMap();
     map['americanVoice'] = americanVoice?.toMap();
     map['showTranslation'] = showTranslation;
+    map['descriptions'] = descriptions.map((e) => e.toMap()).toList();
 
     return map;
   }

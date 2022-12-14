@@ -12,6 +12,7 @@ class LessonModel {
   bool isLock = false;
   int number = 0;
   int improvementPercentage = 0;
+  int quizProgress = 0;
   VocabularySegmentModel? vocabModel;
   GrammarSegmentModel? grammarModel;
   ReadingSegmentModel? readingModel;
@@ -30,16 +31,20 @@ class LessonModel {
       vocabModel = VocabularySegmentModel.fromMap(map['vocabulary']);
     }
 
-    if(map['vocabulary'] is Map) {
-      grammarModel = GrammarSegmentModel.fromMap(map['vocabulary']);
+    if(map['grammar'] is Map) {
+      grammarModel = GrammarSegmentModel.fromMap(map['grammar']);
     }
 
-    if(map['vocabulary'] is Map) {
-      readingModel = ReadingSegmentModel.fromMap(map['vocabulary']);
+    if(map['reading'] is Map) {
+      readingModel = ReadingSegmentModel.fromMap(map['reading']);
     }
 
-    if(map['vocabulary'] is Map) {
-      listeningModel = ListeningSegmentModel.fromMap(map['vocabulary']);
+    if(map['listeningCategory'] is Map) {
+      listeningModel = ListeningSegmentModel.fromMap(map['listeningCategory']);
+    }
+
+    if(map['quiz'] is Map) {
+      quizProgress = map['quiz']['progress'];
     }
   }
 
@@ -52,6 +57,9 @@ class LessonModel {
     map['isLock'] = isLock;
     map['progress'] = improvementPercentage;
     map['vocabulary'] = vocabModel?.toMap();
+    map['grammar'] = grammarModel?.toMap();
+    map['reading'] = readingModel?.toMap();
+    map['listeningCategory'] = listeningModel?.toMap();
 
     return map;
   }

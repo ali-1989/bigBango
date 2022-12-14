@@ -1,3 +1,5 @@
+import 'package:app/structures/models/mediaModel.dart';
+
 class VocabDescriptionModel {
   int number = 0;
   String? content;
@@ -35,17 +37,20 @@ class VocabDescriptionSampleModel {
   String? title;
   String? content;
   String? translation;
-  String? voice;
+  MediaModel? voice;
 
   VocabDescriptionSampleModel();
 
   VocabDescriptionSampleModel.fromMap(Map map) {
-    order = map['order'];
+    order = map['order']?? 0;
     type = map['type'];
     title = map['title'];
     content = map['content'];
     translation = map['translation'];
-    voice = map['voice'];
+
+    if(map['voice'] is Map){
+      voice = MediaModel.fromMap(map['voice']);
+    }
   }
 
   Map<String, dynamic> toMap() {
@@ -56,7 +61,7 @@ class VocabDescriptionSampleModel {
     map['title'] = title;
     map['content'] = content;
     map['translation'] = translation;
-    map['voice'] = voice;
+    map['voice'] = voice?.toMap();
 
     return map;
   }

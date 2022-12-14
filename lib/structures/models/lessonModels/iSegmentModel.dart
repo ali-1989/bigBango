@@ -5,6 +5,7 @@ import 'package:app/system/keys.dart';
 abstract class ISegmentModel {
   int? id;
   int progress = 0;
+
   //-------------- local
   String title = '';
   String engTitle = '';

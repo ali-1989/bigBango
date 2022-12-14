@@ -92,6 +92,8 @@ class JwtService {
       final dataJs = a.getBodyAsJson()!;
       um.token?.token = dataJs['data'];
 
+      Session.sinkUserInfo(um);
+
       return true;
     }
 

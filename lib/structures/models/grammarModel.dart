@@ -12,16 +12,18 @@ class GrammarModel {
     id = map['id'];
     title = map['title'];
     order = map['order']?? 0;
-    final video = map['video'];
 
-    if(video != null) {
-      media = MediaModel.fromMap(video);
+    if(map['video'] is Map) {
+      media = MediaModel.fromMap(map['video']);
     }
   }
 
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{};
 
+    map['id'] = id;
+    map['title'] = title;
+    map['order'] = order;
     map['video'] = media?.toMap();
 
     return map;

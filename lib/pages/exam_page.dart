@@ -1,10 +1,15 @@
+import 'package:app/structures/enums/examDescription.dart';
+import 'package:app/structures/enums/quizType.dart';
+import 'package:app/structures/injectors/examInjector.dart';
+import 'package:app/structures/models/examModel.dart';
+import 'package:app/views/components/examBlankSpaseComponent.dart';
+import 'package:app/views/components/examOptionComponent.dart';
+import 'package:app/views/components/examSelectWordComponent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -12,15 +17,9 @@ import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/views/widgets/customCard.dart';
 
-class ExamPageInjector {
-  late LessonModel lessonModel;
-  late ISegmentModel segment;
-  late Widget examPage;
-  late String description;
-}
-///-----------------------------------------------------
+
 class ExamPage extends StatefulWidget {
-  final ExamPageInjector injector;
+  final ExamInjector injector;
 
   const ExamPage({
     required this.injector,
@@ -110,18 +109,31 @@ class _ExamPageState extends StateBase<ExamPage> {
           SizedBox(height: 10),
           Row(
             children: [
-              Text(widget.injector.description)
+              Text(ExamDescription.from(widget.injector.examList[0].exerciseType.type()).getText())
             ],
           ),
           SizedBox(height: 14),
 
           /// exam
-          Expanded(child: widget.injector.examPage),
+          Expanded(child: buildExamView(widget.injector.examList[0])),
         ],
       ),
     );
   }
 
+  Widget buildExamView(ExamModel examModel){
+    if(examModel.exerciseType == QuizType.fillInBlank){
+      return ExamBlankSpaceComponent(injector: widget.injector);
+    }
+    else if(examModel.exerciseType == QuizType.recorder){
+      return ExamSelectWordComponent(injector: widget.injector);
+    }
+    else if(examModel.exerciseType == QuizType.multipleChoice){
+      return ExamOptionComponent(injector: widget.injector);
+    }
+
+    return SizedBox();
+  }
 
 }
 

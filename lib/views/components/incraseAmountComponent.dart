@@ -1,8 +1,10 @@
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/currencyTools.dart';
 import 'package:flutter/material.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class IncreaseAmountComponent extends StatefulWidget {
   final int? amount;
@@ -16,9 +18,10 @@ class IncreaseAmountComponent extends StatefulWidget {
   State<IncreaseAmountComponent> createState() => _IncreaseAmountComponentState();
 }
 ///============================================================================================
-class _IncreaseAmountComponentState extends State<IncreaseAmountComponent> {
+class _IncreaseAmountComponentState extends StateBase<IncreaseAmountComponent> {
   late ButtonStyle style;
   int amount = 10000;
+  int selectedKeyIndex = 1;
 
   @override
   void initState(){
@@ -67,34 +70,50 @@ class _IncreaseAmountComponentState extends State<IncreaseAmountComponent> {
               children: [
                 ElevatedButton(
                   style: style,
-                    onPressed: (){},
+                    onPressed: clickOnOne,
                     child: Text('1,000')
                 ),
 
                 SizedBox(width: 4,),
                 ElevatedButton(
                     style: style,
-                    onPressed: (){},
+                    onPressed: clickOnFive,
                     child: Text('5,000')
                 ),
 
                 SizedBox(width: 4,),
                 ElevatedButton(
                     style: style,
-                    onPressed: (){},
+                    onPressed: clickOnTwenty,
                     child: Text('20,000')
                 ),
 
                 SizedBox(width: 4,),
                 ElevatedButton(
                     style: style,
-                    onPressed: (){},
+                    onPressed: clickOnFifty,
                     child: Text('50,000')
                 ),
               ],
             ),
 
-            SizedBox(height: 10),
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: SizedBox(
+                height: 25,
+                child: ToggleSwitch(
+                  initialLabelIndex: selectedKeyIndex,
+                  totalSwitches: 2,
+                  customIcons: [Icon(Icons.remove, color: Colors.white,), Icon(Icons.add, color: Colors.white)],
+                  labels: ['', ''],
+                  onToggle: (index) {
+                    selectedKeyIndex = index?? 0;
+                  },
+                ),
+              ),
+            ),
+
+            SizedBox(height: 30),
             SizedBox(
               width: double.infinity,
               child: DecoratedBox(
@@ -110,7 +129,6 @@ class _IncreaseAmountComponentState extends State<IncreaseAmountComponent> {
                       Expanded(child: SizedBox()),
                       Expanded(child: Center(child: Text(CurrencyTools.formatCurrency(amount)).bold())),
                       Expanded(child: Align(alignment: Alignment.centerLeft, child: Text('تومان').fsR(-1))),
-
                     ],
                   ),
                 ),
@@ -134,5 +152,65 @@ class _IncreaseAmountComponentState extends State<IncreaseAmountComponent> {
         ),
       ),
     );
+  }
+
+  void clickOnOne(){
+    if(selectedKeyIndex == 0){
+      if(amount < 1000){
+        return;
+      }
+
+      amount -= 1000;
+    }
+    else {
+      amount += 1000;
+    }
+
+    callState();
+  }
+
+  void clickOnFive(){
+    if(selectedKeyIndex == 0){
+      if(amount < 5000){
+        return;
+      }
+
+      amount -= 5000;
+    }
+    else {
+      amount += 5000;
+    }
+
+    callState();
+  }
+
+  void clickOnTwenty(){
+    if(selectedKeyIndex == 0){
+      if(amount < 20000){
+        return;
+      }
+
+      amount -= 20000;
+    }
+    else {
+      amount += 20000;
+    }
+
+    callState();
+  }
+
+  void clickOnFifty(){
+    if(selectedKeyIndex == 0){
+      if(amount < 50000){
+        return;
+      }
+
+      amount -= 50000;
+    }
+    else {
+      amount += 50000;
+    }
+
+    callState();
   }
 }

@@ -114,7 +114,7 @@ class Requester {
       if(_httpRequester.responseData?.statusCode == 401){ // token
         final getNewToken = await JwtService.requestNewToken(Session.getLastLoginUser()!);
 
-        /// try request again
+        /// try request old api again
         if(getNewToken) {
           request(context, promptErrors);
         }

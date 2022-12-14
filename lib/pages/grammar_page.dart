@@ -14,16 +14,12 @@ import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/examModel.dart';
 import 'package:app/structures/models/grammarModel.dart';
-import 'package:app/system/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/components/appbarLesson.dart';
-import 'package:app/views/components/examBlankSpaseComponent.dart';
-import 'package:app/views/components/examOptionComponent.dart';
-import 'package:app/views/components/examSelectWordComponent.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
@@ -44,6 +40,7 @@ class GrammarPage extends StatefulWidget {
 class _GrammarPageState extends StateBase<GrammarPage> {
   Requester requester = Requester();
   List<GrammarModel> itemList = [];
+  List<ExamModel> examList = [];
   GrammarModel? currentItem;
   VideoPlayerController? playerController;
   ChewieController? chewieVideoController;
@@ -329,7 +326,6 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       return;
     }
 
-    print(currentItem!.media!.fileLocation);
     isVideoInit = false;
     playerController = VideoPlayerController.network(currentItem!.media!.fileLocation!);
 
@@ -375,33 +371,11 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   }
 
   void gotoExam(ExamModel examModel){
-    ExamInjector examComponentInjector = ExamInjector();
+    final examComponentInjector = ExamInjector();
     examComponentInjector.lessonModel = widget.injection.lessonModel;
-    examComponentInjector.segmentModel = widget.injection.lessonModel.grammarModel!;
+    examComponentInjector.examList = [examModel];
 
-    Widget component = SizedBox();
-    String desc = '';
-
-    if(examModel.quizType == QuizType.fillInBlank){
-      component = ExamBlankSpaceComponent(injector: examComponentInjector);
-      desc = 'جای خالی را پر کنید';
-    }
-    else if(examModel.quizType == QuizType.recorder){
-      component = ExamSelectWordComponent(injector: examComponentInjector);
-      desc = 'کلمه ی مناسب را انتخاب کنید';
-    }
-    else if(examModel.quizType == QuizType.multipleChoice){
-      component = ExamOptionComponent(injector: examComponentInjector);
-      desc = 'گزینه ی مناسب را انتخاب کنید';
-    }
-
-
-    final pageInjector = ExamPageInjector();
-    pageInjector.lessonModel = widget.injection.lessonModel;
-    pageInjector.segment = widget.injection.lessonModel.grammarModel!;
-    pageInjector.examPage = component;
-    pageInjector.description = desc;
-    final examPage = ExamPage(injector: pageInjector);
+    final examPage = ExamPage(injector: examComponentInjector);
 
     AppRoute.push(context, examPage);
   }
@@ -461,8 +435,8 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
       if(data is List){
         for(final m in data){
-          final g = GrammarModel.fromMap(m);
-          itemList.add(g);
+          final g = ExamModel.fromMap(m);
+          examList.add(g);
         }
       }
 
@@ -470,8 +444,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/grammars/quizzes?GrammarId=${currentItem!.id}');
-    requester.debug = true;
+    requester.prepareUrl(pathUrl: '/grammars/exercises?GrammarId=${currentItem!.id}');
     requester.request(context);
 
     return c.future;

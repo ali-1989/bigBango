@@ -20,7 +20,7 @@ import 'package:shamsi_date/shamsi_date.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/userModel.dart';
-import 'package:app/system/enums.dart';
+import 'package:app/structures/enums/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';

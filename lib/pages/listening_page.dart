@@ -1,3 +1,4 @@
+import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,6 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/listeningModel.dart';
-import 'package:app/system/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
@@ -62,7 +62,6 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     player.positionStream.listen(durationListener);
 
     examComponentInjector.lessonModel = widget.injector.lessonModel;
-    examComponentInjector.segmentModel = widget.injector.lessonModel.grammarModel!;
 
     requestListening();
   }
@@ -304,15 +303,15 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   }
 
   void buildExamView(){
-    if(currentItem!.quiz.quizType == QuizType.fillInBlank){
+    if(currentItem!.quiz.exerciseType == QuizType.fillInBlank){
       examComponent = ExamBlankSpaceComponent(injector: examComponentInjector);
       description = 'با توجه به صوت جای خالی را پر کنید';
     }
-    else if(currentItem!.quiz.quizType == QuizType.recorder){
+    else if(currentItem!.quiz.exerciseType == QuizType.recorder){
       examComponent = ExamSelectWordComponent(injector: examComponentInjector);
       description = 'با توجه به صوت کلمه ی مناسب را انتخاب کنید';
     }
-    else if(currentItem!.quiz.quizType == QuizType.multipleChoice){
+    else if(currentItem!.quiz.exerciseType == QuizType.multipleChoice){
       examComponent = ExamOptionComponent(injector: examComponentInjector);
       description = 'با توجه به صوت گزینه ی مناسب را انتخاب کنید';
     }
@@ -452,7 +451,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/listening?LessonId=${widget.injector.lessonModel.id}');
+    requester.prepareUrl(pathUrl: '/listening?LessonId=${widget.injector.segment.listeningList[0].id}');
     requester.request(context);
   }
 }

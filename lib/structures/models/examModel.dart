@@ -1,10 +1,10 @@
-import 'package:app/system/enums.dart';
+import 'package:app/structures/enums/quizType.dart';
 import 'package:iris_tools/api/generator.dart';
 
 class ExamModel {
   late String id;
   late String question;
-  QuizType quizType = QuizType.unKnow;
+  QuizType exerciseType = QuizType.unKnow;
   List<ExamChoiceModel> choices = [];
 
   //----------- local
@@ -16,21 +16,19 @@ class ExamModel {
   ExamModel();
 
   ExamModel.fromMap(Map js){
-    final choicesTemp = js['choices'];
-    final userAnswersTemp = js['userAnswers'];
-
     id = js['id']?? '';
     question = js['question'];
-    quizType = QuizType.from(js['quizType']);
+    exerciseType = QuizType.from(js['exerciseType']);
 
-    if(choicesTemp is List){
-      choices = choicesTemp.map((e) => ExamChoiceModel.fromMap(e)).toList();
+    if(js['choices'] is List){
+      choices = js['choices'].map((e) => ExamChoiceModel.fromMap(e)).toList();
     }
 
-    if(userAnswersTemp is List){
-      userAnswers = choicesTemp.map((e) => ExamChoiceModel.fromMap(e)).toList();
-    }
     //----------- local
+    if(js['userAnswers'] is List){
+      userAnswers = js['userAnswers'].map((e) => ExamChoiceModel.fromMap(e)).toList();
+    }
+
     userSelectedOptionIndex = js['userSelectedOptionIndex']?? -1;
   }
 
@@ -39,11 +37,11 @@ class ExamModel {
 
     js['id'] = id;
     js['question'] = question;
-    js['quizType'] = quizType.type();
-    js['choices'] = choices;
+    js['exerciseType'] = exerciseType.type();
+    js['choices'] = choices.map((e) => e.toMap()).toList();
 
     //----------- local
-    js['userAnswers'] = userAnswers;
+    js['userAnswers'] = userAnswers.map((e) => e.toMap()).toList();
     js['userSelectedOptionIndex'] = userSelectedOptionIndex;
 
     return js;
@@ -63,7 +61,7 @@ class ExamModel {
       userAnswers.add(ExamChoiceModel()..order = i..id = '');
     }
 
-    if(quizType == QuizType.recorder){
+    if(exerciseType == QuizType.recorder){
       shuffleWords = [...choices];
       shuffleWords.shuffle();
     }
