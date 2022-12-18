@@ -143,7 +143,7 @@ class PublicAccess {
       page = IdiomsPage(injector: VocabIdiomsPageInjector(lessonModel));
     }
     else if (lessonModel.grammarModel != null){
-      page = GrammarPage(injection: GrammarPageInjector(lessonModel));
+      page = GrammarPage(injector: GrammarPageInjector(lessonModel));
     }
     else if (lessonModel.readingModel != null){
       page = ReadingPage(injector: ReadingPageInjector(lessonModel));

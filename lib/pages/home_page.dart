@@ -651,7 +651,7 @@ class HomePageState extends StateBase<HomePage> {
       page = VocabPage(injector: VocabIdiomsPageInjector(lessonModel));
     }
     else if (segment is GrammarSegmentModel){
-      page = GrammarPage(injection: GrammarPageInjector(lessonModel));
+      page = GrammarPage(injector: GrammarPageInjector(lessonModel));
     }
     else if (segment is ReadingSegmentModel){
       page = ReadingPage(injector: ReadingPageInjector(lessonModel));

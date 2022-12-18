@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:app/services/send_review_service.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appRoute.dart';
@@ -5,6 +8,7 @@ import 'package:app/views/states/emptyData.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
+import 'package:iris_tools/api/taskQueueCaller.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/attribute.dart';
 import 'package:video_player/video_player.dart';
@@ -49,20 +53,40 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
   AttributeController atrCtr1 = AttributeController();
   AttributeController atrCtr2 = AttributeController();
   double regulator = 200;
+  TaskQueueCaller<Set<String>, dynamic> reviewTaskQue = TaskQueueCaller();
+  Timer? reviewSendTimer;
+  Set<String> reviewIds = {};
 
   @override
   void initState(){
     super.initState();
 
+    currentIdiomIdx = widget.injector.lessonModel.vocabModel!.idiomReviewCount;
+
+    if(currentIdiomIdx >= widget.injector.lessonModel.vocabModel!.idiomCount){
+      currentIdiomIdx--;
+    }
+
     assistCtr.addState(AssistController.state$loading);
+
+    reviewTaskQue.setFn((Set<String> lis, value){
+      requestSetReview(lis);
+    });
+
     requestIdioms();
   }
 
   @override
   void dispose(){
+    reviewSendTimer?.cancel();
+    reviewTaskQue.dispose();
     requester.dispose();
     chewieVideoController?.dispose();
     playerController?.dispose();
+
+    if(reviewIds.isNotEmpty){
+      SendReviewService.addReviews(ReviewSection.idioms, reviewIds);
+    }
 
     super.dispose();
   }
@@ -372,6 +396,10 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
 
       currentIdiom = idiomsList[currentIdiomIdx];
       showTranslate = currentIdiom.showTranslation;
+
+      if(currentIdiomIdx > widget.injector.lessonModel.vocabModel!.idiomReviewCount) {
+        sendReview(currentIdiom.id);
+      }
     }
     else {
       showGreeting = true;
@@ -484,11 +512,35 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
 
         assistCtr.updateHead();
         initVideo();
+
+        if(currentIdiomIdx > widget.injector.lessonModel.vocabModel!.idiomReviewCount) {
+          sendReview(currentIdiom.id);
+        }
       }
     };
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/idioms?LessonId=${widget.injector.lessonModel.id}');
     requester.request(context);
+  }
+
+  void sendReview(String id){
+    reviewIds.add(id);
+
+    if(reviewSendTimer == null || !reviewSendTimer!.isActive){
+      reviewSendTimer = Timer(Duration(seconds: 5), (){
+        reviewTaskQue.addObject({...reviewIds});
+      });
+    }
+  }
+
+  void requestSetReview(Set<String> ids) async {
+    final status = await SendReviewService.requestSetReview(ReviewSection.idioms, ids.toList());
+
+    if(status){
+      reviewIds.removeAll(ids);
+    }
+
+    reviewTaskQue.callNext(null);
   }
 }

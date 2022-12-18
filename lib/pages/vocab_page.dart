@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/services/send_review_service.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,6 @@ class VocabPage extends StatefulWidget {
 class _VocabPageState extends StateBase<VocabPage> {
   bool showTranslate = false;
   Requester requester = Requester();
-  Requester reviewRequester = Requester();
   List<VocabModel> vocabList = [];
   String id$voicePlayerGroupId = 'voicePlayerGroupId';
   String id$usVoicePlayerSectionId = 'usVoicePlayerSectionId';
@@ -65,12 +65,18 @@ class _VocabPageState extends StateBase<VocabPage> {
   void initState(){
     super.initState();
 
+    currentVocabIdx = widget.injector.lessonModel.vocabModel!.reviewCount;
+
+    if(currentVocabIdx >= widget.injector.lessonModel.vocabModel!.count){
+      currentVocabIdx--;
+    }
+
     leitnerTaskQue.setFn((VocabModel voc, value){
       requestSetLeitner(voc, voc.inLeitner);
     });
 
-    leitnerTaskQu.setFn((VocabModel voc, value){
-      requestSetLeitner(voc, voc.inLeitner);
+    reviewTaskQue.setFn((Set<String> lis, value){
+      requestSetReview(lis);
     });
 
     assistCtr.addState(AssistController.state$loading);
@@ -79,12 +85,16 @@ class _VocabPageState extends StateBase<VocabPage> {
 
   @override
   void dispose(){
-    requester.dispose();
-    reviewRequester.dispose();
+    reviewSendTimer?.cancel();
     leitnerTaskQue.dispose();
     reviewTaskQue.dispose();
+    requester.dispose();
+
     AudioPlayerService.getAudioPlayer().stop();
-    reviewSendTimer?.cancel();
+
+    if(reviewIds.isNotEmpty){
+      SendReviewService.addReviews(ReviewSection.vocab, reviewIds);
+    }
 
     super.dispose();
   }
@@ -664,7 +674,9 @@ class _VocabPageState extends StateBase<VocabPage> {
       currentVocab = vocabList[currentVocabIdx];
       showTranslate = currentVocab.showTranslation;
 
-      sendReview(currentVocab.id);
+      if(currentVocabIdx > widget.injector.lessonModel.vocabModel!.reviewCount) {
+        sendReview(currentVocab.id);
+      }
     }
     else {
       showGreeting = true;
@@ -723,6 +735,10 @@ class _VocabPageState extends StateBase<VocabPage> {
 
       assistCtr.clearStates();
       assistCtr.updateHead();
+
+      if(currentVocabIdx > widget.injector.lessonModel.vocabModel!.reviewCount) {
+        sendReview(currentVocab.id);
+      }
     };
 
     requester.methodType = MethodType.get;
@@ -753,29 +769,19 @@ class _VocabPageState extends StateBase<VocabPage> {
 
     if(reviewSendTimer == null || !reviewSendTimer!.isActive){
       reviewSendTimer = Timer(Duration(seconds: 5), (){
-        leitnerTaskQue.addObject(<String>{...currentVocab});
+        reviewTaskQue.addObject({...reviewIds});
       });
     }
   }
 
-  void requestSetReview(Set<String> ids){
-    reviewRequester.httpRequestEvents.onFailState = (req, res) async {
-      print('ohhh');
-      reviewTaskQue.callNext(null);
-    };
+  void requestSetReview(Set<String> ids) async {
+    final status = await SendReviewService.requestSetReview(ReviewSection.vocab, ids.toList());
 
-    reviewRequester.httpRequestEvents.onStatusOk = (req, res) async {
-      print('@@@@@@@@@ ');
-      reviewTaskQue.callNext(null);
-    };
+    if(status){
+      reviewIds.removeAll(ids);
+    }
 
-    final js = <String, dynamic>{};
-    js['vocabularyIds'] = ids;
-
-    reviewRequester.bodyJson = js;
-    reviewRequester.methodType = MethodType.post;
-    reviewRequester.prepareUrl(pathUrl: '/vocabularies/review');
-    reviewRequester.request(context);
+    reviewTaskQue.callNext(null);
   }
 }
 

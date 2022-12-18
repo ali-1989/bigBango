@@ -16,13 +16,15 @@ class AppDB {
     AppDB.db.setDebug(false);
 
     await AppDB.db.openTable(AppDB.tbKv);
-    await AppDB.db.openTable(AppDB.tbUserModel);
+    await AppDB.db.openTable(AppDB.tbUsers);
+    await AppDB.db.openTable(AppDB.tbReviews);
 
     return AppDB.db;
   }
   ///-------- tables -------------------------------------------------------------------------------------
   static String tbKv = 'KvTable';
-  static String tbUserModel = 'UserModel';
+  static String tbUsers = 'Users';
+  static String tbReviews = 'Reviews';
 
 
   static Future<bool> firstLaunch() async {

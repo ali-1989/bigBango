@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormatter.dart';
 import 'package:iris_tools/api/generator.dart';
+import 'package:iris_tools/api/taskQueueCaller.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -33,9 +36,11 @@ class ReadingPage extends StatefulWidget {
 ///======================================================================================================================
 class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateMixin {
   Requester requester = Requester();
+  Requester reviewRequester = Requester();
   AudioPlayer player = AudioPlayer();
   Duration totalTime = Duration();
   Duration currentTime = Duration();
+  Duration lastPos = Duration();
   int currentItemIdx = 0;
   int currentSegmentIdx = 0;
   bool showTranslate = false;
@@ -48,7 +53,8 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
   String id$playerViewId = 'playerViewId';
   TextStyle normalStyle = TextStyle(height: 1.7, color: Colors.black);
   TextStyle readStyle = TextStyle(height: 1.7, color: Colors.deepOrange);
-
+  TaskQueueCaller<Set<String>, dynamic> reviewTaskQue = TaskQueueCaller();
+  Timer? reviewSendTimer;
 
   @override
   void initState(){
@@ -70,7 +76,11 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
   @override
   void dispose(){
+    reviewSendTimer?.cancel();
+    reviewTaskQue.dispose();
     requester.dispose();
+    reviewRequester.dispose();
+
     try {
       player.dispose();
     }
@@ -465,17 +475,33 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     return player.playing && player.position.inMilliseconds < totalTime.inMilliseconds;
   }
 
-  void durationListener(Duration dur) {
-    currentTime = dur;
+  void durationListener(Duration pos) async {
+    currentTime = pos;
     assistCtr.updateAssist(id$playerViewId);
+    ///............................
+    final dur = player.duration;
 
+    if(dur != null){
+      if(pos > Duration(milliseconds: lastPos.inMilliseconds + 5000) || pos == dur){
+        lastPos = pos;
+        int per = pos.inMilliseconds * 100 ~/ (dur.inMilliseconds - 1000);
+
+        if(per > 100){
+          per = 100;
+        }
+
+        //requestSetReview(currentItem!.id, MathHelper.percentInt(dur.inMilliseconds, pos.inMilliseconds));
+        requestSetReview(currentItem!.id, per);
+      }
+    }
+    ///............................
     if(currentItem == null || currentSegmentIdx >= currentItem!.segments.length){
       return;
     }
 
     final segment = currentItem!.segments[currentSegmentIdx];
 
-    if(dur > segment.end!){
+    if(pos > segment.end!){
       currentSegmentIdx++;
       assistCtr.updateHead();
     }
@@ -487,6 +513,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
   Future<void> prepareVoice() async {
     voiceIsOk = false;
+    lastPos = Duration();
 
     if(currentItem?.media?.fileLocation == null){
       return;
@@ -539,7 +566,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
         assistCtr.addStateAndUpdateHead(AssistController.state$emptyData);
       }
       else {
-        currentItem = itemList[0];
+        currentItem = itemList[currentItemIdx];
         prepareVoice();
         assistCtr.updateHead();
       }
@@ -548,6 +575,23 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/reading?LessonId=${widget.injector.lessonModel.id}');
     requester.request(context);
+  }
+
+  void requestSetReview(String id, int progress) async {
+    reviewRequester.httpRequestEvents.onFailState = (req, res) async {
+    };
+
+    reviewRequester.httpRequestEvents.onStatusOk = (req, res) async {
+    };
+
+    final js = <String, dynamic>{};
+    js['readingId'] = id;
+    js['percentage'] = progress;
+
+    reviewRequester.bodyJson = js;
+    reviewRequester.methodType = MethodType.post;
+    reviewRequester.prepareUrl(pathUrl: '/reading/review');
+    reviewRequester.request();
   }
 }
 

@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:app/services/login_service.dart';
+import 'package:app/tools/netListenerTools.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
 import 'package:iris_tools/api/system.dart';
+import 'package:iris_tools/net/netManager.dart';
 import 'package:iris_tools/net/trustSsl.dart';
 
 import 'package:app/constants.dart';
@@ -116,7 +118,7 @@ class ApplicationInitial {
       _callLazyInit = true;
 
       /// net & websocket
-      //NetManager.addChangeListener(NetListenerTools.onNetListener);
+      NetManager.addChangeListener(NetListenerTools.onNetListener);
       //WebsocketService.prepareWebSocket(SettingsManager.settingsModel.wsAddress);
 
       /// life cycle

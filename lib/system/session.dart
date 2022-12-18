@@ -18,7 +18,7 @@ class Session {
 	static final List<Function(UserModel user, Map? old)> _profileChangeListeners = [];
 
 	static Future<int> fetchLoginUsers() async {
-		final list = AppDB.db.query(AppDB.tbUserModel,
+		final list = AppDB.db.query(AppDB.tbUsers,
 				Conditions().add(Condition(ConditionType.DefinedNotNull)..key = Keys.setting$lastLoginDate));
 
 		if(list.isNotEmpty){
@@ -93,7 +93,7 @@ class Session {
 		}
 
 		/// insert to db
-		final updateDb = await AppDB.db.insertOrUpdate(AppDB.tbUserModel, newUser.toMap(),
+		final updateDb = await AppDB.db.insertOrUpdate(AppDB.tbUsers, newUser.toMap(),
 				Conditions().add(Condition()..key = Keys.userId..value = newUser.userId));
 
 		if(updateDb > 0) {
@@ -144,7 +144,7 @@ class Session {
 		}
 
 		/// insert to db
-		final updateDb = await AppDB.db.insertOrUpdate(AppDB.tbUserModel, newUser.toMap(),
+		final updateDb = await AppDB.db.insertOrUpdate(AppDB.tbUsers, newUser.toMap(),
 				Conditions().add(Condition()..key = Keys.userId..value = newUser.userId));
 
 		if(updateDb > 0) {
@@ -174,7 +174,7 @@ class Session {
 	}
 
 	static Future<UserModel?> fetchUserById(String userId) async {
-		final cas = AppDB.db.query(AppDB.tbUserModel,
+		final cas = AppDB.db.query(AppDB.tbUsers,
 				Conditions().add(Condition()..key = Keys.userId..value = userId));
 
 		if(cas.isEmpty) {
@@ -198,7 +198,7 @@ class Session {
 	static Future<bool> sinkUserInfo(UserModel user) async {
 		final old = (await fetchUserById(user.userId))?.toMap();
 
-		final res = await AppDB.db.update(AppDB.tbUserModel, user.toMap(),
+		final res = await AppDB.db.update(AppDB.tbUsers, user.toMap(),
 				Conditions().add(Condition()..key = Keys.userId..value = user.userId));
 
 		if(res > 0) {
@@ -219,7 +219,7 @@ class Session {
 		final val = <String, dynamic>{};
 		val[Keys.setting$lastLoginDate] = null;
 
-		await AppDB.db.update(AppDB.tbUserModel, val, Conditions().add(Condition()..key = Keys.userId..value = userId));
+		await AppDB.db.update(AppDB.tbUsers, val, Conditions().add(Condition()..key = Keys.userId..value = userId));
 
 		currentLoginList.removeWhere((element) => element.userId == userId);
 
@@ -250,7 +250,7 @@ class Session {
 		val[Keys.setting$lastLoginDate] = null;
 
 		final con = Conditions().add(Condition(ConditionType.DefinedNotNull)..key = Keys.userId);
-		await AppDB.db.update(AppDB.tbUserModel, val, con);
+		await AppDB.db.update(AppDB.tbUsers, val, con);
 
 		for(var u in currentLoginList){
 			notifyLogoff(u);
@@ -263,7 +263,7 @@ class Session {
 	}
 
 	static Future<bool> deleteUserInfo(String userId) async{
-		final res = await AppDB.db.delete(AppDB.tbUserModel,
+		final res = await AppDB.db.delete(AppDB.tbUsers,
 				Conditions().add(Condition()..key = Keys.userId..value = userId));
 
 		return res > 0;

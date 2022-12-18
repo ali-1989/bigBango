@@ -5,6 +5,7 @@ import 'package:app/tools/app/appToast.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
+
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/maxHeight.dart';
 import 'package:video_player/video_player.dart';
@@ -27,10 +28,10 @@ import 'package:app/views/states/waitToLoad.dart';
 
 
 class GrammarPage extends StatefulWidget {
-  final GrammarPageInjector injection;
+  final GrammarPageInjector injector;
 
   const GrammarPage({
-    required this.injection,
+    required this.injector,
     Key? key
   }) : super(key: key);
 
@@ -40,25 +41,31 @@ class GrammarPage extends StatefulWidget {
 ///======================================================================================================================
 class _GrammarPageState extends StateBase<GrammarPage> {
   Requester requester = Requester();
+  Requester reviewRequester = Requester();
   List<GrammarModel> itemList = [];
   List<ExamModel> examList = [];
   GrammarModel? currentItem;
   VideoPlayerController? playerController;
   ChewieController? chewieVideoController;
+  Duration lastPos = Duration();
   bool isVideoInit = false;
   int currentItemIdx = 0;
+  Timer? reviewSendTimer;
 
   @override
   void initState(){
     super.initState();
 
     assistCtr.addState(AssistController.state$loading);
+
     requestGrammars();
   }
 
   @override
   void dispose(){
+    reviewSendTimer?.cancel();
     requester.dispose();
+    reviewRequester.dispose();
     chewieVideoController?.dispose();
     playerController?.dispose();
 
@@ -135,7 +142,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                     children: [
                       SizedBox(height: 10),
 
-                      AppbarLesson(title: widget.injection.lessonModel.title),
+                      AppbarLesson(title: widget.injector.lessonModel.title),
 
                       SizedBox(height: 14),
                       Row(
@@ -306,6 +313,30 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     }
   }
 
+  void startReviewTimer(){
+    if(reviewSendTimer == null || !reviewSendTimer!.isActive){
+      reviewSendTimer = Timer.periodic(Duration(seconds: 5), (t) async {
+        if(isVideoInit) {
+          final dur = chewieVideoController?.videoPlayerController.value.duration;
+          final pos = await chewieVideoController?.videoPlayerController.position;
+
+          if(dur == null || pos == null || pos <= lastPos){
+            return;
+          }
+
+          lastPos = pos;
+          int per = pos.inMilliseconds * 100 ~/ (dur.inMilliseconds - 1000);
+
+          if(per > 100){
+            per = 100;
+          }
+          //requestSetReview(currentItem!.id, MathHelper.percentInt(dur.inMilliseconds, pos.inMilliseconds));
+          requestSetReview(currentItem!.id, per);
+        }
+      });
+    }
+  }
+
   void startExercise() async{
     showLoading();
     await requestExercise();
@@ -320,11 +351,13 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   }
 
   void initVideo() async {
+    isVideoInit = false;
+    lastPos = Duration();
+
     if(currentItem?.media?.fileLocation == null){
       return;
     }
 
-    isVideoInit = false;
     playerController = VideoPlayerController.network(currentItem!.media!.fileLocation!);
 
     await playerController!.initialize();
@@ -370,7 +403,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
   void gotoExamPage(){
     final examComponentInjector = ExamInjector();
-    examComponentInjector.lessonModel = widget.injection.lessonModel;
+    examComponentInjector.lessonModel = widget.injector.lessonModel;
     examComponentInjector.examList = examList;
 
     final examPage = ExamPage(injector: examComponentInjector);
@@ -409,15 +442,17 @@ class _GrammarPageState extends StateBase<GrammarPage> {
         assistCtr.addStateAndUpdateHead(AssistController.state$emptyData);
       }
       else {
-        currentItem = itemList[0];
+        currentItem = itemList[currentItemIdx];
 
         assistCtr.updateHead();
         initVideo();
+
+        startReviewTimer();
       }
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/grammars?LessonId=${widget.injection.lessonModel.id}');
+    requester.prepareUrl(pathUrl: '/grammars?LessonId=${widget.injector.lessonModel.id}');
     requester.request(context);
   }
 
@@ -447,5 +482,22 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     requester.request(context);
 
     return c.future;
+  }
+
+  void requestSetReview(String id, int progress) async {
+    reviewRequester.httpRequestEvents.onFailState = (req, res) async {
+    };
+
+    reviewRequester.httpRequestEvents.onStatusOk = (req, res) async {
+    };
+
+    final js = <String, dynamic>{};
+    js['grammarId'] = id;
+    js['percentage'] = progress;
+
+    reviewRequester.bodyJson = js;
+    reviewRequester.methodType = MethodType.post;
+    reviewRequester.prepareUrl(pathUrl: '/grammars/review');
+    reviewRequester.request();
   }
 }
