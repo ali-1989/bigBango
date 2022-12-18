@@ -97,6 +97,7 @@ class Requester {
     _httpRequester = AppHttpDio.send(_http);
 
     var f = _httpRequester.response.catchError((e){
+      print('@@@@@@@@@@ ====== response E =========  $e');//todo
       if(debug){
         Logger.L.logToScreen(' dio catch Error --> $e');
       }
@@ -111,6 +112,7 @@ class Requester {
     });
 
     f = f.then((val) async {
+      print('@@@@@@@@@@ ========= response ====== [${_httpRequester.responseData?.statusCode}] $val');//todo
       if(_httpRequester.responseData?.statusCode == 401){ // token
         final getNewToken = await JwtService.requestNewToken(Session.getLastLoginUser()!);
 

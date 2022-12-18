@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
+import 'package:app/tools/app/appToast.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
@@ -52,7 +53,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     super.initState();
 
     assistCtr.addState(AssistController.state$loading);
-    requestIdioms();
+    requestGrammars();
   }
 
   @override
@@ -305,20 +306,17 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     }
   }
 
-  void gotoNextPart(){
-    /*if(widget.injection.segment.hasIdioms){
-      final inject = IdiomsSegmentPageInjector();
-      inject.lessonModel = widget.injection.lessonModel;
-      inject.segment = widget.injection.segment;
-
-      AppRoute.replace(context, IdiomsSegmentPage(injection: inject));
-    }*/
-  }
-
   void startExercise() async{
     showLoading();
     await requestExercise();
     await hideLoading();
+
+    if(examList.isNotEmpty){
+      gotoExamPage();
+    }
+    else {
+      AppToast.showToast(context, 'تمرینی ثبت نشده است');
+    }
   }
 
   void initVideo() async {
@@ -370,10 +368,10 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     assistCtr.updateHead();
   }
 
-  void gotoExam(ExamModel examModel){
+  void gotoExamPage(){
     final examComponentInjector = ExamInjector();
     examComponentInjector.lessonModel = widget.injection.lessonModel;
-    examComponentInjector.examList = [examModel];
+    examComponentInjector.examList = examList;
 
     final examPage = ExamPage(injector: examComponentInjector);
 
@@ -383,10 +381,10 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   void onRefresh(){
     assistCtr.clearStates();
     assistCtr.addStateAndUpdateHead(AssistController.state$loading);
-    requestIdioms();
+    requestGrammars();
   }
 
-  void requestIdioms(){
+  void requestGrammars(){
     requester.httpRequestEvents.onFailState = (req, res) async {
       assistCtr.clearStates();
       assistCtr.addStateAndUpdateHead(AssistController.state$error);
@@ -425,6 +423,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
   Future<void> requestExercise() async {
     Completer c = Completer();
+    examList.clear();
 
     requester.httpRequestEvents.onFailState = (req, res) async {
       c.complete(null);

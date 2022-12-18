@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/services/login_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,6 @@ import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/deviceInfoTools.dart';
-import 'package:app/tools/userLoginTools.dart';
 
 class ApplicationInitial {
   ApplicationInitial._();
@@ -123,7 +123,7 @@ class ApplicationInitial {
       ApplicationLifeCycle.init();
 
       /// login & logoff
-      UserLoginTools.init();
+      LoginService.init();
 
       if (System.isWeb()) {
         void onSizeCheng(oldW, oldH, newW, newH) {

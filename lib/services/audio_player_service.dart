@@ -29,11 +29,15 @@ class AudioPlayerService {
   }
 
   static Future<AudioPlayer> networkVoicePlayer(String source) async {
-    if(_voicePlayer.playing){
-      await _voicePlayer.stop();
-    }
+    try {
+      if (_voicePlayer.playing) {
+        await _voicePlayer.stop();
+      }
 
-    await _voicePlayer.setUrl(source);
+      await _voicePlayer.setUrl(source);
+    }
+    catch (e) {/**/}
+
     return _voicePlayer;
   }
 }

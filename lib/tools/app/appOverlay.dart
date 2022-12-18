@@ -16,7 +16,7 @@ class AppOverlay {
     ),
   );
 
-  static Future showScreen(BuildContext context, OverlayScreenView view, {bool canBack = false}){
+  static Future showDialogScreen(BuildContext context, OverlayScreenView view, {bool canBack = false}){
     OverlayScreenView v = view;
 
     if(AppSizes.isBigWidth()){
@@ -34,7 +34,7 @@ class AppOverlay {
     return OverlayDialog().show(context, v, canBack: canBack);
   }
 
-  static void hideScreen(BuildContext context){
+  static void hideDialog(BuildContext context){
     //OverlayDialog().hide(context);
     Navigator.of(context).pop();
   }
@@ -44,7 +44,7 @@ class AppOverlay {
   }
   ///-------------------------------------------------------------------
   static Future showIgnoreScreen(BuildContext context){
-    return showScreen(context, _ignoreScreen, canBack: false);
+    return showDialogScreen(context, _ignoreScreen, canBack: false);
   }
 
   static void hideIgnoreScreen(BuildContext context){

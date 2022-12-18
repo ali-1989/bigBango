@@ -9,19 +9,19 @@ import 'package:app/tools/app/appRoute.dart';
 import 'package:app/views/widgets/customCard.dart';
 
 
-class LessonComponent extends StatefulWidget {
-  final VocabPageInjector injector;
+class SelectVocabIdiomsDialog extends StatefulWidget {
+  final VocabIdiomsPageInjector injector;
 
-  const LessonComponent({
+  const SelectVocabIdiomsDialog({
     required this.injector,
     Key? key
   }) : super(key: key);
 
   @override
-  State<LessonComponent> createState() => _LessonComponentState();
+  State createState() => _SelectVocabIdiomsDialog();
 }
 ///=================================================================================================
-class _LessonComponentState extends State<LessonComponent> {
+class _SelectVocabIdiomsDialog extends State<SelectVocabIdiomsDialog> {
   @override
   Widget build(BuildContext context) {
     return Align(

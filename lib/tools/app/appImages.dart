@@ -31,6 +31,7 @@ class AppImages {
   static const homeBackground = 'assets/images/home-back.png';
   static const homeBackIcons = 'assets/images/home-back-icons.png';
   static const bigbangoSmallText = 'assets/images/bigbangoSmallText.png';
+  static const bigbangoSmallText2 = 'assets/images/bigbangoSmallText2.png';
   static const statusbar = 'assets/images/statusbar.png';
   static const levelBadgeIco = 'assets/images/levelBadgeIco.png';
   static const profile = 'assets/images/profile.png';
@@ -84,6 +85,9 @@ class AppImages {
   static const marketIco = 'assets/images/marketIco.png';
   static const changeImage = 'assets/images/changeImage.png';
   static const pauseIco = 'assets/images/pauseIco.png';
+  static const aboutUs = 'assets/images/aboutUs.png';
+  static const rulesIco = 'assets/images/rulesIco.png';
+  static const callUsIco = 'assets/images/call-us.png';
 }
 
 

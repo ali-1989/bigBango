@@ -42,6 +42,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   Duration totalTime = Duration();
   Duration currentTime = Duration();
   ExamInjector examComponentInjector = ExamInjector();
+  Widget examComponent = SizedBox();
   int currentItemIdx = 0;
   bool voiceIsOk = false;
   bool isInPlaying = false;
@@ -49,7 +50,6 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   ListeningModel? currentItem;
   String id$playViewId = 'playViewId';
   String? description;
-  Widget examComponent = SizedBox();
   double playerSliderValue = 0;
 
   @override
@@ -90,7 +90,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onRefresh: onRefresh);
+      return ErrorOccur(onRefresh: onTryAgain);
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
@@ -413,7 +413,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     });
   }
 
-  void onRefresh(){
+  void onTryAgain(){
     voiceIsOk = false;
     assistCtr.clearStates();
     assistCtr.addStateAndUpdateHead(AssistController.state$loading);
@@ -451,7 +451,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/listening?LessonId=${widget.injector.segment.listeningList[0].id}');
+    requester.prepareUrl(pathUrl: '/listening?CategoryId=${widget.injector.categoryId}');
     requester.request(context);
   }
 }

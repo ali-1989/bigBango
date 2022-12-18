@@ -328,6 +328,10 @@ class _OtpPageState extends StateBase<OtpPage> {
       AppRoute.backToRoot(context);
     }
     else {
+      if(dataJs[Keys.mobileNumber] == null){
+        dataJs[Keys.mobileNumber] = widget.phoneNumber;
+      }
+
       await Session.login$newProfileData(dataJs);
       await hideLoading();
       AppBroadcast.reBuildMaterial();

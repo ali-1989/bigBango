@@ -24,7 +24,7 @@ class AppHttpDio {
 	}
 
 	static HttpRequester send(HttpItem item, {BaseOptions? options}){
-		if(item.debugMode && !kIsWeb) {
+		if(item.debugMode) {
 			var txt = '\n-------------------------http debug\n';
 			txt += 'url: ${item.fullUrl}\n';
 			txt += 'Method: ${item.method}\n';

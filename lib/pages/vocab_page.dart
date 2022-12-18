@@ -1,10 +1,7 @@
-import 'package:app/pages/grammar_page.dart';
-import 'package:app/pages/listening_page.dart';
-import 'package:app/pages/reading_page.dart';
-import 'package:app/structures/injectors/grammarPagesInjector.dart';
-import 'package:app/structures/injectors/listeningPagesInjector.dart';
-import 'package:app/structures/injectors/readingPagesInjector.dart';
+import 'dart:async';
+
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
+import 'package:app/system/publicAccess.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -15,7 +12,6 @@ import 'package:iris_tools/widgets/attribute.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
 
 import 'package:app/managers/fontManager.dart';
-import 'package:app/pages/idioms_page.dart';
 import 'package:app/services/audio_player_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
@@ -33,7 +29,7 @@ import 'package:app/views/widgets/customCard.dart';
 
 
 class VocabPage extends StatefulWidget {
-  final VocabPageInjector injector;
+  final VocabIdiomsPageInjector injector;
 
   const VocabPage({
     required this.injector,
@@ -47,25 +43,33 @@ class VocabPage extends StatefulWidget {
 class _VocabPageState extends StateBase<VocabPage> {
   bool showTranslate = false;
   Requester requester = Requester();
+  Requester reviewRequester = Requester();
   List<VocabModel> vocabList = [];
   String id$voicePlayerGroupId = 'voicePlayerGroupId';
   String id$usVoicePlayerSectionId = 'usVoicePlayerSectionId';
   String id$ukVoicePlayerSectionId = 'ukVoicePlayerSectionId';
   int currentVocabIdx = 0;
   late VocabModel currentVocab;
-  TaskQueueCaller<VocabModel, dynamic> taskQue = TaskQueueCaller();
+  TaskQueueCaller<VocabModel, dynamic> leitnerTaskQue = TaskQueueCaller();
+  TaskQueueCaller<Set<String>, dynamic> reviewTaskQue = TaskQueueCaller();
   String selectedPlayerId = '';
   bool showGreeting = false;
   bool regulatorIsCall = false;
   AttributeController atrCtr1 = AttributeController();
   AttributeController atrCtr2 = AttributeController();
   double regulator = 200;
+  Timer? reviewSendTimer;
+  Set<String> reviewIds = {};
 
   @override
   void initState(){
     super.initState();
 
-    taskQue.setFn((VocabModel voc, value){
+    leitnerTaskQue.setFn((VocabModel voc, value){
+      requestSetLeitner(voc, voc.inLeitner);
+    });
+
+    leitnerTaskQu.setFn((VocabModel voc, value){
       requestSetLeitner(voc, voc.inLeitner);
     });
 
@@ -76,8 +80,11 @@ class _VocabPageState extends StateBase<VocabPage> {
   @override
   void dispose(){
     requester.dispose();
-    taskQue.dispose();
+    reviewRequester.dispose();
+    leitnerTaskQue.dispose();
+    reviewTaskQue.dispose();
     AudioPlayerService.getAudioPlayer().stop();
+    reviewSendTimer?.cancel();
 
     super.dispose();
   }
@@ -638,21 +645,9 @@ class _VocabPageState extends StateBase<VocabPage> {
     assistCtr.updateHead();
   }
 
-  void gotoNextPart(){
-    Widget? page;
 
-    if(widget.injector.segment.hasIdioms){
-      page = IdiomsPage(injector: widget.injector);
-    }
-    else if (widget.injector.lessonModel.grammarModel != null){
-      page = GrammarPage(injection: GrammarPageInjector(widget.injector.lessonModel));
-    }
-    else if (widget.injector.lessonModel.readingModel != null){
-      page = ReadingPage(injector: ReadingPageInjector(widget.injector.lessonModel));
-    }
-    else if (widget.injector.lessonModel.listeningModel != null){
-      page = ListeningPage(injector: ListeningPageInjector(widget.injector.lessonModel));
-    }
+  void gotoNextPart(){
+    final page = PublicAccess.getNextPart(widget.injector.lessonModel);
 
     if(page != null) {
       AppRoute.replace(context, page);
@@ -668,6 +663,8 @@ class _VocabPageState extends StateBase<VocabPage> {
 
       currentVocab = vocabList[currentVocabIdx];
       showTranslate = currentVocab.showTranslation;
+
+      sendReview(currentVocab.id);
     }
     else {
       showGreeting = true;
@@ -702,7 +699,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     currentVocab.inLeitner = !currentVocab.inLeitner;
     assistCtr.updateHead();
 
-    taskQue.addObject(currentVocab);
+    leitnerTaskQue.addObject(currentVocab);
   }
 
   void requestVocabs(){
@@ -737,18 +734,48 @@ class _VocabPageState extends StateBase<VocabPage> {
     requester.httpRequestEvents.onFailState = (req, res) async {
       AppToast.showToast(context, 'خطا در ارتباط با سرور');
       vocab.inLeitner = !state;
-      taskQue.callNext(null);
+      leitnerTaskQue.callNext(null);
       assistCtr.updateHead();
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
-      taskQue.callNext(null);
+      leitnerTaskQue.callNext(null);
       //assistCtr.updateHead();
     };
 
     requester.methodType = MethodType.post;
     requester.prepareUrl(pathUrl: '/setLeitner?vocabId=${widget.injector.lessonModel.id}?state=$state');
     requester.request(context);
+  }
+
+  void sendReview(String id){
+    reviewIds.add(id);
+
+    if(reviewSendTimer == null || !reviewSendTimer!.isActive){
+      reviewSendTimer = Timer(Duration(seconds: 5), (){
+        leitnerTaskQue.addObject(<String>{...currentVocab});
+      });
+    }
+  }
+
+  void requestSetReview(Set<String> ids){
+    reviewRequester.httpRequestEvents.onFailState = (req, res) async {
+      print('ohhh');
+      reviewTaskQue.callNext(null);
+    };
+
+    reviewRequester.httpRequestEvents.onStatusOk = (req, res) async {
+      print('@@@@@@@@@ ');
+      reviewTaskQue.callNext(null);
+    };
+
+    final js = <String, dynamic>{};
+    js['vocabularyIds'] = ids;
+
+    reviewRequester.bodyJson = js;
+    reviewRequester.methodType = MethodType.post;
+    reviewRequester.prepareUrl(pathUrl: '/vocabularies/review');
+    reviewRequester.request(context);
   }
 }
 

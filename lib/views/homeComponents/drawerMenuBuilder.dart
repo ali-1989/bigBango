@@ -1,4 +1,6 @@
+import 'package:app/pages/about_page.dart';
 import 'package:app/pages/wallet_page.dart';
+import 'package:app/services/login_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -24,7 +26,6 @@ import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSizes.dart';
-import 'package:app/tools/userLoginTools.dart';
 
 class DrawerMenuBuilder {
   static bool _isOpen = false;
@@ -50,7 +51,7 @@ class DrawerMenuBuilder {
     final content = OverlayScreenView(content: buildDrawer());
     final view = OverlayScreenView(content: content, backgroundColor: Colors.black45);
 
-    AppOverlay.showScreen(context, view, canBack: true);
+    AppOverlay.showDialogScreen(context, view, canBack: true);
     await Future.delayed(Duration(milliseconds: _drawerTime), (){});
     return;
   }
@@ -65,7 +66,7 @@ class DrawerMenuBuilder {
     final old = _drawerTime;
     _drawerTime = millSec?? _drawerTime;
     await Future.delayed(Duration(milliseconds: _drawerTime), (){
-      AppOverlay.hideScreen(context);
+      AppOverlay.hideDialog(context);
     });
 
     if(millSec != null) {
@@ -203,7 +204,7 @@ class DrawerMenuBuilder {
                 ListTile(
                   title: Text(AppMessages.aboutUs),
                   leading: Image.asset(AppImages.drawerAboutIco, width: 16, height: 16),
-                  onTap: gotoProfilePage,
+                  onTap: gotoAboutPage,
                   dense: true,
                   horizontalTitleGap: 0,
                   visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
@@ -249,11 +250,11 @@ class DrawerMenuBuilder {
               builder: (ctx, data) {
                 return Builder(
                   builder: (ctx){
-                    if(user.profileModel != null){
-                      final path = AppDirectories.getSavePathUri(user.profileModel!.url?? '', SavePathType.userProfile, user.avatarFileName);
+                    if(user.avatarModel != null){
+                      final path = AppDirectories.getSavePathUri(user.avatarModel!.url?? '', SavePathType.userProfile, user.avatarFileName);
                       final img = FileHelper.getFile(path);
 
-                      if(img.existsSync() && img.lengthSync() == (user.profileModel!.volume?? 0)){
+                      if(img.existsSync() && img.lengthSync() == (user.avatarModel!.volume?? 0)){
                         return CircleAvatar(
                           backgroundColor: ColorHelper.textToColor(user.nameFamily),
                           radius: 30,
@@ -315,6 +316,11 @@ class DrawerMenuBuilder {
     AppRoute.push(AppRoute.getLastContext()!, ProfilePage(userModel: Session.getLastLoginUser()!));
   }
 
+  static void gotoAboutPage() async {
+    await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext()!);
+    AppRoute.push(AppRoute.getLastContext()!, AboutPage());
+  }
+
   static void gotoTransactionPage() async {
     await DrawerMenuBuilder.toggleDrawer(AppRoute.getLastContext()!);
     AppRoute.push(AppRoute.getLastContext()!, WalletPage());
@@ -334,7 +340,7 @@ class DrawerMenuBuilder {
     await DrawerMenuBuilder.hideDrawer(AppRoute.getLastContext()!, millSec: 100);
 
     void yesFn(){
-      UserLoginTools.forceLogoff(Session.getLastLoginUser()!.userId);
+      LoginService.forceLogoff(Session.getLastLoginUser()!.userId);
     }
 
     AppDialogIris.instance.showYesNoDialog(
@@ -349,14 +355,14 @@ class DrawerMenuBuilder {
   }
 
   static void checkAvatar(UserModel user) async {
-    if(user.profileModel?.url == null){
+    if(user.avatarModel?.url == null){
       return;
     }
 
-    final path = AppDirectories.getSavePathUri(user.profileModel!.url!, SavePathType.userProfile, user.avatarFileName);
+    final path = AppDirectories.getSavePathUri(user.avatarModel!.url!, SavePathType.userProfile, user.avatarFileName);
     final img = FileHelper.getFile(path);
 
-    if(img.existsSync() && img.lengthSync() == user.profileModel!.volume!){
+    if(img.existsSync() && img.lengthSync() == user.avatarModel!.volume!){
       return;
     }
 

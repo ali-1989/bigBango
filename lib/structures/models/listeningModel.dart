@@ -10,18 +10,15 @@ class ListeningModel {
   ListeningModel();
 
   ListeningModel.fromMap(Map map) {
-    final voiceTemp = map['voice'];
-    final quizTemp = map['quiz'];
-
     id = map['id'];
     title = map['title'];
 
-    if(voiceTemp != null) {
-      voice = MediaModel.fromMap(voiceTemp);
+    if(map['voice'] != null) {
+      voice = MediaModel.fromMap(map['voice']);
     }
 
-    if(quizTemp != null) {
-      quiz = ExamModel.fromMap(quizTemp);
+    if(map['exercise'] != null) {
+      quiz = ExamModel.fromMap(map['exercise']);
     }
   }
 

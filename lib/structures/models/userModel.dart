@@ -7,12 +7,12 @@ import 'package:app/system/keys.dart';
 class UserModel {
   late String userId;
   String? name;
-  String? family;
+  String? lastName;
   DateTime? birthDate;
   String? mobile;
   int? gender;
   Token? token;
-  MediaModel? profileModel;
+  MediaModel? avatarModel;
   String? email;
   int? courseLevelId;
   //---------------- locale
@@ -27,11 +27,11 @@ class UserModel {
 
     userId = map[Keys.userId].toString();
     name = map[Keys.firstName];
-    family = map[Keys.lastName];
+    lastName = map[Keys.lastName];
     mobile = map[Keys.mobileNumber]?.toString();
     gender = map[Keys.gender];
     email = map['email'];
-    courseLevelId = map['courseLevelId'];
+    courseLevelId = map['courseLevelId']?? 1;
 
     if(map[Keys.token] is Map) {
       token = Token.fromMap(map[Keys.token]);
@@ -41,8 +41,8 @@ class UserModel {
       token?.parseToken();
     }
 
-    if(map['profile_image_model'] != null) {
-      profileModel = MediaModel.fromMap(map['profile_image_model']);
+    if(map['avatar'] != null) {
+      avatarModel = MediaModel.fromMap(map['avatar']);
     }
 
     if(brDate is int) {
@@ -66,11 +66,11 @@ class UserModel {
     final map = <String, dynamic>{};
     map[Keys.userId] = userId;
     map[Keys.firstName] = name;
-    map[Keys.lastName] = family;
+    map[Keys.lastName] = lastName;
     map[Keys.birthdate] = birthDate == null? null: DateHelper.toTimestamp(birthDate!);
     map[Keys.mobileNumber] = mobile;
     map[Keys.gender] = gender;
-    map['profile_image_model'] = profileModel?.toMap();
+    map['avatar'] = avatarModel?.toMap();
     map['email'] = email;
     map['courseLevelId'] = courseLevelId;
 
@@ -87,11 +87,11 @@ class UserModel {
   void matchBy(UserModel other) {
     userId = other.userId;
     name = other.name;
-    family = other.family;
+    lastName = other.lastName;
     birthDate = other.birthDate;
     mobile = other.mobile;
     gender = other.gender;
-    profileModel = other.profileModel;
+    avatarModel = other.avatarModel;
     email = other.email;
     courseLevelId = other.courseLevelId;
     token = other.token;
@@ -102,7 +102,7 @@ class UserModel {
   }
 
   String get nameFamily {
-    return '$name $family';
+    return '$name $lastName';
   }
 
   int get age {
@@ -118,16 +118,16 @@ class UserModel {
   }*/
 
   String? get avatarFileName {
-    if(profileModel == null || profileModel?.id == null){
+    if(avatarModel == null || avatarModel?.id == null){
       return null;
     }
 
-    return '${userId}_${profileModel!.id}.jpg';
+    return '${userId}_${avatarModel!.id}.jpg';
   }
 
   @override
   String toString(){
-    return '$userId _ name: $name _ family: $family _ mobile: $mobile _ sex: $gender | token: ${token?.token} , refresh Token: ${token?.refreshToken} ';
+    return '$userId _ name: $name _ family: $lastName _ mobile: $mobile _ sex: $gender | token: ${token?.token} , refresh Token: ${token?.refreshToken} ';
   }
 }
 ///=======================================================================================================

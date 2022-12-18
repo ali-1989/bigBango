@@ -84,10 +84,12 @@ class JwtService {
     r.body = js;
     r.headers['accept'] = 'application/json';
     r.headers['Content-Type'] = 'application/json';
+    r.debugMode = true;
 
     final a = AppHttpDio.send(r);
+    print('================ jwt  send');
     await a.response;
-
+    print('================ jwt  receive:  ${a.responseData?.statusCode}');//todo
     if(a.responseData?.statusCode == 200){
       final dataJs = a.getBodyAsJson()!;
       um.token?.token = dataJs['data'];

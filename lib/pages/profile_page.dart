@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/tools/deviceInfoTools.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -26,16 +27,13 @@ import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appColors.dart';
-import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/dateTools.dart';
-import 'package:app/tools/deviceInfoTools.dart';
 import 'package:app/tools/permissionTools.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -77,36 +75,16 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       'زن' : 0,
     };
 
-    nameTextCtr.text = widget.userModel.name?? '';
-    familyTextCtr.text = widget.userModel.family?? '';
-    emailTextCtr.text = widget.userModel.email?? '';
-    mobileTextCtr.text = widget.userModel.mobile?? '';
-
-    currentGender = widget.userModel.gender;
-    birthDate = widget.userModel.birthDate;
-
-    if(birthDate != null) {
-      birthDateText = DateTools.dateOnlyRelative(birthDate!);
-
-      userFixInfo[Keys.birthdate] = DateHelper.dateOnlyToStamp(birthDate!);
-    }
-
-    userFixInfo[Keys.firstName] = nameTextCtr.text;
-    userFixInfo[Keys.lastName] = familyTextCtr.text;
-    userFixInfo['email'] = emailTextCtr.text;
-    userFixInfo[Keys.gender] = currentGender;
-
-    /// create a copy of user for compare
-    userChangeInfo = JsonHelper.clone(userFixInfo);
-
-    genderList.addAll(genderText.map((k, v){
+    final temp = genderText.map((k, v){
       return MapEntry<int, DropdownMenuItem<int>>(v, DropdownMenuItem<int>(value: v, child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Text(k),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Text(k),
       )));
-    }).values.toList());
+    }).values.toList();
 
-    inputDecoration =  InputDecoration(
+    genderList.addAll(temp);
+
+    inputDecoration = InputDecoration(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
@@ -117,6 +95,9 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       isDense: true,
     );
+
+    prepare();
+    requestProfile();
   }
 
   @override
@@ -363,6 +344,33 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     );
   }
 
+  void prepare(){
+    nameTextCtr.text = user.name?? '';
+    familyTextCtr.text = user.lastName?? '';
+    emailTextCtr.text = user.email?? '';
+    mobileTextCtr.text = user.mobile?? '';
+
+    currentGender = user.gender;
+    birthDate = user.birthDate;
+
+    if(birthDate != null) {
+      birthDateText = DateTools.dateOnlyRelative(birthDate!);
+    }
+
+    userFixInfo[Keys.firstName] = nameTextCtr.text;
+    userFixInfo[Keys.lastName] = familyTextCtr.text;
+    userFixInfo[Keys.mobileNumber] = mobileTextCtr.text;
+    userFixInfo['email'] = emailTextCtr.text;
+    userFixInfo[Keys.gender] = currentGender;
+
+    if(birthDate != null) {
+      userFixInfo[Keys.birthdate] = DateHelper.dateOnlyToStamp(birthDate!);
+    }
+
+    /// create a copy of user for compare changes
+    userChangeInfo = JsonHelper.clone(userFixInfo);
+  }
+
   void compareChanges(){
     hasChanges = !JsonHelper.deepEquals(userChangeInfo, userFixInfo);
     callState();
@@ -408,7 +416,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
         GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: (){
-            onSelectProfile(1);
+            onSelectAvatar(1);
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -426,7 +434,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
         GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: (){
-            onSelectProfile(2);
+            onSelectAvatar(2);
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -440,11 +448,11 @@ class _ProfilePageState extends StateBase<ProfilePage> {
           ),
         ));
 
-    if(user.profileModel != null){
+    if(user.avatarModel != null){
       widgets.add(
           GestureDetector(
             behavior: HitTestBehavior.translucent,
-            onTap: deleteProfile,
+            onTap: deleteAvatar,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Row(
@@ -466,7 +474,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     );
   }
 
-  void onSelectProfile(int state) async {
+  void onSelectAvatar(int state) async {
     AppSheet.closeSheet(context);
 
     XFile? image;
@@ -594,7 +602,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     requester.request(context, false);
   }
 
-  void deleteProfile(){
+  void deleteAvatar(){
     AppSheet.closeSheet(context);
 
     final js = <String, dynamic>{};
@@ -609,7 +617,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, data) async {
-      user.profileModel = null;
+      user.avatarModel = null;
 
       AppBroadcast.avatarNotifier.notifyAll(null);
       Session.sinkUserInfo(user);
@@ -664,90 +672,98 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       return;
     }
 
-    requestRegister();
+    requestUpdate();
   }
 
-  void requestRegister(){
+  void requestProfile(){
+    requester.httpRequestEvents.onStatusOk = (req, data) async {
+      final js = JsonHelper.jsonToMap(data)!;
+      final message = js['message'];
+      final dataText = js['data'];
+
+      if(message != null) {
+        AppSnack.showInfo(context, message);
+      }
+
+      if(dataText != null) {
+        final temp = UserModel.fromMap(dataText);
+        final user = Session.getLastLoginUser()!;
+        user.matchBy(temp);
+
+        user.mobile ??= userFixInfo[Keys.mobileNumber];
+
+        Session.sinkUserInfo(user);
+
+        prepare();
+        assistCtr.updateHead();
+      }
+    };
+
+    requester.prepareUrl(pathUrl: '/profile?ClientSecret=${DeviceInfoTools.deviceId}');
+    requester.methodType = MethodType.get;
+    requester.request(context, false);
+  }
+
+  void requestUpdate(){
     final name = nameTextCtr.text.trim();
     final family = familyTextCtr.text.trim();
     final email = emailTextCtr.text.trim();
 
+    requester.httpRequestEvents.onAnyState = (req) async {
+      await hideLoading();
+    };
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      if(res != null){
+        final js = JsonHelper.jsonToMap(res.data)!;
+        final message = js['message'];
+
+        if(message != null){
+          AppSnack.showInfo(context, message);
+          return;
+        }
+      }
+
+      AppSnack.showInfo(context, 'خطایی رخ داده است');
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, data) async {
+      final js = JsonHelper.jsonToMap(data)!;
+      final message = js['message'];
+
+      if(message != null) {
+        AppSnack.showInfo(context, message);
+      }
+      else {
+        AppSnack.showInfo(context, 'ثبت شد');
+      }
+
+      final user = Session.getLastLoginUser()!;
+      user.name = name;
+      user.lastName = family;
+      user.email = email;
+      user.gender = currentGender;
+      user.birthDate = birthDate;
+
+      Session.sinkUserInfo(user);
+    };
+
+
     final js = <String, dynamic>{};
-    js['phoneNumber'] = widget.userModel;
     js['firstName'] = name;
     js['lastName'] = family;
     js['gender'] = currentGender;
     js['birthDate'] = DateHelper.dateOnlyToStamp(birthDate!);
-    js['clientSecret'] = DeviceInfoTools.deviceId;
 
     if(email.isNotEmpty){
       js['email'] = email;
     }
 
-    requester.httpRequestEvents.onAnyState = (requester) async {
-      hideLoading();
-    };
-
-    requester.httpRequestEvents.onFailState = (requester, res) async {
-      if(res != null){
-        final js = JsonHelper.jsonToMap(res.data)!;
-        final message = js['message'];
-
-        if(res.statusCode == 307){
-         // not defined
-        }
-
-        // timeout
-        if(res.statusCode == 403){
-          AppDB.deleteKv(Keys.setting$registerPhoneNumber);
-
-          AppSheet.showSheetOneAction(context, message, (){
-            AppBroadcast.reBuildMaterial();
-          });
-
-          return false;
-        }
-
-        // this user exist
-        if(res.statusCode == 422){
-          await AppDB.deleteKv(Keys.setting$registerPhoneNumber);
-          AppSnack.showInfo(context, message);
-          AppBroadcast.reBuildMaterial();
-          return false;
-        }
-      }
-
-      AppSnack.showInfo(context, AppMessages.serverNotRespondProperly);
-    };
-
-    requester.httpRequestEvents.onStatusOk = (requester, js) async {
-      final data = js[Keys.data];
-      final message = js[Keys.message];
-
-      await Session.login$newProfileData(data);
-      await AppDB.deleteKv(Keys.setting$registerPhoneNumber);
-
-      AppToast.showToast(context, message);
-      AppBroadcast.reBuildMaterial();
-    };
+    requester.bodyJson = js;
+    requester.prepareUrl(pathUrl: '/profile/update');
+    requester.methodType = MethodType.put;
 
     showLoading();
-    requester.prepareUrl(pathUrl: '/register');
-    requester.methodType = MethodType.post;
-    requester.bodyJson = js;
-    requester.request(context);
+    requester.request(context, false);
   }
-
-  /*static bool isValidEmail(String email) {
-
-    var ePattern = '''^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@
-        (([(\d|[1-9]\d|1[0-9][0-9]|(2([0-4]\d|5[0-5])))\.
-        (\d|[1-9]\d|1[0-9][0-9]|(2([0-4]\d|5[0-5])))\.
-        (\d|[1-9]\d|1[0-9][0-9]|(2([0-4]\d|5[0-5])))\.
-        (\d|[1-9]\d|1[0-9][0-9]|(2([0-4]\d|5[0-5])))])|(([a-zA-Z\\-0-9]+\.)+[a-zA-Z]{2,})\$''';
-
-
-    final regExp = RegExp(ePattern);
-    return regExp.hasMatch(email);
-  }*/
 }

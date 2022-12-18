@@ -1,3 +1,12 @@
+import 'package:app/pages/grammar_page.dart';
+import 'package:app/pages/idioms_page.dart';
+import 'package:app/pages/listening_page.dart';
+import 'package:app/pages/reading_page.dart';
+import 'package:app/structures/injectors/grammarPagesInjector.dart';
+import 'package:app/structures/injectors/listeningPagesInjector.dart';
+import 'package:app/structures/injectors/readingPagesInjector.dart';
+import 'package:app/structures/injectors/vocabPagesInjector.dart';
+import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/logger/logger.dart';
@@ -126,8 +135,31 @@ class PublicAccess {
 
     return heart;
   }
-}
 
+  static Widget? getNextPart(LessonModel lessonModel){
+    Widget? page;
+
+    if(lessonModel.vocabModel != null && lessonModel.vocabModel!.hasIdioms){
+      page = IdiomsPage(injector: VocabIdiomsPageInjector(lessonModel));
+    }
+    else if (lessonModel.grammarModel != null){
+      page = GrammarPage(injection: GrammarPageInjector(lessonModel));
+    }
+    else if (lessonModel.readingModel != null){
+      page = ReadingPage(injector: ReadingPageInjector(lessonModel));
+    }
+    else if (lessonModel.listeningModel != null && lessonModel.listeningModel!.listeningList.isNotEmpty){
+      if (lessonModel.listeningModel!.listeningList.length == 1) {
+        page = ListeningPage(injector: ListeningPageInjector(lessonModel, lessonModel.listeningModel!.listeningList[0].id));
+      }
+      else {
+        page = ListeningPage(injector: ListeningPageInjector(lessonModel, lessonModel.listeningModel!.listeningList[0].id));
+      }
+    }
+
+    return page;
+  }
+}
 ///===================================================================================
 class UpperLower {
   DateTime? upper;

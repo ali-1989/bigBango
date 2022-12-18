@@ -71,7 +71,10 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
   @override
   void dispose(){
     requester.dispose();
-    player.stop();
+    try {
+      player.dispose();
+    }
+    catch (e){/**/}
 
     super.dispose();
   }

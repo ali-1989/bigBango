@@ -1,7 +1,7 @@
+import 'package:app/structures/models/inviteUserModel.dart';
+import 'package:app/system/session.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/api/helpers/clipboardHelper.dart';
 import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -28,7 +28,7 @@ class _InvitePageState extends StateBase<InvitePage> {
   Requester requester = Requester();
   String description = '';
   TextEditingController txtCtr = TextEditingController();
-  List userList = [];
+  List<InviteUserModel> userList = [];
 
   @override
   void initState(){
@@ -146,7 +146,7 @@ class _InvitePageState extends StateBase<InvitePage> {
                 onTap: copyCodeCall,
                 child: Row(
                   children: [
-                    Text('09139277303').color(AppColors.red),
+                    Text('${Session.getLastLoginUser()?.mobile}').color(AppColors.red),
                     const SizedBox(width: 6),
                     Icon(AppIcons.copy,
                         size: 15,
@@ -204,7 +204,7 @@ class _InvitePageState extends StateBase<InvitePage> {
               }
 
               return ListView.builder(
-                itemCount: 10,
+                itemCount: userList.length,
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   itemBuilder: itemBuilder
               );
@@ -218,6 +218,8 @@ class _InvitePageState extends StateBase<InvitePage> {
   }
 
   Widget itemBuilder(_, idx){
+    final item = userList[idx];
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: SizedBox(
@@ -232,11 +234,13 @@ class _InvitePageState extends StateBase<InvitePage> {
                 Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: ColorHelper.textToColor(Generator.generateKey(3)),
-                      child: idx %2 == 0? Text('ع') : Image.asset(AppImages.profileBig),
+                      backgroundColor: ColorHelper.textToColor(item.getName()),
+                      child: item.avatar == null
+                      ? Text(item.getFirstChar())
+                          : Image.network(item.avatar!.fileLocation!),
                     ),
                     SizedBox(width: 8),
-                    Text('علی باقری')
+                    Text(item.getName())
                   ],
                 ),
 
@@ -250,7 +254,7 @@ class _InvitePageState extends StateBase<InvitePage> {
   }
 
   void copyCodeCall(){
-    ClipboardHelper.insert('09139277303');
+    ClipboardHelper.insert('${Session.getLastLoginUser()?.mobile}');
     AppToast.showToast(context, 'کد شما کپی شد');
   }
 
@@ -262,21 +266,25 @@ class _InvitePageState extends StateBase<InvitePage> {
   }
 
   void requestData(){
-    requester.httpRequestEvents.onAnyState = (requester) async {
-      //hideLoading();
-    };
-
     requester.httpRequestEvents.onFailState = (requester, res) async {
       assistCtr.clearStates();
       assistCtr.addStateAndUpdateHead(AssistController.state$error);
     };
 
-    requester.httpRequestEvents.onStatusOk = (requester, js) async {
+    requester.httpRequestEvents.onStatusOk = (requester, map) async {
+      final data = map['data'];
+
+      if(data is List){
+        for(final x in data){
+          userList.add(InviteUserModel.fromMap(x));
+        }
+      }
+
       assistCtr.clearStates();
+      assistCtr.updateHead();
     };
 
-    //showLoading();
-    requester.prepareUrl(pathUrl: '/getInvite');
+    requester.prepareUrl(pathUrl: '/profile/introduces?Page=1&Size=100');
     requester.methodType = MethodType.get;
     requester.request(context);
   }

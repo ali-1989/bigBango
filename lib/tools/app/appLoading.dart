@@ -52,7 +52,7 @@ class AppLoading {
       backgroundColor: Colors.black.withOpacity(0.3),
     );
 
-    return AppOverlay.showScreen(context, over, canBack: dismiss);
+    return AppOverlay.showDialogScreen(context, over, canBack: dismiss);
   }
 
   Future<void> showError(BuildContext context, String msg, {bool dismiss = true, Duration? duration}){
@@ -68,7 +68,7 @@ class AppLoading {
     );
 
     Future.delayed(duration?? _overlayTheme.displayDuration, () => cancel(context));
-    return AppOverlay.showScreen(context, over, canBack: dismiss);
+    return AppOverlay.showDialogScreen(context, over, canBack: dismiss);
   }
 
   Future<void> showSuccess(BuildContext context, String msg, {bool dismiss = true, Duration? duration}){
@@ -84,11 +84,11 @@ class AppLoading {
     );
 
     Future.delayed(duration?? _overlayTheme.displayDuration, () => cancel(context));
-    return AppOverlay.showScreen(context, over, canBack: dismiss);
+    return AppOverlay.showDialogScreen(context, over, canBack: dismiss);
   }
 
   void cancel(BuildContext context){
-    AppOverlay.hideScreen(context);
+    AppOverlay.hideDialog(context);
   }
   ///-----------------------------------------------------------------------------------
   Future<void> showLoading(BuildContext context, {bool dismiss = false}) async {
@@ -103,7 +103,7 @@ class AppLoading {
       content: easyView,
     );
 
-    return AppOverlay.showScreen(context, over, canBack: dismiss);
+    return AppOverlay.showDialogScreen(context, over, canBack: dismiss);
 
      /*if(!dismiss) {
        AppOverlay.showIgnoreScreen(context *//*AppRoute.getContext()*//*);
@@ -112,7 +112,7 @@ class AppLoading {
 
   Future<void> hideLoading(BuildContext context) async {
     //AppOverlay.hideIgnoreScreen(context);
-    AppOverlay.hideScreen(context);
+    AppOverlay.hideDialog(context);
   }
   //---------------------------------------------------------------------------------
   Future<void> showProgress(BuildContext context, Stream<double> stream, {
@@ -134,7 +134,7 @@ class AppLoading {
       backgroundColor: Colors.black26,
     );
 
-    return AppOverlay.showScreen(context, over, canBack: false);
+    return AppOverlay.showDialogScreen(context, over, canBack: false);
   }
 
   Widget _getLoadingView(){

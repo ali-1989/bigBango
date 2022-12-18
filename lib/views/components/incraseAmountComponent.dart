@@ -144,7 +144,7 @@ class _IncreaseAmountComponentState extends StateBase<IncreaseAmountComponent> {
                   visualDensity: VisualDensity(vertical: -2),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
                 ),
-                  onPressed: (){},
+                  onPressed: onPayClick,
                   child: Text('پرداخت')
               ),
             ),
@@ -212,5 +212,9 @@ class _IncreaseAmountComponentState extends StateBase<IncreaseAmountComponent> {
     }
 
     callState();
+  }
+
+  void onPayClick(){
+
   }
 }

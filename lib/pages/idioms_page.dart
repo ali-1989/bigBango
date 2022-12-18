@@ -1,10 +1,5 @@
-import 'package:app/pages/grammar_page.dart';
-import 'package:app/pages/listening_page.dart';
-import 'package:app/pages/reading_page.dart';
-import 'package:app/structures/injectors/grammarPagesInjector.dart';
-import 'package:app/structures/injectors/listeningPagesInjector.dart';
-import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
+import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +24,7 @@ import 'package:app/views/widgets/customCard.dart';
 
 
 class IdiomsPage extends StatefulWidget {
-  final VocabPageInjector injector;
+  final VocabIdiomsPageInjector injector;
 
   const IdiomsPage({
     required this.injector,
@@ -346,17 +341,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
   }
 
   void gotoNextPart(){
-    Widget? page;
-
-    if (widget.injector.lessonModel.grammarModel != null){
-      page = GrammarPage(injection: GrammarPageInjector(widget.injector.lessonModel));
-    }
-    else if (widget.injector.lessonModel.readingModel != null){
-      page = ReadingPage(injector: ReadingPageInjector(widget.injector.lessonModel));
-    }
-    else if (widget.injector.lessonModel.listeningModel != null){
-      page = ListeningPage(injector: ListeningPageInjector(widget.injector.lessonModel));
-    }
+    final page = PublicAccess.getNextPart(widget.injector.lessonModel);
 
     if(page != null) {
       AppRoute.replace(context, page);

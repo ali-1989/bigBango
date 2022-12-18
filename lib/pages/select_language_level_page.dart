@@ -349,7 +349,6 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
   }
 
   void requestSetLevel(){
-
     requester.httpRequestEvents.onAnyState = (req) async {
       await hideLoading();
     };

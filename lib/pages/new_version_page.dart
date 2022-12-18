@@ -170,23 +170,16 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
   void onDirectLinkClick(){
     UrlHelper.launchLink(widget.versionModel.directLink!);
 
-    if(widget.versionModel.restricted){
+    /*if(widget.versionModel.restricted){
       System.exitApp();
     }
     else {
       AppNavigator.pop(context);
-    }
+    }*/
   }
 
   void onUpdateClick(){
     UrlHelper.launchLink(widget.versionModel.storeLink?? '');
-
-    if(widget.versionModel.restricted){
-      System.exitApp();
-    }
-    else {
-      AppNavigator.pop(context);
-    }
   }
 }
 ///===============================================================================================

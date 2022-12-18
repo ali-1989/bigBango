@@ -1,12 +1,19 @@
+import 'package:app/examples.dart';
 import 'package:app/pages/exam_page.dart';
+import 'package:app/pages/grammar_page.dart';
+import 'package:app/pages/listening_page.dart';
+import 'package:app/pages/reading_page.dart';
+import 'package:app/pages/vocab_page.dart';
 import 'package:app/structures/injectors/examInjector.dart';
-import 'package:app/structures/injectors/segmentInjector.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/models/examModel.dart';
+import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
 import 'package:app/tools/app/appSheet.dart';
+import 'package:app/views/components/selectListeningDialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
@@ -14,18 +21,12 @@ import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/searchBar.dart';
 
-import 'package:app/pages/grammar_page.dart';
-import 'package:app/pages/listening_page.dart';
-import 'package:app/pages/reading_page.dart';
 import 'package:app/pages/select_language_level_page.dart';
-import 'package:app/pages/vocab_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/lessonModels/listeningSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/session.dart';
@@ -34,7 +35,7 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/views/components/lessonComponent.dart';
+import 'package:app/views/components/selectVocabIdiomsDialog.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
@@ -74,7 +75,7 @@ class HomePageState extends StateBase<HomePage> {
       builder: (_, ctr, data) {
         if(assistCtr.hasState(state$error)){
           return ErrorOccur(
-            onRefresh: onRefresh,
+            onRefresh: onTryAgain,
           );
         }
 
@@ -482,7 +483,7 @@ class HomePageState extends StateBase<HomePage> {
                                         left: 5,
                                         child: GestureDetector(
                                           onTap: (){
-                                            gotoExam(lesson);
+                                            requestExams(lesson);
                                           },
                                           child: CustomCard(
                                             padding: EdgeInsets.all(10),
@@ -531,6 +532,14 @@ class HomePageState extends StateBase<HomePage> {
   Widget buildSegment(LessonModel lesson, ISegmentModel? segmentModel){
 
     if(segmentModel == null){
+      return Flexible(
+        fit: FlexFit.tight,
+        flex: 1,
+        child: SizedBox(),
+      );
+    }
+
+    if(segmentModel is ListeningSegmentModel && segmentModel.listeningList.isEmpty){
       return Flexible(
         fit: FlexFit.tight,
         flex: 1,
@@ -600,47 +609,60 @@ class HomePageState extends StateBase<HomePage> {
     );
   }
 
-  void onLessonSegmentClick(LessonModel lesson, ISegmentModel section){
-    Widget page = SizedBox();
-    final inject = SegmentInjector();
-    inject.lessonModel = lesson;
-    inject.segment = section;
+  void onLessonSegmentClick(LessonModel lessonModel, ISegmentModel segment){
+    Widget? dialog;
 
-    if(section is VocabularySegmentModel){
-      if(!section.hasIdioms){
-        AppRoute.push(context, VocabPage(injector: VocabPageInjector.from(inject)));
-        return;
+    if(segment is VocabularySegmentModel){
+      if(segment.hasIdioms){
+        dialog = SelectVocabIdiomsDialog(injector: VocabIdiomsPageInjector(lessonModel));
       }
-
-      page = LessonComponent(injector: VocabPageInjector.from(inject));
-    }
-    else if (section is GrammarSegmentModel){
-      page = GrammarPage(injection: GrammarPageInjector.from(inject));
-    }
-    else if (section is ReadingSegmentModel){
-      page = ReadingPage(injector: ReadingPageInjector.from(inject));
-    }
-    else if (section is ListeningSegmentModel){
-      page = ListeningPage(injector: ListeningPageInjector.from(inject));
     }
 
+    if(segment is ListeningSegmentModel){
+      if(segment.listeningList.length > 1){
+        dialog = SelectListeningDialog(lessonModel: lessonModel);
+      }
+    }
 
-    final view = OverlayScreenView(
-      content: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: (){
-          AppOverlay.hideScreen(context);
-        },
-        child: GestureDetector(
-          onTap: (){},
-          child: SizedBox.expand(
-              child: page
+    if(dialog != null){
+      final view = OverlayScreenView(
+        content: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: (){
+            AppOverlay.hideDialog(context);
+          },
+          child: GestureDetector(
+            onTap: (){},
+            child: SizedBox.expand(
+                child: dialog
+            ),
           ),
         ),
-      ),
-      backgroundColor: Colors.black26,
-    );
-    AppOverlay.showScreen(context, view, canBack: true);
+        backgroundColor: Colors.black26,
+      );
+
+      AppOverlay.showDialogScreen(context, view, canBack: true);
+      return;
+    }
+
+    Widget? page;
+
+    if(segment is VocabularySegmentModel){
+      page = VocabPage(injector: VocabIdiomsPageInjector(lessonModel));
+    }
+    else if (segment is GrammarSegmentModel){
+      page = GrammarPage(injection: GrammarPageInjector(lessonModel));
+    }
+    else if (segment is ReadingSegmentModel){
+      page = ReadingPage(injector: ReadingPageInjector(lessonModel));
+    }
+    else if (lessonModel.listeningModel != null && lessonModel.listeningModel!.listeningList.isNotEmpty){
+      page = ListeningPage(injector: ListeningPageInjector(lessonModel, lessonModel.listeningModel!.listeningList[0].id));
+    }
+
+    if(page != null) {
+      AppRoute.push(context, page);
+    }
   }
 
   bool isOpen(LessonModel model){
@@ -662,15 +684,14 @@ class HomePageState extends StateBase<HomePage> {
     assistCtr.updateHead();
   }
 
-  void onRefresh(){
-    assistCtr.removeState(state$error);
+  void onTryAgain(){
+    assistCtr.clearStates();
     assistCtr.addStateAndUpdateHead(state$loading);
     requestLessons();
   }
 
   void requestLessons(){
     requester.httpRequestEvents.onFailState = (req, res) async {
-      print('================= ee ');
       assistCtr.clearStates();
       assistCtr.addStateAndUpdateHead(state$error);
     };
@@ -684,6 +705,7 @@ class HomePageState extends StateBase<HomePage> {
       if(data is List){
         for(final k in data){
           final les = LessonModel.fromMap(k);
+          Examples.addListening(les);//todo
           lessons.add(les);
         }
       }
@@ -696,8 +718,12 @@ class HomePageState extends StateBase<HomePage> {
     requester.request(context);
   }
 
-  void gotoExam(LessonModel model){
-    requester.httpRequestEvents.onFailState = (req, res) async {
+  void requestExams(LessonModel lessonModel){
+    requester.httpRequestEvents.onAnyState = (req) async {
+      await hideLoading();
+    };
+
+   requester.httpRequestEvents.onFailState = (req, res) async {
      AppSheet.showSheetNotice(context, AppMessages.errorCommunicatingServer);
     };
 
@@ -706,34 +732,36 @@ class HomePageState extends StateBase<HomePage> {
       final data = res['data'];
 
       if(data is Map){
-        final quizzes = data['quizzes'];
-        final autodidacts = data['autodidacts'];
+        final List quizzes = data['quizzes']?? [];
+        final List autodidacts = data['autodidacts']?? [];
 
-        if(quizzes is List) {
-          for (final k in quizzes) {
-            final exam = ExamModel.fromMap(k);
-            //lessons.add(les);
-          }
+        for (final k in quizzes) {
+          final exam = ExamModel.fromMap(k);
+          //lessons.add(les);
         }
 
-        if(autodidacts is List) {
-          for (final k in autodidacts) {
-            //final les = LessonModel.fromMap(k);
-          }
+        for (final k in autodidacts) {
+          //final les = LessonModel.fromMap(k);
+        }
+
+        if(quizzes.isNotEmpty || autodidacts.isNotEmpty){
+          final examComponentInjector = ExamInjector();
+          examComponentInjector.lessonModel = lessonModel;
+          examComponentInjector.examList = [];
+
+          final examPage = ExamPage(injector: examComponentInjector);
+
+          AppRoute.push(context, examPage);
+        }
+        else {
+          AppSheet.showSheetNotice(context, 'آزمونی ثبت نشده است');
         }
       }
-
-      final examComponentInjector = ExamInjector();
-      examComponentInjector.lessonModel = model;
-      examComponentInjector.examList = [];
-
-      final examPage = ExamPage(injector: examComponentInjector);
-
-      AppRoute.push(context, examPage);
     };
 
+    showLoading();
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/quizzes?LessonId=${model.id}');
+    requester.prepareUrl(pathUrl: '/quizzes?LessonId=${lessonModel.id}');
     requester.request(context);
   }
 }

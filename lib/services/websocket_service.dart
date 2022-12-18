@@ -15,7 +15,6 @@ import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/deviceInfoTools.dart';
-import 'package:app/tools/userLoginTools.dart';
 
 class WebsocketService {
 	WebsocketService._();

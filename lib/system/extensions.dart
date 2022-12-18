@@ -841,7 +841,7 @@ extension TextExtension on Text {
 
   Text fs(double size) {
     var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(fontSize: AppSizes.fwFontSize(size));
+    ts = ts.copyWith(fontSize: AppSizes.webFontSize(size));
 
     return Text(
       data!,
