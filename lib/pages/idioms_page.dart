@@ -63,7 +63,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
 
     currentIdiomIdx = widget.injector.lessonModel.vocabModel!.idiomReviewCount;
 
-    if(currentIdiomIdx >= widget.injector.lessonModel.vocabModel!.idiomCount){
+    if(currentIdiomIdx > 0){
       currentIdiomIdx--;
     }
 
@@ -397,7 +397,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
       currentIdiom = idiomsList[currentIdiomIdx];
       showTranslate = currentIdiom.showTranslation;
 
-      if(currentIdiomIdx > widget.injector.lessonModel.vocabModel!.idiomReviewCount) {
+      if(currentIdiomIdx+1 > widget.injector.lessonModel.vocabModel!.idiomReviewCount) {
         sendReview(currentIdiom.id);
       }
     }
@@ -507,13 +507,13 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
         assistCtr.addStateAndUpdateHead(AssistController.state$emptyData);
       }
       else {
-        currentIdiom = idiomsList[0];
+        currentIdiom = idiomsList[currentIdiomIdx];
         showTranslate = currentIdiom.showTranslation;
 
         assistCtr.updateHead();
         initVideo();
 
-        if(currentIdiomIdx > widget.injector.lessonModel.vocabModel!.idiomReviewCount) {
+        if(currentIdiomIdx == 0) {
           sendReview(currentIdiom.id);
         }
       }
@@ -535,10 +535,12 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
   }
 
   void requestSetReview(Set<String> ids) async {
+    print('============= requestSetReview  $ids');
     final status = await SendReviewService.requestSetReview(ReviewSection.idioms, ids.toList());
 
     if(status){
       reviewIds.removeAll(ids);
+      widget.injector.lessonModel.vocabModel!.idiomReviewCount++;
     }
 
     reviewTaskQue.callNext(null);

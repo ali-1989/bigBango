@@ -1,6 +1,5 @@
 import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 class VocabularySegmentModel extends ISegmentModel {
   bool hasIdioms = false;
@@ -25,11 +24,13 @@ class VocabularySegmentModel extends ISegmentModel {
     count = map['count']?? 1;
     reviewCount = map['reviewedCount']?? 0;
 
-    progress = MathHelper.percentInt(count, reviewCount);
-
     if(map['idiom'] is Map){
       idiomCount = map['idiom']['count']?? 1;
       idiomReviewCount = map['idiom']['reviewedCount']?? 0;
+    }
+
+    if(count > 0) {
+      progress = map['progress']?? ((reviewCount * 100 / count) + (idiomReviewCount * 100 / idiomCount)) /2;
     }
   }
 

@@ -7,5 +7,5 @@ class Constants {
   /// used for (app title)
   static String appTitle = 'Big Bango';
   static String appVersionName = '1.0.0';                     //match by pubspec.yaml
-  static int appVersionCode = (1 * 100) + (0 * 10) + (0);
+  static int appVersionCode = (1 * 10000) + (0 * 100) + (0);
 }

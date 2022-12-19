@@ -16,8 +16,8 @@ import 'package:app/tools/app/appThemes.dart';
 /*
 '''
 <body>
-<span>\u2705</span><p><strong> اضافه شدن لایتنر</strong></p>
-<span>\u2705</span><p><strong> دریافت دروس از سرور</strong></p>
+<span>\u2705</span><p><strong> اضافه شدن درباره ما</strong></p>
+<span>\u2705</span><p><strong> تکمیل دروس</strong></p>
 </body>
 ''';
  */

@@ -11,7 +11,7 @@ class LessonModel {
   late String title;
   bool isLock = false;
   int number = 0;
-  int improvementPercentage = 0;
+  double improvementPercentage = 0;
   int quizProgress = 0;
   VocabularySegmentModel? vocabModel;
   GrammarSegmentModel? grammarModel;
@@ -25,7 +25,7 @@ class LessonModel {
     title = map[Keys.title];
     isLock = map['isLock'];
     number = map['number']?? 0;
-    improvementPercentage = MathHelper.clearToInt(map['progress']);
+    improvementPercentage = MathHelper.clearToDouble(map['progress']);
 
     if(map['vocabulary'] is Map) {
       vocabModel = VocabularySegmentModel.fromMap(map['vocabulary']);

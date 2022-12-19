@@ -67,7 +67,7 @@ class _VocabPageState extends StateBase<VocabPage> {
 
     currentVocabIdx = widget.injector.lessonModel.vocabModel!.reviewCount;
 
-    if(currentVocabIdx >= widget.injector.lessonModel.vocabModel!.count){
+    if(currentVocabIdx > 0){
       currentVocabIdx--;
     }
 
@@ -674,7 +674,7 @@ class _VocabPageState extends StateBase<VocabPage> {
       currentVocab = vocabList[currentVocabIdx];
       showTranslate = currentVocab.showTranslation;
 
-      if(currentVocabIdx > widget.injector.lessonModel.vocabModel!.reviewCount) {
+      if(currentVocabIdx+1 > widget.injector.lessonModel.vocabModel!.reviewCount) {
         sendReview(currentVocab.id);
       }
     }
@@ -736,7 +736,7 @@ class _VocabPageState extends StateBase<VocabPage> {
       assistCtr.clearStates();
       assistCtr.updateHead();
 
-      if(currentVocabIdx > widget.injector.lessonModel.vocabModel!.reviewCount) {
+      if(currentVocabIdx == 0) {
         sendReview(currentVocab.id);
       }
     };
@@ -779,6 +779,7 @@ class _VocabPageState extends StateBase<VocabPage> {
 
     if(status){
       reviewIds.removeAll(ids);
+      widget.injector.lessonModel.vocabModel!.reviewCount++;
     }
 
     reviewTaskQue.callNext(null);

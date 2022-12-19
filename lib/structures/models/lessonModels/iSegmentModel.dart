@@ -4,7 +4,7 @@ import 'package:app/system/keys.dart';
 
 abstract class ISegmentModel {
   int? id;
-  int progress = 0;
+  double progress = 0;
 
   //-------------- local
   String title = '';
@@ -15,7 +15,7 @@ abstract class ISegmentModel {
 
   ISegmentModel.fromMap(Map map) {
     id = map[Keys.id];
-    progress = MathHelper.clearToInt(map['progress']);
+    progress = MathHelper.clearToDouble(map['progress']);
   }
 
   Map<String, dynamic> toMap() {
