@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app/services/send_review_service.dart';
+import 'package:app/services/review_service.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +93,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     AudioPlayerService.getAudioPlayer().stop();
 
     if(reviewIds.isNotEmpty){
-      SendReviewService.addReviews(ReviewSection.vocab, reviewIds);
+      ReviewService.addReviews(ReviewSection.vocab, reviewIds);
     }
 
     super.dispose();
@@ -674,7 +674,7 @@ class _VocabPageState extends StateBase<VocabPage> {
       currentVocab = vocabList[currentVocabIdx];
       showTranslate = currentVocab.showTranslation;
 
-      if(currentVocabIdx+1 > widget.injector.lessonModel.vocabModel!.reviewCount) {
+      if(!widget.injector.lessonModel.vocabModel!.reviewIds.contains(currentVocab.id)) {
         sendReview(currentVocab.id);
       }
     }
@@ -736,7 +736,7 @@ class _VocabPageState extends StateBase<VocabPage> {
       assistCtr.clearStates();
       assistCtr.updateHead();
 
-      if(currentVocabIdx == 0) {
+      if(!widget.injector.lessonModel.vocabModel!.reviewIds.contains(currentVocab.id)) {
         sendReview(currentVocab.id);
       }
     };
@@ -775,11 +775,14 @@ class _VocabPageState extends StateBase<VocabPage> {
   }
 
   void requestSetReview(Set<String> ids) async {
-    final status = await SendReviewService.requestSetReview(ReviewSection.vocab, ids.toList());
+    final status = await ReviewService.requestSetReview(ReviewSection.vocab, ids.toList());
 
     if(status){
       reviewIds.removeAll(ids);
+      widget.injector.lessonModel.vocabModel!.reviewIds.addAll(ids);
       widget.injector.lessonModel.vocabModel!.reviewCount++;
+
+      ReviewService.requestUpdateReviews(widget.injector.lessonModel);
     }
 
     reviewTaskQue.callNext(null);

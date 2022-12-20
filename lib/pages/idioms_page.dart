@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app/services/send_review_service.dart';
+import 'package:app/services/review_service.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appRoute.dart';
@@ -85,7 +85,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
     playerController?.dispose();
 
     if(reviewIds.isNotEmpty){
-      SendReviewService.addReviews(ReviewSection.idioms, reviewIds);
+      ReviewService.addReviews(ReviewSection.idioms, reviewIds);
     }
 
     super.dispose();
@@ -397,7 +397,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
       currentIdiom = idiomsList[currentIdiomIdx];
       showTranslate = currentIdiom.showTranslation;
 
-      if(currentIdiomIdx+1 > widget.injector.lessonModel.vocabModel!.idiomReviewCount) {
+      if(!widget.injector.lessonModel.vocabModel!.reviewIds.contains(currentIdiom.id)) {
         sendReview(currentIdiom.id);
       }
     }
@@ -513,7 +513,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
         assistCtr.updateHead();
         initVideo();
 
-        if(currentIdiomIdx == 0) {
+        if(!widget.injector.lessonModel.vocabModel!.reviewIds.contains(currentIdiom.id)) {
           sendReview(currentIdiom.id);
         }
       }
@@ -535,12 +535,14 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
   }
 
   void requestSetReview(Set<String> ids) async {
-    print('============= requestSetReview  $ids');
-    final status = await SendReviewService.requestSetReview(ReviewSection.idioms, ids.toList());
+    final status = await ReviewService.requestSetReview(ReviewSection.idioms, ids.toList());
 
     if(status){
       reviewIds.removeAll(ids);
-      widget.injector.lessonModel.vocabModel!.idiomReviewCount++;
+      widget.injector.lessonModel.vocabModel!.reviewIds.addAll(ids);
+      widget.injector.lessonModel.vocabModel!.reviewCount++;
+
+      ReviewService.requestUpdateReviews(widget.injector.lessonModel);
     }
 
     reviewTaskQue.callNext(null);

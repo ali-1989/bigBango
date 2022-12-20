@@ -97,7 +97,6 @@ class Requester {
     _httpRequester = AppHttpDio.send(_http);
 
     var f = _httpRequester.response.catchError((e){
-      print('@@@@@@@@@@ ====== response E =========  $e');//todo
       if(debug){
         Logger.L.logToScreen(' dio catch Error --> $e');
       }
@@ -119,6 +118,9 @@ class Requester {
         /// try request old api again
         if(getNewToken) {
           request(context, promptErrors);
+        }
+        else {
+          await httpRequestEvents.onFailState?.call(_httpRequester, val);
         }
 
         return;

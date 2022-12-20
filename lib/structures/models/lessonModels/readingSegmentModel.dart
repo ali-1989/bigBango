@@ -34,4 +34,12 @@ class ReadingSegmentModel extends ISegmentModel {
 
     return map;
   }
+
+  void matchBy(ReadingSegmentModel others){
+    id = others.id;
+    title = others.title;
+    progress = others.progress;
+    readingList.clear();
+    readingList.addAll(others.readingList);
+  }
 }

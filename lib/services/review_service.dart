@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:app/pages/home_page.dart';
 import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:iris_db/iris_db.dart';
+import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-class SendReviewService {
-  SendReviewService._();
+class ReviewService {
+  ReviewService._();
 
   static void sendReviews() async {
     final con = Conditions();
@@ -65,7 +68,7 @@ class SendReviewService {
     };
 
     reviewRequester.httpRequestEvents.onStatusOk = (req, res) async {
-      SendReviewService.deleteReviews(ReviewSection.vocab, ids);
+      ReviewService.deleteReviews(ReviewSection.vocab, ids);
 
       completer.complete(true);
     };
@@ -76,6 +79,32 @@ class SendReviewService {
     reviewRequester.bodyJson = js;
     reviewRequester.methodType = MethodType.post;
     reviewRequester.prepareUrl(pathUrl: _getReviewAddress(section));
+    reviewRequester.request();
+
+    return completer.future;
+  }
+
+  static Future<bool> requestUpdateReviews(LessonModel lessonModel) async {
+    final reviewRequester = Requester();
+    final completer = Completer<bool>();
+
+    reviewRequester.httpRequestEvents.onFailState = (req, res) async {
+      completer.complete(false);
+    };
+
+    reviewRequester.httpRequestEvents.onStatusOk = (req, res) async {
+      final data = res['data'];
+
+      final lesson = LessonModel.fromMap(data);
+      lessonModel.matchBy(lesson);
+
+      AssistController.commonUpdateAssist(HomePage.id$head);
+      completer.complete(true);
+    };
+
+
+    reviewRequester.methodType = MethodType.get;
+    reviewRequester.prepareUrl(pathUrl: '/lessons/details?LessonId=${lessonModel.id}');
     reviewRequester.request();
 
     return completer.future;

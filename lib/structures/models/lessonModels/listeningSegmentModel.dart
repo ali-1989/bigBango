@@ -30,4 +30,12 @@ class ListeningSegmentModel extends ISegmentModel {
 
     return map;
   }
+
+  void matchBy(ListeningSegmentModel others){
+    id = others.id;
+    title = others.title;
+    progress = others.progress;
+    listeningList.clear();
+    listeningList.addAll(others.listeningList);
+  }
 }

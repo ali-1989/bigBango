@@ -34,4 +34,12 @@ class GrammarSegmentModel extends ISegmentModel {
 
     return map;
   }
+
+  void matchBy(GrammarSegmentModel others){
+    id = others.id;
+    title = others.title;
+    progress = others.progress;
+    grammarList.clear();
+    grammarList.addAll(others.grammarList);
+  }
 }

@@ -63,4 +63,29 @@ class LessonModel {
 
     return map;
   }
+
+  void matchBy(LessonModel others){
+    id = others.id;
+    quizProgress = others.quizProgress;
+    number = others.number;
+    title = others.title;
+    improvementPercentage = others.improvementPercentage;
+    isLock = others.isLock;
+
+    if(others.vocabModel != null) {
+      vocabModel?.matchBy(others.vocabModel!);
+    }
+
+    if(others.grammarModel != null) {
+      grammarModel?.matchBy(others.grammarModel!);
+    }
+
+    if(others.readingModel != null) {
+      readingModel?.matchBy(others.readingModel!);
+    }
+
+    if(others.listeningModel != null) {
+      listeningModel?.matchBy(others.listeningModel!);
+    }
+  }
 }

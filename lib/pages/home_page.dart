@@ -41,6 +41,8 @@ import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 
 class HomePage extends StatefulWidget {
+  static String id$head = 'id_head';
+
   const HomePage({Key? key}) : super(key: key);
 
   @override
@@ -49,6 +51,7 @@ class HomePage extends StatefulWidget {
 ///===================================================================================================================
 class HomePageState extends StateBase<HomePage> {
   List<LessonModel> lessons = [];
+  List<LessonModel> lessonsBackup = [];
   List<int> openedLessonsIds = [];
   Requester requester = Requester();
   String state$loading = 'state_loading';
@@ -72,6 +75,7 @@ class HomePageState extends StateBase<HomePage> {
   Widget build(BuildContext context) {
     return Assist(
       controller: assistCtr,
+      id: HomePage.id$head,
       builder: (_, ctr, data) {
         if(assistCtr.hasState(state$error)){
           return ErrorOccur(
@@ -158,6 +162,7 @@ class HomePageState extends StateBase<HomePage> {
                                 padding: const EdgeInsets.symmetric(horizontal: 20),
                                 child: SearchBar(
                                   hint: 'جستجو در دروس',
+                                  onChangeEvent: onSearch,
                                   insertDefaultClearIcon: false,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -209,7 +214,7 @@ class HomePageState extends StateBase<HomePage> {
                     SliverList(
                       delegate: SliverChildBuilderDelegate((ctx, idx){
                         return buildListItem(lessons[idx]);
-                      },
+                        },
                         childCount: lessons.length,
                       ),
                     ),
@@ -684,6 +689,19 @@ class HomePageState extends StateBase<HomePage> {
     assistCtr.updateHead();
   }
 
+  void onSearch(String text){
+    lessons.clear();
+
+    if(text.length < 2){
+      lessons.addAll(lessonsBackup);
+    }
+    else {
+      lessons.addAll(lessonsBackup.where((element) => element.title.contains(text)));
+    }
+
+    assistCtr.updateHead();
+  }
+
   void onTryAgain(){
     assistCtr.clearStates();
     assistCtr.addStateAndUpdateHead(state$loading);
@@ -710,6 +728,7 @@ class HomePageState extends StateBase<HomePage> {
         }
       }
 
+      lessonsBackup.addAll(lessons);
       assistCtr.updateHead();
     };
 

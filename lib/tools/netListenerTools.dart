@@ -1,4 +1,4 @@
-import 'package:app/services/send_review_service.dart';
+import 'package:app/services/review_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:iris_tools/net/netManager.dart';
 
@@ -35,7 +35,7 @@ class NetListenerTools {
     if(connectivityResult != ConnectivityResult.none) {
       AppBroadcast.isNetConnected = true;
 
-      SendReviewService.sendReviews();
+      ReviewService.sendReviews();
     }
     else {
       AppBroadcast.isNetConnected = false;
