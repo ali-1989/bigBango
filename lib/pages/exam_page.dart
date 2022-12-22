@@ -31,10 +31,23 @@ class ExamPage extends StatefulWidget {
 }
 ///======================================================================================================================
 class _ExamPageState extends StateBase<ExamPage> {
+  int currentItemIdx = 0;
+  late List<ExamModel> itemList;
+  late ExamModel currentExam;
 
   @override
   void initState(){
     super.initState();
+
+    itemList = widget.injector.examList;
+
+    for (final element in itemList) {
+      if(!element.isPrepare) {
+        element.prepare();
+      }
+    }
+
+    currentExam = itemList[0];
   }
 
   @override
@@ -57,6 +70,17 @@ class _ExamPageState extends StateBase<ExamPage> {
   }
 
   Widget buildBody(){
+    Color preColor = Colors.black;
+    Color nextColor = Colors.black;
+
+    if(currentItemIdx == 0){
+      preColor = Colors.grey;
+    }
+
+    if(currentItemIdx == itemList.length-1){
+      nextColor = Colors.grey;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -107,15 +131,58 @@ class _ExamPageState extends StateBase<ExamPage> {
           ),
 
           SizedBox(height: 10),
+
+          /// progress bar
+          Visibility(
+            visible: itemList.length >1,
+              child: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
+              ),
+          ),
+
+          SizedBox(height: 10),
+
+          /// title
           Row(
             children: [
-              Text(ExamDescription.from(widget.injector.examList[0].exerciseType.type()).getText())
+              Text(ExamDescription.from(currentExam.exerciseType.type()).getText())
             ],
           ),
           SizedBox(height: 14),
 
-          /// exam
-          Expanded(child: buildExamView(widget.injector.examList[0])),
+          /// exam view
+          Expanded(child: buildExamView(currentExam)),
+
+          Visibility(
+            visible: itemList.length > 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton.icon(
+                      onPressed: onNextClick,
+                      icon: RotatedBox(
+                          quarterTurns: 2,
+                          child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
+                      ),
+                      label: Text('next').englishFont().color(nextColor)
+                  ),
+
+                  TextButton(
+                      style: TextButton.styleFrom(),
+                      onPressed: onPreClick,
+                      child: Text('ارسال جواب').englishFont(),
+                  ),
+
+                  TextButton.icon(
+                      style: TextButton.styleFrom(),
+                      onPressed: onPreClick,
+                      icon: Text('pre').englishFont().color(preColor),
+                      label: Image.asset(AppImages.arrowLeftIco, color: preColor)
+                  ),
+                ],
+              ),
+          ),
         ],
       ),
     );
@@ -135,6 +202,28 @@ class _ExamPageState extends StateBase<ExamPage> {
     return SizedBox();
   }
 
+  double calcProgress(){
+    int r = ((currentItemIdx+1) * 100) ~/ itemList.length;
+    return r/100;
+  }
+
+  void onNextClick(){
+    if(currentItemIdx < itemList.length-1) {
+      currentItemIdx++;
+
+      currentExam = itemList[currentItemIdx];
+      assistCtr.updateHead();
+    }
+  }
+
+  void onPreClick(){
+    if(currentItemIdx > -1){
+      currentItemIdx--;
+
+      currentExam = itemList[currentItemIdx];
+      assistCtr.updateHead();
+    }
+  }
 }
 
 

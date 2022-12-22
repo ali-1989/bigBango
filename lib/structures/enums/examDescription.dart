@@ -25,11 +25,11 @@ enum ExamDescription {
   String getText(){
     switch(_type){
       case 1:
-        return 'کلمه ی مناسب را انتخاب کنید';
+        return 'گزینه ی مناسب را انتخاب کنید';
       case 2:
         return 'جای خالی را پر کنید';
       case 3:
-        return 'گزینه ی مناسب را انتخاب کنید';
+        return 'کلمات را در جای مناسب قرار دهید';
     }
 
     return '';

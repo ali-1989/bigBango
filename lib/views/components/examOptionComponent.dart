@@ -1,4 +1,5 @@
-import 'package:app/tools/app/appToast.dart';
+import 'package:app/structures/enums/quizType.dart';
+import 'package:app/structures/models/examModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -8,8 +9,7 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/structures/interfaces/examStateInterface.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
-import 'package:app/tools/app/appImages.dart';
+
 
 class ExamOptionComponent extends StatefulWidget {
   final ExamInjector injector;
@@ -24,9 +24,9 @@ class ExamOptionComponent extends StatefulWidget {
 }
 ///======================================================================================================================
 class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implements ExamStateInterface {
-  Map<String, int?> selectedAnswers = {};
+  //Map<String, int?> selectedAnswers = {};
+  List<ExamModel> examList = [];
   bool showAnswers = false;
-  int currentExamIdx = 0;
   late TextStyle questionNormalStyle;
 
   @override
@@ -34,6 +34,7 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
     super.initState();
 
     widget.injector.state = this;
+    examList.addAll(widget.injector.examList.where((element) => element.exerciseType == QuizType.multipleChoice));
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
   }
 
@@ -53,101 +54,68 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
   }
 
   Widget buildBody(){
-    Color preColor = Colors.black;
-    Color nextColor = Colors.black;
-
-    if(currentExamIdx <= 0){
-      preColor = Colors.grey;
-    }
-
-    if(currentExamIdx >= widget.injector.examList.length-1){
-      nextColor = Colors.grey;
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
 
-          /// progress bar
-          Visibility(
-            visible: widget.injector.examList.length > 1,
-            child: Directionality(
-                textDirection: TextDirection.ltr,
-                child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
-            ),
-          ),
-
           /// exam
           Directionality(
             textDirection: TextDirection.ltr,
-            child: ListView(
+            child: ListView.builder(
               shrinkWrap: true,
               physics: const ScrollPhysics(),
-              children: [
-                ...buildQuestionAndOptions()
-              ],
+              itemCount: examList.length *2 -1,
+              itemBuilder: buildQuestionAndOptions,
             ),
           ),
 
 
           SizedBox(height: 10),
-
-          /// next, pre buttons
-          Visibility(
-            visible: widget.injector.examList.length > 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton.icon(
-                    onPressed: onNextClick,
-                    icon: RotatedBox(
-                        quarterTurns: 2,
-                        child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
-                    ),
-                    label: Text('next').englishFont().color(nextColor)
-                ),
-
-                TextButton.icon(
-                    style: TextButton.styleFrom(),
-                    onPressed: onPreClick,
-                    icon: Text('pre').englishFont().color(preColor),
-                    label: Image.asset(AppImages.arrowLeftIco, color: preColor)
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
   }
 
-  List<Widget> buildQuestionAndOptions(){
-    final res = <Widget>[];
-    final curExam = widget.injector.examList[currentExamIdx];
+  Widget buildQuestionAndOptions(_, int idx){
+    ///=== Divider
+    if(idx % 2 != 0){
+      return Divider(color: Colors.black, height: 2);
+    }
 
-    final questionWidget = DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(5)
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: Text(
-            curExam.question,
-            style: TextStyle(fontSize: 12, height: 1.7),
-          textAlign: TextAlign.justify,
+    final curExam = examList[idx~/2];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 10),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(5)
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: Text(
+                curExam.question,
+                style: TextStyle(fontSize: 12, height: 1.7),
+              textAlign: TextAlign.justify,
+            ),
+          ).wrapDotBorder(
+            color: Colors.grey.shade600,
+            radius: 5,
+          ),
         ),
-      ).wrapDotBorder(
-        color: Colors.grey.shade600,
-        radius: 5,
-      ),
+
+        SizedBox(height: 10),
+        ...buildOptions(curExam),
+        SizedBox(height: 20)
+      ],
     );
+  }
 
-    res.add(SizedBox(height: 20));
-    res.add(questionWidget);
-    res.add(SizedBox(height: 20));
-
+  List<Widget> buildOptions(ExamModel curExam){
+    List<Widget> res = [];
 
     for(final opt in curExam.choices){
       final w = GestureDetector(
@@ -157,14 +125,17 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
             return;
           }
 
-          final optionIdx = curExam.choices.indexOf(opt);
-          bool isSelected = selectedAnswers[curExam.id] == optionIdx;
+          bool isSelected = curExam.getUserChoiceById(opt.id) != null;
 
           if(isSelected){
-            selectedAnswers[curExam.id] = null;
+            curExam.userAnswers.removeWhere((element) => element.id == opt.id);
           }
           else {
-            selectedAnswers[curExam.id] = optionIdx;
+            final ex = ExamChoiceModel()..order = opt.order;
+            ex.id = opt.id;
+
+            curExam.userAnswers.clear();
+            curExam.userAnswers.add(ex);
           }
 
           assistCtr.updateHead();
@@ -176,8 +147,8 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
           cycles: 1,
           builder: (_, animate){
             final optionIdx = curExam.choices.indexOf(opt);
-            bool isSelected = selectedAnswers[curExam.id] == optionIdx;
-            bool isCorrect = optionIdx == widget.injector.examList[currentExamIdx].getCorrectChoiceIndex();
+            bool isSelected = curExam.getUserChoiceById(opt.id) != null;
+            bool isCorrect = optionIdx == curExam.getIndexOfCorrectChoice();
 
             Color backColor;
 
@@ -225,8 +196,8 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
   }
 
   bool isAllAnswer(){
-    for(final k in widget.injector.examList){
-      if(selectedAnswers[k.id] == null){
+    for(final k in examList){
+      if(k.userAnswers.isEmpty){
         return false;
       }
     }
@@ -234,32 +205,12 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
     return true;
   }
 
-  void onNextClick(){
-    if(currentExamIdx < widget.injector.examList.length-1) {
-      currentExamIdx++;
-    }
-
-    assistCtr.updateHead();
-  }
-
-  void onPreClick(){
-    if(currentExamIdx > 0) {
-      currentExamIdx--;
-      assistCtr.updateHead();
-    }
-  }
-
-  double calcProgress(){
-    int r = ((currentExamIdx+1) * 100) ~/ widget.injector.examList.length;
-    return r/100;
-  }
-
   @override
   void checkAnswers() {
-    if(selectedAnswers.isEmpty || selectedAnswers.length < currentExamIdx){
+    /*if(selectedAnswers.isEmpty || selectedAnswers.length < currentExamIdx){
       AppToast.showToast(context, 'لطفا یک گزینه را انتخاب کنید');
       return;
-    }
+    }*/
 
     showAnswers = !showAnswers;
     assistCtr.updateHead();

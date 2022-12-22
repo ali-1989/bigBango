@@ -338,9 +338,11 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   }
 
   void startExercise() async{
-    showLoading();
-    await requestExercise();
-    await hideLoading();
+    if(examList.isEmpty){
+      showLoading();
+      await requestExercise();
+      await hideLoading();
+    }
 
     if(examList.isNotEmpty){
       gotoExamPage();
@@ -401,14 +403,13 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     assistCtr.updateHead();
   }
 
-  void gotoExamPage(){
+  void gotoExamPage() async {
     final examComponentInjector = ExamInjector();
     examComponentInjector.lessonModel = widget.injector.lessonModel;
     examComponentInjector.examList = examList;
 
     final examPage = ExamPage(injector: examComponentInjector);
-
-    AppRoute.push(context, examPage);
+    await AppRoute.push(context, examPage);
   }
 
   void onRefresh(){
@@ -467,12 +468,15 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       final List? data = res['data'];
 
-      if(data is List){
-        for(final m in data){
-          final g = ExamModel.fromMap(m);
-          examList.add(g);
+      try{
+        if(data is List){
+          for(final m in data){
+            final g = ExamModel.fromMap(m);
+            examList.add(g);
+          }
         }
       }
+      catch (e){/**/}
 
       c.complete();
     };

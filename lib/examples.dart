@@ -9,7 +9,6 @@ class Examples {
   static List<ExamModel> genExams(){
     final res = <ExamModel>[];
 
-
     return res;
   }
 
@@ -36,3 +35,38 @@ class Examples {
     lessonModel.listeningModel!.listeningList.add(l2);
   }
 }
+
+
+
+/*
+void gotoExam(LessonModel model){
+
+    ExamModel ee = ExamModel();
+    ee.question = 'gggggg ** ffff ** ssss ** dddd';
+    ee.id = 'fdfff fgfg ffgg';
+    ee.quizType = QuizType.recorder;
+
+    ee.choices = [
+      ExamChoiceModel()..text = 'yes'..order=2,
+      ExamChoiceModel()..text = 'no'..order = 1,
+      ExamChoiceModel()..text = 'ok'..order = 0,
+    ];
+
+    ee.doSplitQuestion();
+    ExamInjector examComponentInjector = ExamInjector();
+    examComponentInjector.lessonModel = model;
+    examComponentInjector.segmentModel = model.grammarModel!;
+    examComponentInjector.examList.add(ee);
+
+    final component = ExamSelectWordComponent(injector: examComponentInjector);
+
+    final pageInjector = ExamPageInjector();
+    pageInjector.lessonModel = model;
+    pageInjector.segment = model.grammarModel!;
+    pageInjector.examPage = component;
+    pageInjector.description = 'ddd dff dfdf';
+    final examPage = ExamPage(injector: pageInjector);
+
+    AppRoute.push(context, examPage);
+  }
+ */

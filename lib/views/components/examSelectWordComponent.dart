@@ -1,4 +1,6 @@
+import 'package:app/structures/enums/quizType.dart';
 import 'package:app/tools/app/appThemes.dart';
+import 'package:app/tools/app/appToast.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -30,11 +32,14 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
   bool showAnswers = false;
   late TextStyle questionNormalStyle;
   int currentSelectIndex = -1;
+  List<ExamModel> examList = [];
 
   @override
   void initState() {
     super.initState();
 
+    widget.injector.state = this;
+    examList.addAll(widget.injector.examList.where((element) => element.exerciseType == QuizType.recorder));
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
   }
 
@@ -68,7 +73,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       listItemBuilder,
-                      childCount: widget.injector.examList.length * 2 - 1,
+                      childCount: examList.length * 2 - 1,
                     ),
                   ),
                 ],
@@ -85,7 +90,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
       return Divider(color: Colors.black, height: 2);
     }
 
-    final item = widget.injector.examList[idx ~/ 2];
+    final item = examList[idx ~/ 2];
     final List<InlineSpan> spans = generateSpans(item);
 
     return Directionality(
@@ -97,7 +102,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
 
           ///=== number box
           Visibility(
-            visible: widget.injector.examList.length > 1,
+            visible: examList.length > 1,
             child: CustomCard(
               color: Colors.white,
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
@@ -235,6 +240,13 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
 
   void onWordClick(ExamModel model, ExamChoiceModel ec) {
     if (currentSelectIndex < 0) {
+      for (final k in model.userAnswers){
+        if(k.id == ec.id){
+          return;
+        }
+      }
+
+      AppToast.showToast(context, 'ابتدا جای خالی را انتخاب کنید');
       return;
     }
 
@@ -332,7 +344,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
   void checkAnswers() {
     bool isAllSelected = true;
 
-    for (final model in widget.injector.examList) {
+    for (final model in examList) {
       for (final k in model.userAnswers) {
         if (k.id.isEmpty) {
           isAllSelected = false;
@@ -354,38 +366,3 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
     assistCtr.updateHead();
   }
 }
-
-
-
-/*
-void gotoExam(LessonModel model){
-
-    ExamModel ee = ExamModel();
-    ee.question = 'gggggg ** ffff ** ssss ** dddd';
-    ee.id = 'fdfff fgfg ffgg';
-    ee.quizType = QuizType.recorder;
-
-    ee.choices = [
-      ExamChoiceModel()..text = 'yes'..order=2,
-      ExamChoiceModel()..text = 'no'..order = 1,
-      ExamChoiceModel()..text = 'ok'..order = 0,
-    ];
-
-    ee.doSplitQuestion();
-    ExamInjector examComponentInjector = ExamInjector();
-    examComponentInjector.lessonModel = model;
-    examComponentInjector.segmentModel = model.grammarModel!;
-    examComponentInjector.examList.add(ee);
-
-    final component = ExamSelectWordComponent(injector: examComponentInjector);
-
-    final pageInjector = ExamPageInjector();
-    pageInjector.lessonModel = model;
-    pageInjector.segment = model.grammarModel!;
-    pageInjector.examPage = component;
-    pageInjector.description = 'ddd dff dfdf';
-    final examPage = ExamPage(injector: pageInjector);
-
-    AppRoute.push(context, examPage);
-  }
- */

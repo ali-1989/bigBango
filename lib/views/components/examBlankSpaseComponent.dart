@@ -1,3 +1,4 @@
+import 'package:app/structures/enums/quizType.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -28,11 +29,13 @@ class ExamBlankSpaceComponent extends StatefulWidget {
 class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> implements ExamStateInterface {
   bool showAnswers = false;
   late TextStyle questionNormalStyle;
+  List<ExamModel> examList = [];
 
   @override
   void initState(){
     super.initState();
 
+    examList.addAll(widget.injector.examList.where((element) => element.exerciseType == QuizType.fillInBlank));
     widget.injector.state = this;
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
   }
@@ -62,7 +65,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
           SliverList(
             delegate: SliverChildBuilderDelegate(
               listItemBuilder,
-              childCount: widget.injector.examList.length *2 -1,
+              childCount: examList.length *2 -1,
             ),
           ),
 
@@ -99,7 +102,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
       return Divider(color: Colors.black, height: 2);
     }
 
-    final item = widget.injector.examList[idx~/2];
+    final item = examList[idx~/2];
     final List<InlineSpan> spans = generateSpans(item);
 
     return Directionality(
@@ -110,7 +113,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
           SizedBox(height: 20),
           ///=== number box
           Visibility(
-            visible: widget.injector.examList.length > 1,
+            visible: examList.length > 1,
             child: CustomCard(
               color: Colors.white,
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
@@ -137,7 +140,6 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
 
   List<InlineSpan> generateSpans(ExamModel exam){
     final List<InlineSpan> spans = [];
-
     for(int i = 0; i < exam.questionSplit.length; i++) {
       spans.add(TextSpan(text: exam.questionSplit[i], style: questionNormalStyle));
 

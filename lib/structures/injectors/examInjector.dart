@@ -13,12 +13,7 @@ class ExamInjector {
     examList = list;
 
     for(final k in examList){
-      k.doSplitQuestion();
+      k.prepare();
     }
   }
 }
-/*///-----------------------------------------------------
-class ExamPageInjector {
-  late LessonModel lessonModel;
-  List<ExamInjector> exams = [];
-}*/

@@ -8,8 +8,8 @@ class ExamModel {
   List<ExamChoiceModel> choices = [];
 
   //----------- local
+  bool isPrepare = false;
   List<ExamChoiceModel> userAnswers = [];
-  int userSelectedOptionIndex = -1;
   List<String> questionSplit = [];
   List<ExamChoiceModel> shuffleWords = [];
 
@@ -21,15 +21,13 @@ class ExamModel {
     exerciseType = QuizType.from(js['exerciseType']);
 
     if(js['choices'] is List){
-      choices = js['choices'].map((e) => ExamChoiceModel.fromMap(e)).toList();
+      choices = js['choices'].map<ExamChoiceModel>((e) => ExamChoiceModel.fromMap(e)).toList();
     }
 
     //----------- local
     if(js['userAnswers'] is List){
-      userAnswers = js['userAnswers'].map((e) => ExamChoiceModel.fromMap(e)).toList();
+      userAnswers = js['userAnswers'].map<ExamChoiceModel>((e) => ExamChoiceModel.fromMap(e)).toList();
     }
-
-    userSelectedOptionIndex = js['userSelectedOptionIndex']?? -1;
   }
 
   Map<String, dynamic> toMap(){
@@ -42,12 +40,39 @@ class ExamModel {
 
     //----------- local
     js['userAnswers'] = userAnswers.map((e) => e.toMap()).toList();
-    js['userSelectedOptionIndex'] = userSelectedOptionIndex;
 
     return js;
   }
 
-  void doSplitQuestion(){
+  void prepare(){
+    if(exerciseType == QuizType.multipleChoice){
+      _generateUserAnswer();
+    }
+    else {
+      _doSplitQuestion();
+    }
+
+    if(exerciseType == QuizType.recorder){
+      shuffleWords = [...choices];
+      shuffleWords.shuffle();
+    }
+
+    isPrepare = true;
+  }
+
+  void _generateUserAnswer(){
+    userAnswers.clear();
+
+    /*for(int i = 0; i < choices.length; i++) {
+      final ex = ExamChoiceModel()..order = i;
+
+      ex.id = choices[i].id;
+
+      userAnswers.add(ex);
+    }*/
+  }
+
+  void _doSplitQuestion(){
     if(question.startsWith('**')){
       /// this trick used if question start with ** for correct splitting
       question = '\u2060$question';
@@ -58,16 +83,17 @@ class ExamModel {
     userAnswers.clear();
 
     for(int i = 0; i < questionSplit.length-1; i++) {
-      userAnswers.add(ExamChoiceModel()..order = i..id = '');
-    }
+      final ex = ExamChoiceModel()..order = i;
 
-    if(exerciseType == QuizType.recorder){
-      shuffleWords = [...choices];
-      shuffleWords.shuffle();
+      if(exerciseType == QuizType.multipleChoice){
+        ex.id = '';
+      }
+
+      userAnswers.add(ex);
     }
   }
 
-  int getCorrectChoiceIndex(){
+  int getIndexOfCorrectChoice(){
     for(int i = 0; i< choices.length; i++){
       if(choices[i].isCorrect){
         return i;
@@ -90,6 +116,16 @@ class ExamModel {
   ExamChoiceModel? getUserChoiceByOrder(int order){
     for(int i = 0; i< userAnswers.length; i++){
       if(userAnswers[i].order == order){
+        return userAnswers[i];
+      }
+    }
+
+    return null;
+  }
+
+  ExamChoiceModel? getUserChoiceById(String id){
+    for(int i = 0; i< userAnswers.length; i++){
+      if(userAnswers[i].id == id){
         return userAnswers[i];
       }
     }
