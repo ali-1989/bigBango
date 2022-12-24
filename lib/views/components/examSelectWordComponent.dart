@@ -17,7 +17,7 @@ import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/widgets/customCard.dart';
 
 class ExamSelectWordComponent extends StatefulWidget {
-  final ExamInjector injector;
+  final ExamPageInjector injector;
 
   const ExamSelectWordComponent({
     required this.injector,

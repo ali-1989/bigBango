@@ -1,12 +1,17 @@
 import 'dart:async';
 
+import 'package:app/pages/exam_page.dart';
+import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
+import 'package:app/structures/models/examModel.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormatter.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/api/taskQueueCaller.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/maxHeight.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
@@ -41,6 +46,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
   Duration totalTime = Duration();
   Duration currentTime = Duration();
   Duration lastPos = Duration();
+  List<ExamModel> examList = [];
   int currentItemIdx = 0;
   int currentSegmentIdx = 0;
   bool showTranslate = false;
@@ -242,8 +248,6 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                 );
                               },
                             ),
-
-
                           ],
                         ),
                       ),
@@ -365,9 +369,43 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                     ),
                   )
               ),
+
+              SizedBox(height: 20,),
+              Stack(
+                children: [
+                  MaxHeight(
+                      maxHeight: 150,
+                      child: AspectRatio(
+                          aspectRatio: 2/1,
+                          child: Image.asset(AppImages.examManMen)
+                      )
+                  ),
+
+                  Positioned(
+                    bottom: 16,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: startExercise,
+                        child: Chip(
+                            backgroundColor: AppColors.red,
+                            elevation: 0,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                            visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                            label: Text('شروع تمرین', style: TextStyle(fontSize: 14))
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 20,),
             ],
           ),
         ),
+
 
         Visibility(
           visible: itemList.length > 1,
@@ -544,6 +582,31 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     requestReading();
   }
 
+  void startExercise() async{
+    if(examList.isEmpty){
+      showLoading();
+      await requestExercise();
+      await hideLoading();
+    }
+
+    if(examList.isNotEmpty){
+      gotoExamPage();
+    }
+    else {
+      AppToast.showToast(context, 'تمرینی ثبت نشده است');
+    }
+  }
+
+  void gotoExamPage() async {
+    final examPageInjector = ExamPageInjector();
+    examPageInjector.lessonModel = widget.injector.lessonModel;
+    examPageInjector.examList = examList;
+    examPageInjector.answerUrl = '/reading/exercises/solving';
+
+    final examPage = ExamPage(injector: examPageInjector);
+    await AppRoute.push(context, examPage);
+  }
+
   void requestReading(){
     requester.httpRequestEvents.onFailState = (req, res) async {
       assistCtr.clearStates();
@@ -592,6 +655,37 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     reviewRequester.methodType = MethodType.post;
     reviewRequester.prepareUrl(pathUrl: '/reading/review');
     reviewRequester.request();
+  }
+
+  Future<void> requestExercise() async {
+    Completer c = Completer();
+    examList.clear();
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      c.complete(null);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
+      final List? data = res['data'];
+
+      try{
+        if(data is List){
+          for(final m in data){
+            final g = ExamModel.fromMap(m);
+            examList.add(g);
+          }
+        }
+      }
+      catch (e){/**/}
+
+      c.complete();
+    };
+
+    requester.methodType = MethodType.get;
+    requester.prepareUrl(pathUrl: '/reading/exercises?ReadingId=${currentItem!.id}');
+    requester.request(context);
+
+    return c.future;
   }
 }
 

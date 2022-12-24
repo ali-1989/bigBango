@@ -27,7 +27,7 @@ class LayoutPageState extends StateBase<LayoutPage> {
         return SafeArea(
           top: true,
           child: Scaffold(
-            appBar: const AppBarCustom(),
+            appBar: AppBarCustom(),
             extendBodyBehindAppBar: true,
             bottomNavigationBar: BottomNavBar(
                 selectedItemIndex: selectedPageIndex,

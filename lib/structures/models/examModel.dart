@@ -103,6 +103,16 @@ class ExamModel {
     return -1;
   }
 
+  ExamChoiceModel? getCorrectChoice(){
+    for(int i = 0; i< choices.length; i++){
+      if(choices[i].isCorrect){
+        return choices[i];
+      }
+    }
+
+    return null;
+  }
+
   ExamChoiceModel? getChoiceByOrder(int order){
     for(int i = 0; i< choices.length; i++){
       if(choices[i].order == order){
@@ -131,6 +141,94 @@ class ExamModel {
     }
 
     return null;
+  }
+
+  ExamChoiceModel? getChoiceById(String id){
+    for(int i = 0; i< choices.length; i++){
+      if(choices[i].id == id){
+        return choices[i];
+      }
+    }
+
+    return null;
+  }
+
+  String getUserAnswerText(){
+    if(exerciseType == QuizType.multipleChoice){
+      if(userAnswers.isNotEmpty){
+        return getChoiceById(userAnswers[0].id)!.text;
+      }
+    }
+    else if (exerciseType == QuizType.recorder){
+      var txt = question;
+      var order = 0;
+
+      while(txt.contains('**')){
+        final ans = getUserChoiceByOrder(order)!.text;
+
+        txt = txt.replaceFirst('**', '[${ans.isEmpty? 'بدون پاسخ': ans}]');
+        order++;
+      }
+
+      return txt;
+    }
+    else if (exerciseType == QuizType.fillInBlank){
+      var txt = question;
+      var order = 0;
+
+      while(txt.contains('**')){
+        final ans = getUserChoiceByOrder(order)!.text;
+
+        txt = txt.replaceFirst('**', '[${ans.isEmpty? 'بدون پاسخ': ans}]');
+        order++;
+      }
+
+      return txt;
+    }
+
+    return 'بدون پاسخ';
+  }
+
+  bool isUserAnswerCorrect(){
+    if(exerciseType == QuizType.multipleChoice){
+      if(userAnswers.isEmpty){
+        return false;
+      }
+
+      return userAnswers[0].id == getCorrectChoice()!.id;
+    }
+    else if (exerciseType == QuizType.recorder){
+      for (final k in userAnswers) {
+        if (k.id.isEmpty) {
+          return false;
+        }
+      }
+
+      for(int i=0; i< choices.length; i++){
+        final correctAnswer = getChoiceByOrder(i)!.text;
+        final userAnswer = getUserChoiceByOrder(i)!.text;
+
+        if(correctAnswer != userAnswer){
+          return false;
+        }
+      }
+
+      return true;
+    }
+    else if (exerciseType == QuizType.fillInBlank){
+      for(int i = 0; i < choices.length; i++){
+        final correctAnswer = getChoiceByOrder(i)!.text;
+        final userAnswer = getUserChoiceByOrder(i)!.text;
+
+        if(correctAnswer != userAnswer){
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    return false;
   }
 }
 ///==================================================================================================

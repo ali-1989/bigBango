@@ -41,7 +41,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   AudioPlayer player = AudioPlayer();
   Duration totalTime = Duration();
   Duration currentTime = Duration();
-  ExamInjector examComponentInjector = ExamInjector();
+  ExamPageInjector examPageInjector = ExamPageInjector();
   Widget examComponent = SizedBox();
   int currentItemIdx = 0;
   bool voiceIsOk = false;
@@ -61,7 +61,8 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     player.playbackEventStream.listen(eventListener);
     player.positionStream.listen(durationListener);
 
-    examComponentInjector.lessonModel = widget.injector.lessonModel;
+    examPageInjector.lessonModel = widget.injector.lessonModel;
+    examPageInjector.answerUrl = '/listening/exercises/solving';
 
     requestListening();
   }
@@ -266,7 +267,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
                     ),
                     onPressed: (){
-                      examComponentInjector.state.checkAnswers();
+                      examPageInjector.state.checkAnswers();
                     },
                     child: Text('ثبت')
                 ),
@@ -304,15 +305,15 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
   void buildExamView(){
     if(currentItem!.quiz.exerciseType == QuizType.fillInBlank){
-      examComponent = ExamBlankSpaceComponent(injector: examComponentInjector);
+      examComponent = ExamBlankSpaceComponent(injector: examPageInjector);
       description = 'با توجه به صوت جای خالی را پر کنید';
     }
     else if(currentItem!.quiz.exerciseType == QuizType.recorder){
-      examComponent = ExamSelectWordComponent(injector: examComponentInjector);
+      examComponent = ExamSelectWordComponent(injector: examPageInjector);
       description = 'با توجه به صوت کلمه ی مناسب را انتخاب کنید';
     }
     else if(currentItem!.quiz.exerciseType == QuizType.multipleChoice){
-      examComponent = ExamOptionComponent(injector: examComponentInjector);
+      examComponent = ExamOptionComponent(injector: examPageInjector);
       description = 'با توجه به صوت گزینه ی مناسب را انتخاب کنید';
     }
   }
@@ -347,7 +348,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       await prepareVoice();
       playerSliderValue = 0;
 
-      examComponentInjector.prepareExamList([currentItem!.quiz]);
+      examPageInjector.prepareExamList([currentItem!.quiz]);
       buildExamView();
 
       assistCtr.updateHead();
@@ -363,7 +364,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       await prepareVoice();
       playerSliderValue = 0;
 
-      examComponentInjector.prepareExamList([currentItem!.quiz]);
+      examPageInjector.prepareExamList([currentItem!.quiz]);
       buildExamView();
 
       assistCtr.updateHead();
@@ -444,7 +445,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       else {
         currentItem = itemList[0];
         prepareVoice();
-        examComponentInjector.prepareExamList([currentItem!.quiz]);
+        examPageInjector.prepareExamList([currentItem!.quiz]);
         buildExamView();
         assistCtr.updateHead();
       }

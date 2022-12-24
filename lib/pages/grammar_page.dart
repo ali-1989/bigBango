@@ -404,11 +404,12 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   }
 
   void gotoExamPage() async {
-    final examComponentInjector = ExamInjector();
-    examComponentInjector.lessonModel = widget.injector.lessonModel;
-    examComponentInjector.examList = examList;
+    final examPageInjector = ExamPageInjector();
+    examPageInjector.lessonModel = widget.injector.lessonModel;
+    examPageInjector.examList = examList;
+    examPageInjector.answerUrl = '/grammars/exercises/solving';
 
-    final examPage = ExamPage(injector: examComponentInjector);
+    final examPage = ExamPage(injector: examPageInjector);
     await AppRoute.push(context, examPage);
   }
 

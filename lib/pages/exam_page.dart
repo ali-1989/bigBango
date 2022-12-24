@@ -1,7 +1,9 @@
 import 'package:app/structures/enums/examDescription.dart';
 import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/injectors/examInjector.dart';
+import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/examModel.dart';
+import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/components/examBlankSpaseComponent.dart';
 import 'package:app/views/components/examOptionComponent.dart';
 import 'package:app/views/components/examSelectWordComponent.dart';
@@ -19,7 +21,7 @@ import 'package:app/views/widgets/customCard.dart';
 
 
 class ExamPage extends StatefulWidget {
-  final ExamInjector injector;
+  final ExamPageInjector injector;
 
   const ExamPage({
     required this.injector,
@@ -31,6 +33,7 @@ class ExamPage extends StatefulWidget {
 }
 ///======================================================================================================================
 class _ExamPageState extends StateBase<ExamPage> {
+  Requester requester = Requester();
   int currentItemIdx = 0;
   late List<ExamModel> itemList;
   late ExamModel currentExam;
@@ -53,6 +56,8 @@ class _ExamPageState extends StateBase<ExamPage> {
   @override
   void dispose(){
     super.dispose();
+
+    requester.dispose();
   }
 
   @override
@@ -168,10 +173,15 @@ class _ExamPageState extends StateBase<ExamPage> {
                       label: Text('next').englishFont().color(nextColor)
                   ),
 
-                  TextButton(
-                      style: TextButton.styleFrom(),
-                      onPressed: onPreClick,
-                      child: Text('ارسال جواب').englishFont(),
+                  ElevatedButton(
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                        shape: StadiumBorder()
+                      ),
+                      onPressed: sendAnswer,
+                      child: Text('ارسال جواب').englishFont().color(Colors.white),
                   ),
 
                   TextButton.icon(
@@ -223,6 +233,36 @@ class _ExamPageState extends StateBase<ExamPage> {
       currentExam = itemList[currentItemIdx];
       assistCtr.updateHead();
     }
+  }
+
+  void sendAnswer(){
+    requester.httpRequestEvents.onAnyState = (req) async {
+      await hideLoading();
+    };
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      AppSnack.showSnack$errorCommunicatingServer(context);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
+      AppSnack.showSnack$operationSuccess(context);
+    };
+
+    final js = <String, dynamic>{};
+    js['items'] = [
+      {
+        'exerciseId' : currentExam.id,
+        'answer' : currentExam.getUserAnswerText(),
+        'isCorrect' : currentExam.isUserAnswerCorrect(),
+      }
+    ];
+
+    requester.methodType = MethodType.post;
+    requester.prepareUrl(pathUrl: widget.injector.answerUrl);
+    requester.bodyJson = js;
+
+    showLoading();
+    requester.request(context);
   }
 }
 

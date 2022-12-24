@@ -21,7 +21,6 @@ import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/searchBar.dart';
 
-import 'package:app/pages/select_language_level_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
@@ -133,23 +132,18 @@ class HomePageState extends StateBase<HomePage> {
                               right: 0,
                               child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 30),
-                              child: GestureDetector(
-                                onTap: (){
-                                  AppRoute.push(context, SelectLanguageLevelPage());
-                                },
-                                child: Center(
-                                    child: Chip(
+                              child: Center(
+                                  child: Chip(
                                       backgroundColor: Colors.white,
-                                        label: RichText(
-                                          text: const TextSpan(
+                                      label: RichText(
+                                        text: const TextSpan(
                                             children: [
                                               TextSpan(text: 'آکادمی آنلاین آموزش انگلیسی ', style: TextStyle(color: Colors.black)),
                                               TextSpan(text: 'بیگ بنگو ', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
                                             ]
-                                          ),
-                                        )
-                                    )
-                                ),
+                                        ),
+                                      )
+                                  )
                               ),
                             ),
                             ),
@@ -764,11 +758,12 @@ class HomePageState extends StateBase<HomePage> {
         }
 
         if(quizzes.isNotEmpty || autodidacts.isNotEmpty){
-          final examComponentInjector = ExamInjector();
-          examComponentInjector.lessonModel = lessonModel;
-          examComponentInjector.examList = [];
+          final examPageInjector = ExamPageInjector();
+          examPageInjector.lessonModel = lessonModel;
+          examPageInjector.examList = [];
+          examPageInjector.answerUrl = '/quiz/solving';
 
-          final examPage = ExamPage(injector: examComponentInjector);
+          final examPage = ExamPage(injector: examPageInjector);
 
           AppRoute.push(context, examPage);
         }

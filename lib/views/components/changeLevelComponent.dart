@@ -1,3 +1,9 @@
+import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/userModel.dart';
+import 'package:app/system/publicAccess.dart';
+import 'package:app/system/session.dart';
+import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/tools/app/appSnack.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/colorHelper.dart';
@@ -8,19 +14,34 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 
-class ChangeLevel extends StatefulWidget {
-  const ChangeLevel({Key? key}) : super(key: key);
+class ChangeLevelComponent extends StatefulWidget {
+  const ChangeLevelComponent({Key? key}) : super(key: key);
 
   @override
-  State<ChangeLevel> createState() => _ChangeLevelState();
+  State<ChangeLevelComponent> createState() => _ChangeLevelComponentState();
 }
 ///=========================================================================================================
-class _ChangeLevelState extends StateBase<ChangeLevel> {
+class _ChangeLevelComponentState extends StateBase<ChangeLevelComponent> {
   int selectValue = 0;
+  Requester requester = Requester();
+  UserModel? user;
 
   @override
   void initState(){
     super.initState();
+
+    user = Session.getLastLoginUser();
+
+    if(user != null){
+      selectValue = user!.courseLevelId?? 0;
+    }
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+
+    requester.dispose();
   }
 
   @override
@@ -46,7 +67,9 @@ class _ChangeLevelState extends StateBase<ChangeLevel> {
                   const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Text(AppMessages.selectLevelDescription, textAlign: TextAlign.center, style: const TextStyle(height: 1.4)),
+                    child: Text(AppMessages.selectLevelDescription, textAlign: TextAlign.center,
+                        style: const TextStyle(height: 1.4)
+                    ),
                   ),
 
                   const SizedBox(height: 25),
@@ -101,7 +124,7 @@ class _ChangeLevelState extends StateBase<ChangeLevel> {
                                     ),
                                     const SizedBox(width: 18),
                                     RichText(
-                                      text: const TextSpan(
+                                      text: TextSpan(
                                           children: [
                                             TextSpan(
                                               text: 'سطح ',
@@ -109,7 +132,7 @@ class _ChangeLevelState extends StateBase<ChangeLevel> {
                                             ),
 
                                             TextSpan(
-                                              text: 'پایه',
+                                              text: PublicAccess.getLevelText(0),
                                               style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
                                             ),
                                           ]
@@ -147,7 +170,7 @@ class _ChangeLevelState extends StateBase<ChangeLevel> {
 
                                     const SizedBox(width: 18),
                                     RichText(
-                                      text: const TextSpan(
+                                      text: TextSpan(
                                           children: [
                                             TextSpan(
                                               text: 'سطح ',
@@ -155,7 +178,7 @@ class _ChangeLevelState extends StateBase<ChangeLevel> {
                                             ),
 
                                             TextSpan(
-                                              text: 'مبتدی',
+                                              text: PublicAccess.getLevelText(1),
                                               style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
                                             ),
                                           ]
@@ -192,7 +215,7 @@ class _ChangeLevelState extends StateBase<ChangeLevel> {
 
                                     const SizedBox(width: 18),
                                     RichText(
-                                      text: const TextSpan(
+                                      text: TextSpan(
                                           children: [
                                             TextSpan(
                                               text: 'سطح ',
@@ -200,7 +223,7 @@ class _ChangeLevelState extends StateBase<ChangeLevel> {
                                             ),
 
                                             TextSpan(
-                                              text: 'متوسط',
+                                              text: PublicAccess.getLevelText(2),
                                               style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
                                             ),
                                           ]
@@ -237,7 +260,7 @@ class _ChangeLevelState extends StateBase<ChangeLevel> {
 
                                     const SizedBox(width: 18),
                                     RichText(
-                                      text: const TextSpan(
+                                      text: TextSpan(
                                           children: [
                                             TextSpan(
                                               text: 'سطح ',
@@ -245,7 +268,7 @@ class _ChangeLevelState extends StateBase<ChangeLevel> {
                                             ),
 
                                             TextSpan(
-                                              text: 'پیشرفته',
+                                              text: PublicAccess.getLevelText(3),
                                               style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
                                             ),
                                           ]
@@ -292,6 +315,29 @@ class _ChangeLevelState extends StateBase<ChangeLevel> {
     return Image.asset(AppImages.selectLevelIco);
   }
 
-  void sendClick(){}
+  void sendClick(){
+    requester.httpRequestEvents.onAnyState = (req) async {
+      await hideLoading();
+    };
 
+    requester.httpRequestEvents.onFailState = (req, data) async {
+      AppSnack.showSnack$OperationFailed(context);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, data) async {
+      final user = Session.getLastLoginUser()!;
+      user.courseLevelId = selectValue;
+      await Session.sinkUserInfo(user);
+      AppSnack.showSnack$operationSuccess(context);
+
+      AppBroadcast.reBuildMaterial();
+    };
+
+    requester.bodyJson = {'courseLevelId' : selectValue};
+    requester.prepareUrl(pathUrl: '/profile/update');
+    requester.methodType = MethodType.put;
+
+    showLoading();
+    requester.request(context, false);
+  }
 }

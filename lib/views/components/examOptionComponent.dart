@@ -12,7 +12,7 @@ import 'package:app/system/extensions.dart';
 
 
 class ExamOptionComponent extends StatefulWidget {
-  final ExamInjector injector;
+  final ExamPageInjector injector;
 
   const ExamOptionComponent({
     required this.injector,

@@ -15,7 +15,7 @@ import 'package:app/views/widgets/animationPositionScale.dart';
 import 'package:app/views/widgets/customCard.dart';
 
 class ExamBlankSpaceComponent extends StatefulWidget {
-  final ExamInjector injector;
+  final ExamPageInjector injector;
 
   const ExamBlankSpaceComponent({
     required this.injector,

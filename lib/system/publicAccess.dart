@@ -76,6 +76,20 @@ class PublicAccess {
   static WidgetsBinding getAppWidgetsBinding() {
     return WidgetsBinding.instance;
   }
+
+  static String getLevelText(int i){
+    try {
+      for(final k in PublicAccess.courseLevels){
+        if(k['id'] == i+1){
+          return k['name'];
+        }
+      }
+    }
+    catch (e){/**/}
+
+    return '-';
+  }
+
   /*static UpperLower findUpperLower(List<DateFieldMixin> list, bool isAsc){
     final res = UpperLower();
 
