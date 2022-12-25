@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app/pages/exam_page.dart';
+import 'package:app/services/review_service.dart';
 import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/models/examModel.dart';
@@ -59,6 +60,11 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
   String id$playerViewId = 'playerViewId';
   TextStyle normalStyle = TextStyle(height: 1.7, color: Colors.black);
   TextStyle readStyle = TextStyle(height: 1.7, color: Colors.deepOrange);
+  TextStyle clickableStyle = TextStyle(height: 1.7,
+      color: Colors.blue,
+      decorationStyle: TextDecorationStyle.solid,
+    decoration: TextDecoration.underline
+  );
   TaskQueueCaller<Set<String>, dynamic> reviewTaskQue = TaskQueueCaller();
   Timer? reviewSendTimer;
 
@@ -129,7 +135,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
       nextColor = Colors.grey;
     }
     
-    currentItem?.prepareSpans(currentSegmentIdx, normalStyle, readStyle);
+    ///currentItem?.prepareSpans(currentSegmentIdx, normalStyle, readStyle, clickableStyle);
 
     return Column(
       children: [
@@ -151,8 +157,8 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                 ),
               ),
 
+              /// title
               SizedBox(height: 20),
-
               Visibility(
                 visible: currentItem?.title != null,
                 child: Row(
@@ -196,8 +202,8 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                 ),
               ),
 
+              /// content
               SizedBox(height: 10),
-
               SizedBox(
                 width: sw,
                 child: DecoratedBox(
@@ -223,7 +229,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                     child: RichText(
                                       key: ValueKey(Generator.generateKey(4)),
                                       text: TextSpan(
-                                          children: currentItem?.spans
+                                          children: currentItem!.genSpans(currentItem!.segments[currentItemIdx].id, normalStyle, readStyle, clickableStyle)
                                       ),
                                     ),
                                   ),
@@ -241,7 +247,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                     child: RichText(
                                       key: ValueKey(Generator.generateKey(4)),
                                       text: TextSpan(
-                                          children: currentItem?.spansTranslate
+                                          children: currentItem!.genTranslateSpans(currentItem!.segments[currentItemIdx].id, normalStyle, readStyle)
                                       ),
                                     ),
                                   ),
@@ -264,6 +270,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
               SizedBox(height: 20),
 
+              /// buttons
               DecoratedBox(
                   decoration: BoxDecoration(
                       color: Colors.grey.shade300,
@@ -370,6 +377,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                   )
               ),
 
+              /// exam
               SizedBox(height: 20,),
               Stack(
                 children: [
@@ -618,6 +626,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
       if(data is List){
         for(final m in data){
+          print(m);
           final g = ReadingModel.fromMap(m);
           itemList.add(g);
         }
@@ -645,6 +654,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     };
 
     reviewRequester.httpRequestEvents.onStatusOk = (req, res) async {
+      ReviewService.requestUpdateReviews(widget.injector.lessonModel);
     };
 
     final js = <String, dynamic>{};

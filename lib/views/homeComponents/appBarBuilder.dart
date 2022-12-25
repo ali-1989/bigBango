@@ -126,7 +126,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                               visualDensity: VisualDensity.compact,
                               padding: EdgeInsets.zero
                           ),
-                          child: Text(PublicAccess.getLevelText(Session.getLastLoginUser()?.courseLevelId?? 0)),
+                          child: Text(PublicAccess.getCourseLevelById(Session.getLastLoginUser()?.courseLevel?.id?? 1)?.name?? '-'),
                         ),
                         const SizedBox(width: 5),
                         Image.asset(AppImages.levelBadgeIco),

@@ -1,8 +1,10 @@
 import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/courselevelModel.dart';
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +24,7 @@ class ChangeLevelComponent extends StatefulWidget {
 }
 ///=========================================================================================================
 class _ChangeLevelComponentState extends StateBase<ChangeLevelComponent> {
-  int selectValue = 0;
+  CourseLevelModel? selectedLevel;
   Requester requester = Requester();
   UserModel? user;
 
@@ -32,8 +34,8 @@ class _ChangeLevelComponentState extends StateBase<ChangeLevelComponent> {
 
     user = Session.getLastLoginUser();
 
-    if(user != null){
-      selectValue = user!.courseLevelId?? 0;
+    if(user != null && user!.courseLevel != null){
+      selectedLevel = user!.courseLevel;
     }
   }
 
@@ -100,185 +102,7 @@ class _ChangeLevelComponentState extends StateBase<ChangeLevelComponent> {
 
                           const SizedBox(height: 25),
 
-                          GestureDetector(
-                            onTap: (){
-                              selectValue = 0;
-                              assistCtr.updateHead();
-                            },
-                            child: Card(
-                              color: Colors.grey.shade100,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 13),
-                                child: Row(
-                                  children: [
-                                    Builder(
-                                        builder: (ctx){
-                                          if(selectValue == 0){
-                                            return getSelectedBox();
-                                          }
-
-                                          return getEmptyBox();
-                                        }
-                                    ),
-                                    const SizedBox(width: 18),
-                                    RichText(
-                                      text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: 'سطح ',
-                                              style: TextStyle(color: Colors.black),
-                                            ),
-
-                                            TextSpan(
-                                              text: PublicAccess.getLevelText(0),
-                                              style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
-                                            ),
-                                          ]
-                                      ),
-                                    ),
-
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          GestureDetector(
-                            onTap: (){
-                              selectValue = 1;
-                              assistCtr.updateHead();
-                            },
-                            child: Card(
-                              color: Colors.grey.shade100,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 13),
-                                child: Row(
-                                  children: [
-                                    Builder(
-                                        builder: (ctx){
-                                          if(selectValue == 1){
-                                            return getSelectedBox();
-                                          }
-
-                                          return getEmptyBox();
-                                        }
-                                    ),
-
-                                    const SizedBox(width: 18),
-                                    RichText(
-                                      text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: 'سطح ',
-                                              style: TextStyle(color: Colors.black),
-                                            ),
-
-                                            TextSpan(
-                                              text: PublicAccess.getLevelText(1),
-                                              style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
-                                            ),
-                                          ]
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          GestureDetector(
-                            onTap: (){
-                              selectValue = 2;
-                              assistCtr.updateHead();
-                            },
-                            child: Card(
-                              color: Colors.grey.shade100,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 13),
-                                child: Row(
-                                  children: [
-                                    Builder(
-                                        builder: (ctx){
-                                          if(selectValue == 2){
-                                            return getSelectedBox();
-                                          }
-
-                                          return getEmptyBox();
-                                        }
-                                    ),
-
-                                    const SizedBox(width: 18),
-                                    RichText(
-                                      text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: 'سطح ',
-                                              style: TextStyle(color: Colors.black),
-                                            ),
-
-                                            TextSpan(
-                                              text: PublicAccess.getLevelText(2),
-                                              style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
-                                            ),
-                                          ]
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          GestureDetector(
-                            onTap: (){
-                              selectValue = 3;
-                              assistCtr.updateHead();
-                            },
-                            child: Card(
-                              color: Colors.grey.shade100,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 13),
-                                child: Row(
-                                  children: [
-                                    Builder(
-                                        builder: (ctx){
-                                          if(selectValue == 3){
-                                            return getSelectedBox();
-                                          }
-
-                                          return getEmptyBox();
-                                        }
-                                    ),
-
-                                    const SizedBox(width: 18),
-                                    RichText(
-                                      text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: 'سطح ',
-                                              style: TextStyle(color: Colors.black),
-                                            ),
-
-                                            TextSpan(
-                                              text: PublicAccess.getLevelText(3),
-                                              style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
-                                            ),
-                                          ]
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                          ...buildChoice(),
 
                           const SizedBox(height: 30),
 
@@ -307,7 +131,62 @@ class _ChangeLevelComponentState extends StateBase<ChangeLevelComponent> {
     );
   }
 
-  Widget getEmptyBox(){
+  List<Widget> buildChoice(){
+    List<Widget> res = [];
+
+    for(final k in PublicAccess.courseLevels){
+      final itm = GestureDetector(
+        onTap: (){
+          selectedLevel = k;
+          assistCtr.updateHead();
+        },
+        child: Card(
+          color: Colors.grey.shade100,
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 13),
+            child: Row(
+              children: [
+                Builder(
+                    builder: (ctx){
+                      if(selectedLevel == k){
+                        return getSelectedBox();
+                      }
+
+                      return getEmptyBox();
+                    }
+                ),
+                const SizedBox(width: 18),
+                RichText(
+                  text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'سطح ',
+                          style: TextStyle(color: Colors.black),
+                        ),
+
+                        TextSpan(
+                          text: k.name,
+                          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
+                        ),
+                      ]
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+        ),
+      );
+
+      res.add(itm);
+    }
+
+    return res;
+  }
+
+ Widget getEmptyBox(){
     return Image.asset(AppImages.emptyBoxIco);
   }
 
@@ -326,14 +205,20 @@ class _ChangeLevelComponentState extends StateBase<ChangeLevelComponent> {
 
     requester.httpRequestEvents.onStatusOk = (req, data) async {
       final user = Session.getLastLoginUser()!;
-      user.courseLevelId = selectValue;
+      user.courseLevel = selectedLevel;
       await Session.sinkUserInfo(user);
       AppSnack.showSnack$operationSuccess(context);
 
       AppBroadcast.reBuildMaterial();
+      AppBroadcast.homePageKey.currentState?.requestLessons();
+      AppBroadcast.homePageKey.currentState?.assistCtr.updateHead();
+
+      Future.delayed(Duration(seconds: 1), (){
+        AppRoute.popTopView(context);
+      });
     };
 
-    requester.bodyJson = {'courseLevelId' : selectValue};
+    requester.bodyJson = {'courseLevelId' : selectedLevel!.id};
     requester.prepareUrl(pathUrl: '/profile/update');
     requester.methodType = MethodType.put;
 

@@ -1,3 +1,5 @@
+import 'package:app/structures/models/courselevelModel.dart';
+import 'package:app/system/publicAccess.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:iris_tools/models/dataModels/mediaModel.dart';
 
@@ -14,7 +16,7 @@ class UserModel {
   Token? token;
   MediaModel? avatarModel;
   String? email;
-  int? courseLevelId;
+  CourseLevelModel? courseLevel;
   //---------------- locale
   DateTime? loginDate;
 
@@ -31,7 +33,7 @@ class UserModel {
     mobile = map[Keys.mobileNumber]?.toString();
     gender = map[Keys.gender];
     email = map['email'];
-    courseLevelId = map['courseLevelId']?? 1;
+    courseLevel = PublicAccess.getCourseLevelById(map['courseLevelId']?? 0);
 
     if(map[Keys.token] is Map) {
       token = Token.fromMap(map[Keys.token]);
@@ -72,7 +74,7 @@ class UserModel {
     map[Keys.gender] = gender;
     map['avatar'] = avatarModel?.toMap();
     map['email'] = email;
-    map['courseLevelId'] = courseLevelId;
+    map['courseLevelId'] = courseLevel?.id;
 
     if (token != null) {
       map[Keys.token] = token!.toMap();
@@ -93,7 +95,7 @@ class UserModel {
     gender = other.gender;
     avatarModel = other.avatarModel;
     email = other.email;
-    courseLevelId = other.courseLevelId;
+    courseLevel = other.courseLevel;
     token = other.token;
 
     //--------------------------------- local

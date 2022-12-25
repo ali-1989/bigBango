@@ -10,9 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/api/system.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
-
-
-
 class FirstPageComponent extends StatelessWidget {
   const FirstPageComponent({Key? key}) : super(key: key);
 
@@ -25,7 +22,7 @@ class FirstPageComponent extends StatelessWidget {
 
           final user = Session.getLastLoginUser()!;
 
-          if(user.courseLevelId == null){
+          if(user.courseLevel == null){
             return SelectLanguageLevelPage();
           }
 

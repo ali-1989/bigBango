@@ -6,6 +6,7 @@ import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
+import 'package:app/structures/models/courselevelModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +31,7 @@ class PublicAccess {
   static late Reporter reporter;
   static String serverApi = SettingsManager.settingsModel.httpAddress;
   /// {id: 1, name: پایه, order: 1}, {id: 2, name: مبتدی, order: 2}, {id: 3, name: متوسط, order: 3}, {id: 4, name: پیشرفته, order: 4}
-  static List<Map> courseLevels = [];
+  static List<CourseLevelModel> courseLevels = [];
   /// login, determiningCourseLevel
   static Map advertisingVideos = {};
   /** "supportPhoneNumber": "031-32355205",
@@ -77,17 +78,14 @@ class PublicAccess {
     return WidgetsBinding.instance;
   }
 
-  static String getLevelText(int i){
-    try {
-      for(final k in PublicAccess.courseLevels){
-        if(k['id'] == i+1){
-          return k['name'];
-        }
+  static CourseLevelModel? getCourseLevelById(int id){
+    for(final x in PublicAccess.courseLevels){
+      if(x.id == id){
+        return x;
       }
     }
-    catch (e){/**/}
 
-    return '-';
+    return null;
   }
 
   /*static UpperLower findUpperLower(List<DateFieldMixin> list, bool isAsc){

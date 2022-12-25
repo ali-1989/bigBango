@@ -121,6 +121,8 @@ class SplashScreenState extends StateBase<SplashPage> {
     }
     else {
       _isConnectToServer = true;
+      /// this is for CourseLevelId
+      Session.fetchLoginUsers();
       callState();
     }
   }

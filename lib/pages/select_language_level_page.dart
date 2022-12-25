@@ -355,13 +355,13 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
 
     requester.httpRequestEvents.onStatusOk = (req, data) async {
       final user = Session.getLastLoginUser()!;
-      user.courseLevelId = 1;
+      user.courseLevel = PublicAccess.getCourseLevelById(1);
       Session.sinkUserInfo(user);
 
       AppBroadcast.reBuildMaterial();
     };
 
-    requester.bodyJson = {'courseLevelId' : 1};
+    requester.bodyJson = {'courseLevelId' : PublicAccess.getCourseLevelById(1)};
     requester.prepareUrl(pathUrl: '/profile/update');
     requester.methodType = MethodType.put;
 

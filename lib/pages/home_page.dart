@@ -12,6 +12,7 @@ import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/models/examModel.dart';
 import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
+
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/views/components/selectListeningDialog.dart';
 import 'package:flutter/material.dart';
@@ -703,6 +704,8 @@ class HomePageState extends StateBase<HomePage> {
   }
 
   void requestLessons(){
+    lessons.clear();
+
     requester.httpRequestEvents.onFailState = (req, res) async {
       assistCtr.clearStates();
       assistCtr.addStateAndUpdateHead(state$error);
@@ -710,7 +713,6 @@ class HomePageState extends StateBase<HomePage> {
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       assistCtr.clearStates();
-      lessons.clear();
 
       final List? data = res['data'];
 
@@ -727,7 +729,7 @@ class HomePageState extends StateBase<HomePage> {
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/lessons?CourseLevelId=${Session.getLastLoginUser()?.courseLevelId}');
+    requester.prepareUrl(pathUrl: '/lessons?CourseLevelId=${Session.getLastLoginUser()?.courseLevel?.id}');
     requester.request(context);
   }
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/services/review_service.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:flutter/material.dart';
@@ -494,6 +495,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     };
 
     reviewRequester.httpRequestEvents.onStatusOk = (req, res) async {
+      ReviewService.requestUpdateReviews(widget.injector.lessonModel);
     };
 
     final js = <String, dynamic>{};

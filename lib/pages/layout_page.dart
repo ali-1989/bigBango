@@ -1,3 +1,4 @@
+import 'package:app/tools/app/appBroadcast.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -36,8 +37,8 @@ class LayoutPageState extends StateBase<LayoutPage> {
             body: PageView(
               controller: pageController,
               physics: const NeverScrollableScrollPhysics(),
-              children: const [
-                HomePage(),
+              children: [
+                HomePage(key: AppBroadcast.homePageKey),
                 LightnerPage(),
                 HomePage(),
                 HomePage(),

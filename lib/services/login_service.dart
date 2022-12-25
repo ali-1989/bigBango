@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:app/managers/settingsManager.dart';
+import 'package:app/structures/models/courselevelModel.dart';
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:dio/dio.dart';
-import 'package:iris_tools/api/converter.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/system.dart';
 
@@ -171,7 +171,14 @@ class LoginService {
       final js = JsonHelper.jsonToMap(response.data);
       final data = js?['data']?? {};
 
-      PublicAccess.courseLevels = Converter.correctList<Map>(data['courseLevels'])?? [];
+      final courseLevels = data['courseLevels'];
+
+      if(courseLevels is List){
+        for(final k in courseLevels){
+          PublicAccess.courseLevels.add(CourseLevelModel.fromMap(k));
+        }
+      }
+
       PublicAccess.advertisingVideos = data['advertisingVideos']?? {};
       PublicAccess.contacts = data['contact']?? {};
       final versionModel = VersionModel.fromMap(data['version']?? {});

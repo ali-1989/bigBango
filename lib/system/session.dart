@@ -25,16 +25,20 @@ class Session {
 			for (final row in list) {
 				final isCur = getExistLoginUserById(row[Keys.userId]);
 
-				if(isCur == null) {
-					final n = (row as Map).map<String, dynamic>((k, v){
-						return MapEntry<String, dynamic>(k.toString(), v);
-					});
+				final n = (row as Map).map<String, dynamic>((k, v){
+					return MapEntry<String, dynamic>(k.toString(), v);
+				});
 
+				if(isCur == null) {
 					currentLoginList.add(createOrUpdateUserModel(n, null));
+				}
+				else {
+					createOrUpdateUserModel(n, isCur);
 				}
 			}
 		}
 
+		/// last user
 		final lastSaved = SettingsManager.settingsModel.lastUserId;
 
 		if (!Checker.isNullOrEmpty(lastSaved)) {

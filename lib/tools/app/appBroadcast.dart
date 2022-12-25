@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/notifyRefresh.dart';
@@ -20,6 +21,7 @@ class AppBroadcast {
   static final rootScaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   static final rootNavigatorKey = GlobalKey<NavigatorState>();
   static final layoutPageKey = GlobalKey<LayoutPageState>();
+  static final homePageKey = GlobalKey<HomePageState>();
 
   //static final homePageBadges = <int, int>{};
   static bool isNetConnected = true;

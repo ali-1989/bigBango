@@ -1,3 +1,4 @@
+import 'package:app/system/publicAccess.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
@@ -119,7 +120,7 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
                   children: [
                     TextButton.icon(
                         onPressed: (){
-                          Session.getLastLoginUser()?.courseLevelId = 0;
+                          Session.getLastLoginUser()?.courseLevel = PublicAccess.getCourseLevelById(1);
                           AppBroadcast.reBuildMaterial();
                         },
                         icon: Image.asset(AppImages.arrowRightIco),
