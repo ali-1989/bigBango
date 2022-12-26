@@ -65,7 +65,7 @@ class _VocabPageState extends StateBase<VocabPage> {
   void initState(){
     super.initState();
 
-    currentVocabIdx = widget.injector.lessonModel.vocabModel!.reviewCount;
+    currentVocabIdx = widget.injector.lessonModel.vocabModel?.reviewCount?? 0;
 
     if(currentVocabIdx > 0){
       currentVocabIdx--;
@@ -79,8 +79,14 @@ class _VocabPageState extends StateBase<VocabPage> {
       requestSetReview(lis);
     });
 
-    assistCtr.addState(AssistController.state$loading);
-    requestVocabs();
+    if(widget.injector.vocabModel != null) {
+      vocabList.add(widget.injector.vocabModel!);
+      currentVocab = widget.injector.vocabModel!;
+    }
+    else {
+      assistCtr.addState(AssistController.state$loading);
+      requestVocabs();
+    }
   }
 
   @override
@@ -157,24 +163,27 @@ class _VocabPageState extends StateBase<VocabPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Chip(
-                                label: Text(widget.injector.segment.title).bold().color(Colors.white),
-                                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-                                visualDensity: VisualDensity.compact,
-                              ),
-
-                              SizedBox(width: 10),
-
-                              /*SizedBox(
-                                height: 15,
-                                width: 2,
-                                child: ColoredBox(
-                                  color: Colors.black45,
+                          Visibility(
+                            visible: widget.injector.segment != null,
+                            child: Row(
+                              children: [
+                                Chip(
+                                  label: Text('${widget.injector.segment?.title}').bold().color(Colors.white),
+                                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                                  visualDensity: VisualDensity.compact,
                                 ),
-                              ),*/
-                            ],
+
+                                SizedBox(width: 10),
+
+                                /*SizedBox(
+                                  height: 15,
+                                  width: 2,
+                                  child: ColoredBox(
+                                    color: Colors.black45,
+                                  ),
+                                ),*/
+                              ],
+                            ),
                           ),
 
                           Row(
@@ -432,7 +441,6 @@ class _VocabPageState extends StateBase<VocabPage> {
                                           SizedBox(height: 10),
 
                                           ...buildDescription(),
-
                                         ],
                                       ),
                                     ),
@@ -452,25 +460,28 @@ class _VocabPageState extends StateBase<VocabPage> {
           ),
         ),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton.icon(
-                onPressed: onNextClick,
-                icon: RotatedBox(
-                    quarterTurns: 2,
-                    child: Image.asset(AppImages.arrowLeftIco, color: nextBtnColor)
-                ),
-                label: Text('next').englishFont().color(nextBtnColor)
-            ),
+        Visibility(
+          visible: vocabList.length > 1,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton.icon(
+                  onPressed: onNextClick,
+                  icon: RotatedBox(
+                      quarterTurns: 2,
+                      child: Image.asset(AppImages.arrowLeftIco, color: nextBtnColor)
+                  ),
+                  label: Text('next').englishFont().color(nextBtnColor)
+              ),
 
-            TextButton.icon(
-                style: TextButton.styleFrom(),
-                onPressed: onPreClick,
-                icon: Text('pre').englishFont().color(preBtnColor),
-                label: Image.asset(AppImages.arrowLeftIco, color: preBtnColor)
-            ),
-          ],
+              TextButton.icon(
+                  style: TextButton.styleFrom(),
+                  onPressed: onPreClick,
+                  icon: Text('pre').englishFont().color(preBtnColor),
+                  label: Image.asset(AppImages.arrowLeftIco, color: preBtnColor)
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -654,7 +665,6 @@ class _VocabPageState extends StateBase<VocabPage> {
 
     assistCtr.updateHead();
   }
-
 
   void gotoNextPart(){
     final page = PublicAccess.getNextPart(widget.injector.lessonModel);

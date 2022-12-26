@@ -1,11 +1,16 @@
 import 'dart:async';
 
 import 'package:app/pages/exam_page.dart';
+import 'package:app/pages/vocab_page.dart';
 import 'package:app/services/review_service.dart';
+import 'package:app/services/vocab_clickable_service.dart';
 import 'package:app/structures/injectors/examInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
+import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/models/examModel.dart';
+import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/app/appSnack.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormatter.dart';
@@ -63,7 +68,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
   TextStyle clickableStyle = TextStyle(height: 1.7,
       color: Colors.blue,
       decorationStyle: TextDecorationStyle.solid,
-    decoration: TextDecoration.underline
+    //decoration: TextDecoration.underline
   );
   TaskQueueCaller<Set<String>, dynamic> reviewTaskQue = TaskQueueCaller();
   Timer? reviewSendTimer;
@@ -229,7 +234,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                     child: RichText(
                                       key: ValueKey(Generator.generateKey(4)),
                                       text: TextSpan(
-                                          children: currentItem!.genSpans(currentItem!.segments[currentItemIdx].id, normalStyle, readStyle, clickableStyle)
+                                          children: currentItem!.genSpans(currentItem!.segments[currentSegmentIdx].id, normalStyle, readStyle, clickableStyle, onVocabClick)
                                       ),
                                     ),
                                   ),
@@ -237,22 +242,25 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                               },
                             ),
 
-                            AnimatedBuilder(
-                              animation: anim2Ctr,
-                              builder: (_, c){
-                                return Transform.translate(
-                                  offset: Offset(0, anim2Ctr.value),
-                                  child: Opacity(
-                                    opacity: (anim2Ctr.value/30 -1).abs(),
-                                    child: RichText(
-                                      key: ValueKey(Generator.generateKey(4)),
-                                      text: TextSpan(
-                                          children: currentItem!.genTranslateSpans(currentItem!.segments[currentItemIdx].id, normalStyle, readStyle)
+                            IgnorePointer(
+                              ignoring: true,
+                                child: AnimatedBuilder(
+                                  animation: anim2Ctr,
+                                  builder: (_, c){
+                                    return Transform.translate(
+                                      offset: Offset(0, anim2Ctr.value),
+                                      child: Opacity(
+                                        opacity: (anim2Ctr.value/30 -1).abs(),
+                                        child: RichText(
+                                          key: ValueKey(Generator.generateKey(4)),
+                                          text: TextSpan(
+                                              children: currentItem!.genTranslateSpans(currentItem!.segments[currentSegmentIdx].id, normalStyle, readStyle)
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              },
+                                    );
+                                  },
+                                )
                             ),
                           ],
                         ),
@@ -626,7 +634,6 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
       if(data is List){
         for(final m in data){
-          print(m);
           final g = ReadingModel.fromMap(m);
           itemList.add(g);
         }
@@ -696,6 +703,26 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     requester.request(context);
 
     return c.future;
+  }
+
+  void onVocabClick(ReadingTextSplitHolder i) async {
+    if(i.vocab != null){
+      showLoading();
+      final v = await VocabClickableService.requestVocab(i.vocab!.id);
+      await hideLoading();
+
+      if(v != null) {
+        final lessonModel = LessonModel();
+        lessonModel.title = '--';
+        AppRoute.push(context, VocabPage(injector: VocabIdiomsPageInjector(lessonModel)..vocabModel = v));
+      }
+      else {
+        AppSnack.showSnack$OperationFailed(context);
+      }
+    }
+    else {
+      //AppRoute.push(context, VocabPage(injector: VocabIdiomsPageInjector(lessonModel)));
+    }
   }
 }
 

@@ -23,7 +23,7 @@ class LessonModel {
   LessonModel.fromMap(Map map) {
     id = map[Keys.id];
     title = map[Keys.title];
-    isLock = map['isLock'];
+    isLock = map['isLock']?? false;
     number = map['number']?? 0;
     improvementPercentage = MathHelper.clearToDouble(map['progress']);
 

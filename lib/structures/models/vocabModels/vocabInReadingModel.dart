@@ -18,4 +18,9 @@ class VocabInReadingModel {
 
     return map;
   }
+
+  @override
+  String toString(){
+    return word;
+  }
 }

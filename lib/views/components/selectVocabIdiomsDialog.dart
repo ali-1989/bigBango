@@ -48,7 +48,7 @@ class _SelectVocabIdiomsDialog extends State<SelectVocabIdiomsDialog> {
 
                   SizedBox(height: 10),
                   Chip(
-                      label: Text(widget.injector.segment.title).bold().color(Colors.white),
+                      label: Text(widget.injector.segment!.title).bold().color(Colors.white),
                       labelPadding: EdgeInsets.symmetric(horizontal: 10),
                       visualDensity: VisualDensity.compact
                   ),
