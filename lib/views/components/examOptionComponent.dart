@@ -6,7 +6,7 @@ import 'package:animator/animator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/injectors/examInjector.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/interfaces/examStateInterface.dart';
 import 'package:app/system/extensions.dart';
 
@@ -195,6 +195,7 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
     return res;
   }
 
+  @override
   bool isAllAnswer(){
     for(final k in examList){
       if(k.userAnswers.isEmpty){
@@ -207,11 +208,6 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
 
   @override
   void checkAnswers() {
-    /*if(selectedAnswers.isEmpty || selectedAnswers.length < currentExamIdx){
-      AppToast.showToast(context, 'لطفا یک گزینه را انتخاب کنید');
-      return;
-    }*/
-
     showAnswers = !showAnswers;
     assistCtr.updateHead();
   }

@@ -4,11 +4,12 @@ import 'package:app/pages/grammar_page.dart';
 import 'package:app/pages/listening_page.dart';
 import 'package:app/pages/reading_page.dart';
 import 'package:app/pages/vocab_page.dart';
-import 'package:app/structures/injectors/examInjector.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
+import 'package:app/structures/models/autodidactModel.dart';
 import 'package:app/structures/models/examModel.dart';
 import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
@@ -415,11 +416,11 @@ class HomePageState extends StateBase<HomePage> {
                           padding: const EdgeInsets.symmetric(vertical: 7),
                           child: Row(
                             children: [
-                              buildSegment(lesson, lesson.vocabModel ?? lesson.grammarModel),
+                              buildSegment(lesson, lesson.vocabSegmentModel ?? lesson.grammarModel),
 
                               SizedBox(width: 8),
 
-                              buildSegment(lesson, lesson.vocabModel != null ? lesson.grammarModel : null),
+                              buildSegment(lesson, lesson.vocabSegmentModel != null ? lesson.grammarModel : null),
                             ],
                           ),
                         ),
@@ -750,19 +751,23 @@ class HomePageState extends StateBase<HomePage> {
         final List quizzes = data['quizzes']?? [];
         final List autodidacts = data['autodidacts']?? [];
 
+        List<ExamModel> examList = [];
+        List<AutodidactModel> autodidactList = [];
+
         for (final k in quizzes) {
           final exam = ExamModel.fromMap(k);
-          //lessons.add(les);
+          examList.add(exam);
         }
 
         for (final k in autodidacts) {
-          //final les = LessonModel.fromMap(k);
+          final exam = AutodidactModel.fromMap(k);
+          autodidactList.add(exam);
         }
 
         if(quizzes.isNotEmpty || autodidacts.isNotEmpty){
           final examPageInjector = ExamPageInjector();
           examPageInjector.lessonModel = lessonModel;
-          examPageInjector.examList = [];
+          examPageInjector.examList = examList;
           examPageInjector.answerUrl = '/quiz/solving';
 
           final examPage = ExamPage(injector: examPageInjector);

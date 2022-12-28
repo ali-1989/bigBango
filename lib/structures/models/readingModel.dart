@@ -15,7 +15,8 @@ class ReadingModel {
   MediaModel? media;
   List<SegmentOfReadingModel> segments = [];
   List<IdiomInReadingModel> clickableIdioms = [];
-  List<VocabInReadingModel> clickableVocabs = [];
+  List<VocabInReadingModel> clickableVocabsOrg = [];
+  List<VocabInReadingModel> clickableVocabsScope = [];
   ///------------------------------------
   List<ReadingTextSplitHolder> textSplits = [];
   List<ReadingTextSplitHolder> translateSplits = [];
@@ -44,8 +45,10 @@ class ReadingModel {
     if(map['vocabularies'] is List) {
       for(final itm in map['vocabularies']){
         final s = VocabInReadingModel.fromMap(itm);
-        clickableVocabs.add(s);
+        clickableVocabsOrg.add(s);
       }
+
+      clickableVocabsScope.addAll(clickableVocabsOrg);
     }
 
     if(map['idioms'] is List) {
@@ -155,7 +158,7 @@ class ReadingModel {
           textSplits.add(holder);
         }
         else {
-          final vIndex = getVocabIndex(holder.text, clickableVocabs);
+          final vIndex = getVocabIndex(holder.text, clickableVocabsScope);
           if(vIndex.isEmpty){
             final tsh = ReadingTextSplitHolder();
             tsh.segmentId = segment.id;
@@ -165,6 +168,10 @@ class ReadingModel {
             textSplits.add(tsh);
           }
           else {
+            for(final x in vIndex){
+              clickableVocabsScope.removeWhere((element) => element.id == x.vocab.id);
+            }
+
             bool notVocab = false;
             int lastIdx = 0;
 

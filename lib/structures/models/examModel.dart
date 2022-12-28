@@ -1,11 +1,14 @@
+import 'package:app/structures/abstract/examAutodidactModel.dart';
 import 'package:app/structures/enums/quizType.dart';
 import 'package:iris_tools/api/generator.dart';
 
-class ExamModel {
+
+class ExamModel extends ExamAutodidactModel {
   late String id;
   late String question;
   QuizType exerciseType = QuizType.unKnow;
   List<ExamChoiceModel> choices = [];
+  List<ExamSolveModel> solveItems = [];
 
   //----------- local
   bool isPrepare = false;
@@ -24,6 +27,10 @@ class ExamModel {
       choices = js['choices'].map<ExamChoiceModel>((e) => ExamChoiceModel.fromMap(e)).toList();
     }
 
+    if(js['solveItems'] is List){
+      choices = js['solveItems'].map<ExamChoiceModel>((e) => ExamSolveModel.fromMap(e)).toList();
+    }
+
     //----------- local
     if(js['userAnswers'] is List){
       userAnswers = js['userAnswers'].map<ExamChoiceModel>((e) => ExamChoiceModel.fromMap(e)).toList();
@@ -37,6 +44,7 @@ class ExamModel {
     js['question'] = question;
     js['exerciseType'] = exerciseType.type();
     js['choices'] = choices.map((e) => e.toMap()).toList();
+    js['solveItems'] = solveItems.map((e) => e.toMap()).toList();
 
     //----------- local
     js['userAnswers'] = userAnswers.map((e) => e.toMap()).toList();
@@ -254,6 +262,30 @@ class ExamChoiceModel {
     js['text'] = text;
     js['isCorrect'] = isCorrect;
     js['order'] = order;
+
+    return js;
+  }
+}
+///==================================================================================================
+class ExamSolveModel {
+  String quizId = '';
+  String answer = '';
+  bool isCorrect = false;
+
+  ExamSolveModel();
+
+  ExamSolveModel.fromMap(Map js){
+    quizId = js['quizId'];
+    answer = js['answer'];
+    isCorrect = js['isCorrect']?? false;
+  }
+
+  Map<String, dynamic> toMap(){
+    final js = <String, dynamic>{};
+
+    js['quizId'] = quizId;
+    js['answer'] = answer;
+    js['isCorrect'] = isCorrect;
 
     return js;
   }

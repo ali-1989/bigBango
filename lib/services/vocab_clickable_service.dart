@@ -1,30 +1,45 @@
 import 'dart:async';
 
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/models/vocabModels/vocabModel.dart';
 
 class VocabClickableService {
   static final requester = Requester();
 
   VocabClickableService._();
 
-  static Future<VocabModel?> requestVocab(String id) {
+  static Future<Map?> requestVocab(String id) {
     requester.dispose();
-    Completer<VocabModel?> com = Completer();
+    Completer<Map?> com = Completer();
 
     requester.httpRequestEvents.onFailState = (req, res) async {
       com.complete(null);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
-      final data = res['data'];
-
-      final v = VocabModel.fromMap(data);
-      com.complete(v);
+      com.complete(res['data']);
     };
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/vocabularies/details?Id=$id');
+    requester.request();
+
+    return com.future;
+  }
+
+  static Future<Map?> requestIdioms(String id) {
+    requester.dispose();
+    Completer<Map?> com = Completer();
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      com.complete(null);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
+      com.complete(res['data']);
+    };
+
+    requester.methodType = MethodType.get;
+    requester.prepareUrl(pathUrl: '/idioms/details?Id=$id');
     requester.request();
 
     return com.future;

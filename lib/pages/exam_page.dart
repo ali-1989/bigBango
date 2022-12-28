@@ -1,9 +1,14 @@
+import 'package:app/structures/abstract/examAutodidactModel.dart';
 import 'package:app/structures/enums/examDescription.dart';
 import 'package:app/structures/enums/quizType.dart';
-import 'package:app/structures/injectors/examInjector.dart';
+import 'package:app/structures/injectors/autodidactPageInjector.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/autodidactModel.dart';
 import 'package:app/structures/models/examModel.dart';
 import 'package:app/tools/app/appSnack.dart';
+import 'package:app/tools/app/appToast.dart';
+import 'package:app/views/components/autodidactTextComponent.dart';
 import 'package:app/views/components/examBlankSpaseComponent.dart';
 import 'package:app/views/components/examOptionComponent.dart';
 import 'package:app/views/components/examSelectWordComponent.dart';
@@ -35,8 +40,8 @@ class ExamPage extends StatefulWidget {
 class _ExamPageState extends StateBase<ExamPage> {
   Requester requester = Requester();
   int currentItemIdx = 0;
-  late List<ExamModel> itemList;
-  late ExamModel currentExam;
+  List<ExamAutodidactModel> itemList = [];
+  late ExamAutodidactModel currentExam;
 
   @override
   void initState(){
@@ -44,10 +49,16 @@ class _ExamPageState extends StateBase<ExamPage> {
 
     itemList = widget.injector.examList;
 
-    for (final element in itemList) {
+    for (final element in widget.injector.examList) {
       if(!element.isPrepare) {
         element.prepare();
       }
+
+      itemList.add(element);
+    }
+
+    for (final element in widget.injector.autodidactList) {
+      itemList.add(element);
     }
 
     currentExam = itemList[0];
@@ -77,6 +88,11 @@ class _ExamPageState extends StateBase<ExamPage> {
   Widget buildBody(){
     Color preColor = Colors.black;
     Color nextColor = Colors.black;
+    String title = '';
+
+    if(currentExam is ExamModel){
+      title = ExamDescription.from((currentExam as ExamModel).exerciseType.type()).getText();
+    }
 
     if(currentItemIdx == 0){
       preColor = Colors.grey;
@@ -151,7 +167,7 @@ class _ExamPageState extends StateBase<ExamPage> {
           /// title
           Row(
             children: [
-              Text(ExamDescription.from(currentExam.exerciseType.type()).getText())
+              Text(title)
             ],
           ),
           SizedBox(height: 14),
@@ -198,15 +214,30 @@ class _ExamPageState extends StateBase<ExamPage> {
     );
   }
 
-  Widget buildExamView(ExamModel examModel){
-    if(examModel.exerciseType == QuizType.fillInBlank){
-      return ExamBlankSpaceComponent(injector: widget.injector);
+  Widget buildExamView(ExamAutodidactModel model){
+    if(model is ExamModel){
+      if(model.exerciseType == QuizType.fillInBlank){
+        return ExamBlankSpaceComponent(injector: widget.injector);
+      }
+      else if(model.exerciseType == QuizType.recorder){
+        return ExamSelectWordComponent(injector: widget.injector);
+      }
+      else if(model.exerciseType == QuizType.multipleChoice){
+        return ExamOptionComponent(injector: widget.injector);
+      }
     }
-    else if(examModel.exerciseType == QuizType.recorder){
-      return ExamSelectWordComponent(injector: widget.injector);
-    }
-    else if(examModel.exerciseType == QuizType.multipleChoice){
-      return ExamOptionComponent(injector: widget.injector);
+
+    else if(model is AutodidactModel){
+      final injector = AutodidactPageInjector();
+      injector.autodidactModel = currentExam as AutodidactModel;
+      injector.lessonModel = widget.injector.lessonModel;
+
+      if(model.question != null){
+        return AutodidactTextComponent(injector: injector);
+      }
+      else if(model.voice != null){
+        return AutodidactTextComponent(injector: injector);
+      }
     }
 
     return SizedBox();
@@ -236,6 +267,19 @@ class _ExamPageState extends StateBase<ExamPage> {
   }
 
   void sendAnswer(){
+    if(currentExam is! ExamModel){
+      return;
+    }
+
+    ExamModel exam = currentExam as ExamModel;
+
+    if(exam.exerciseType == QuizType.multipleChoice){
+      if(!widget.injector.state.isAllAnswer()){
+        AppToast.showToast(context, 'لطفا یک گزینه را انتخاب کنید');
+        return;
+      }
+    }
+
     requester.httpRequestEvents.onAnyState = (req) async {
       await hideLoading();
     };
@@ -245,15 +289,18 @@ class _ExamPageState extends StateBase<ExamPage> {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
-      AppSnack.showSnack$operationSuccess(context);
+      final message = res['message']?? 'پاسخ شما ثبت شد';
+
+      AppSnack.showInfo(context, message);
+      widget.injector.state.checkAnswers();
     };
 
     final js = <String, dynamic>{};
     js['items'] = [
       {
-        'exerciseId' : currentExam.id,
-        'answer' : currentExam.getUserAnswerText(),
-        'isCorrect' : currentExam.isUserAnswerCorrect(),
+        'exerciseId' : exam.id,
+        'answer' : exam.getUserAnswerText(),
+        'isCorrect' : exam.isUserAnswerCorrect(),
       }
     ];
 

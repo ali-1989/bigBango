@@ -13,7 +13,7 @@ class LessonModel {
   int number = 0;
   double improvementPercentage = 0;
   int quizProgress = 0;
-  VocabularySegmentModel? vocabModel;
+  VocabularySegmentModel? vocabSegmentModel;
   GrammarSegmentModel? grammarModel;
   ReadingSegmentModel? readingModel;
   ListeningSegmentModel? listeningModel;
@@ -28,7 +28,7 @@ class LessonModel {
     improvementPercentage = MathHelper.clearToDouble(map['progress']);
 
     if(map['vocabulary'] is Map) {
-      vocabModel = VocabularySegmentModel.fromMap(map['vocabulary']);
+      vocabSegmentModel = VocabularySegmentModel.fromMap(map['vocabulary']);
     }
 
     if(map['grammar'] is Map) {
@@ -56,7 +56,7 @@ class LessonModel {
     map['number'] = number;
     map['isLock'] = isLock;
     map['progress'] = improvementPercentage;
-    map['vocabulary'] = vocabModel?.toMap();
+    map['vocabulary'] = vocabSegmentModel?.toMap();
     map['grammar'] = grammarModel?.toMap();
     map['reading'] = readingModel?.toMap();
     map['listeningCategory'] = listeningModel?.toMap();
@@ -72,8 +72,8 @@ class LessonModel {
     improvementPercentage = others.improvementPercentage;
     isLock = others.isLock;
 
-    if(others.vocabModel != null) {
-      vocabModel?.matchBy(others.vocabModel!);
+    if(others.vocabSegmentModel != null) {
+      vocabSegmentModel?.matchBy(others.vocabSegmentModel!);
     }
 
     if(others.grammarModel != null) {

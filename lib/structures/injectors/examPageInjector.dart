@@ -1,10 +1,12 @@
 import 'package:app/structures/interfaces/examStateInterface.dart';
+import 'package:app/structures/models/autodidactModel.dart';
 import 'package:app/structures/models/examModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 
 class ExamPageInjector {
   late LessonModel lessonModel;
   List<ExamModel> examList = [];
+  List<AutodidactModel> autodidactList = [];
   late ExamStateInterface state;
   String answerUrl = '';
 

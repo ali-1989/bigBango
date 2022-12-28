@@ -151,7 +151,7 @@ class PublicAccess {
   static Widget? getNextPart(LessonModel lessonModel){
     Widget? page;
 
-    if(lessonModel.vocabModel != null && lessonModel.vocabModel!.hasIdioms){
+    if(lessonModel.vocabSegmentModel != null && lessonModel.vocabSegmentModel!.hasIdioms){
       page = IdiomsPage(injector: VocabIdiomsPageInjector(lessonModel));
     }
     else if (lessonModel.grammarModel != null){

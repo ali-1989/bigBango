@@ -61,19 +61,26 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
   void initState(){
     super.initState();
 
-    currentIdiomIdx = widget.injector.lessonModel.vocabModel!.idiomReviewCount;
+    currentIdiomIdx = widget.injector.lessonModel.vocabSegmentModel?.idiomReviewCount?? 0;
 
     if(currentIdiomIdx > 0){
       currentIdiomIdx--;
     }
 
-    assistCtr.addState(AssistController.state$loading);
-
     reviewTaskQue.setFn((Set<String> lis, value){
       requestSetReview(lis);
     });
 
-    requestIdioms();
+    if(widget.injector.idiomModel != null) {
+      idiomsList.add(widget.injector.idiomModel!);
+      currentIdiom = widget.injector.idiomModel!;
+
+      initVideo();
+    }
+    else {
+      assistCtr.addState(AssistController.state$loading);
+      requestIdioms();
+    }
   }
 
   @override
@@ -169,45 +176,51 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                       SizedBox(height: 14),
 
                       /// 7/20
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Chip(
-                                label: Text('اصطلاحات').bold().color(Colors.white),//widget.injection.segment.title
-                                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-                                visualDensity: VisualDensity.compact,
-                              ),
+                      Visibility(
+                        visible: idiomsList.length > 1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Chip(
+                                  label: Text('اصطلاحات').bold().color(Colors.white),//widget.injection.segment.title
+                                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                                  visualDensity: VisualDensity.compact,
+                                ),
 
-                              SizedBox(width: 10),
-                            ],
-                          ),
+                                SizedBox(width: 10),
+                              ],
+                            ),
 
-                          Row(
-                            children: [
-                              Text('${idiomsList.length}').englishFont().fsR(4),
+                            Row(
+                              children: [
+                                Text('${idiomsList.length}').englishFont().fsR(4),
 
-                              SizedBox(width: 10),
-                              Text('/').englishFont().fsR(5),
+                                SizedBox(width: 10),
+                                Text('/').englishFont().fsR(5),
 
-                              SizedBox(width: 10),
-                              CustomCard(
-                                color: Colors.grey.shade200,
-                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                                  child: Text('${currentIdiomIdx+1}').englishFont().bold().fsR(4)
-                              )
-                            ],
-                          ),
-                        ],
+                                SizedBox(width: 10),
+                                CustomCard(
+                                  color: Colors.grey.shade200,
+                                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                    child: Text('${currentIdiomIdx+1}').englishFont().bold().fsR(4)
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
 
                       SizedBox(height: 14),
 
                       /// progressbar
-                      Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
+                      Visibility(
+                        visible: idiomsList.length > 1,
+                        child: Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
+                        ),
                       ),
 
                       SizedBox(height: 14),
@@ -336,25 +349,28 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
           ),
         ),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton.icon(
-                onPressed: onNextClick,
-                icon: RotatedBox(
-                    quarterTurns: 2,
-                    child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
-                ),
-                label: Text('next').englishFont().color(nextColor)
-            ),
+        Visibility(
+          visible: idiomsList.length > 1,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton.icon(
+                  onPressed: onNextClick,
+                  icon: RotatedBox(
+                      quarterTurns: 2,
+                      child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
+                  ),
+                  label: Text('next').englishFont().color(nextColor)
+              ),
 
-            TextButton.icon(
-                style: TextButton.styleFrom(),
-                onPressed: onPreClick,
-                icon: Text('pre').englishFont().color(preColor),
-                label: Image.asset(AppImages.arrowLeftIco, color: preColor)
-            ),
-          ],
+              TextButton.icon(
+                  style: TextButton.styleFrom(),
+                  onPressed: onPreClick,
+                  icon: Text('pre').englishFont().color(preColor),
+                  label: Image.asset(AppImages.arrowLeftIco, color: preColor)
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -397,7 +413,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
       currentIdiom = idiomsList[currentIdiomIdx];
       showTranslate = currentIdiom.showTranslation;
 
-      if(!widget.injector.lessonModel.vocabModel!.reviewIds.contains(currentIdiom.id)) {
+      if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentIdiom.id)) {
         sendReview(currentIdiom.id);
       }
     }
@@ -513,7 +529,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
         assistCtr.updateHead();
         initVideo();
 
-        if(!widget.injector.lessonModel.vocabModel!.reviewIds.contains(currentIdiom.id)) {
+        if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentIdiom.id)) {
           sendReview(currentIdiom.id);
         }
       }
@@ -539,8 +555,8 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
 
     if(status){
       reviewIds.removeAll(ids);
-      widget.injector.lessonModel.vocabModel!.reviewIds.addAll(ids);
-      widget.injector.lessonModel.vocabModel!.reviewCount++;
+      widget.injector.lessonModel.vocabSegmentModel!.reviewIds.addAll(ids);
+      widget.injector.lessonModel.vocabSegmentModel!.reviewCount++;
 
       ReviewService.requestUpdateReviews(widget.injector.lessonModel);
     }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/injectors/examInjector.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/interfaces/examStateInterface.dart';
 import 'package:app/structures/models/examModel.dart';
 import 'package:app/system/extensions.dart';
@@ -326,6 +326,19 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
     }
 
     return spans;
+  }
+
+  @override
+  bool isAllAnswer(){
+    for(final k in examList){
+      for(final x in k.userAnswers) {
+        if (x.text.isEmpty) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   @override

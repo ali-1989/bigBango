@@ -1,14 +1,17 @@
 import 'dart:async';
 
 import 'package:app/pages/exam_page.dart';
+import 'package:app/pages/idioms_page.dart';
 import 'package:app/pages/vocab_page.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/services/vocab_clickable_service.dart';
-import 'package:app/structures/injectors/examInjector.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/models/examModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
+import 'package:app/structures/models/vocabModels/idiomModel.dart';
+import 'package:app/structures/models/vocabModels/vocabModel.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:flutter/material.dart';
@@ -708,10 +711,11 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
   void onVocabClick(ReadingTextSplitHolder i) async {
     if(i.vocab != null){
       showLoading();
-      final v = await VocabClickableService.requestVocab(i.vocab!.id);
+      final data = await VocabClickableService.requestVocab(i.vocab!.id);
       await hideLoading();
 
-      if(v != null) {
+      if(data != null) {
+        final v = VocabModel.fromMap(data['vocab']);
         final lessonModel = LessonModel();
         lessonModel.title = '--';
         AppRoute.push(context, VocabPage(injector: VocabIdiomsPageInjector(lessonModel)..vocabModel = v));
@@ -721,7 +725,19 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
       }
     }
     else {
-      //AppRoute.push(context, VocabPage(injector: VocabIdiomsPageInjector(lessonModel)));
+      showLoading();
+      final data = await VocabClickableService.requestIdioms(i.idiom!.id);
+      await hideLoading();
+
+      if(data != null) {
+        final i = IdiomModel.fromMap(data['idiom']);
+        final lessonModel = LessonModel();
+        lessonModel.title = '---';
+        AppRoute.push(context, IdiomsPage(injector: VocabIdiomsPageInjector(lessonModel)..idiomModel = i));
+      }
+      else {
+        AppSnack.showSnack$OperationFailed(context);
+      }
     }
   }
 }

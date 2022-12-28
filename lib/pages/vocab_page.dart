@@ -65,7 +65,7 @@ class _VocabPageState extends StateBase<VocabPage> {
   void initState(){
     super.initState();
 
-    currentVocabIdx = widget.injector.lessonModel.vocabModel?.reviewCount?? 0;
+    currentVocabIdx = widget.injector.lessonModel.vocabSegmentModel?.reviewCount?? 0;
 
     if(currentVocabIdx > 0){
       currentVocabIdx--;
@@ -186,20 +186,23 @@ class _VocabPageState extends StateBase<VocabPage> {
                             ),
                           ),
 
-                          Row(
-                            children: [
-                              Text('${vocabList.length}').englishFont().fsR(4),
+                          Visibility(
+                            visible: vocabList.length > 1,
+                            child: Row(
+                              children: [
+                                Text('${vocabList.length}').englishFont().fsR(4),
 
-                              SizedBox(width: 10),
-                              Text('/').englishFont().fsR(5),
+                                SizedBox(width: 10),
+                                Text('/').englishFont().fsR(5),
 
-                              SizedBox(width: 10),
-                              CustomCard(
-                                color: Colors.grey.shade200,
-                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                                  child: Text('${currentVocabIdx+1}').englishFont().bold().fsR(4)
-                              )
-                            ],
+                                SizedBox(width: 10),
+                                CustomCard(
+                                  color: Colors.grey.shade200,
+                                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                    child: Text('${currentVocabIdx+1}').englishFont().bold().fsR(4)
+                                )
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -207,9 +210,12 @@ class _VocabPageState extends StateBase<VocabPage> {
                       SizedBox(height: 14),
 
                       /// progressbar
-                      Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
+                      Visibility(
+                        visible: vocabList.length > 1,
+                        child: Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
+                        ),
                       ),
 
                       SizedBox(height: 14),
@@ -684,7 +690,7 @@ class _VocabPageState extends StateBase<VocabPage> {
       currentVocab = vocabList[currentVocabIdx];
       showTranslate = currentVocab.showTranslation;
 
-      if(!widget.injector.lessonModel.vocabModel!.reviewIds.contains(currentVocab.id)) {
+      if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentVocab.id)) {
         sendReview(currentVocab.id);
       }
     }
@@ -746,7 +752,7 @@ class _VocabPageState extends StateBase<VocabPage> {
       assistCtr.clearStates();
       assistCtr.updateHead();
 
-      if(!widget.injector.lessonModel.vocabModel!.reviewIds.contains(currentVocab.id)) {
+      if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentVocab.id)) {
         sendReview(currentVocab.id);
       }
     };
@@ -789,8 +795,8 @@ class _VocabPageState extends StateBase<VocabPage> {
 
     if(status){
       reviewIds.removeAll(ids);
-      widget.injector.lessonModel.vocabModel!.reviewIds.addAll(ids);
-      widget.injector.lessonModel.vocabModel!.reviewCount++;
+      widget.injector.lessonModel.vocabSegmentModel!.reviewIds.addAll(ids);
+      widget.injector.lessonModel.vocabSegmentModel!.reviewCount++;
 
       ReviewService.requestUpdateReviews(widget.injector.lessonModel);
     }
