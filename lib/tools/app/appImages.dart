@@ -88,6 +88,8 @@ class AppImages {
   static const aboutUs = 'assets/images/aboutUs.png';
   static const rulesIco = 'assets/images/rulesIco.png';
   static const callUsIco = 'assets/images/call-us.png';
+  static const doubleArrow = 'assets/images/doubleArrow.png';
+  static const mic = 'assets/images/mic.png';
 }
 
 

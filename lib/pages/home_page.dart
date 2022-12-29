@@ -744,7 +744,6 @@ class HomePageState extends StateBase<HomePage> {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
-
       final data = res['data'];
 
       if(data is Map){
@@ -768,6 +767,7 @@ class HomePageState extends StateBase<HomePage> {
           final examPageInjector = ExamPageInjector();
           examPageInjector.lessonModel = lessonModel;
           examPageInjector.examList = examList;
+          examPageInjector.autodidactList = autodidactList;
           examPageInjector.answerUrl = '/quiz/solving';
 
           final examPage = ExamPage(injector: examPageInjector);

@@ -47,8 +47,6 @@ class _ExamPageState extends StateBase<ExamPage> {
   void initState(){
     super.initState();
 
-    itemList = widget.injector.examList;
-
     for (final element in widget.injector.examList) {
       if(!element.isPrepare) {
         element.prepare();
@@ -58,6 +56,8 @@ class _ExamPageState extends StateBase<ExamPage> {
     }
 
     for (final element in widget.injector.autodidactList) {
+      print(element.runtimeType);
+      print(itemList.runtimeType);
       itemList.add(element);
     }
 
@@ -189,15 +189,18 @@ class _ExamPageState extends StateBase<ExamPage> {
                       label: Text('next').englishFont().color(nextColor)
                   ),
 
-                  ElevatedButton(
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        visualDensity: VisualDensity(horizontal: 0, vertical: -2),
-                        shape: StadiumBorder()
-                      ),
-                      onPressed: sendAnswer,
-                      child: Text('ارسال جواب').englishFont().color(Colors.white),
+                  Visibility(
+                    visible: currentExam is! AutodidactModel,
+                    child: ElevatedButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                          shape: StadiumBorder()
+                        ),
+                        onPressed: sendAnswer,
+                        child: Text('ارسال جواب').englishFont().color(Colors.white),
+                    ),
                   ),
 
                   TextButton.icon(
