@@ -56,8 +56,6 @@ class _ExamPageState extends StateBase<ExamPage> {
     }
 
     for (final element in widget.injector.autodidactList) {
-      print(element.runtimeType);
-      print(itemList.runtimeType);
       itemList.add(element);
     }
 
