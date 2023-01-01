@@ -142,8 +142,6 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     if(currentItemIdx == itemList.length-1){
       nextColor = Colors.grey;
     }
-    
-    ///currentItem?.prepareSpans(currentSegmentIdx, normalStyle, readStyle, clickableStyle);
 
     return Column(
       children: [

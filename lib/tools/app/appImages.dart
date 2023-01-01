@@ -12,6 +12,7 @@ class AppImages {
   static const registerIco2 = 'assets/images/registerIco2.png';
   static const watchIco = 'assets/images/watch.png';
   static const playIcon = 'assets/images/playIcon.png';
+  static const playIco = 'assets/images/playIco.png';
   static const emailInputIco = 'assets/images/emailInputIco.png';
   static const userInputIco = 'assets/images/userInputIco.png';
   static const calendarIco = 'assets/images/calendar.png';

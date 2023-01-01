@@ -38,19 +38,19 @@ import 'package:app/structures/interfaces/examStateInterface.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
-class AutodidactTextComponent extends StatefulWidget {
+class AutodidactVoiceComponent extends StatefulWidget {
   final AutodidactPageInjector injector;
 
-  const AutodidactTextComponent({
+  const AutodidactVoiceComponent({
     required this.injector,
     Key? key
   }) : super(key: key);
 
   @override
-  State<AutodidactTextComponent> createState() => AutodidactTextComponentState();
+  State<AutodidactVoiceComponent> createState() => AutodidactVoiceComponentState();
 }
 ///=================================================================================================================
-class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> implements ExamStateInterface {
+class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> implements ExamStateInterface {
   late AutodidactModel autodidactModel;
   Requester requester = Requester();
   FlutterSoundRecorder voiceRecorder = FlutterSoundRecorder();

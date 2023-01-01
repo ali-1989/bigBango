@@ -9,6 +9,7 @@ import 'package:app/structures/models/examModel.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/autodidactTextComponent.dart';
+import 'package:app/views/components/autodidactVoiceComponent.dart';
 import 'package:app/views/components/examBlankSpaseComponent.dart';
 import 'package:app/views/components/examOptionComponent.dart';
 import 'package:app/views/components/examSelectWordComponent.dart';
@@ -237,7 +238,7 @@ class _ExamPageState extends StateBase<ExamPage> {
         return AutodidactTextComponent(injector: injector);
       }
       else if(model.voice != null){
-        return AutodidactTextComponent(injector: injector);
+        return AutodidactVoiceComponent(injector: injector);
       }
     }
 
