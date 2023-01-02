@@ -23,6 +23,7 @@ import 'package:audio_session/audio_session.dart';
 import 'package:im_animations/im_animations.dart';
 import 'package:iris_tools/api/duration/durationFormatter.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/pathHelper.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logger/logger.dart';
@@ -57,15 +58,16 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   TextEditingController answerCtr = TextEditingController();
   Codec recorderCodec = Codec.aacMP4;
   Duration recordTime = Duration();
-  Duration playTime = Duration();
   bool voiceRecorderIsInit = false;
   bool isVoiceFileOK = false;
   StreamSubscription? _recorderSubscription;
   late String savePath;
-  AudioPlayer player = AudioPlayer();
+  AudioPlayer questionPlayer = AudioPlayer();
+  AudioPlayer answerPlayer = AudioPlayer();
   Duration totalTime = Duration();
   Duration currentTime = Duration();
-  bool voiceIsOk = false;
+  bool questionVoiceIsPrepare = false;
+  bool answerVoiceIsPrepare = false;
 
   @override
   void initState(){
@@ -75,8 +77,11 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     widget.injector.state = this;
     savePath = 'record.mp4';
 
-    player.playbackEventStream.listen(eventListener);
-    player.positionStream.listen(durationListener);
+    //answerPlayer.playbackEventStream.listen(answerEventListener);
+    answerPlayer.positionStream.listen(durationListener);
+    questionPlayer.positionStream.listen(durationListener);
+
+    prepareQuestionVoice();
   }
 
   @override
@@ -87,7 +92,8 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     voiceRecorder.closeRecorder();
 
     try {
-      player.dispose();
+      answerPlayer.dispose();
+      questionPlayer.dispose();
     }
     catch (e){/**/}
 
@@ -123,16 +129,39 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
 
               Directionality(
                 textDirection: TextDirection.ltr,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 15),
-                  child: Text(autodidactModel.text!).englishFont().fsR(-1),
-                ).wrapDotBorder(
-                    color: Colors.black12,
-                    alpha: 100,
-                    dashPattern: [4,8]),
+                child: CustomCard(
+                  padding: EdgeInsets.all(5),
+                  color: Colors.grey.shade300,
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: playPauseAnswerVoice,
+                        child: CustomCard(
+                          radius: 50,
+                          padding: EdgeInsets.all(14),
+                          child: Image.asset(questionPlayer.playing? AppImages.pauseIco : AppImages.playIco, width: 16, height: 16),
+                        ),
+                      ),
+
+                      Expanded(
+                        child: Slider(
+                          value: percentOfRecordVoice(),
+                          onChanged: (v){
+                            var x = v * 100;
+                            x = x * totalTime.inMilliseconds / 100;
+
+                            questionPlayer.seek(Duration(milliseconds: x.toInt()));
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
 
               SizedBox(height: 30),
+              Text('پاسخ:'),
+              SizedBox(height: 10),
               buildReply()
             ],
           ),
@@ -204,22 +233,22 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
           child: Row(
             children: [
               GestureDetector(
-                onTap: playPauseSound,
+                onTap: playPauseAnswerVoice,
                 child: CustomCard(
                   radius: 50,
                   padding: EdgeInsets.all(14),
-                  child: Image.asset(player.playing? AppImages.pauseIco : AppImages.playIco, width: 16, height: 16),
+                  child: Image.asset(answerPlayer.playing? AppImages.pauseIco : AppImages.playIco, width: 16, height: 16),
                 ),
               ),
 
               Expanded(
                 child: Slider(
-                  value: percent(),
+                  value: percentOfRecordVoice(),
                   onChanged: (v){
                     var x = v * 100;
                     x = x * totalTime.inMilliseconds / 100;
 
-                    player.seek(Duration(milliseconds: x.toInt()));
+                    answerPlayer.seek(Duration(milliseconds: x.toInt()));
                   },
                 ),
               ),
@@ -365,7 +394,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     await voiceRecorder.stopRecorder();
     isVoiceFileOK = true;
 
-    await prepareVoice();
+    await prepareAnswerVoice();
   }
 
  void deleteVoice() {
@@ -373,8 +402,8 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       isVoiceFileOK = false;
       recordTime = Duration();
 
-      if(player.playing){
-        await player.stop();
+      if(answerPlayer.playing){
+        await answerPlayer.stop();
       }
 
       assistCtr.updateHead();
@@ -448,28 +477,49 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     );
   }
 
-  void playPauseSound() async {
-    if(!voiceIsOk){
+  void playPauseAnswerVoice() async {
+    if(!answerVoiceIsPrepare){
       AppToast.showToast(context, 'در حال آماده سازی صوت');
-      await prepareVoice();
+      await prepareAnswerVoice();
     }
 
-    if(isPlaying()){
-      await player.pause();
+    if(isAnswerPlaying()){
+      await answerPlayer.pause();
     }
     else {
-      if(player.position.inMilliseconds < totalTime.inMilliseconds) {
-        await player.play();
+      if(answerPlayer.position.inMilliseconds < totalTime.inMilliseconds) {
+        await answerPlayer.play();
       }
       else {
-        await player.pause();
-        await player.seek(Duration());
-        await player.play();
+        await answerPlayer.pause();
+        await answerPlayer.seek(Duration());
+        await answerPlayer.play();
       }
     }
   }
 
-  double percent() {
+  void playPauseQuestionVoice() async {
+    if(!questionVoiceIsPrepare){
+      AppToast.showToast(context, 'در حال آماده سازی صوت');
+      await prepareQuestionVoice();
+    }
+
+    if(isQuestionPlaying()){
+      await questionPlayer.pause();
+    }
+    else {
+      if(questionPlayer.position.inMilliseconds < totalTime.inMilliseconds) {
+        await questionPlayer.play();
+      }
+      else {
+        await questionPlayer.pause();
+        await questionPlayer.seek(Duration());
+        await questionPlayer.play();
+      }
+    }
+  }
+
+  double percentOfRecordVoice() {
     if(currentTime.inMilliseconds <= 0 || currentTime.inMilliseconds <= 0){
       return 0;
     }
@@ -483,32 +533,64 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     return x/100;
   }
 
-  bool isPlaying() {
-    return player.playing && player.position.inMilliseconds < totalTime.inMilliseconds;
+  bool isQuestionPlaying() {
+    return questionPlayer.playing && questionPlayer.position.inMilliseconds < totalTime.inMilliseconds;
+  }
+
+  bool isAnswerPlaying() {
+    return answerPlayer.playing && answerPlayer.position.inMilliseconds < totalTime.inMilliseconds;
   }
 
   void durationListener(Duration pos) async {
     currentTime = pos;
 
     if(currentTime.inMilliseconds >= totalTime.inMilliseconds){
-      await player.stop();
+      await answerPlayer.stop();
     }
 
     assistCtr.updateHead();
   }
 
-  void eventListener(PlaybackEvent event){
+  /*void answerEventListener(PlaybackEvent event){
     assistCtr.updateHead();
-  }
+  }*/
 
-  Future<void> prepareVoice() async {
-    voiceIsOk = false;
+  Future<void> prepareAnswerVoice() async {
+    answerVoiceIsPrepare = false;
+
+    if(questionPlayer.playing){
+      await questionPlayer.stop();
+    }
 
     final p = AppDirectories.getAppFolderInInternalStorage();
     final adr = PathHelper.resolvePath('$p/$savePath')!;
 
-    return player.setFilePath(adr).then((dur) {
-      voiceIsOk = true;
+    return answerPlayer.setFilePath(adr).then((dur) {
+      answerVoiceIsPrepare = true;
+
+      if(dur != null){
+        totalTime = dur;
+      }
+
+    }).onError((error, stackTrace) {
+      if(error is PlayerException){
+        if(error.toString().contains('Source error')){
+          AppToast.showToast(context, 'آماده سازی صوت انجام نشد');
+          return;
+        }
+      }
+    });
+  }
+
+  Future<void> prepareQuestionVoice() async {
+    questionVoiceIsPrepare = false;
+
+    if(answerPlayer.playing){
+      await answerPlayer.stop();
+    }
+
+    return answerPlayer.setUrl(autodidactModel.voice!.fileLocation!).then((dur) {
+      questionVoiceIsPrepare = true;
 
       if(dur != null){
         totalTime = dur;
@@ -548,6 +630,17 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     };
 
     requester.httpRequestEvents.onFailState = (req, res) async {
+      if(res?.data != null){
+        final map = JsonHelper.jsonToMap(res?.data)!;
+
+        final message = map['message'];
+
+        if(message != null){
+          AppSnack.showInfo(context, message);
+          return;
+        }
+      }
+
       AppSnack.showSnack$errorCommunicatingServer(context);
     };
 

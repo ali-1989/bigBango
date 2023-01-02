@@ -234,10 +234,10 @@ class _ExamPageState extends StateBase<ExamPage> {
       injector.autodidactModel = currentExam as AutodidactModel;
       injector.lessonModel = widget.injector.lessonModel;
 
-      if(model.question != null){
+      if(model.question == null){
         return AutodidactTextComponent(injector: injector);
       }
-      else if(model.voice != null){
+      else if(model.voice == null){
         return AutodidactVoiceComponent(injector: injector);
       }
     }

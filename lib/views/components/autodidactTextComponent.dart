@@ -23,6 +23,7 @@ import 'package:audio_session/audio_session.dart';
 import 'package:im_animations/im_animations.dart';
 import 'package:iris_tools/api/duration/durationFormatter.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/pathHelper.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logger/logger.dart';
@@ -57,7 +58,6 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> im
   TextEditingController answerCtr = TextEditingController();
   Codec recorderCodec = Codec.aacMP4;
   Duration recordTime = Duration();
-  Duration playTime = Duration();
   bool voiceRecorderIsInit = false;
   bool isVoiceFileOK = false;
   StreamSubscription? _recorderSubscription;
@@ -133,6 +133,9 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> im
               ),
 
               SizedBox(height: 30),
+              Text('پاسخ:'),
+              SizedBox(height: 10),
+
               buildReply()
             ],
           ),
@@ -548,6 +551,17 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> im
     };
 
     requester.httpRequestEvents.onFailState = (req, res) async {
+      if(res?.data != null){
+        final map = JsonHelper.jsonToMap(res?.data)!;
+
+        final message = map['message'];
+
+        if(message != null){
+          AppSnack.showInfo(context, message);
+          return;
+        }
+      }
+
       AppSnack.showSnack$errorCommunicatingServer(context);
     };
 

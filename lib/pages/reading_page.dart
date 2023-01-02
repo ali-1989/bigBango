@@ -1,19 +1,18 @@
 import 'dart:async';
 
 import 'package:app/pages/exam_page.dart';
-import 'package:app/pages/idioms_page.dart';
-import 'package:app/pages/vocab_page.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/services/vocab_clickable_service.dart';
 import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
-import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/models/examModel.dart';
-import 'package:app/structures/models/lessonModels/lessonModel.dart';
+import 'package:app/structures/models/vocabModels/clickableVocabModel.dart';
 import 'package:app/structures/models/vocabModels/idiomModel.dart';
-import 'package:app/structures/models/vocabModels/vocabModel.dart';
 import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
+import 'package:app/views/components/idiomClickableComponent.dart';
+import 'package:app/views/components/vocabClickableComponent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormatter.dart';
@@ -713,10 +712,17 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
       await hideLoading();
 
       if(data != null) {
-        final v = VocabModel.fromMap(data['vocab']);
-        final lessonModel = LessonModel();
-        lessonModel.title = '--';
-        AppRoute.push(context, VocabPage(injector: VocabIdiomsPageInjector(lessonModel)..vocabModel = v));
+        final v = ClickableVocabModel.fromMap(data);
+
+        AppSheet.showSheetCustom(
+            context,
+          builder: (ctx){
+              return VocabClickableComponent(clickableVocabModel: v);
+          },
+          routeName: 'ClickableVocab',
+          isScrollControlled: true,
+          contentColor: Colors.transparent,
+        );
       }
       else {
         AppSnack.showSnack$OperationFailed(context);
@@ -728,10 +734,17 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
       await hideLoading();
 
       if(data != null) {
-        final i = IdiomModel.fromMap(data['idiom']);
-        final lessonModel = LessonModel();
-        lessonModel.title = '---';
-        AppRoute.push(context, IdiomsPage(injector: VocabIdiomsPageInjector(lessonModel)..idiomModel = i));
+        final i = IdiomModel.fromMap(data);
+
+        AppSheet.showSheetCustom(
+          context,
+          builder: (ctx){
+            return IdiomClickableComponent(idiomModel: i);
+          },
+          routeName: 'ClickableIdiom',
+          isScrollControlled: true,
+          contentColor: Colors.transparent,
+        );
       }
       else {
         AppSnack.showSnack$OperationFailed(context);

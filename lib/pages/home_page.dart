@@ -720,7 +720,6 @@ class HomePageState extends StateBase<HomePage> {
       if(data is List){
         for(final k in data){
           final les = LessonModel.fromMap(k);
-          Examples.addListening(les);//todo
           lessons.add(les);
         }
       }

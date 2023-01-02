@@ -48,11 +48,12 @@ class _VocabPageState extends StateBase<VocabPage> {
   String id$voicePlayerGroupId = 'voicePlayerGroupId';
   String id$usVoicePlayerSectionId = 'usVoicePlayerSectionId';
   String id$ukVoicePlayerSectionId = 'ukVoicePlayerSectionId';
+  String selectedPlayerId = '';
+  String? voiceUrl;
   int currentVocabIdx = 0;
   late VocabModel currentVocab;
   TaskQueueCaller<VocabModel, dynamic> leitnerTaskQue = TaskQueueCaller();
   TaskQueueCaller<Set<String>, dynamic> reviewTaskQue = TaskQueueCaller();
-  String selectedPlayerId = '';
   bool showGreeting = false;
   bool regulatorIsCall = false;
   AttributeController atrCtr1 = AttributeController();
@@ -317,6 +318,8 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                   GestureDetector(
                                                     onTap: (){
                                                       selectedPlayerId = id$usVoicePlayerSectionId;
+                                                      voiceUrl = currentVocab.americanVoice?.fileLocation;
+
                                                       playSound(id$usVoicePlayerSectionId);
                                                     },
                                                     child: Assist(
@@ -360,6 +363,8 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                   GestureDetector(
                                                     onTap: (){
                                                       selectedPlayerId = id$ukVoicePlayerSectionId;
+                                                      voiceUrl = currentVocab.britishVoice?.fileLocation;
+
                                                       playSound(id$ukVoicePlayerSectionId);
                                                     },
                                                     child: Assist(
@@ -579,6 +584,7 @@ class _VocabPageState extends StateBase<VocabPage> {
           final voiceView = GestureDetector(
             onTap: (){
               selectedPlayerId = id;
+              voiceUrl = sample.voice?.fileLocation;
               playSound(id);
             },
             child: Assist(
@@ -650,18 +656,23 @@ class _VocabPageState extends StateBase<VocabPage> {
   }
 
   void playSound(String sectionId){
-    // currentVocab.americanVoiceId
+    if(voiceUrl == null){
+      AppToast.showToast(context, 'صدایی ثبت نشده');
+      return;
+    }
+
     assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
     assistCtr.updateAssist(sectionId, stateData: 'prepare');
-    AudioPlayerService.networkVoicePlayer('https://download.samplelib.com/mp3/sample-3s.mp3').then((p) async {
+
+    AudioPlayerService.networkVoicePlayer(voiceUrl!).then((player) async {
       if(sectionId != selectedPlayerId){
         return;
       }
 
       assistCtr.updateAssist(sectionId, stateData: 'play');
-      await p.play();
+      await player.play();
       assistCtr.updateAssist(sectionId, stateData: null);
-      p.stop();
+      player.stop();
     });
   }
 
