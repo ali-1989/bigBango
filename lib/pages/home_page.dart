@@ -1,4 +1,3 @@
-import 'package:app/examples.dart';
 import 'package:app/pages/exam_page.dart';
 import 'package:app/pages/grammar_page.dart';
 import 'package:app/pages/listening_page.dart';

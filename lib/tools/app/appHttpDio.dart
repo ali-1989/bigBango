@@ -294,12 +294,12 @@ class AppHttpDio {
 	}
 
 	static void cancelAndClose(HttpRequester? request, {String passTag = 'my'}) {
-		if(request != null){
+		if(request != null) {
 			if(!(request.canceller?.isCancelled?? true)) {
 			  request.canceller?.cancel(passTag);
 			}
 
-			request.dio?.close();
+			request.dio?.close(force: true);
 		}
 	}
 

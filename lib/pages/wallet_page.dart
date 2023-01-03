@@ -76,17 +76,7 @@ class _WalletPageState extends StateBase<WalletPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return Column(
-        children: [
-          Align(
-              alignment: Alignment.topRight,
-              child: BackButton()
-          ),
-          Expanded(
-              child: ErrorOccur()
-          ),
-        ],
-      );
+      return ErrorOccur();
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){

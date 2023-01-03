@@ -4,9 +4,11 @@ import 'package:app/tools/app/appImages.dart';
 
 class EmptyData extends StatelessWidget {
   final TextStyle? textStyle;
+  final String? message;
 
   const EmptyData({
     this.textStyle,
+    this.message,
     Key? key,
     }) : super(key: key);
 
@@ -31,7 +33,7 @@ class EmptyData extends StatelessWidget {
           Flexible(
             flex: 1,
             child: Center(
-              child: Text('داده ای یافت نشد',
+              child: Text(message?? 'داده ای یافت نشد',
                 style: textStyle?? const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),

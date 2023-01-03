@@ -191,8 +191,8 @@ class _InvitePageState extends StateBase<InvitePage> {
                 return WaitToLoad();
               }
 
-              if(assistCtr.hasState(AssistController.state$error)){
-                return ErrorOccur(onRefresh: onRefresh);
+              if(!assistCtr.hasState(AssistController.state$error)){
+                return ErrorOccur(onRefresh: onRefresh, showBackButton: false);
               }
 
               if(userList.isEmpty){

@@ -115,17 +115,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return Column(
-        children: [
-          Align(
-              alignment: Alignment.topRight,
-              child: BackButton()
-          ),
-          Expanded(
-              child: ErrorOccur(onRefresh: onRefresh)
-          ),
-        ],
-      );
+      return ErrorOccur(onRefresh: onRefresh);
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
