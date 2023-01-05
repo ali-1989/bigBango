@@ -1,0 +1,6 @@
+
+class TicketDetailUserBubbleInjector {
+
+
+  TicketDetailUserBubbleInjector();
+}

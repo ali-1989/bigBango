@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:app/services/pages_event_service.dart';
 import 'package:app/structures/enums/supportSessionStatus.dart';
 import 'package:app/structures/models/supportSessionModel.dart';
+import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
+import 'package:iris_tools/api/helpers/localeHelper.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -349,7 +351,9 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
-                      child: Text('${model.durationMinutes}', style: TextStyle(color: AppColors.red, fontSize: 10)),
+                      child: Text(LocaleHelper.embedLtr('${model.durationMinutes} \u{2032}'),
+                          style: TextStyle(color: AppColors.red, fontSize: 10)
+                      ),
                     ),
                   ),
 
@@ -364,13 +368,12 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                           visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        icon: Icon(AppIcons.delete, size: 17),
+                        icon: Icon(AppIcons.delete, size: 17, color: Colors.red),
                         onPressed: (){
-
+                          unReserve(model);
                         },
                       )
                   ),
-
                 ],
               ),
             ],
@@ -394,7 +397,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
               Expanded(
                   child: RefreshConfiguration(
                     headerBuilder: () => MaterialClassicHeader(),
-                    footerBuilder:  () => PublicAccess.classicFooter,
+                    footerBuilder: () => PublicAccess.classicFooter,
                     //headerTriggerDistance: 80.0,
                     //maxOverScrollExtent :100,
                     //maxUnderScrollExtent:0,
@@ -455,13 +458,13 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                   children: [
                     DecoratedBox(
                       decoration: BoxDecoration(
-                          color: AppColors.greenTint,
+                          color: tik.status == 1 ? AppColors.greenTint : AppColors.redTint,
                           borderRadius: BorderRadius.circular(4)
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
                         child: Text(tik.status == 1 ? 'باز' : 'بسته',
-                            style: TextStyle(color: AppColors.green, fontSize: 10)
+                            style: TextStyle(color: tik.status == 1 ? AppColors.green : Colors.red, fontSize: 10)
                         ),
                       ),
                     ),
@@ -703,5 +706,17 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     requester.request(context);
 
     return co.future;
+  }
+
+  void unReserve(SupportSessionModel model) {
+    void fn(){
+
+    }
+
+    AppDialogIris.instance.showYesNoDialog(
+        context,
+      yesFn: fn,
+      desc: 'آیا می خواهید درخواست را لغو کنید؟'
+    );
   }
 }

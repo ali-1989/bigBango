@@ -1,9 +1,12 @@
 
+import 'package:app/structures/injectors/ticketDetailUserBubbleInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/ticketModels/ticketDetailModel.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appNavigator.dart';
+import 'package:app/views/components/ticketDetailUserBubbleComponent.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
@@ -28,11 +31,14 @@ class TicketDetailPage extends StatefulWidget {
 ///=================================================================================================
 class _TicketDetailPageState extends StateBase<TicketDetailPage> {
   Requester requester = Requester();
+  late TicketModel ticketModel;
+  TicketDetailModel? ticketDetailModel;
 
   @override
   void initState(){
     super.initState();
 
+    ticketModel = widget.ticketModel;
     assistCtr.addState(AssistController.state$loading);
     requestTicketDetail();
   }
@@ -66,8 +72,8 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
 
     return Column(
       children: [
+        /// header
         SizedBox(height: 20),
-
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 18),
           child: Row(
@@ -85,16 +91,16 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.ticketModel.title).bold().fsR(1),
+                      Text(ticketModel.title).bold().fsR(1),
                       DecoratedBox(
                         decoration: BoxDecoration(
-                            color: Colors.greenAccent.withAlpha(40),
+                            color: ticketModel.status == 1 ? AppColors.greenTint : AppColors.redTint,
                             borderRadius: BorderRadius.circular(4)
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
-                          child: Text(widget.ticketModel.status == 1 ? 'باز' : 'بسته',
-                              style: TextStyle(color: Color(0xFF0ECF73), fontSize: 10)
+                          child: Text(ticketModel.status == 1 ? 'باز' : 'بسته',
+                              style: TextStyle(color: ticketModel.status == 1 ? AppColors.green : Colors.red, fontSize: 10)
                           ),
                         ),
                       )
@@ -122,11 +128,13 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
             ],
           ),
         ),
-
         Divider(indent: 15, endIndent: 15, color: Colors.black54,),
         SizedBox(height: 20),
 
-        Expanded(child: Text('f')),
+        /// content
+        Expanded(
+            child: TicketDetailUserBubbleComponent(injector: TicketDetailUserBubbleInjector(),)
+        ),
       ],
     );
   }
@@ -139,18 +147,23 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
 
   void requestTicketDetail() async {
     requester.httpRequestEvents.onFailState = (req, res) async {
-
+      assistCtr.clearStates();
+      assistCtr.addStateAndUpdateHead(AssistController.state$error);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       final data = res['data'];
+
+      if(data is Map){
+        ticketDetailModel = TicketDetailModel.fromMap(data);
+      }
 
       assistCtr.clearStates();
       assistCtr.updateHead();
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/tickets/details?Id=${widget.ticketModel.id}');
+    requester.prepareUrl(pathUrl: '/tickets/details?Id=${ticketModel.id}');
     requester.request(context);
   }
 }

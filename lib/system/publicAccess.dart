@@ -171,6 +171,10 @@ class PublicAccess {
 
     return page;
   }
+
+  static void printObj(Object obj){
+    print('${'*' * 40}\n ${obj.toString()} \n${'*' * 50}');
+  }
 }
 ///===================================================================================
 class UpperLower {

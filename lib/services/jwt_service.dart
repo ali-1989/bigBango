@@ -84,7 +84,6 @@ class JwtService {
     r.body = js;
     r.headers['accept'] = 'application/json';
     r.headers['Content-Type'] = 'application/json';
-    r.debugMode = true;
 
     final a = AppHttpDio.send(r);
     await a.response;
