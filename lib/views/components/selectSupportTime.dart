@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/models/dayWeekModel.dart';
-import 'package:app/structures/models/supportTimeModel.dart';
+import 'package:app/structures/models/supportModels/dayWeekModel.dart';
+import 'package:app/structures/models/supportModels/supportTimeModel.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';

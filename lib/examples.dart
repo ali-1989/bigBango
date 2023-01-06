@@ -1,16 +1,11 @@
 import 'package:app/structures/enums/quizType.dart';
-import 'package:app/structures/models/examModel.dart';
+import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/listeningModel.dart';
+import 'package:app/structures/models/mediaModel.dart';
 
 class Examples {
   Examples._();
-
-  static List<ExamModel> genExams(){
-    final res = <ExamModel>[];
-
-    return res;
-  }
 
   static void addListening(LessonModel lessonModel){
     final l1 = ListeningModel();
@@ -33,6 +28,30 @@ class Examples {
     l2.quiz.choices = [ExamChoiceModel()..id = 'i1'..text = 't1', ExamChoiceModel()..id = 'i2'..text = 't2'];
 
     lessonModel.listeningModel!.listeningList.add(l2);
+  }
+
+  static List<MediaModel> genAttachment(){
+    final res = <MediaModel>[];
+
+    final f = MediaModel();
+    f.fileLocation = 'https://bigbangofiles.nicode.org/2022/12/3c42e5fdab0a4d43910640f6f681083a.PNG';
+    f.fileType = 1;
+
+    res.add(f);
+    //......................
+    final s = MediaModel();
+    s.fileLocation = 'https://bigbangofiles.nicode.org/2022/12/fe200adb45a34cb1a2f907fd232d535f.jpg';
+    s.fileType = 1;
+
+    res.add(s);
+    //......................
+    final x = MediaModel();
+    x.fileLocation = 'https://bigbangofiles.nicode.org/2022/12/79405d11f5464a1795934e6e8c65f5a3.jpg';
+    x.fileType = 1;
+
+    res.add(x);
+    //......................
+    return res;
   }
 }
 

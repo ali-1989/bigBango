@@ -1,5 +1,5 @@
 import 'package:app/structures/enums/quizType.dart';
-import 'package:app/structures/models/examModel.dart';
+import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';

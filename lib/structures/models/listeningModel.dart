@@ -1,4 +1,4 @@
-import 'package:app/structures/models/examModel.dart';
+import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
 
 class ListeningModel {

@@ -1,9 +1,9 @@
-import 'package:app/structures/abstract/examAutodidactModel.dart';
+import 'package:app/structures/models/examModels/examSuperModel.dart';
 import 'package:app/structures/enums/quizType.dart';
 import 'package:iris_tools/api/generator.dart';
 
 
-class ExamModel extends ExamAutodidactModel {
+class ExamModel extends ExamSuperModel {
   late String id;
   late String question;
   QuizType exerciseType = QuizType.unKnow;

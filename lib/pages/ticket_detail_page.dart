@@ -1,4 +1,5 @@
 
+import 'package:app/examples.dart';
 import 'package:app/structures/injectors/ticketDetailUserBubbleInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/ticketModels/ticketDetailModel.dart';
@@ -6,10 +7,12 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appNavigator.dart';
+import 'package:app/views/components/ticketDetailBigbangoBubbleComponent.dart';
 import 'package:app/views/components/ticketDetailUserBubbleComponent.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -71,6 +74,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// header
         SizedBox(height: 20),
@@ -133,7 +137,17 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
 
         /// content
         Expanded(
-            child: TicketDetailUserBubbleComponent(injector: TicketDetailUserBubbleInjector(),)
+            child: Builder(
+                builder: (_){
+                  if(ticketDetailModel != null){
+                    return TicketDetailBigbangoBubbleComponent(
+                      injector: TicketDetailBubbleInjector(ticketDetailModel!.firstTicket),
+                    );
+                  }
+
+                  return Text('ggg');
+                }
+            ),
         ),
       ],
     );
@@ -156,6 +170,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
 
       if(data is Map){
         ticketDetailModel = TicketDetailModel.fromMap(data);
+        ticketDetailModel!.firstTicket.attachments = Examples.genAttachment();//todo
       }
 
       assistCtr.clearStates();

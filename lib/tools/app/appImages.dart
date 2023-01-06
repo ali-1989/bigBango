@@ -91,6 +91,7 @@ class AppImages {
   static const callUsIco = 'assets/images/call-us.png';
   static const doubleArrow = 'assets/images/doubleArrow.png';
   static const mic = 'assets/images/mic.png';
+  static const bigbangoTicket = 'assets/images/bigbangoTicket.png';
 }
 
 

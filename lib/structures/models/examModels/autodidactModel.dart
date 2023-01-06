@@ -1,8 +1,8 @@
-import 'package:app/structures/abstract/examAutodidactModel.dart';
+import 'package:app/structures/models/examModels/examSuperModel.dart';
 import 'package:app/structures/enums/autodidactReplyType.dart';
 import 'package:app/structures/models/mediaModel.dart';
 
-class AutodidactModel extends ExamAutodidactModel {
+class AutodidactModel extends ExamSuperModel {
   late String id;
   String? text;
   String? question;

@@ -15,7 +15,7 @@ import 'package:app/pages/exam_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/models/examModel.dart';
+import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/grammarModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';

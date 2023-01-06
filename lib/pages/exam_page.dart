@@ -1,11 +1,11 @@
-import 'package:app/structures/abstract/examAutodidactModel.dart';
+import 'package:app/structures/models/examModels/examSuperModel.dart';
 import 'package:app/structures/enums/examDescription.dart';
 import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/injectors/autodidactPageInjector.dart';
 import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/models/autodidactModel.dart';
-import 'package:app/structures/models/examModel.dart';
+import 'package:app/structures/models/examModels/autodidactModel.dart';
+import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/autodidactTextComponent.dart';
@@ -41,8 +41,8 @@ class ExamPage extends StatefulWidget {
 class _ExamPageState extends StateBase<ExamPage> {
   Requester requester = Requester();
   int currentItemIdx = 0;
-  List<ExamAutodidactModel> itemList = [];
-  late ExamAutodidactModel currentExam;
+  List<ExamSuperModel> itemList = [];
+  late ExamSuperModel currentExam;
 
   @override
   void initState(){
@@ -216,7 +216,7 @@ class _ExamPageState extends StateBase<ExamPage> {
     );
   }
 
-  Widget buildExamView(ExamAutodidactModel model){
+  Widget buildExamView(ExamSuperModel model){
     if(model is ExamModel){
       if(model.exerciseType == QuizType.fillInBlank){
         return ExamBlankSpaceComponent(injector: widget.injector);

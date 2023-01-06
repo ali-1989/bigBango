@@ -8,8 +8,8 @@ import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
-import 'package:app/structures/models/autodidactModel.dart';
-import 'package:app/structures/models/examModel.dart';
+import 'package:app/structures/models/examModels/autodidactModel.dart';
+import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
 

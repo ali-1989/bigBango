@@ -1,17 +1,22 @@
 
+import 'package:app/structures/abstract/ticketAttachmentShowSupper.dart';
 import 'package:app/structures/injectors/ticketDetailUserBubbleInjector.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
+import 'package:app/tools/dateTools.dart';
 
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/helpers/localeHelper.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:iris_tools/widgets/icon/circularIcon.dart';
+import 'package:app/system/extensions.dart';
+import 'package:iris_tools/widgets/irisImageView.dart';
 
 
 class TicketDetailUserBubbleComponent extends StatefulWidget {
-  final TicketDetailUserBubbleInjector injector;
+  final TicketDetailBubbleInjector injector;
 
   const TicketDetailUserBubbleComponent({
     required this.injector,
@@ -22,7 +27,7 @@ class TicketDetailUserBubbleComponent extends StatefulWidget {
   State<TicketDetailUserBubbleComponent> createState() => TicketDetailUserBubbleComponentState();
 }
 ///=================================================================================================================
-class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBubbleComponent> {
+class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBubbleComponent> with TicketAttachmentShowSupper  {
   late Radius radius;
 
   @override
@@ -55,13 +60,30 @@ class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBub
         child: Stack(
           children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Row(
+                  //mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(AppIcons.calendar, size: 13),
-                    SizedBox(width: 8,),
-                    Text('20223/01/02  7:20'),
-
+                    Icon(AppIcons.calendar, size: 13).alpha(),
+                    SizedBox(width: 8),
+                    Text(DateTools.dateAndHmRelative(widget.injector.ticketReply.createdAt)).alpha(),
+                    SizedBox(width: 8),
+                    Visibility(
+                      visible: true,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        iconSize: 17,
+                        splashRadius: 14,
+                        constraints: BoxConstraints.tightFor(),
+                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                          onPressed: (){
+                            showAttachment(context, widget.injector.ticketReply);
+                          },
+                          icon: Icon(AppIcons.attach, size: 17, color: AppColors.red),
+                      ),
+                    ),
+                    SizedBox(width: 60),
                   ],
                 ),
 
@@ -71,18 +93,24 @@ class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBub
                   borderRadius: BorderRadius.only(topLeft: radius, bottomLeft: radius, bottomRight: radius),
                   child: ColoredBox(
                     color: Colors.grey.shade100,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(10, 26, 10, 14),
-                      child: Text('ali ali ali ali ali ali ali ali ali ali ali ali ali ali ali ali ali ali ali ali ali ali ali ali '),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints.tightFor(width: 70),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(10, 26, 10, 14),
+                        child: Text(widget.injector.ticketReply.description,
+                          textDirection: LocaleHelper.autoDirection(widget.injector.ticketReply.description),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
 
+            /// avatar
             Positioned(
-              top: 0,
-                right: 18,
+                top: 0,
+                right: 15,
                 child: CircleAvatar(
                   radius: 18,
                   backgroundColor: Colors.grey.shade100,
@@ -90,9 +118,20 @@ class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBub
                     child: ColoredBox(
                       color: Colors.white,
                       child: SizedBox(
-                        width: 33,
+                          width: 33,
                           height: 33,
-                          child: Icon(AppIcons.email, size: 15,)
+                          child: Builder(
+                            builder: (context) {
+                              if(widget.injector.ticketReply.creator.hasAvatar()) {
+                                return IrisImageView(
+                                  url: widget.injector.ticketReply.creator.avatar!.fileLocation,
+                                  beforeLoadWidget: Icon(AppIcons.personLogin, size: 17),
+                                );
+                              }
+
+                              return Icon(AppIcons.personLogin, size: 17);
+                            }
+                          )
                       ),
                     ),
                   ),
@@ -103,6 +142,8 @@ class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBub
       ),
     );
   }
+
+
 }
 
 

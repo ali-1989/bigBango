@@ -5,7 +5,7 @@ import 'package:app/services/review_service.dart';
 import 'package:app/services/vocab_clickable_service.dart';
 import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
-import 'package:app/structures/models/examModel.dart';
+import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/vocabModels/clickableVocabModel.dart';
 import 'package:app/structures/models/vocabModels/idiomModel.dart';
 import 'package:app/tools/app/appRoute.dart';

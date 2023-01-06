@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:app/structures/enums/autodidactReplyType.dart';
 import 'package:app/structures/injectors/autodidactPageInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/models/autodidactModel.dart';
+import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';

@@ -10,6 +10,7 @@ import 'package:app/system/httpProcess.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/app/appSheet.dart';
+import 'package:iris_tools/api/tools.dart';
 
 ///=============================================================================================
 enum MethodType {
@@ -111,7 +112,7 @@ class Requester {
     });
 
     f = f.then((val) async {
-      print('@@@@@@@@@@ ========= response ====== [${_httpRequester.responseData?.statusCode}] $val');//todo
+      Tools.verbosePrint('@@@@@@@@@@ ========= response ====== [${_httpRequester.responseData?.statusCode}] $val');//todo
       if(_httpRequester.responseData?.statusCode == 401){ // token
         final getNewToken = await JwtService.requestNewToken(Session.getLastLoginUser()!);
 

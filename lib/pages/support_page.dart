@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:app/services/pages_event_service.dart';
 import 'package:app/structures/enums/supportSessionStatus.dart';
-import 'package:app/structures/models/supportSessionModel.dart';
+import 'package:app/structures/models/supportModels/supportSessionModel.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/states/emptyData.dart';
