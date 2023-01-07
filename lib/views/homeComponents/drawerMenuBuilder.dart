@@ -183,6 +183,7 @@ class DrawerMenuBuilder {
                   visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
                 ),
 
+
                 ListTile(
                   title: Text('پشتیبانی'),
                   leading: Image.asset(AppImages.drawerSupportIco, width: 16, height: 16),
@@ -191,7 +192,6 @@ class DrawerMenuBuilder {
                   horizontalTitleGap: 0,
                   visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
                 ),
-
                 ListTile(
                   title: Text('گزارشات و آزمون ها'),
                   leading: Image.asset(AppImages.drawerLogIco, width: 16, height: 16),
@@ -210,14 +210,14 @@ class DrawerMenuBuilder {
                   visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
                 ),
 
-                ListTile(
+                /*ListTile(
                   title: Text('تنظیمات'),
                   leading: Image.asset(AppImages.drawerSettingIco, width: 16, height: 16),
                   onTap: gotoProfilePage,
                   dense: true,
                   horizontalTitleGap: 0,
                   visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
-                ),
+                ),*/
 
                 if(Session.hasAnyLogin())
                   ListTile(
@@ -251,7 +251,7 @@ class DrawerMenuBuilder {
                 return Builder(
                   builder: (ctx){
                     if(user.avatarModel != null){
-                      final path = AppDirectories.getSavePathUri(user.avatarModel!.url?? '', SavePathType.userProfile, user.avatarFileName);
+                      final path = AppDirectories.getSavePathUri(user.avatarModel!.fileLocation?? '', SavePathType.userProfile, user.avatarFileName);
                       final img = FileHelper.getFile(path);
 
                       if(img.existsSync() && img.lengthSync() == (user.avatarModel!.volume?? 0)){
@@ -355,11 +355,11 @@ class DrawerMenuBuilder {
   }
 
   static void checkAvatar(UserModel user) async {
-    if(user.avatarModel?.url == null){
+    if(user.avatarModel?.fileLocation == null){
       return;
     }
 
-    final path = AppDirectories.getSavePathUri(user.avatarModel!.url!, SavePathType.userProfile, user.avatarFileName);
+    final path = AppDirectories.getSavePathUri(user.avatarModel!.fileLocation!, SavePathType.userProfile, user.avatarFileName);
     final img = FileHelper.getFile(path);
 
     if(img.existsSync() && img.lengthSync() == user.avatarModel!.volume!){

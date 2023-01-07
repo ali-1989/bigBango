@@ -1,7 +1,7 @@
 import 'package:app/structures/models/courselevelModel.dart';
+import 'package:app/structures/models/mediaModel.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
-import 'package:iris_tools/models/dataModels/mediaModel.dart';
 
 import 'package:app/services/jwt_service.dart';
 import 'package:app/system/keys.dart';

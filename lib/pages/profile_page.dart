@@ -1,5 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:app/services/file_upload_service.dart';
+import 'package:app/structures/enums/fileUploadType.dart';
+import 'package:app/structures/models/mediaModel.dart';
 import 'package:app/tools/deviceInfoTools.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +13,6 @@ import 'package:iris_pic_editor/pic_editor.dart';
 import 'package:iris_tools/api/checker.dart';
 import 'package:iris_tools/api/helpers/fileHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
-import 'package:iris_tools/api/helpers/pathHelper.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
@@ -555,51 +558,48 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     return comp.future;
   }
 
-  void afterUploadAvatar(String imgPath, Map map){
-    final String? url = map[Keys.url];
+  void uploadAvatar(String filePath) async {
+    showLoading(canBack: false);
+    final uploadRes = await FileUploadService.uploadFiles<Map>([File(filePath)], FileUploadType.avatar);
+    bool isOk = false;
+    String? message;
 
-    if(url == null){
-      return;
+    if(uploadRes.hasResult1()){
+      final data = uploadRes.result1![Keys.data];
+
+      if(data is List) {
+        final media = MediaModel.fromMap(data[0]);
+        media.path = filePath;
+
+        isOk = await requestUpdateAvatar(media);
+      }
+    }
+    else {
+      final res = uploadRes.result2!.data;
+
+      if(res != null){
+        final js = JsonHelper.jsonToMap(res);
+        if(js != null){
+          message = js['message'];
+        }
+      }
     }
 
-    final newName = PathHelper.getFileName(url);
-    final newFileAddress = PathHelper.getParentDirPath(imgPath) + PathHelper.getSeparator() + newName;
-
-    final f = FileHelper.renameSyncSafe(imgPath, newFileAddress);
-
-    //user.profileModel = MediaModel()..url = url..path = f.path;
-
     hideLoading();
-    Session.sinkUserInfo(user);
+
+    if(isOk) {
+      AppSnack.showSnack$operationSuccess(context);
+    }
+    else {
+      if(message != null){
+        AppSnack.showInfo(context, message);
+      }
+      else {
+        AppSnack.showSnack$errorCommunicatingServer(context);
+      }
+    }
+
     assistCtr.updateHead();
-
-    //after load image, auto will call: OverlayCenter().hideLoading(context);
-    AppSnack.showSnack$operationSuccess(context);
-  }
-
-  void uploadAvatar(String filePath) {
-    final partName = 'ProfileAvatar';
-    final fileName = PathHelper.getFileName(filePath);
-
-    final js = <String, dynamic>{};
-
-
-    requester.httpRequestEvents.onFailState = (req, r) async {
-      await hideLoading();
-      AppSnack.showSnack$errorCommunicatingServer(context);
-    };
-
-    requester.httpRequestEvents.onStatusOk = (req, data) async {
-      afterUploadAvatar(filePath, data);
-    };
-
-    //requester.prepareUrl();
-    requester.bodyJson = null;
-    //requester.httpItem.addBodyField(Keys.jsonPart, JsonHelper.mapToJson(js));
-    //requester.httpItem.addBodyFile(partName, fileName, File(filePath));
-
-    showLoading(canBack: false);
-    requester.request(context, false);
   }
 
   void deleteAvatar(){
@@ -765,5 +765,32 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
     showLoading();
     requester.request(context, false);
+  }
+
+  Future<bool> requestUpdateAvatar(MediaModel media){
+    Completer<bool> result = Completer();
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      result.complete(false);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, data) async {
+      user.avatarModel = media;
+      Session.sinkUserInfo(user);
+
+      result.complete(true);
+    };
+
+    final js = <String, dynamic>{};
+    js['avatarId'] = media.id;
+
+
+    requester.bodyJson = js;
+    requester.prepareUrl(pathUrl: '/profile/update');
+    requester.methodType = MethodType.put;
+
+    requester.request(context, false);
+
+    return result.future;
   }
 }

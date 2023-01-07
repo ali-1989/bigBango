@@ -105,6 +105,7 @@ class JwtService {
 
       await Session.logoff(um.userId);
       AppBroadcast.reBuildMaterial();
+
       AppRoute.backToRoot(AppRoute.getLastContext()!);
     }
 
@@ -116,6 +117,7 @@ class JwtService {
 
       await Session.logoff(um.userId);
       AppBroadcast.reBuildMaterial();
+
       AppRoute.backToRoot(AppRoute.getLastContext()!);
     }
 

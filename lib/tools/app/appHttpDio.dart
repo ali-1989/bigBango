@@ -526,7 +526,7 @@ class HttpItem {
 		body = system_convert.json.encode(js);
 	}
 
-	void addBodyField(String key, String value){
+	void addFormField(String key, String value){
 		if(body is! FormData) {
 			body = FormData();
 		}
@@ -534,7 +534,7 @@ class HttpItem {
 		(body as FormData).fields.add(MapEntry(key, value));
 	}
 
-	void addBodyFile(String partName, String fileName, File file){
+	void addFormFile(String partName, String fileName, File file){
 		if(body is! FormData) {
 			body = FormData();
 		}
@@ -547,7 +547,7 @@ class HttpItem {
 		formDataItems.add(itm);
 	}
 
-	void addBodyBytes(String partName, String dataName, List<int> bytes){
+	void addFormBytes(String partName, String dataName, List<int> bytes){
 		if(body is! FormData) {
 			body = FormData();
 		}
@@ -560,7 +560,7 @@ class HttpItem {
 		formDataItems.add(itm);
 	}
 
-	void addBodyStream(String partName, String dataName, Stream<List<int>> stream, int size){
+	void addFormStream(String partName, String dataName, Stream<List<int>> stream, int size){
 		if(body is! FormData) {
 			body = FormData();
 		}

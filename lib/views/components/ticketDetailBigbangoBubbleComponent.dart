@@ -118,7 +118,7 @@ class TicketDetailBigbangoBubbleComponentState extends StateBase<TicketDetailBig
                             alignment: LocaleHelper.detectDirection(widget.injector.ticketReply.description) == TextDirection.rtl
                                 ? Alignment.centerRight : Alignment.centerLeft,
                             child: Padding(
-                              padding: EdgeInsets.only(left: 5, right: 5, top: 10),
+                              padding: EdgeInsets.only(left: 5, right: 5, top: 10 ),
                               child: Text(widget.injector.ticketReply.description),
                             ),
                           ),
