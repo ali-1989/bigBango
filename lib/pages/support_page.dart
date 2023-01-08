@@ -27,7 +27,7 @@ import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/dateTools.dart';
-import 'package:app/views/components/addTicketPage.dart';
+import 'package:app/views/components/addTicketComponent.dart';
 import 'package:app/views/components/supportPlanPage.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
@@ -517,9 +517,8 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     AppSheet.showSheetCustom(
       context,
-      builder: (_) => AddTicketPage(ticketRoles: ticketRoles),
+      builder: (_) => AddTicketComponent(ticketRoles: ticketRoles),
       routeName: 'showAddTicketSheet',
-      isDismissible: true,
       isScrollControlled: true,
       contentColor: Colors.transparent,
       backgroundColor: Colors.transparent,

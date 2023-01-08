@@ -5,8 +5,11 @@ import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/ticketModels/ticketDetailModel.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appNavigator.dart';
+import 'package:app/tools/app/appSheet.dart';
+import 'package:app/views/components/replyTicketComponent.dart';
 import 'package:app/views/components/ticketDetailBigbangoBubbleComponent.dart';
 import 'package:app/views/components/ticketDetailUserBubbleComponent.dart';
 import 'package:app/views/states/errorOccur.dart';
@@ -59,6 +62,10 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
       builder: (_, ctr, data){
         return Scaffold(
           body: buildBody(),
+          floatingActionButton: ElevatedButton(
+            onPressed: openNewResponse,
+            child: Text('پاسخ دادن'),
+          ),
         );
       },
     );
@@ -113,21 +120,40 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
                 ],
               ),
 
-              GestureDetector(
-                onTap: (){
-                  AppNavigator.pop(context);
-                },
-                child: Row(
-                  children: [
-                    //Text(AppMessages.back),
-                    SizedBox(width: 10),
-                    CustomCard(
-                        color: Colors.grey.shade200,
-                        padding: EdgeInsets.all(5),
-                        child: Image.asset(AppImages.arrowLeftIco)
+              Row(
+                children: [
+                  Visibility(
+                    visible: widget.ticketModel.status == 1,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                        ),
+                        onPressed: closeTicket,
+                        child: Text('بستن',
+                            textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: true, applyHeightToLastDescent: true)
+                        ).subFont().color(Colors.white)
                     ),
-                  ],
-                ),
+                  ),
+
+                  SizedBox(width: 10,),
+                  GestureDetector(
+                    onTap: (){
+                      AppNavigator.pop(context);
+                    },
+                    child: Row(
+                      children: [
+                        //Text(AppMessages.back),
+                        SizedBox(width: 10),
+                        CustomCard(
+                            color: Colors.grey.shade200,
+                            padding: EdgeInsets.all(5),
+                            child: Image.asset(AppImages.arrowLeftIco)
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -180,5 +206,31 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/tickets/details?Id=${ticketModel.id}');
     requester.request(context);
+  }
+
+  void closeTicket() {
+    void yesFn(){
+      requestCloseTicket();
+    }
+
+    AppDialogIris.instance.showYesNoDialog(
+      context,
+      yesFn: yesFn,
+      desc: 'آیا می خواهید تیکت بسته شود؟',
+    );
+  }
+
+  void openNewResponse() {
+    AppSheet.showSheetCustom(
+      context,
+      builder: (ctx) => ReplyTicketComponent(ticketDetailModel: ticketDetailModel!),
+      routeName: 'openNewReply',
+      contentColor: Colors.transparent,
+      isScrollControlled: true,
+    );
+  }
+
+  void requestCloseTicket(){
+
   }
 }

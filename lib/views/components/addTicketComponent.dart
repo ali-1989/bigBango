@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:app/pages/support_page.dart';
 import 'package:app/services/pages_event_service.dart';
 import 'package:app/structures/models/ticketModels/ticketModel.dart';
+import 'package:app/views/components/attachmentFileTicketComponent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -18,24 +21,25 @@ import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/views/widgets/customCard.dart';
 
-class AddTicketPage extends StatefulWidget {
+class AddTicketComponent extends StatefulWidget {
   final List<TicketRole> ticketRoles;
 
-  const AddTicketPage({
+  const AddTicketComponent({
     required this.ticketRoles,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<AddTicketPage> createState() => _AddTicketPageState();
+  State<AddTicketComponent> createState() => _AddTicketComponentState();
 }
 ///==================================================================================================
-class _AddTicketPageState extends StateBase<AddTicketPage> {
+class _AddTicketComponentState extends StateBase<AddTicketComponent> {
   Requester requester = Requester();
   TextEditingController titleCtr = TextEditingController();
   TextEditingController descriptionCtr = TextEditingController();
   String selectedTicketRoleId = '';
   List<DropdownMenuItem<String>> dropList = [];
+  List<File> attachmentFiles = <File>[];
   late TextStyle boldStyle;
   late InputDecoration inputDecoration;
 
@@ -169,10 +173,25 @@ class _AddTicketPageState extends StateBase<AddTicketPage> {
                               ),
 
                               SizedBox(height: 15),
-                              ElevatedButton(
-                                  onPressed: requestSendTicket,
-                                  child: Text('ارسال')
-                              )
+                              Row(
+                                children: [
+                                  ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                                      icon: Icon(AppIcons.attach),
+                                      onPressed: showAttachmentDialog,
+                                      label: Text('فایل ها')
+                                  ),
+
+                                  SizedBox(width: 10),
+
+                                  Expanded(
+                                    child: ElevatedButton(
+                                        onPressed: requestSendTicket,
+                                        child: Text('ارسال')
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           )
                       )
@@ -183,6 +202,16 @@ class _AddTicketPageState extends StateBase<AddTicketPage> {
             ),
           );
         }
+    );
+  }
+
+  void showAttachmentDialog(){
+    AppSheet.showSheetCustom(
+      context,
+      builder: (ctx) => AttachmentFileTicketComponent(files: attachmentFiles),
+      routeName: 'openNewReply',
+      contentColor: Colors.transparent,
+      isScrollControlled: true,
     );
   }
 

@@ -28,7 +28,9 @@ class AppSheet {
   AppSheet._();
 
   static void closeSheet<T>(BuildContext context, {T? result}) {
-    Navigator.of(context).pop(result);
+    if(Navigator.of(context).canPop()){
+      Navigator.of(context).pop(result);
+    }
   }
 
   static void closeSheetByName<T>(BuildContext context, String routeName, {T? result}) {
