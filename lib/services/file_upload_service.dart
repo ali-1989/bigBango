@@ -12,9 +12,9 @@ import 'package:iris_tools/api/helpers/pathHelper.dart';
 class FileUploadService {
   FileUploadService._();
 
-  static Future<TwoReturn<R1, Response>> uploadFiles<R1>(List<File> files, FileUploadType section){
+  static Future<TwoReturn<Map, Response>> uploadFiles(List<File> files, FileUploadType section){
     Requester requester = Requester();
-    Completer<TwoReturn<R1, Response>> res = Completer();
+    Completer<TwoReturn<Map, Response>> res = Completer();
 
     requester.httpRequestEvents.onFailState = (req, response) async {
       res.complete(TwoReturn(r2: response));
@@ -23,7 +23,7 @@ class FileUploadService {
     requester.httpRequestEvents.onStatusOk = (req, data) async {
       final js = JsonHelper.jsonToMap(data)!;
 
-      res.complete(TwoReturn(r1: js as R1));
+      res.complete(TwoReturn(r1: js));
     };
 
     //requester.httpItem.addFormField('Section', '${section.number()}');
@@ -46,15 +46,25 @@ class FileUploadService {
 }
 
 /*
-* final res = uploadRes.result2!.data;
-      PublicAccess.printObj(res);
+ if(uploadRes.hasResult2()){
+      final res = uploadRes.result2!.data;
+
       if(res != null){
-        final js = JsonHelper.jsonToMap(res)!;
+        final js = JsonHelper.jsonToMap(res)?? {};
         final message = js['message'];
 
         if(message != null){
           AppSnack.showInfo(context, message);
-          return;
+          return null;
         }
       }
+    }
+
+    if(uploadRes.hasResult1()){
+      final data = uploadRes.result1![Keys.data];
+
+      if(data is List<String>) {
+        return data;
+      }
+    }
 * */

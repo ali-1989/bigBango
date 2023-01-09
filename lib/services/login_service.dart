@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app/managers/settingsManager.dart';
 import 'package:app/structures/models/courselevelModel.dart';
+import 'package:app/structures/models/towReturn.dart';
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
@@ -111,9 +112,9 @@ class LoginService {
     return result.future;
   }
 
-  static Future<HttpRequester?> requestVerifyOtp({CountryModel? countryModel, required String phoneNumber, required String code}) async {
+  static Future<TwoReturn<Map?, Map?>> requestVerifyOtp({CountryModel? countryModel, required String phoneNumber, required String code}) async {
     final http = HttpItem();
-    final result = Completer<HttpRequester?>();
+    final result = Completer<TwoReturn<Map?, Map?>>();
 
     final js = {};
     js['phoneNumber'] = phoneNumber;
@@ -127,16 +128,16 @@ class LoginService {
     final request = AppHttpDio.send(http);
 
     var f = request.response.catchError((e){
-      result.complete(null);
+      result.complete(TwoReturn());
     });
 
     f = f.then((Response? response){
       if(response == null) {
-        result.complete(null);
+        result.complete(TwoReturn(r2: request.getBodyAsJson()));
         return;
       }
 
-      result.complete(request);
+      result.complete(TwoReturn(r1: request.getBodyAsJson()));
       return null;
     });
 

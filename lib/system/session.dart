@@ -80,8 +80,6 @@ class Session {
 
 		final newUser = UserModel.fromMap(json);
 
-		newUser.token?.refreshToken = json['refreshToken'];
-
 		newUser.loginDate = DateHelper.getNow().toUtc();
 
 		final wasLoginUser = getExistLoginUserById(userId);

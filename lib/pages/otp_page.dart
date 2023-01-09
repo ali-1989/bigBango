@@ -289,23 +289,17 @@ class _OtpPageState extends StateBase<OtpPage> {
   void sendOtpCode() async {
     showLoading();
 
-    final httpRequester = await LoginService.requestVerifyOtp(phoneNumber: widget.phoneNumber, code: otpCode);
+    final twoReturn = await LoginService.requestVerifyOtp(phoneNumber: widget.phoneNumber, code: otpCode);
 
-    if(httpRequester == null){
+    if(!twoReturn.hasResult1() && !twoReturn.hasResult2()){
       await hideLoading();
       AppSnack.showSnack$errorCommunicatingServer(context);
       return;
     }
 
-    int statusCode = httpRequester.responseData?.statusCode?? 0;
-
-    if(statusCode != 200){
+    if(twoReturn.hasResult2()){
       await hideLoading();
-      String? message;
-
-      if(httpRequester.getBodyAsJson() != null) {
-        message = httpRequester.getBodyAsJson()![Keys.message];
-      }
+      String? message = twoReturn.result2![Keys.message];
 
       if(message == null) {
         AppSnack.showSnack$serverNotRespondProperly(context);
@@ -313,12 +307,10 @@ class _OtpPageState extends StateBase<OtpPage> {
       else {
         AppSnack.showError(context, message);
       }
-
-      return;
     }
 
 
-    final dataJs = httpRequester.getBodyAsJson()![Keys.data];
+    final dataJs = twoReturn.result1![Keys.data];
 
     if(dataJs == null || dataJs[Keys.token] == null) {
       await hideLoading();

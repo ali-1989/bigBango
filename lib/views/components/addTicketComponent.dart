@@ -1,8 +1,14 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:app/pages/support_page.dart';
+import 'package:app/services/file_upload_service.dart';
 import 'package:app/services/pages_event_service.dart';
+import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/models/ticketModels/ticketModel.dart';
+import 'package:app/system/keys.dart';
+import 'package:app/tools/app/appSnack.dart';
+import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/attachmentFileTicketComponent.dart';
 import 'package:flutter/material.dart';
 
@@ -173,6 +179,12 @@ class _AddTicketComponentState extends StateBase<AddTicketComponent> {
                               ),
 
                               SizedBox(height: 15),
+                              Visibility(
+                                visible: attachmentFiles.isNotEmpty,
+                                  child: Text('تعداد فایل ها: ${attachmentFiles.length}'),
+                              ),
+                              SizedBox(height: 15),
+
                               Row(
                                 children: [
                                   ElevatedButton.icon(
@@ -186,7 +198,7 @@ class _AddTicketComponentState extends StateBase<AddTicketComponent> {
 
                                   Expanded(
                                     child: ElevatedButton(
-                                        onPressed: requestSendTicket,
+                                        onPressed: sendClick,
                                         child: Text('ارسال')
                                     ),
                                   ),
@@ -215,14 +227,78 @@ class _AddTicketComponentState extends StateBase<AddTicketComponent> {
     );
   }
 
-  void requestSendTicket(){
+  void sendClick() async {
+    if(attachmentFiles.isEmpty){
+      requestSendTicket();
+    }
+    else {
+      final files = await requestUpload();
+
+      if(files != null){
+        requestSendTicket(attachments: files);
+      }
+    }
+  }
+
+  Future<List<String>?> requestUpload() async {
     FocusHelper.hideKeyboardByUnFocusRoot();
 
+    final title = titleCtr.text.trim();
+    final description = descriptionCtr.text.trim();
+
+    if(title.isEmpty) {
+      AppToast.showToast(context, 'لطفا موضوع را وارد کنید');
+      return null;
+    }
+
+    if(description.isEmpty) {
+      AppToast.showToast(context, 'لطفا توضیحات را وارد کنید');
+      return null;
+    }
+
+    showLoading();
+    final uploadRes = await FileUploadService.uploadFiles(attachmentFiles, FileUploadType.ticket);
+    await hideLoading();
+
+    if(uploadRes.hasResult2()){
+      final res = uploadRes.result2!.data;
+
+      if(res != null){
+        final js = JsonHelper.jsonToMap(res)?? {};
+        final message = js['message'];
+
+        if(message != null){
+          AppSnack.showInfo(context, message);
+          return null;
+        }
+      }
+    }
+
+    if(uploadRes.hasResult1()){
+      final data = uploadRes.result1![Keys.data];
+
+      if(data is List<String>) {
+        return data;
+      }
+    }
+
+    return null;
+  }
+
+  void requestSendTicket({List<String>? attachments}){
+    FocusHelper.hideKeyboardByUnFocusRoot();
+
+    final title = titleCtr.text.trim();
+    final description = descriptionCtr.text.trim();
+
     final body = <String, dynamic>{};
-    body['title'] = titleCtr.text.trim();
+    body['title'] = title;
     body['trackingRoleId'] = selectedTicketRoleId;
-    body['description'] = descriptionCtr.text.trim();
-    //body['attachments'] = ;
+    body['description'] = description;
+
+    if(attachments != null) {
+      body['attachments'] = attachments;
+    }
 
     requester.httpRequestEvents.onFailState = (req, res) async {
       hideLoading();

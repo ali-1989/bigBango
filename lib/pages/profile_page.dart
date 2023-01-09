@@ -15,6 +15,7 @@ import 'package:iris_tools/api/helpers/fileHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
+import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:persian_modal_date_picker/button.dart';
@@ -28,7 +29,6 @@ import 'package:app/structures/enums/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';
-import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
@@ -116,234 +116,242 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SizedBox.expand(
-          child: Scaffold(
-            body: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              children: [
-                const SizedBox(height: 30),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Assist(
+      controller: assistCtr,
+      builder: (_, ctr, data) {
+        print('^^^^^^^^^^^^^^^^^^^^^^^  ${user.avatarModel?.fileLocation}, ${user.avatarModel}');//todo
+        print('^^^^^^^^^^^^^^^^^^^^^^^  ${user.token}');//todo
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: SizedBox.expand(
+              child: Scaffold(
+                body: ListView(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   children: [
+                    const SizedBox(height: 30),
+
                     Row(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const SizedBox(width: 10),
-                        Image.asset(AppImages.changeImage, color: AppColors.red),
-                        const SizedBox(width: 8),
-                        Text('پروفایل و اطلاعات', style: const TextStyle(fontSize: 17)),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(width: 10),
+                            Image.asset(AppImages.changeImage, color: AppColors.red),
+                            const SizedBox(width: 8),
+                            Text('پروفایل و اطلاعات', style: const TextStyle(fontSize: 17)),
+                          ],
+                        ),
+
+                        RotatedBox(
+                          quarterTurns: 2,
+                            child: BackButton()
+                        ),
                       ],
                     ),
 
-                    RotatedBox(
-                      quarterTurns: 2,
-                        child: BackButton()
+                    const SizedBox(height: 20),
+                    IrisImageView(
+                      height: 70,
+                      beforeLoadWidget: Image.asset(AppImages.profileBig, height: 70),
+                      url: user.avatarModel?.fileLocation,
                     ),
-                  ],
-                ),
 
-                const SizedBox(height: 20),
-                IrisImageView(
-                  height: 70,
-                  beforeLoadWidget: Image.asset(AppImages.profileBig, height: 70),
-                ),
+                    const SizedBox(height: 10),
+                    Center(
+                      child: IntrinsicWidth(
+                        child: Column(
+                          children: [
+                            Divider(color: Colors.black54),
+                            SizedBox(height: 5),
 
-                const SizedBox(height: 10),
-                Center(
-                  child: IntrinsicWidth(
-                    child: Column(
+                            GestureDetector(
+                              onTap: changeAvatarClick,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(AppImages.changeImage, width: 20),
+                                  SizedBox(width: 10),
+                                  Text('تغییر تصویر پروفایل')
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(height: 5),
+                            Divider(color: Colors.black54),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+                    Row(
                       children: [
-                        Divider(color: Colors.black54),
-                        SizedBox(height: 5),
-
-                        GestureDetector(
-                          onTap: changeAvatarClick,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Image.asset(AppImages.changeImage, width: 20),
-                              SizedBox(width: 10),
-                              Text('تغییر تصویر پروفایل')
+                              Text('نام').color(Colors.grey),
+                              const SizedBox(height: 6),
+
+                              TextField(
+                                controller: nameTextCtr,
+                                onChanged: (t){
+                                  userChangeInfo[Keys.firstName] = t;
+                                  compareChanges();
+                                },
+                                textInputAction: TextInputAction.next,
+                                decoration: inputDecoration
+                              ),
                             ],
                           ),
                         ),
 
-                        SizedBox(height: 5),
-                        Divider(color: Colors.black54),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('نام خانوادگی').color(Colors.grey),
+                              const SizedBox(height: 6),
+
+                              TextField(
+                                controller: familyTextCtr,
+                                textInputAction: TextInputAction.next,
+                                onChanged: (t){
+                                  userChangeInfo[Keys.lastName] = t;
+                                  compareChanges();
+                                },
+                                decoration: inputDecoration
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ),
 
-                const SizedBox(height: 30),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('نام').color(Colors.grey),
-                          const SizedBox(height: 6),
+                    const SizedBox(height: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('شماره موبایل').color(Colors.grey),
+                        const SizedBox(height: 6),
 
-                          TextField(
-                            controller: nameTextCtr,
-                            onChanged: (t){
-                              userChangeInfo[Keys.firstName] = t;
-                              compareChanges();
-                            },
-                            textInputAction: TextInputAction.next,
-                            decoration: inputDecoration
-                          ),
-                        ],
-                      ),
+                        TextField(
+                          controller: mobileTextCtr,
+                          enabled: false,
+                          decoration: inputDecoration
+                        ),
+                      ],
                     ),
 
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('نام خانوادگی').color(Colors.grey),
-                          const SizedBox(height: 6),
+                    const SizedBox(height: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('ایمیل').color(Colors.grey),
+                        const SizedBox(height: 6),
 
-                          TextField(
-                            controller: familyTextCtr,
-                            textInputAction: TextInputAction.next,
-                            onChanged: (t){
-                              userChangeInfo[Keys.lastName] = t;
-                              compareChanges();
-                            },
-                            decoration: inputDecoration
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('شماره موبایل').color(Colors.grey),
-                    const SizedBox(height: 6),
-
-                    TextField(
-                      controller: mobileTextCtr,
-                      enabled: false,
-                      decoration: inputDecoration
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('ایمیل').color(Colors.grey),
-                    const SizedBox(height: 6),
-
-                    TextField(
-                      controller: emailTextCtr,
-                      onChanged: (t){
-                        userChangeInfo['email'] = t;
-                        compareChanges();
-                      },
-                      decoration: inputDecoration
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('جنسیت', style: TextStyle(color: Colors.grey)),
-                            const SizedBox(height: 6),
-
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: ColoredBox(
-                                color: Colors.grey.shade100,
-                                child: DropdownButton2<int>(
-                                  items: genderList,
-                                  value: currentGender,
-                                  hint: const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 10),
-                                    child: Text('جنسیت', style: TextStyle(color: Colors.grey)),
-                                  ),
-                                  itemPadding: const EdgeInsets.symmetric(horizontal: 10),
-                                  dropdownPadding: const EdgeInsets.symmetric(horizontal: 10),
-                                  onChanged: (value) {
-                                    currentGender = value;
-                                    userChangeInfo[Keys.gender] = currentGender;
-                                    compareChanges();
-                                  },
-                                  buttonHeight: 40,
-                                  buttonWidth: 140,
-                                  itemHeight: 40,
-                                  underline: const SizedBox(),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
+                        TextField(
+                          controller: emailTextCtr,
+                          onChanged: (t){
+                            userChangeInfo['email'] = t;
+                            compareChanges();
+                          },
+                          decoration: inputDecoration
+                        ),
+                      ],
                     ),
 
-                    const SizedBox(width: 10),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('جنسیت', style: TextStyle(color: Colors.grey)),
+                                const SizedBox(height: 6),
 
-                    Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('تاریخ تولد', style: const TextStyle(color: Colors.grey)),
-                            const SizedBox(height: 6),
-
-                            InkWell(
-                              onTap: changeBirthdate,
-                              child: ClipRRect(
+                                ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: ColoredBox(
-                                      color: Colors.grey.shade100,
-                                      child: SizedBox(
-                                        height: 40,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Text(birthDateText),
-                                            Image.asset(AppImages.calendarIco)
-                                          ],
-                                        ),
+                                    color: Colors.grey.shade100,
+                                    child: DropdownButton2<int>(
+                                      items: genderList,
+                                      value: currentGender,
+                                      hint: const Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
+                                        child: Text('جنسیت', style: TextStyle(color: Colors.grey)),
+                                      ),
+                                      itemPadding: const EdgeInsets.symmetric(horizontal: 10),
+                                      dropdownPadding: const EdgeInsets.symmetric(horizontal: 10),
+                                      onChanged: (value) {
+                                        currentGender = value;
+                                        userChangeInfo[Keys.gender] = currentGender;
+                                        compareChanges();
+                                      },
+                                      buttonHeight: 40,
+                                      buttonWidth: 140,
+                                      itemHeight: 40,
+                                      underline: const SizedBox(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
+
+                        const SizedBox(width: 10),
+
+                        Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('تاریخ تولد', style: const TextStyle(color: Colors.grey)),
+                                const SizedBox(height: 6),
+
+                                InkWell(
+                                  onTap: changeBirthdate,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: ColoredBox(
+                                          color: Colors.grey.shade100,
+                                          child: SizedBox(
+                                            height: 40,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              children: [
+                                                Text(birthDateText),
+                                                Image.asset(AppImages.calendarIco)
+                                              ],
+                                            ),
+                                          )
                                       )
-                                  )
-                              ),
-                            ),
-                          ],
-                        )
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
+                      ],
                     ),
+
+                    SizedBox(height: 20),
+
+                    ElevatedButton(
+                        onPressed: hasChanges? sendChanges : null,
+                        child: Text('ثبت تغییرات')
+                    ),
+
+                    SizedBox(height: 20),
                   ],
                 ),
-
-                SizedBox(height: 20),
-
-                ElevatedButton(
-                    onPressed: hasChanges? sendChanges : null,
-                    child: Text('ثبت تغییرات')
-                ),
-
-                SizedBox(height: 20),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      }
     );
   }
 
@@ -560,7 +568,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
   void uploadAvatar(String filePath) async {
     showLoading(canBack: false);
-    final uploadRes = await FileUploadService.uploadFiles<Map>([File(filePath)], FileUploadType.avatar);
+    final uploadRes = await FileUploadService.uploadFiles([File(filePath)], FileUploadType.avatar);
     bool isOk = false;
     String? message;
 
@@ -568,31 +576,34 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       final data = uploadRes.result1![Keys.data];
 
       if(data is List) {
-        final media = MediaModel.fromMap(data[0]);
-        media.path = filePath;
+        final media = MediaModel.fromMap(data[0]['file']);
 
         isOk = await requestUpdateAvatar(media);
+
+        if(isOk){
+          media.path = filePath;
+          user.avatarModel = media;
+          Session.sinkUserInfo(user);
+        }
       }
     }
     else {
       final res = uploadRes.result2!.data;
 
       if(res != null){
-        final js = JsonHelper.jsonToMap(res);
-        if(js != null){
-          message = js['message'];
-        }
+        final js = JsonHelper.jsonToMap(res)?? {};
+        message = js['message'];
       }
     }
 
     hideLoading();
 
-    if(isOk) {
-      AppSnack.showSnack$operationSuccess(context);
+    if(message != null){
+      AppSnack.showInfo(context, message);
     }
     else {
-      if(message != null){
-        AppSnack.showInfo(context, message);
+      if(isOk) {
+        AppSnack.showSnack$operationSuccess(context);
       }
       else {
         AppSnack.showSnack$errorCommunicatingServer(context);
@@ -619,7 +630,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     requester.httpRequestEvents.onStatusOk = (req, data) async {
       user.avatarModel = null;
 
-      AppBroadcast.avatarNotifier.notifyAll(null);
+      //AppBroadcast.avatarNotifier.notifyAll(null);
       Session.sinkUserInfo(user);
     };
 
@@ -687,6 +698,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
       if(dataText != null) {
         final temp = UserModel.fromMap(dataText);
+
         final user = Session.getLastLoginUser()!;
         user.matchBy(temp);
 
@@ -775,9 +787,6 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, data) async {
-      user.avatarModel = media;
-      Session.sinkUserInfo(user);
-
       result.complete(true);
     };
 

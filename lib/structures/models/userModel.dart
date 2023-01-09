@@ -43,6 +43,10 @@ class UserModel {
       token?.parseToken();
     }
 
+    if(map['refreshToken'] != null) {
+      token?.refreshToken = map['refreshToken'];
+    }
+
     if(map['avatar'] != null) {
       avatarModel = MediaModel.fromMap(map['avatar']);
     }

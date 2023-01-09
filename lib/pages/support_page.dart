@@ -595,7 +595,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     requester.httpRequestEvents.onFailState = (req, res) async {
       if(res?.data != null){
-        final map = JsonHelper.jsonToMap(res?.data)!;
+        final map = JsonHelper.jsonToMap(res?.data)?? {};
 
         final message = map['message'];
 
