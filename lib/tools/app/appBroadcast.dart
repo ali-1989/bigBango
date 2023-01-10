@@ -15,7 +15,7 @@ class AppBroadcast {
 
   static final StreamController<bool> viewUpdaterStream = StreamController<bool>();
   static final RefreshController drawerMenuRefresher = RefreshController();
-  static final NotifyBroadcast avatarNotifier = NotifyBroadcast();
+  //static final NotifyBroadcast userProfileNotifier = NotifyBroadcast();
   //---------------------- keys
   static final LocalKey materialAppKey = UniqueKey();
   static final rootScaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();

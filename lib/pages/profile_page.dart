@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/services/file_upload_service.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/models/mediaModel.dart';
@@ -12,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:iris_pic_editor/pic_editor.dart';
 import 'package:iris_tools/api/checker.dart';
 import 'package:iris_tools/api/helpers/fileHelper.dart';
+import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
@@ -119,8 +121,6 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     return Assist(
       controller: assistCtr,
       builder: (_, ctr, data) {
-        print('^^^^^^^^^^^^^^^^^^^^^^^  ${user.avatarModel?.fileLocation}, ${user.avatarModel}');//todo
-        print('^^^^^^^^^^^^^^^^^^^^^^^  ${user.token}');//todo
         return Scaffold(
           backgroundColor: Colors.white,
           body: SafeArea(
@@ -129,7 +129,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                 body: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   children: [
-                    const SizedBox(height: 30),
+                    //const SizedBox(height: 30),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -152,10 +152,32 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                     ),
 
                     const SizedBox(height: 20),
-                    IrisImageView(
-                      height: 70,
-                      beforeLoadWidget: Image.asset(AppImages.profileBig, height: 70),
-                      url: user.avatarModel?.fileLocation,
+                    Visibility(
+                        visible: !user.hasAvatar(),
+                        child: Image.asset(AppImages.profileBig, height: 70),
+                    ),
+
+                    Visibility(
+                        visible: user.hasAvatar(),
+                        child: Center(
+                          child: IrisImageView(
+                            height: 70,
+                            width: 70,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                            beforeLoadWidget: SizedBox(
+                              height: 70,
+                                width: 70,
+                                child: UnconstrainedBox(
+                                  child: SizedBox(
+                                      height: 30,
+                                      width: 30,
+                                      child: CircularProgressIndicator()
+                                  ),
+                                )
+                            ),
+                            url: user.avatarModel?.fileLocation,
+                          ),
+                        ),
                     ),
 
                     const SizedBox(height: 10),
@@ -584,6 +606,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
           media.path = filePath;
           user.avatarModel = media;
           Session.sinkUserInfo(user);
+          EventDispatcherService.notify(EventDispatcher.userProfileChange);
         }
       }
     }
@@ -630,7 +653,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     requester.httpRequestEvents.onStatusOk = (req, data) async {
       user.avatarModel = null;
 
-      //AppBroadcast.avatarNotifier.notifyAll(null);
+      EventDispatcherService.notify(EventDispatcher.userProfileChange);
       Session.sinkUserInfo(user);
     };
 
@@ -717,6 +740,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
   }
 
   void requestUpdate(){
+    FocusHelper.hideKeyboardByUnFocusRoot();
+
     final name = nameTextCtr.text.trim();
     final family = familyTextCtr.text.trim();
     final email = emailTextCtr.text.trim();
@@ -758,6 +783,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       user.birthDate = birthDate;
 
       Session.sinkUserInfo(user);
+      EventDispatcherService.notify(EventDispatcher.userProfileChange);
     };
 
 

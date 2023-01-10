@@ -1,18 +1,19 @@
+import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/system/session.dart';
-import 'package:flutter/foundation.dart';
+import 'package:app/views/homeComponents/layoutComponent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/mathHelper.dart';
+import 'package:iris_tools/widgets/irisImageView.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/views/components/changeLevelComponent.dart';
-import 'package:app/views/homeComponents/drawerMenuBuilder.dart';
 
-class AppBarCustom2 extends AppBar {
+/*class AppBarCustom2 extends AppBar {
 
   AppBarCustom2({
     super.key,
@@ -60,8 +61,8 @@ class AppBarCustom2 extends AppBar {
   bool isWeb(){
     return kIsWeb;
   }
-}
-///=========================================================================================================================
+}*/
+///=====================================================================================================================
 class AppBarCustom extends StatefulWidget implements PreferredSizeWidget {
 
   const AppBarCustom({Key? key}) : super(key: key);
@@ -76,7 +77,7 @@ class AppBarCustom extends StatefulWidget implements PreferredSizeWidget {
     return const Size.fromHeight(kToolbarHeight + 40);
   }
 }
-///=========================================================================================================================
+///=====================================================================================================================
 class AppBarCustomState extends StateBase<AppBarCustom> {
 
   @override
@@ -96,10 +97,10 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 22, 15, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 14/*22*/, 15, 0),
                   child: GestureDetector(
                     onTap: () async {
-                      DrawerMenuBuilder.toggleDrawer(context);
+                      LayoutComponentState.toggleDrawer();
                     },
                     child: Row(
                       children: [
@@ -114,7 +115,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                 GestureDetector(
                   onTap: onLevelClick,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 16, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 8, 0, 0),
                     child: Row(
                       children: [
                         Icon(AppIcons.arrowDropDown),
@@ -137,16 +138,38 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
               ],
             ),
 
-            Column(
+           Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: AssetImage(AppImages.profile),
-                  //child: Image.asset(AppImages.profile, fit: BoxFit.fill),
-                ),
+              children: [
+                StreamBuilder(
+                  stream: EventDispatcherService.getStream(EventDispatcher.userProfileChange),
+                  builder: (_, data) {
+                      final user = Session.getLastLoginUser();
+
+                      if(user != null && user.hasAvatar()){
+                        return CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.transparent,
+                          child: IrisImageView(
+                            height: 40,
+                            width: 40,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                            beforeLoadWidget: CircularProgressIndicator(),
+                            url: user.avatarModel?.fileLocation,
+                          ),
+                        );
+                      }
+
+                      return CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: AssetImage(AppImages.profile),
+                        //child: Image.asset(AppImages.profile, fit: BoxFit.fill),
+                      );
+                    },
+                  ),
+
                 SizedBox(height: 20),
                 //SizedBox(height: 8),
                 //Text('علی باقری'),

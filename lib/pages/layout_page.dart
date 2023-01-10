@@ -1,4 +1,6 @@
 import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/views/homeComponents/drawerMenuBuilder.dart';
+import 'package:app/views/homeComponents/layoutComponent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -7,7 +9,7 @@ import 'package:app/pages/home_page.dart';
 import 'package:app/pages/leitner_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/views/homeComponents/appBarBuilder.dart';
-import 'package:app/views/homeComponents/bottomNavBar.dart';
+import 'package:app/views/homeComponents/bottomNavBarBuilder.dart';
 
 class LayoutPage extends StatefulWidget {
   const LayoutPage({Key? key}) : super(key: key);
@@ -25,24 +27,26 @@ class LayoutPageState extends StateBase<LayoutPage> {
     return Assist(
       controller: assistCtr,
       builder: (ctx, ctr, data) {
-        return SafeArea(
-          top: true,
-          child: Scaffold(
-            appBar: AppBarCustom(),
-            extendBodyBehindAppBar: true,
-            bottomNavigationBar: BottomNavBar(
-                selectedItemIndex: selectedPageIndex,
-                onSelectItem: onPageItemSelect,
-            ),
-            body: PageView(
-              controller: pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                HomePage(key: AppBroadcast.homePageKey),
-                LightnerPage(),
-                HomePage(),
-                HomePage(),
-              ],
+        return LayoutComponent(
+          drawer: DrawerMenuBuilder.buildDrawer(),
+          body: SafeArea(
+            child: Scaffold(
+              appBar: AppBarCustom(),
+              extendBodyBehindAppBar: true,
+              bottomNavigationBar: BottomNavBar(
+                  selectedItemIndex: selectedPageIndex,
+                  onSelectItem: onPageItemSelect,
+              ),
+              body: PageView(
+                controller: pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  HomePage(key: AppBroadcast.homePageKey),
+                  LightnerPage(),
+                  HomePage(),
+                  HomePage(),
+                ],
+              ),
             ),
           ),
         );
