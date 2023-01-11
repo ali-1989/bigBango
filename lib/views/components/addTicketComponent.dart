@@ -13,6 +13,7 @@ import 'package:app/views/components/attachmentFileTicketComponent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:iris_tools/api/converter.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
@@ -25,6 +26,7 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
+import 'package:app/system/extensions.dart';
 import 'package:app/views/widgets/customCard.dart';
 
 class AddTicketComponent extends StatefulWidget {
@@ -181,7 +183,7 @@ class _AddTicketComponentState extends StateBase<AddTicketComponent> {
                               SizedBox(height: 15),
                               Visibility(
                                 visible: attachmentFiles.isNotEmpty,
-                                  child: Text('تعداد فایل ها: ${attachmentFiles.length}'),
+                                  child: Text('تعداد فایل ها: ${attachmentFiles.length}').subFont().fsR(-2),
                               ),
                               SizedBox(height: 15),
 
@@ -217,14 +219,16 @@ class _AddTicketComponentState extends StateBase<AddTicketComponent> {
     );
   }
 
-  void showAttachmentDialog(){
-    AppSheet.showSheetCustom(
+  void showAttachmentDialog() async {
+    await AppSheet.showSheetCustom(
       context,
       builder: (ctx) => AttachmentFileTicketComponent(files: attachmentFiles),
       routeName: 'openNewReply',
       contentColor: Colors.transparent,
       isScrollControlled: true,
     );
+
+    assistCtr.updateHead();
   }
 
   void sendClick() async {
@@ -232,15 +236,15 @@ class _AddTicketComponentState extends StateBase<AddTicketComponent> {
       requestSendTicket();
     }
     else {
-      final files = await requestUpload();
+      final files = await requestUploadFiles();
 
       if(files != null){
-        requestSendTicket(attachments: files);
+        requestSendTicket(attachments: files.map<String>((e) => e['file']['fileLocation']).toList());
       }
     }
   }
 
-  Future<List<String>?> requestUpload() async {
+  Future<List<Map>?> requestUploadFiles() async {
     FocusHelper.hideKeyboardByUnFocusRoot();
 
     final title = titleCtr.text.trim();
@@ -251,8 +255,18 @@ class _AddTicketComponentState extends StateBase<AddTicketComponent> {
       return null;
     }
 
+    if(title.length < 6) {
+      AppToast.showToast(context, 'موضوع کوتاه است');
+      return null;
+    }
+
     if(description.isEmpty) {
       AppToast.showToast(context, 'لطفا توضیحات را وارد کنید');
+      return null;
+    }
+
+    if(description.length < 6) {
+      AppToast.showToast(context, 'توضیحات کوتاه است');
       return null;
     }
 
@@ -263,22 +277,21 @@ class _AddTicketComponentState extends StateBase<AddTicketComponent> {
     if(uploadRes.hasResult2()){
       final res = uploadRes.result2!.data;
 
-      if(res != null){
-        final js = JsonHelper.jsonToMap(res)?? {};
-        final message = js['message'];
+      final js = JsonHelper.jsonToMap(res)?? {};
+      final message = js['message']?? 'خطایی رخ داد';
 
-        if(message != null){
-          AppSnack.showInfo(context, message);
-          return null;
-        }
-      }
+      AppSnack.showInfo(context, message);
+      return null;
     }
 
     if(uploadRes.hasResult1()){
       final data = uploadRes.result1![Keys.data];
 
-      if(data is List<String>) {
-        return data;
+      if(data is List) {
+        return Converter.correctList<Map>(data);
+      }
+      else{
+        AppSnack.showInfo(context, 'متاسفانه انجام نشد');
       }
     }
 

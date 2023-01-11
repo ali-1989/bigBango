@@ -3,7 +3,7 @@ import 'package:iris_tools/dateSection/dateHelper.dart';
 class TicketModel {
   late String id;
   int number = 0;
-  int status = 0;
+  int status = 1;
   late String title;
   String trackingRoleName = '';
   late DateTime createdAt;
@@ -14,7 +14,7 @@ class TicketModel {
     id = map['id'];
     title = map['title'];
     number = map['number'];
-    status = map['status']?? 0;
+    status = map['status']?? 1; // 1: open 2:close
     trackingRoleName = map['trackingRoleName']?? '';
     createdAt = DateHelper.tsToSystemDate(map['createdAt'])!;
   }

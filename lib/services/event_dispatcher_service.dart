@@ -10,7 +10,7 @@ Alternative:
   static final NotifyBroadcast userProfileNotifier = NotifyBroadcast();
  */
 
-typedef EventFunction<f> = void Function({dynamic data});
+typedef EventFunction = void Function({dynamic data});
 ///==============================================================================
 class EventDispatcherService {
   static final Map<EventDispatcher, List<EventFunction>> _functions = {};
@@ -92,4 +92,8 @@ enum EventDispatcher {
   final int _number;
 
   const EventDispatcher(this._number);
+
+  int getNumber(){
+    return _number;
+  }
 }

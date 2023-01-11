@@ -9,6 +9,7 @@ import 'package:app/views/states/emptyData.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/localeHelper.dart';
+import 'package:iris_tools/dateSection/dateHelper.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -530,6 +531,10 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   void onAddTicketEventCall(param){
     ticketList.add(param);
 
+    ticketList.sort((e1, e2){
+      return DateHelper.compareDates(e1.createdAt, e2.createdAt, asc: false);
+    });
+
     assistCtr.updateHead();
   }
 
@@ -685,6 +690,10 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
           ticketList.add(tik);
         }
       }
+
+      ticketList.sort((e1, e2){
+        return DateHelper.compareDates(e1.createdAt, e2.createdAt, asc: false);
+      });
 
       if(ticketRefreshController.isLoading) {
         ticketRefreshController.loadComplete();

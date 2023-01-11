@@ -94,6 +94,15 @@ class FontManager {
       }
     }
 
+    for(final fon in _fontList){
+      final matchLanguage = fon.defaultLanguage == language;
+      final matchUsage = fon.usages.any((element) => element == usage);
+
+      if(matchLanguage && matchUsage) {
+        return fon.clone();
+      }
+    }
+
     return _platformDefaultFont.clone();
   }
 
