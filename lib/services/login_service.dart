@@ -22,21 +22,10 @@ import 'package:app/tools/deviceInfoTools.dart';
 class LoginService {
   LoginService._();
 
-  static void init(){
-    Session.addLoginListener(LoginService.onLogin);
-    Session.addLogoffListener(LoginService.onLogoff);
-    Session.addProfileChangeListener(LoginService.onProfileChange);
-  }
-
-  static void onLogin(UserModel user){
-  }
-
-  static void onLogoff(UserModel user){
-    sendLogoffState(user);
-  }
-
-  // on new data for existUser
-  static void onProfileChange(UserModel user, Map? old) async {
+  static void onLogoffObservable({dynamic data}){
+    if(data is UserModel){
+      sendLogoffState(data);
+    }
   }
 
   static void sendLogoffState(UserModel user){

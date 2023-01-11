@@ -3,7 +3,14 @@ import 'dart:async';
 
 import 'package:iris_tools/api/generator.dart';
 
-typedef EventFunction = void Function();
+
+/*
+Alternative:
+  import 'package:iris_tools/modules/stateManagers/notifyRefresh.dart';
+  static final NotifyBroadcast userProfileNotifier = NotifyBroadcast();
+ */
+
+typedef EventFunction<f> = void Function({dynamic data});
 ///==============================================================================
 class EventDispatcherService {
   static final Map<EventDispatcher, List<EventFunction>> _functions = {};
@@ -33,7 +40,7 @@ class EventDispatcherService {
     }
   }
 
-  static Stream<int> getStream(EventDispatcher event){
+  static Stream<dynamic> getStream(EventDispatcher event){
     if(!_streams.containsKey(event)){
       _streams[event] = StreamController.broadcast();
     }
@@ -41,14 +48,16 @@ class EventDispatcherService {
     return _streams[event]!.stream;
   }
 
-  static notify(EventDispatcher event){
-    for(final ef in _functions.entries){
-      if(ef.key == event){
-        for(final f in ef.value){
-          try{
-            f.call();
+  static notify(EventDispatcher event, {dynamic data}){
+    for (final ef in _functions.entries) {
+      if (ef.key == event) {
+        for (final f in ef.value) {
+          try {
+            f.call(data: data);
           }
-          catch(e){/**/}
+          catch (e) {
+            /**/
+          }
         }
         break;
       }
@@ -57,7 +66,7 @@ class EventDispatcherService {
     for(final ef in _streams.entries){
       if(ef.key == event){
         try{
-          ef.value.sink.add(Generator.getRandomInt(10, 9999));
+          ef.value.sink.add(data?? Generator.getRandomInt(10, 9999));
         }
         catch(e){/**/}
         break;
@@ -65,9 +74,9 @@ class EventDispatcherService {
     }
   }
 
-  static notifyFor(List<EventDispatcher> events){
+  static notifyFor(List<EventDispatcher> events, {dynamic data}){
     for(final e in events){
-      notify(e);
+      notify(e, data: data);
     }
   }
 }
@@ -76,7 +85,9 @@ enum EventDispatcher {
   networkConnected(100),
   networkDisConnected(101),
   networkStateChange(102),
-  userProfileChange(103);
+  userProfileChange(103),
+  userLogin(104),
+  userLogoff(105);
 
   final int _number;
 

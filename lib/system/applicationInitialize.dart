@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/tools/netListenerTools.dart';
 import 'package:flutter/foundation.dart';
@@ -125,7 +126,7 @@ class ApplicationInitial {
       ApplicationLifeCycle.init();
 
       /// login & logoff
-      LoginService.init();
+      EventDispatcherService.attachFunction(EventDispatcher.userLogoff, LoginService.onLogoffObservable);
 
       if (System.isWeb()) {
         void onSizeCheng(oldW, oldH, newW, newH) {

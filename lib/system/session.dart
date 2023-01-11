@@ -1,3 +1,4 @@
+import 'package:app/services/event_dispatcher_service.dart';
 import 'package:iris_db/iris_db.dart';
 import 'package:iris_tools/api/checker.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
@@ -13,9 +14,9 @@ class Session {
 
 	static UserModel? _lastLoginUser;
 	static List<UserModel> currentLoginList = [];
-	static final List<Function(UserModel user)> _loginListeners = [];
-	static final List<Function(UserModel user)> _logoffListeners = [];
-	static final List<Function(UserModel user, Map? old)> _profileChangeListeners = [];
+	//static final List<Function(UserModel user)> _loginListeners = [];
+	//static final List<Function(UserModel user)> _logoffListeners = [];
+	//static final List<Function(UserModel user, Map? old)> _profileChangeListeners = [];
 
 	static Future<int> fetchLoginUsers() async {
 		final list = AppDB.db.query(AppDB.tbUsers,
@@ -100,12 +101,12 @@ class Session {
 
 		if(updateDb > 0) {
 			if(wasLoginUser != null) {
-				final old = wasLoginUser.toMap();
+				//final old = wasLoginUser.toMap();
 
 				wasLoginUser.matchBy(newUser);
 				_setLastLoginUser(wasLoginUser);
 
-				notifyChangeProfileInfo(wasLoginUser, old);
+				EventDispatcherService.notify(EventDispatcher.userProfileChange, data: wasLoginUser);
 
 				return wasLoginUser;
 			}
@@ -113,7 +114,7 @@ class Session {
 				currentLoginList.add(newUser);
 				_setLastLoginUser(newUser);
 
-				notifyNewLogin(newUser, json);
+				EventDispatcherService.notify(EventDispatcher.userLogin, data: newUser);
 
 				return newUser;
 			}
@@ -151,10 +152,10 @@ class Session {
 
 		if(updateDb > 0) {
 			if(wasLoginUser != null) {
-				final oldMap = wasLoginUser.toMap();
+				//final oldMap = wasLoginUser.toMap();
 				wasLoginUser.matchBy(newUser);
 
-				notifyChangeProfileInfo(wasLoginUser, oldMap);
+				EventDispatcherService.notify(EventDispatcher.userProfileChange, data: wasLoginUser);
 			}
 		}
 	}
@@ -198,13 +199,13 @@ class Session {
 	}
 
 	static Future<bool> sinkUserInfo(UserModel user) async {
-		final old = (await fetchUserById(user.userId))?.toMap();
+		//final old = (await fetchUserById(user.userId))?.toMap();
 
 		final res = await AppDB.db.update(AppDB.tbUsers, user.toMap(),
 				Conditions().add(Condition()..key = Keys.userId..value = user.userId));
 
 		if(res > 0) {
-			notifyChangeProfileInfo(user, old);
+			EventDispatcherService.notify(EventDispatcher.userProfileChange, data: user);
 			return true;
 		}
 
@@ -232,7 +233,7 @@ class Session {
 		  _setLastLoginUser(null);
 		}
 
-		notifyLogoff(user);
+		EventDispatcherService.notify(EventDispatcher.userLogoff, data: user);
 
 		return true;
 	}
@@ -255,7 +256,7 @@ class Session {
 		await AppDB.db.update(AppDB.tbUsers, val, con);
 
 		for(var u in currentLoginList){
-			notifyLogoff(u);
+			EventDispatcherService.notify(EventDispatcher.userLogoff, data: u);
 		}
 
 		currentLoginList.clear();
@@ -285,88 +286,4 @@ class Session {
 
 		return '-';
 	}
-
-	static void addLoginListener(void Function(UserModel user) listener){
-		if(!_loginListeners.contains(listener)) {
-		  _loginListeners.add(listener);
-		}
-	}
-
-	static void removeLoginListener(void Function(UserModel user) listener){
-		_loginListeners.remove(listener);
-	}
-
-	static void addLogoffListener(void Function(UserModel user) listener){
-		if(!_logoffListeners.contains(listener)) {
-		  _logoffListeners.add(listener);
-		}
-	}
-
-	static void removeLogoffListener(void Function(UserModel user) listener){
-		_logoffListeners.remove(listener);
-	}
-
-	static void addProfileChangeListener(void Function(UserModel user, Map? old) listener){
-		if(!_profileChangeListeners.contains(listener)) {
-		  _profileChangeListeners.add(listener);
-		}
-	}
-
-	static void removeProfileChangeListener(void Function(UserModel user, Map? old) listener){
-		_profileChangeListeners.remove(listener);
-	}
-
-	static void clearLoginListeners(){
-		_loginListeners.clear();
-	}
-
-	static void clearLogoffListeners(){
-		_logoffListeners.clear();
-	}
-
-	static void clearProfileChangeListeners(){
-		_profileChangeListeners.clear();
-	}
-}
-///======================================================================================================
-void notifyNewLogin(UserModel user, Map json) {
-	void callListeners(){
-		for(Function f in Session._loginListeners){
-			try{
-				f.call(user);
-			}
-			catch(e){/**/}
-		}
-	}
-
-	callListeners();
-	//must call immediate Future(callListeners);
-}
-//---------------------------------------------------------
-void notifyLogoff(UserModel user) async {
-	void callListeners() {
-		for (Function f in Session._logoffListeners) {
-			try {
-				f.call(user);
-			}
-			catch (e) {/**/}
-		}
-	}
-
-	// ignore: unawaited_futures
-	Future(callListeners);
-}
-//---------------------------------------------------------
-void notifyChangeProfileInfo(UserModel user, Map? old) {
-	void callListeners() {
-		for (Function f in Session._profileChangeListeners) {
-			try {
-				f.call(user, old);
-			}
-			catch (e) {/**/}
-		}
-	}
-
-	callListeners();
-	//Future(callListeners);
 }

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:app/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
-import 'package:iris_tools/modules/stateManagers/notifyRefresh.dart';
 import 'package:iris_tools/modules/stateManagers/refresh.dart';
 
 import 'package:app/pages/layout_page.dart';
@@ -15,7 +14,6 @@ class AppBroadcast {
 
   static final StreamController<bool> viewUpdaterStream = StreamController<bool>();
   static final RefreshController drawerMenuRefresher = RefreshController();
-  //static final NotifyBroadcast userProfileNotifier = NotifyBroadcast();
   //---------------------- keys
   static final LocalKey materialAppKey = UniqueKey();
   static final rootScaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
