@@ -6,6 +6,7 @@ import 'package:app/structures/models/supportModels/supportSessionModel.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/states/emptyData.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/localeHelper.dart';
@@ -105,8 +106,12 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     return Column(
       children: [
         Row(
+          textDirection: TextDirection.ltr,
           children: [
-            BackButton(),
+            RotatedBox(
+              quarterTurns: 2,
+                child: BackButton()
+            ),
           ],
         ),
 
@@ -396,29 +401,37 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
           return Column(
             children: [
               Expanded(
-                  child: RefreshConfiguration(
-                    headerBuilder: () => MaterialClassicHeader(),
-                    footerBuilder: () => PublicAccess.classicFooter,
-                    //headerTriggerDistance: 80.0,
-                    //maxOverScrollExtent :100,
-                    //maxUnderScrollExtent:0,
-                    //springDescription: SpringDescription(stiffness: 170, damping: 16, mass: 1.9),
-                    enableScrollWhenRefreshCompleted: true,
-                    enableLoadingWhenFailed : true,
-                    hideFooterWhenNotFull: true,
-                    enableBallisticLoad: true,
-                    enableLoadingWhenNoData: false,
-                    child: SmartRefresher(
-                      enablePullDown: false,
-                      enablePullUp: true,
-                      controller: ticketRefreshController,
-                      onRefresh: (){},
-                      onLoading: onLoadingMoreTicketsCall,
-                      child: ListView.builder(
-                        itemCount: ticketList.length,
-                        itemBuilder: listBuilderForTicket,
-                      ),
-                    ),
+                  child: Builder(
+                    builder: (context) {
+                      if(ticketList.isEmpty){
+                        return EmptyData(message: 'موردی ثبت نشده',);
+                      }
+
+                      return RefreshConfiguration(
+                        headerBuilder: () => MaterialClassicHeader(),
+                        footerBuilder: () => PublicAccess.classicFooter,
+                        //headerTriggerDistance: 80.0,
+                        //maxOverScrollExtent :100,
+                        //maxUnderScrollExtent:0,
+                        //springDescription: SpringDescription(stiffness: 170, damping: 16, mass: 1.9),
+                        enableScrollWhenRefreshCompleted: true,
+                        enableLoadingWhenFailed : true,
+                        hideFooterWhenNotFull: true,
+                        enableBallisticLoad: true,
+                        enableLoadingWhenNoData: false,
+                        child: SmartRefresher(
+                          enablePullDown: false,
+                          enablePullUp: true,
+                          controller: ticketRefreshController,
+                          onRefresh: (){},
+                          onLoading: onLoadingMoreTicketsCall,
+                          child: ListView.builder(
+                            itemCount: ticketList.length,
+                            itemBuilder: listBuilderForTicket,
+                          ),
+                        ),
+                      );
+                    }
                   )
               ),
 

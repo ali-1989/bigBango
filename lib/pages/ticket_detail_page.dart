@@ -1,8 +1,8 @@
-
-import 'package:app/examples.dart';
 import 'package:app/structures/injectors/ticketDetailUserBubbleInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/ticketModels/ticketDetailModel.dart';
+import 'package:app/structures/models/userModel.dart';
+import 'package:app/system/session.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appDialogIris.dart';
@@ -15,7 +15,6 @@ import 'package:app/views/components/ticketDetailUserBubbleComponent.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -38,6 +37,7 @@ class TicketDetailPage extends StatefulWidget {
 class _TicketDetailPageState extends StateBase<TicketDetailPage> {
   Requester requester = Requester();
   late TicketModel ticketModel;
+  late UserModel userModel;
   TicketDetailModel? ticketDetailModel;
 
   @override
@@ -46,6 +46,8 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
 
     ticketModel = widget.ticketModel;
     assistCtr.addState(AssistController.state$loading);
+    userModel = Session.getLastLoginUser()!;
+
     requestTicketDetail();
   }
 
@@ -163,20 +165,34 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
 
         /// content
         Expanded(
-            child: Builder(
-                builder: (_){
-                  if(ticketDetailModel != null){
-                    return TicketDetailBigbangoBubbleComponent(
-                      injector: TicketDetailBubbleInjector(ticketDetailModel!.firstTicket),
-                    );
-                  }
-
-                  return Text('ggg');
-                }
+            child: ListView.builder(
+                itemCount: ticketDetailModel!.replies.length +1,
+                itemBuilder: buildList,
             ),
         ),
       ],
     );
+  }
+
+  Widget buildList(_, int idx) {
+    if (idx == 0) {
+      return TicketDetailUserBubbleComponent(
+        injector: TicketDetailBubbleInjector(ticketDetailModel!.firstTicket),
+      );
+    }
+
+    final item = ticketDetailModel!.replies[idx+1];
+
+    if (item.creator.id == userModel.userId) {
+      return TicketDetailUserBubbleComponent(
+        injector: TicketDetailBubbleInjector(item),
+      );
+    }
+    else {
+      return TicketDetailBigbangoBubbleComponent(
+        injector: TicketDetailBubbleInjector(item),
+      );
+    }
   }
 
   void onRefresh(){
@@ -196,7 +212,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
 
       if(data is Map){
         ticketDetailModel = TicketDetailModel.fromMap(data);
-        ticketDetailModel!.firstTicket.attachments = Examples.genAttachment();//todo
+        //ticketDetailModel!.firstTicket.attachments = Examples.genAttachment();//todo
       }
 
       assistCtr.clearStates();

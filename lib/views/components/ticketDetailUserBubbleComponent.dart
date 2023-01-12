@@ -63,12 +63,13 @@ class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBub
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Row(
-                  //mainAxisSize: MainAxisSize.min,
+                  //mainAxisSize: MainAxisSize.min,  for date and time position
                   children: [
                     Icon(AppIcons.calendar, size: 13).alpha(),
                     SizedBox(width: 8),
                     Text(DateTools.dateAndHmRelative(widget.injector.ticketReply.createdAt)).alpha(),
                     SizedBox(width: 8),
+
                     Visibility(
                       visible: true,
                       child: IconButton(
@@ -94,7 +95,8 @@ class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBub
                   child: ColoredBox(
                     color: Colors.grey.shade100,
                     child: ConstrainedBox(
-                      constraints: BoxConstraints.tightFor(width: 70),
+                      //constraints: BoxConstraints.tightFor(width: 70), if need bubble be small
+                      constraints: BoxConstraints.tightFor(width: sw),
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(10, 26, 10, 14),
                         child: Text(widget.injector.ticketReply.description,
