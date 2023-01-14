@@ -1,7 +1,9 @@
 
 import 'package:app/structures/abstract/ticketAttachmentShowSupper.dart';
+import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/injectors/ticketDetailUserBubbleInjector.dart';
 import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/dateTools.dart';
 
@@ -71,7 +73,7 @@ class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBub
                     SizedBox(width: 8),
 
                     Visibility(
-                      visible: true,
+                      visible: widget.injector.ticketReply.attachments.isNotEmpty,
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         iconSize: 17,
@@ -127,6 +129,7 @@ class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBub
                               if(widget.injector.ticketReply.creator.hasAvatar()) {
                                 return IrisImageView(
                                   url: widget.injector.ticketReply.creator.avatar!.fileLocation,
+                                  imagePath: AppDirectories.getSavePathUri(widget.injector.ticketReply.creator.avatar!.fileLocation, SavePathType.userProfile, null),
                                   beforeLoadWidget: Icon(AppIcons.personLogin, size: 17),
                                 );
                               }

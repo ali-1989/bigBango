@@ -507,8 +507,8 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     );
   }
   ///\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-  void showBuySessionTimeSheet(){
-    AppSheet.showSheetCustom(
+  void showBuySessionTimeSheet() async {
+    final res = await AppSheet.showSheetCustom(
         context,
         builder: (_) => SupportPlanPage(),
         routeName: 'showBuySessionTimeSheet',
@@ -517,6 +517,8 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       contentColor: Colors.transparent,
       backgroundColor: Colors.transparent,
     );
+
+    print(res);
   }
 
   void showAddTicketSheet() async {

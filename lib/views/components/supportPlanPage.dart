@@ -1,6 +1,9 @@
+import 'package:app/system/keys.dart';
+import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/app/appSnack.dart';
 import 'package:flutter/material.dart';
 
-import 'package:iris_tools/api/helpers/focusHelper.dart';
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
@@ -23,6 +26,7 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
   Requester requester = Requester();
   int optionSelectedIdx = 0;
   int timeSelectedIdx = 1;
+  int minutes = 10;
   late ScrollController srcCtr;
 
   @override
@@ -39,7 +43,7 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
     srcCtr.addListener(scrollListener);
 
     addPostOrCall(fn: (){
-      srcCtr.jumpTo(timeSelectedIdx * 18);
+      srcCtr.jumpTo(timeSelectedIdx * 18); // 18 is height
       optionSelectedIdx = 0;
       assistCtr.updateHead();
     });
@@ -82,9 +86,7 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
                       SizedBox(height: 10),
                       GestureDetector(
                         onTap: (){
-                          srcCtr.jumpTo(1*18);
-                          optionSelectedIdx = 0;
-                          assistCtr.updateHead();
+                          onOptionClick(1);
                         },
                         child: Card(
                           color: Colors.grey.shade100,
@@ -261,7 +263,7 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
                         child: SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                              onPressed: (){},
+                              onPressed: requestFreeTimes,
                               child: Text('ادامه خرید')
                           ),
                         ),
@@ -284,33 +286,61 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
     return Image.asset(AppImages.selectLevelIco, height: 15);
   }
 
-  void requestSendTicket(){
-    FocusHelper.hideKeyboardByUnFocusRoot();
+  void scrollListener() {
+    optionSelectedIdx = -1;
+    final a2 = srcCtr.offset / 18;  //18 is height
 
-    requester.httpRequestEvents.onFailState = (req, res) async {
+    if(a2.round() <= (a2+ 0.15).round()){
+      timeSelectedIdx = a2.round();
+      minutes = timeSelectedIdx * 5;
+    }
+    else {
+      timeSelectedIdx = -1;
+      minutes = 0;
+    }
+
+    assistCtr.updateHead();
+  }
+
+  void onOptionClick(int num) {
+    srcCtr.jumpTo(num*18);
+    optionSelectedIdx = 0;
+
+    assistCtr.updateHead();
+  }
+
+  void requestFreeTimes(){
+    requester.httpRequestEvents.onAnyState = (req) async {
+      await hideLoading();
     };
 
-    requester.httpRequestEvents.onStatusOk = (req, res) async {
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      String msg = 'خطایی رخ داده است';
+
+      if(res != null && res.data != null){
+        final js = JsonHelper.jsonToMap(res.data)?? {};
+
+        msg = js['message']?? msg;
+      }
+
+      AppSnack.showInfo(context, msg);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, jsData) async {
+      final data = jsData[Keys.data];
+
+      if(data is List){
+        for(final k in data){
+
+        }
+      }
+
+      AppRoute.popTopView(context, data: 'aliiiii');
     };
 
     showLoading();
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/tickets/add');
-    requester.debug = true; //todo
+    requester.prepareUrl(pathUrl: '/supprtTimes?RequiredMinutes=10');
     requester.request(context);
-  }
-
-  void scrollListener() {
-    optionSelectedIdx = -1;
-    final a2 = srcCtr.offset / 18;
-
-    if(a2.round() <= (a2+0.15).round()){
-      timeSelectedIdx = a2.round();
-    }
-    else {
-      timeSelectedIdx = -1;
-    }
-
-    assistCtr.updateHead();
   }
 }

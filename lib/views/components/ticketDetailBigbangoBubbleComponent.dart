@@ -62,7 +62,7 @@ class TicketDetailBigbangoBubbleComponentState extends StateBase<TicketDetailBig
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           child: DecoratedBox(
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
@@ -92,7 +92,7 @@ class TicketDetailBigbangoBubbleComponentState extends StateBase<TicketDetailBig
                               Text(DateTools.dateAndHmRelative(widget.injector.ticketReply.createdAt)).alpha(),
 
                               Visibility(
-                                visible: true,
+                                visible: widget.injector.ticketReply.attachments.isNotEmpty,
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [

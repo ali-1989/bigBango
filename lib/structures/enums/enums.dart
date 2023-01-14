@@ -15,5 +15,6 @@ enum SavePathType {
 enum ImageType {
   file,
   bytes,
-  asset
+  asset,
+  network,
 }

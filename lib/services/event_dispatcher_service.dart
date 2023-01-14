@@ -85,9 +85,12 @@ enum EventDispatcher {
   networkConnected(100),
   networkDisConnected(101),
   networkStateChange(102),
-  userProfileChange(103),
-  userLogin(104),
-  userLogoff(105);
+  webSocketConnected(105),
+  webSocketDisConnected(106),
+  webSocketStateChange(107),
+  userProfileChange(110),
+  userLogin(111),
+  userLogoff(112);
 
   final int _number;
 

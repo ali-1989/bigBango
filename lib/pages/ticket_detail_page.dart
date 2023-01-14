@@ -181,7 +181,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
       );
     }
 
-    final item = ticketDetailModel!.replies[idx+1];
+    final item = ticketDetailModel!.replies[idx-1];
 
     if (item.creator.id == userModel.userId) {
       return TicketDetailUserBubbleComponent(
@@ -212,7 +212,6 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
 
       if(data is Map){
         ticketDetailModel = TicketDetailModel.fromMap(data);
-        //ticketDetailModel!.firstTicket.attachments = Examples.genAttachment();//todo
       }
 
       assistCtr.clearStates();
@@ -236,14 +235,16 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
     );
   }
 
-  void openNewResponse() {
-    AppSheet.showSheetCustom(
+  void openNewResponse() async {
+    await AppSheet.showSheetCustom(
       context,
       builder: (ctx) => ReplyTicketComponent(ticketDetailModel: ticketDetailModel!),
       routeName: 'openNewReply',
       contentColor: Colors.transparent,
       isScrollControlled: true,
     );
+
+    assistCtr.updateHead();
   }
 
   void requestCloseTicket(){

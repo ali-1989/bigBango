@@ -1,9 +1,17 @@
+import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/models/ticketModels/ticketReplyModel.dart';
+import 'package:app/tools/app/appIcons.dart';
+import 'package:app/tools/app/appNavigator.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSizes.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/views/components/fullScreenImageComponent.dart';
+import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
+
+
 
 abstract class TicketAttachmentShowSupper {
 
@@ -12,36 +20,65 @@ abstract class TicketAttachmentShowSupper {
         context,
         builder: (ctx) => attachmentView(ctx, ticketReply),
         routeName: 'attachment',
-      contentColor: Colors.white,
+      contentColor: Colors.transparent,
       isScrollControlled: true,
     );
   }
 
   Widget attachmentView(BuildContext context, TicketReplyModel ticketReply){
 
-    return SizedBox(
-      height: AppSizes.getScreenHeight(context) * 3/4,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          children: [
-            Center(
-                child: Text('پیوست ها').bold().fsR(2)
-            ),
-            SizedBox(height: 14),
-            Divider(),
-            SizedBox(height: 10),
+    return Card(
+      margin: EdgeInsets.fromLTRB(12, 0, 12, 10),
+      child: SizedBox(
+        height: AppSizes.getScreenHeight(context) * 3/4,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  SizedBox(
+                    height: 22,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('پیوست ها').bold().fsR(2),
+                      ],
+                    ),
+                  ),
 
-
-            Expanded(
-              child: ListView.builder(
-                itemCount: ticketReply.attachments.length,
-                itemBuilder: (_, idx){
-                  return listBuilder(_, idx, ticketReply);
-                },
+                  Positioned(
+                    left: 10,
+                    child: GestureDetector(
+                      onTap: (){
+                        AppRoute.popTopView(context);
+                      },
+                      child: CustomCard(
+                          color: Colors.grey.shade200,
+                          padding: EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+                          radius: 4,
+                          child: Icon(AppIcons.close, size: 10)
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
+
+              SizedBox(height: 14),
+              Divider(),
+              SizedBox(height: 10),
+
+
+              Expanded(
+                child: ListView.builder(
+                  itemCount: ticketReply.attachments.length,
+                  itemBuilder: (_, idx){
+                    return listBuilder(_, idx, ticketReply);
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -63,15 +100,33 @@ abstract class TicketAttachmentShowSupper {
                   if(itm.fileType == 1){
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: IrisImageView(
-                        url: itm.fileLocation,
-                        beforeLoadWidget: ConstrainedBox(
-                          constraints: BoxConstraints(minHeight: 120),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: AspectRatio(
+                          aspectRatio: 3/2,
                           child: Center(
-                            child: SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: CircularProgressIndicator()
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: GestureDetector(
+                                onTap: (){
+                                  showFullScreen(itm.fileLocation!);
+                                },
+                                child: IrisImageView(
+                                  url: itm.fileLocation,
+                                  //imagePath: ,
+                                  fit: BoxFit.contain,
+                                  beforeLoadWidget: ConstrainedBox(
+                                    constraints: BoxConstraints(minHeight: 120),
+                                    child: Center(
+                                      child: SizedBox(
+                                          width: 50,
+                                          height: 50,
+                                          child: CircularProgressIndicator()
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -86,5 +141,16 @@ abstract class TicketAttachmentShowSupper {
         ),
       ),
     );
+  }
+
+  void showFullScreen(String pathOrUrl) {
+    final view = FullScreenImageComponent(
+      heroTag: 'heroTag',
+      imageObj: pathOrUrl,
+      imageType: ImageType.network,
+      appBarColor: Colors.black,
+    );
+
+    AppNavigator.pushNextPageExtra(AppRoute.getLastContext()!, view, name: FullScreenImageComponent.screenName);
   }
 }

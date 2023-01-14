@@ -26,8 +26,7 @@ class FileUploadService {
       res.complete(TwoReturn(r1: js));
     };
 
-    //requester.httpItem.addFormField('Section', '${section.number()}');
-    requester.httpItem.addFormField('Section', '1');
+    requester.httpItem.addFormField('Section', '${section.number()}');
 
     for(final f in files){
       final fName = PathHelper.getFileName(f.path);

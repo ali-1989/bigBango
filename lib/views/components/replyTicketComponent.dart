@@ -1,15 +1,17 @@
 import 'dart:io';
 
-import 'package:app/pages/support_page.dart';
-import 'package:app/services/pages_event_service.dart';
+import 'package:app/services/file_upload_service.dart';
+import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/models/ticketModels/ticketDetailModel.dart';
-import 'package:app/structures/models/ticketModels/ticketModel.dart';
+import 'package:app/structures/models/ticketModels/ticketReplyModel.dart';
+import 'package:app/system/keys.dart';
+import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/components/attachmentFileTicketComponent.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/converter.dart';
 
 import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
-import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
@@ -128,7 +130,7 @@ class _ReplyTicketComponentState extends StateBase<ReplyTicketComponent> {
 
                         Expanded(
                           child: ElevatedButton(
-                              onPressed: requestSendTicket,
+                              onPressed: sendClick,
                               child: Text('ارسال')
                           ),
                         ),
@@ -153,12 +155,60 @@ class _ReplyTicketComponentState extends StateBase<ReplyTicketComponent> {
     );
   }
 
-  void requestSendTicket(){
+  void sendClick() async {
+    if(attachmentFiles.isEmpty){
+      requestSendTicket();
+    }
+    else {
+      final files = await requestUploadFiles();
+
+      if(files != null){
+        requestSendTicket(attachments: files.map<String>((e) => e['file']['fileLocation']).toList());
+      }
+    }
+  }
+
+  Future<List<Map>?> requestUploadFiles() async {
+    FocusHelper.hideKeyboardByUnFocusRoot();
+
+    showLoading();
+    final uploadRes = await FileUploadService.uploadFiles(attachmentFiles, FileUploadType.ticket);
+    await hideLoading();
+
+    if(uploadRes.hasResult2()){
+      final res = uploadRes.result2!.data;
+
+      final js = JsonHelper.jsonToMap(res)?? {};
+      final message = js['message']?? 'خطایی رخ داد';
+
+      AppSnack.showInfo(context, message);
+      return null;
+    }
+
+    if(uploadRes.hasResult1()){
+      final data = uploadRes.result1![Keys.data];
+
+      if(data is List) {
+        return Converter.correctList<Map>(data);
+      }
+      else{
+        AppSnack.showInfo(context, 'متاسفانه انجام نشد');
+      }
+    }
+
+    return null;
+  }
+
+  void requestSendTicket({List<String>? attachments}){
     FocusHelper.hideKeyboardByUnFocusRoot();
 
     final body = <String, dynamic>{};
+    body['ticketId'] = widget.ticketDetailModel.id;
     body['description'] = descriptionCtr.text.trim();
-    //body['attachments'] = ;
+
+    if(attachments != null) {
+      body['attachments'] = attachments;
+    }
 
     requester.httpRequestEvents.onFailState = (req, res) async {
       hideLoading();
@@ -177,15 +227,13 @@ class _ReplyTicketComponentState extends StateBase<ReplyTicketComponent> {
       hideLoading();
 
       final data = res['data'];
-      final id = data['id'];
-      final number = data['number']?? 0;
 
-      final tik = TicketModel();
-      tik.id = id;
-      tik.number = number;
-      tik.createdAt = DateHelper.getNowAsUtcZ();
+      final trm = TicketReplyModel();
+      trm.creator = widget.ticketDetailModel.firstTicket.creator;
+      //trm.description = ;
 
-      PagesEventService.getEventBus(SupportPage.pageEventId).callEvent(SupportPage.eventFnId$addTicket, tik);
+      widget.ticketDetailModel.replies.add(trm);
+      //tik.createdAt = DateHelper.getNowAsUtcZ();
 
       final message = res['message']?? 'تیکت ثبت شد';
 
@@ -197,7 +245,7 @@ class _ReplyTicketComponentState extends StateBase<ReplyTicketComponent> {
 
     showLoading();
     requester.methodType = MethodType.post;
-    requester.prepareUrl(pathUrl: '/tickets/add');
+    requester.prepareUrl(pathUrl: '/tickets/reply');
     requester.bodyJson = body;
     requester.request(context);
   }

@@ -7,6 +7,7 @@ import 'package:app/services/pages_event_service.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/models/ticketModels/ticketModel.dart';
 import 'package:app/system/keys.dart';
+
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/attachmentFileTicketComponent.dart';
@@ -239,7 +240,7 @@ class _AddTicketComponentState extends StateBase<AddTicketComponent> {
       final files = await requestUploadFiles();
 
       if(files != null){
-        requestSendTicket(attachments: files.map<String>((e) => e['file']['fileLocation']).toList());
+        requestSendTicket(attachments: files.map<String>((e) => e['file']['id']).toList());
       }
     }
   }

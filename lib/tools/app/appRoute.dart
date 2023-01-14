@@ -55,8 +55,8 @@ class AppRoute {
     //return GoRouter.of(context).canPop();
   }
 
-  static void popTopView(BuildContext context) {
-    AppNavigator.pop(context);
+  static void popTopView(BuildContext context, {dynamic data}) {
+    AppNavigator.pop(context, result: data);
   }
 
   /*static void popPage(BuildContext context) {

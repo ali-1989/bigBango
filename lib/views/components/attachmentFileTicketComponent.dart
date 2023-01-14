@@ -6,9 +6,11 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
+import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/permissionTools.dart';
+import 'package:app/views/components/fullScreenImageComponent.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
@@ -155,10 +157,21 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
               child: Center(
                 child: Stack(
                   children: [
-                    IrisImageView(
-                      beforeLoadWidget: Icon(AppIcons.media),
-                      imagePath: itm.path,
-                      fit: BoxFit.contain,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: GestureDetector(
+                        onTap: (){
+                          showFullScreen(itm.path);
+                        },
+                        child: Hero(
+                          tag: 'heroTag',
+                          child: IrisImageView(
+                            beforeLoadWidget: Icon(AppIcons.media),
+                            imagePath: itm.path,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
                     ),
 
                     Positioned(
@@ -326,5 +339,16 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
       yesFn: yesFn,
       desc: 'آیا این مورد حذف شود؟',
     );
+  }
+
+  void showFullScreen(String pathOrUrl) {
+    final view = FullScreenImageComponent(
+        heroTag: 'heroTag',
+        imageObj: File(pathOrUrl),
+        imageType: ImageType.file,
+      appBarColor: Colors.black,
+    );
+
+    AppNavigator.pushNextPageExtra(context, view, name: FullScreenImageComponent.screenName);
   }
 }
