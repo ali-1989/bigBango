@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:app/pages/timetable_page.dart';
 import 'package:app/services/pages_event_service.dart';
 import 'package:app/structures/enums/supportSessionStatus.dart';
 import 'package:app/structures/models/supportModels/supportSessionModel.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/states/emptyData.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/localeHelper.dart';
@@ -33,6 +33,9 @@ import 'package:app/views/components/addTicketComponent.dart';
 import 'package:app/views/components/supportPlanPage.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
+
+//todo.im
+// request cancel meeting
 
 class SupportPage extends StatefulWidget {
   static final pageEventId = 'SupportPageEvent';
@@ -235,7 +238,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                         children: [
                           ActionChip(
                             label: Text('درخواست پشتیبانی'),
-                            onPressed: showBuySessionTimeSheet,
+                            onPressed: requesterSupport,
                             visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
@@ -507,6 +510,12 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     );
   }
   ///\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+  void requesterSupport() {
+    final page = TimetablePage();
+
+    AppRoute.push(context, page);
+  }
+
   void showBuySessionTimeSheet() async {
     final res = await AppSheet.showSheetCustom(
         context,
@@ -518,7 +527,9 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       backgroundColor: Colors.transparent,
     );
 
-    print(res);
+    if(res is List){
+      print('------------- @@');
+    }
   }
 
   void showAddTicketSheet() async {

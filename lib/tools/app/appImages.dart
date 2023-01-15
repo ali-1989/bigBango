@@ -60,6 +60,7 @@ class AppImages {
   static const grammarIco = 'assets/images/grammarIco.png';
   static const readingIco = 'assets/images/readingIco.png';
   static const doutar = 'assets/images/doutar.png';
+  static const timetable = 'assets/images/timetable.png';
   static const errorTry = 'assets/images/error_try.png';
   static const closeIco = 'assets/images/closeIco.png';
   static const greeting = 'assets/images/greeting.png';

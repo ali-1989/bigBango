@@ -30,6 +30,9 @@ import 'package:app/tools/app/appSheet.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/views/widgets/customCard.dart';
 
+//todo.im
+// بعد از ثبت  باید یک رکورد اضافه شود. اطلاعات بک اند ناقص است
+
 class AddTicketComponent extends StatefulWidget {
   final List<TicketRole> ticketRoles;
 

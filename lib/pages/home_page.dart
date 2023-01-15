@@ -2,6 +2,7 @@ import 'package:app/pages/exam_page.dart';
 import 'package:app/pages/grammar_page.dart';
 import 'package:app/pages/listening_page.dart';
 import 'package:app/pages/reading_page.dart';
+import 'package:app/pages/timetable_page.dart';
 import 'package:app/pages/vocab_page.dart';
 import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
@@ -507,7 +508,9 @@ class HomePageState extends StateBase<HomePage> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                              onPressed: (){},
+                              onPressed: (){
+                                requesterSupport(lesson);
+                              },
                               child: Row(
                                 children: [
                                   Image.asset(AppImages.supportIco, width: 25, height: 25),
@@ -782,6 +785,12 @@ class HomePageState extends StateBase<HomePage> {
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/quizzes?LessonId=${lessonModel.id}');
     requester.request(context);
+  }
+
+  void requesterSupport(LessonModel lesson) {
+    final page = TimetablePage(lesson: lesson);
+
+    AppRoute.push(context, page);
   }
 }
 

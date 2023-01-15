@@ -1,10 +1,10 @@
 import 'dart:math';
 
+import 'package:app/structures/models/hoursOfSupportModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/models/supportModels/dayWeekModel.dart';
-import 'package:app/structures/models/supportModels/supportTimeModel.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
@@ -18,28 +18,28 @@ class SelectSupportTime extends StatefulWidget {
 ///=========================================================================================================
 class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
   int currentDay = 12;
-  int timeSelectId = 5;
+  String timeSelectId = '';
   List<DayWeekModel> days = [];
-  List<SupportTimeModel> times = [];
+  List<HoursModel> times = [];
 
 
   @override
   void initState(){
     super.initState();
 
-    days.add(DayWeekModel()..dayText = 'ش'..dayNumber = 10..isBlock = true);
-    days.add(DayWeekModel()..dayText = 'ی'..dayNumber = 11);
-    days.add(DayWeekModel()..dayText = 'د'..dayNumber = 12);
-    days.add(DayWeekModel()..dayText = 'س'..dayNumber = 13);
-    days.add(DayWeekModel()..dayText = 'چ'..dayNumber = 14);
-    days.add(DayWeekModel()..dayText = 'پ'..dayNumber = 15);
-    days.add(DayWeekModel()..dayText = 'ج'..dayNumber = 16);
+    days.add(DayWeekModel()..dayText = 'ش'..dayOfWeek = 10..isBlock = true);
+    days.add(DayWeekModel()..dayText = 'ی'..dayOfWeek = 11);
+    days.add(DayWeekModel()..dayText = 'د'..dayOfWeek = 12);
+    days.add(DayWeekModel()..dayText = 'س'..dayOfWeek = 13);
+    days.add(DayWeekModel()..dayText = 'چ'..dayOfWeek = 14);
+    days.add(DayWeekModel()..dayText = 'پ'..dayOfWeek = 15);
+    days.add(DayWeekModel()..dayText = 'ج'..dayOfWeek = 16);
 
     final randomNumberGenerator = Random();
 
     List.generate(30, (index) {
-      final s = SupportTimeModel();
-      s.id = index;
+      final s = HoursModel();
+      s.id = '$index';
       s.isBlock = randomNumberGenerator.nextBool();
       s.isReserved = randomNumberGenerator.nextBool();
 
@@ -89,7 +89,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
               direction: Axis.horizontal,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(flex: 10,child: buildDayItem(days[0])),
+                Flexible(flex: 10, child: buildDayItem(days[0])),
                 const Flexible(flex: 2, child: SizedBox()),
 
                 Flexible(flex: 10, child: buildDayItem(days[1])),
@@ -131,7 +131,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
     );
   }
 
-  Widget getTimeSeparator(SupportTimeModel model){
+  Widget getTimeSeparator(HoursModel model){
     return SizedBox(
       width: 3,
       height: 16,
@@ -139,8 +139,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
     );
   }
 
-  Widget buildListItem(SupportTimeModel model){
-
+  Widget buildListItem(HoursModel model){
     return GestureDetector(
       onTap: (){
         if(model.isBlock || model.isReserved){
@@ -179,7 +178,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
                     padding: const EdgeInsets.only(left: 14),
                     child: Row(
                       children: [
-                        Text(model.startTime, style: TextStyle(color: model.getTimeColor(model.id == timeSelectId))),
+                        Text(model.from, style: TextStyle(color: model.getTimeColor(model.id == timeSelectId))),
                         const SizedBox(width: 10),
                         Builder(
                           builder: (context) {
@@ -191,7 +190,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
                           }
                         ),
                         const SizedBox(width: 10),
-                        Text(model.endTime, style: TextStyle(color: model.getTimeColor(model.id == timeSelectId))),
+                        Text(model.to, style: TextStyle(color: model.getTimeColor(model.id == timeSelectId))),
                       ],
                     ),
                   ),
@@ -211,7 +210,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
           return;
         }
 
-        currentDay = dModel.dayNumber;
+        currentDay = dModel.dayOfWeek;
         callState();
       },
       child: DecoratedBox(
@@ -222,7 +221,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: ColoredBox(
-            color: dModel.isBlock ? Colors.grey[200]! : (dModel.dayNumber == currentDay? AppColors.red: Colors.transparent),
+            color: dModel.isBlock ? Colors.grey[200]! : (dModel.dayOfWeek == currentDay? AppColors.red: Colors.transparent),
             child: SizedBox.expand(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -234,7 +233,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
 
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15),
-                    child: Text('${dModel.dayNumber}'),
+                    child: Text('${dModel.dayOfWeek}'),
                   ),
                 ],
               ),

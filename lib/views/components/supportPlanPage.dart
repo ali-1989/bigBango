@@ -1,3 +1,4 @@
+import 'package:app/structures/models/hoursOfSupportModel.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSnack.dart';
@@ -11,6 +12,9 @@ import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
+
+// todo.im
+// باید دو درخواست جدید اضافه شود
 
 class SupportPlanPage extends StatefulWidget {
 
@@ -86,7 +90,7 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
                       SizedBox(height: 10),
                       GestureDetector(
                         onTap: (){
-                          onOptionClick(1);
+                          onOptionClick(0, 1);
                         },
                         child: Card(
                           color: Colors.grey.shade100,
@@ -116,9 +120,7 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
 
                       GestureDetector(
                         onTap: (){
-                          srcCtr.jumpTo(3*18);
-                          optionSelectedIdx = 1;
-                          assistCtr.updateHead();
+                          onOptionClick(1, 3);
                         },
                         child: Card(
                           color: Colors.grey.shade100,
@@ -148,9 +150,7 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
 
                       GestureDetector(
                         onTap: (){
-                          srcCtr.jumpTo(5*18);
-                          optionSelectedIdx = 2;
-                          assistCtr.updateHead();
+                          onOptionClick(2, 5);
                         },
                         child: Card(
                           color: Colors.grey.shade100,
@@ -292,7 +292,7 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
 
     if(a2.round() <= (a2+ 0.15).round()){
       timeSelectedIdx = a2.round();
-      minutes = timeSelectedIdx * 5;
+      minutes = (timeSelectedIdx+1) * 5;
     }
     else {
       timeSelectedIdx = -1;
@@ -302,10 +302,11 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
     assistCtr.updateHead();
   }
 
-  void onOptionClick(int num) {
+  void onOptionClick(int idx, int num) {
     srcCtr.jumpTo(num*18);
-    optionSelectedIdx = 0;
+    minutes = (num+1) * 5;
 
+    optionSelectedIdx = idx;
     assistCtr.updateHead();
   }
 
@@ -329,18 +330,21 @@ class _SupportPlanPageState extends StateBase<SupportPlanPage> {
     requester.httpRequestEvents.onStatusOk = (req, jsData) async {
       final data = jsData[Keys.data];
 
+      final List<HoursOfSupportModel> list = [];
+
       if(data is List){
         for(final k in data){
-
+          final g = HoursOfSupportModel.fromMap(k);
+          list.add(g);
         }
       }
 
-      AppRoute.popTopView(context, data: 'aliiiii');
+      AppRoute.popTopView(context, data: list);
     };
 
     showLoading();
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/supprtTimes?RequiredMinutes=10');
+    requester.prepareUrl(pathUrl: '/supprtTimes?RequiredMinutes=$minutes');
     requester.request(context);
   }
 }

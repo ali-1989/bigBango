@@ -1,5 +1,6 @@
 class DayWeekModel {
   String dayText = '';
-  int dayNumber = 0;
+  int dayOfMonth = 0;
+  int dayOfWeek = 0;
   bool isBlock = false;
 }
