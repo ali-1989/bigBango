@@ -16,7 +16,8 @@ import 'package:iris_tools/api/tools.dart';
 enum MethodType {
   post,
   get,
-  put
+  put,
+  delete,
 }
 
 enum RequestPath {
@@ -80,6 +81,9 @@ class Requester {
       case MethodType.post:
         _http.method = 'POST';
         break;
+      case MethodType.delete:
+        _http.method = 'DELETE';
+        break;
       case MethodType.put:
         _http.method = 'PUT';
         break;
@@ -113,7 +117,7 @@ class Requester {
 
     f = f.then((val) async {
       Tools.verbosePrint('@@@@@@@@@@  response ================= [${_httpRequester.responseData?.statusCode}] $val');//todo
-      if(_httpRequester.responseData?.statusCode == 401){ // token
+      if(_httpRequester.responseData?.statusCode == 401){ //n
         final getNewToken = await JwtService.requestNewToken(Session.getLastLoginUser()!);
 
         /// try request old api again
@@ -190,4 +194,13 @@ class HttpRequestEvents {
   Future Function(HttpRequester, Map)? manageResponse;
   Future Function(HttpRequester, Map)? onStatusOk;
   Future<bool> Function(HttpRequester, Map)? onStatusError;
+
+  void clear(){
+    onAnyState = null;
+    onFailState = null;
+    onNetworkError = null;
+    manageResponse = null;
+    onStatusOk = null;
+    onStatusError = null;
+  }
 }

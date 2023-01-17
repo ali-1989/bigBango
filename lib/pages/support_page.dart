@@ -30,12 +30,10 @@ import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/dateTools.dart';
 import 'package:app/views/components/addTicketComponent.dart';
-import 'package:app/views/components/supportPlanPage.dart';
+import 'package:app/views/sheets/supportPlanSheet.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 
-//todo.im
-// request cancel meeting
 
 class SupportPage extends StatefulWidget {
   static final pageEventId = 'SupportPageEvent';
@@ -459,8 +457,9 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: (){
-        AppRoute.push(context, TicketDetailPage(ticketModel: tik));
+      onTap: () async {
+        await AppRoute.push(context, TicketDetailPage(ticketModel: tik));
+        assistCtr.updateHead();
       },
       child: Padding(
         padding: EdgeInsets.all(10),
@@ -519,7 +518,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   void showBuySessionTimeSheet() async {
     final res = await AppSheet.showSheetCustom(
         context,
-        builder: (_) => SupportPlanPage(),
+        builder: (_) => SupportPlanSheet(),
         routeName: 'showBuySessionTimeSheet',
       isDismissible: true,
       isScrollControlled: true,
@@ -528,7 +527,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     );
 
     if(res is List){
-      print('------------- @@');
+
     }
   }
 

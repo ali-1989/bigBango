@@ -9,6 +9,7 @@ import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appSheet.dart';
+import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/components/replyTicketComponent.dart';
 import 'package:app/views/components/ticketDetailBigbangoBubbleComponent.dart';
 import 'package:app/views/components/ticketDetailUserBubbleComponent.dart';
@@ -248,6 +249,26 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
   }
 
   void requestCloseTicket(){
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      hideLoading();
+      AppSnack.showSnack$OperationFailed(context);
+    };
 
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
+      hideLoading();
+      AppSnack.showSnack$operationSuccess(context);
+
+      widget.ticketModel.status = 2;
+      assistCtr.updateHead();
+    };
+
+    final js = <String, dynamic>{};
+    js['ticketId'] = widget.ticketModel.id;
+
+    showLoading();
+    requester.methodType = MethodType.post;
+    requester.bodyJson = js;
+    requester.prepareUrl(pathUrl: '/tickets/close');
+    requester.request(context);
   }
 }

@@ -639,8 +639,6 @@ class _ProfilePageState extends StateBase<ProfilePage> {
   void deleteAvatar(){
     AppSheet.closeSheet(context);
 
-    final js = <String, dynamic>{};
-
 
     requester.httpRequestEvents.onAnyState = (req) async {
       await hideLoading();
@@ -655,11 +653,14 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
       EventDispatcherService.notify(EventDispatcher.userProfileChange);
       Session.sinkUserInfo(user);
+
+      assistCtr.updateHead();
     };
 
+
     showLoading();
-    requester.bodyJson = js;
-    //requester.prepareUrl();
+    requester.methodType = MethodType.delete;
+    requester.prepareUrl(pathUrl: '/profile/deleteAvatar');
 
     requester.request(context, false);
   }

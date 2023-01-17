@@ -36,10 +36,10 @@ class HoursModel {
   late String id;
   late String from;
   late String to;
-  late String fromDT;
-  late String toDT;
+  late String fromHuman;
+  late String toHuman;
   bool isBlock = false;
-  bool isReserved = false;
+  bool isReserveByMe = false;
 
   HoursModel(): id = Generator.generateKey(8);
 
@@ -51,8 +51,8 @@ class HoursModel {
       to = map['to'];
       isBlock = map['isBooked'];
 
-      fromDT = DateTools.hmOnlyRelative(DateHelper.tsToSystemDate('2023-01-01 $from'), isUtc: false);
-      toDT = DateTools.hmOnlyRelative(DateHelper.tsToSystemDate('2023-01-01 $to'), isUtc: false);
+      fromHuman = DateTools.hmOnlyRelative(DateHelper.tsToSystemDate('2023-01-01 $from'), isUtc: false);
+      toHuman = DateTools.hmOnlyRelative(DateHelper.tsToSystemDate('2023-01-01 $to'), isUtc: false);
     }
   }
 
@@ -78,7 +78,7 @@ class HoursModel {
       return Colors.red;
     }
 
-    return isSelected? Colors.white : Colors.orange;
+    return isSelected? Colors.white : Colors.green;
   }
 
   Color getTimeColor(bool isSelected){

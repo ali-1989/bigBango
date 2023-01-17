@@ -16,17 +16,17 @@ import 'package:app/tools/app/appImages.dart';
 // todo.im
 // باید دو درخواست جدید اضافه شود
 
-class SupportPlanPage extends StatefulWidget {
+class SupportPlanSheet extends StatefulWidget {
 
-  const SupportPlanPage({
+  const SupportPlanSheet({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<SupportPlanPage> createState() => _SupportPlanPageState();
+  State<SupportPlanSheet> createState() => _SupportPlanSheetState();
 }
 ///==================================================================================================
-class _SupportPlanPageState extends StateBase<SupportPlanPage> {
+class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
   Requester requester = Requester();
   int optionSelectedIdx = 0;
   int timeSelectedIdx = 1;

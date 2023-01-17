@@ -3,12 +3,15 @@ import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/supportModels/dayWeekModel.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
+import 'package:app/views/sheets/timetable@confirmRequestSupport.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
+import 'package:iris_tools/api/helpers/textHelper.dart';
 import 'package:iris_tools/dateSection/ADateStructure.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -17,6 +20,7 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
+
 
 class TimetablePage extends StatefulWidget {
   final LessonModel? lesson;
@@ -189,7 +193,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                       return Column(
                         children: [
                           SizedBox(height: 20),
-                          Text('لطفا زمان مورد نظر خود را انتخاب کنید'),
+                          Text('لطفا روز و زمان مورد نظر خود را انتخاب کنید'),
                           SizedBox(height: 15),
 
                           buildDays(),
@@ -198,9 +202,9 @@ class _TimetablePageState extends StateBase<TimetablePage> {
 
                           SizedBox(height: 5),
                           Visibility(
-                            visible: dayHourList.isNotEmpty && timeSelectId == '',
+                            visible: dayHourList.isNotEmpty && timeSelectId != '',
                             child: ElevatedButton(
-                              onPressed: (){},
+                              onPressed: requestSupportDialog,
                               child: Text('ثبت درخواست پشتیبانی'),
                             ),
                           ),
@@ -294,7 +298,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
   List<Widget> buildTimes(){
     List<Widget> result = [];
 
-    final day = days.firstWhere((element) => element.dayOfMonth == currentDay);
+    final day = getDay();
     final hours = dayHourList.firstWhere((element) => element.dayOfWeek == day.dayOfWeek);
 
     if(hours.hours.isEmpty){
@@ -316,12 +320,11 @@ class _TimetablePageState extends StateBase<TimetablePage> {
   Widget itemBuilder(HoursModel hour){
     return GestureDetector(
       onTap: (){
-        if(hour.isBlock || hour.isReserved){
+        if(hour.isBlock || hour.isReserveByMe){
           return;
         }
 
         timeSelectId = hour.id;
-        timeSelectId = '';
 
         assistCtr.updateHead();
       },
@@ -358,13 +361,13 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                       padding: const EdgeInsets.only(left: 14),
                       child: Row(
                         children: [
-                          Text(hour.toDT, style: TextStyle(color: hour.getTimeColor(hour.id == timeSelectId))),
+                          Text(hour.toHuman, style: TextStyle(color: hour.getTimeColor(hour.id == timeSelectId))),
 
                           const SizedBox(width: 10),
                           Image.asset(hour.id != timeSelectId? AppImages.arrowIco: AppImages.arrowWhiteIco),
                           const SizedBox(width: 10),
 
-                          Text(hour.fromDT, style: TextStyle(color: hour.getTimeColor(hour.id == timeSelectId))),
+                          Text(hour.fromHuman, style: TextStyle(color: hour.getTimeColor(hour.id == timeSelectId))),
                         ],
                       ),
                     ),
@@ -376,6 +379,52 @@ class _TimetablePageState extends StateBase<TimetablePage> {
         ),
       ),
     );
+  }
+
+  List<HoursModel> getHoursList(){
+    final day = getDay();
+    final hours = dayHourList.firstWhere((element) => element.dayOfWeek == day.dayOfWeek);
+
+    return hours.hours;
+  }
+
+  HoursModel? getHourById(String id){
+    final hours = getHoursList();
+
+    return hours.firstWhere((element) => element.id == id);
+  }
+
+  DayWeekModel getDay(){
+    return days.firstWhere((element) => element.dayOfMonth == currentDay);
+  }
+
+  void requestSupportDialog() async {
+    final hour = getHourById(timeSelectId);
+
+    if(hour == null){
+      AppSnack.showInfo(context, 'لطفا یک بازه زمانی را انتخاب کنید');
+      return;
+    }
+
+    final day = getDay();
+
+    final res = await AppSheet.showSheetCustom(
+      context,
+      builder: (ctx){
+        return TimetableConfirmRequestSupport(
+          lesson: widget.lesson?.title,
+          title: TextHelper.subByCharCountSafe(titleCtr.text.trim(), 50),
+          day: day.day.format('YYYY/MM/DD', 'en'),
+          limitTime:'${hour.toHuman}  -  ${hour.fromHuman}',
+        );
+      },
+      routeName: 'TimetableConfirmRequestSupport',
+      contentColor: Colors.transparent,
+    );
+
+    if(res == true){
+      requestSupport();
+    }
   }
 
   void requestFreeTimes() async {
@@ -447,6 +496,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
         x.dayText = day.getWeekDayName().substring(0, 1);
         x.dayOfMonth = day.getDay();
         x.dayOfWeek = dayHourList[i].dayOfWeek;
+        x.day = day;
 
         days.add(x);
       }
@@ -462,27 +512,48 @@ class _TimetablePageState extends StateBase<TimetablePage> {
     days.clear();
     dayHourList.clear();
     showLoading();
+
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/supprtTimes?RequiredMinutes=$minNumber');
+    requester.prepareUrl(pathUrl: '/supportTimes?RequiredMinutes=$minNumber');
     requester.request(context);
   }
 
   void requestSupport(){
+    requester.httpRequestEvents.clear();
+
     requester.httpRequestEvents.onFailState = (requester, res) async {
-      assistCtr.clearStates();
-      assistCtr.addStateAndUpdateHead(AssistController.state$error);
+      hideLoading();
     };
 
-    requester.httpRequestEvents.onStatusOk = (requester, map) async {
-      final data = map['data'];
+    requester.httpRequestEvents.onStatusOk = (requester, jsData) async {
+      final data = jsData['data'];
 
+      String msg = 'رزرو شد';
+      msg = data['message']?? msg;
 
-      assistCtr.clearStates();
-      assistCtr.updateHead();
+      hideLoading();
+      await AppSheet.showSheetOk(context, msg);
+
+      AppRoute.popTopView(context);
     };
 
-    requester.prepareUrl(pathUrl: '/profile/introduces?Page=1&Size=100');
-    requester.methodType = MethodType.get;
+    final day = getDay();
+    final hour = getHourById(timeSelectId)!;
+
+    final js = <String, dynamic>{};
+    js['subject'] = TextHelper.subByCharCountSafe(titleCtr.text.trim(), 50);
+    js['dayOfWeek'] = day.dayOfWeek;
+    js['from'] = hour.from;
+    js['to'] = hour.to;
+
+    if(widget.lesson != null){
+      js['lessonId'] = widget.lesson!.id;
+    }
+
+    showLoading();
+    requester.prepareUrl(pathUrl: '/appointments/booking');
+    requester.methodType = MethodType.post;
+    requester.bodyJson = js;
     requester.request(context);
   }
 }

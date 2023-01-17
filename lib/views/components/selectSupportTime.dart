@@ -41,7 +41,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
       final s = HoursModel();
       s.id = '$index';
       s.isBlock = randomNumberGenerator.nextBool();
-      s.isReserved = randomNumberGenerator.nextBool();
+      s.isReserveByMe = randomNumberGenerator.nextBool();
 
       times.add(s);
     });
@@ -142,7 +142,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
   Widget buildListItem(HoursModel model){
     return GestureDetector(
       onTap: (){
-        if(model.isBlock || model.isReserved){
+        if(model.isBlock || model.isReserveByMe){
           return;
         }
 

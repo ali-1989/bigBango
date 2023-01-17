@@ -120,6 +120,9 @@ class JwtService {
 
       AppRoute.backToRoot(AppRoute.getLastContext()!);
     }
+    else if(a.responseData?.statusCode == 405){
+      AppToast.showToast(AppRoute.getBaseContext()!, 'need to config');
+    }
 
     return false;
   }

@@ -1,19 +1,16 @@
 import 'dart:async';
 
 import 'package:app/structures/models/transactionModel.dart';
-import 'package:app/system/publicAccess.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appSheet.dart';
 
-import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/incraseAmountComponent.dart';
+import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/api/generator.dart';
-import 'package:iris_tools/dateSection/dateHelper.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -33,22 +30,23 @@ class WalletPage extends StatefulWidget {
 class _WalletPageState extends StateBase<WalletPage> {
   Requester requester = Requester();
   RefreshController refreshController = RefreshController(initialRefresh: false);
-  int traPage = 1;
+  int walletBalance = 0;
+  int withdrawalBalance = 0;
   List<TransactionModel> transactionList = [];
 
   @override
   void initState(){
     super.initState();
 
-    //assistCtr.addState(AssistController.state$loading);
-    List.generate(10, (index){
+    assistCtr.addState(AssistController.state$loading);
+    /*List.generate(10, (index){
       final t = TransactionModel();
       t.id = '$index';
       t.amount = Generator.getRandomInt(10, 500000);
       t.date = DateHelper.getNowAsUtcZ();
 
       transactionList.add(t);
-    });
+    });*/
 
     requestTransaction();
   }
@@ -76,7 +74,7 @@ class _WalletPageState extends StateBase<WalletPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur();
+      return ErrorOccur(onRefresh: tryAgain);
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
@@ -140,7 +138,7 @@ class _WalletPageState extends StateBase<WalletPage> {
                   children: [
                     Text('موجودی'),
                     SizedBox(height: 4),
-                    Text('158,000').fsR(5).bold(),
+                    Text('$walletBalance').fsR(5).bold(),
 
                     SizedBox(height: 10),
 
@@ -164,7 +162,7 @@ class _WalletPageState extends StateBase<WalletPage> {
                                   ],
                                 ),
 
-                                Text('2000 تومان'),
+                                Text('$withdrawalBalance تومان'),
                               ],
                             ),
                           ),
@@ -197,27 +195,20 @@ class _WalletPageState extends StateBase<WalletPage> {
           height: 10,
         ),
 
+
         Expanded(
-            child: RefreshConfiguration(
-              headerBuilder: () => MaterialClassicHeader(),
-              footerBuilder: () => PublicAccess.classicFooter,
-              enableScrollWhenRefreshCompleted: true,
-              enableLoadingWhenFailed : true,
-              hideFooterWhenNotFull: true,
-              enableBallisticLoad: true,
-              enableLoadingWhenNoData: false,
-              child: SmartRefresher(
-                enablePullDown: false,
-                enablePullUp: true,
-                controller: refreshController,
-                onRefresh: (){},
-                onLoading: onLoadingMoreTicketCall,
-                child: ListView.builder(
-                  itemCount: transactionList.length,
-                  itemBuilder: listBuilderForTicket,
-                ),
-              ),
-            )
+            child: Builder(
+                builder: (_){
+                  if(transactionList.isEmpty){
+                    return EmptyData();
+                  }
+
+                  return ListView.builder(
+                    itemCount: transactionList.length,
+                    itemBuilder: listBuilderForTicket,
+                  );
+                }
+            ),
         ),
       ],
     );
@@ -273,6 +264,12 @@ class _WalletPageState extends StateBase<WalletPage> {
     );
   }
 
+  void tryAgain(){
+    assistCtr.clearStates();
+    assistCtr.addStateAndUpdateHead(AssistController.state$loading);
+    requestTransaction();
+  }
+
   void gotoIncreaseAmount(){
     AppSheet.showSheetCustom(
         context,
@@ -286,39 +283,25 @@ class _WalletPageState extends StateBase<WalletPage> {
     );
   }
 
-  void onLoadingMoreTicketCall(){
-    traPage++;
-    requestTransaction();
-  }
-
   Future<void> requestTransaction() async {
     Completer co = Completer();
 
     requester.httpRequestEvents.onFailState = (req, res) async {
-      AppToast.showToast(context, 'ارتباط با سرور برقرار نشد');
+      assistCtr.clearStates();
+      assistCtr.addStateAndUpdateHead(AssistController.state$error);
       co.complete(null);
     };
 
-    requester.httpRequestEvents.onStatusOk = (req, res) async {
-      final data = res['data'];
+    requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
+      final data = dataJs['data'];
+      final transactions = data['transactions']?? [];
+      walletBalance = data['walletBalance']?? 0;
 
-      final hasNextPage = res['hasNextPage']?? true;
-      traPage = res['pageIndex']?? traPage;
-
-      /*if(data is List){
-        for(final t in data){
-          final tik = TransactionModel.fromMap(t);
-          transactionList.add(tik);
-        }
-      }*/
-
-      if(refreshController.isLoading) {
-        refreshController.loadComplete();
+      for(final t in transactions){
+        final tik = TransactionModel.fromMap(t);
+        transactionList.add(tik);
       }
 
-      if(!hasNextPage){
-        refreshController.loadNoData();
-      }
       co.complete(null);
 
       assistCtr.clearStates();
@@ -326,7 +309,7 @@ class _WalletPageState extends StateBase<WalletPage> {
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/tickets?Page=$traPage');
+    requester.prepareUrl(pathUrl: '/wallet');
     requester.request(context);
 
     return co.future;
