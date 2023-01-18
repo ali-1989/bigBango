@@ -90,7 +90,10 @@ enum EventDispatcher {
   webSocketStateChange(107),
   userProfileChange(110),
   userLogin(111),
-  userLogoff(112);
+  userLogoff(112),
+  appResume(115),
+  appPause(116),
+  appDeatach(117);
 
   final int _number;
 

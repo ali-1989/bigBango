@@ -16,14 +16,14 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 
-class ChangeLevelComponent extends StatefulWidget {
-  const ChangeLevelComponent({Key? key}) : super(key: key);
+class ChangeLanguageLevelSheet extends StatefulWidget {
+  const ChangeLanguageLevelSheet({Key? key}) : super(key: key);
 
   @override
-  State<ChangeLevelComponent> createState() => _ChangeLevelComponentState();
+  State<ChangeLanguageLevelSheet> createState() => _ChangeLanguageLevelSheetState();
 }
 ///=========================================================================================================
-class _ChangeLevelComponentState extends StateBase<ChangeLevelComponent> {
+class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet> {
   CourseLevelModel? selectedLevel;
   Requester requester = Requester();
   UserModel? user;
@@ -51,9 +51,9 @@ class _ChangeLevelComponentState extends StateBase<ChangeLevelComponent> {
     return Assist(
       controller: assistCtr,
       builder: (ctx, ctr, data){
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: SizedBox.expand(
+        return Material(
+          color: Colors.transparent,
+          child: SizedBox.expand(
               child: Column(
                 children: [
                   const SizedBox(height: 15),
@@ -69,7 +69,7 @@ class _ChangeLevelComponentState extends StateBase<ChangeLevelComponent> {
                   const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Text(AppMessages.selectLevelDescription, textAlign: TextAlign.center,
+                    child: Text(AppMessages.selectLanguageLevelDescription1, textAlign: TextAlign.center,
                         style: const TextStyle(height: 1.4)
                     ),
                   ),

@@ -11,7 +11,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/views/components/changeLevelComponent.dart';
+import 'package:app/views/sheets/changeLanguageLevelSheet.dart';
 
 /*class AppBarCustom2 extends AppBar {
 
@@ -187,15 +187,17 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
       isDismissible: true,
       bounce: true,
       expand: false,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(topLeft:Radius.circular(20),
-              topRight: Radius.circular(20))
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20)
+          )
       ),
       builder: (context) {
         return SizedBox(
-          height: MathHelper.percent(sh, 85),
-          //child: const SelectSupportTime(),
-          child: const ChangeLevelComponent(),
+          height: MathHelper.percent(sh, 80),
+          child: const ChangeLanguageLevelSheet(),
         );
       },
     );

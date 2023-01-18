@@ -312,12 +312,29 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                  child: Text(model.lesson?.title?? 'عمومی', maxLines: 1)
+                  child: Text(model.lesson?.title?? 'عمومی', maxLines: 1).alpha()
               ),
 
               Row(
                 children: [
-                  Text(DateTools.dateAndHmRelative(model.reservationAt, isUtc: false)),
+                  SizedBox(width: 4),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                        color: Colors.grey.withAlpha(40),
+                        borderRadius: BorderRadius.circular(4)
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
+                      child: Text(LocaleHelper.embedLtr('${model.durationMinutes} \u{2032}'),
+                          style: TextStyle(color: AppColors.red, fontSize: 10)
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(width: 6),
+                  Text(DateTools.hmOnlyRelative(model.reservationAt, isUtc: false)),
+                  SizedBox(width: 6),
+                  Text(DateTools.dateOnlyRelative(model.reservationAt, isUtc: false)).alpha(),
                   SizedBox(width: 5),
                   Icon(AppIcons.calendar, size: 14, color: Colors.grey.shade700),
                 ],
@@ -326,7 +343,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
           ),
 
           SizedBox(height: 6),
-          Divider(color: Colors.grey.shade700),
+          Divider(color: Colors.grey.shade500),
           SizedBox(height: 6),
 
           Row(
@@ -349,33 +366,20 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                     ),
                   ),
 
-                  SizedBox(width: 10,),
-
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                        color: Colors.grey.withAlpha(40),
-                        borderRadius: BorderRadius.circular(4)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
-                      child: Text(LocaleHelper.embedLtr('${model.durationMinutes} \u{2032}'),
-                          style: TextStyle(color: AppColors.red, fontSize: 10)
-                      ),
-                    ),
-                  ),
+                  SizedBox(width: 10),
 
                   Visibility(
                     visible: model.status == SupportSessionStatus.inProgress,
                       child: IconButton(
                         iconSize: 17,
-                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        padding: EdgeInsets.symmetric(horizontal: 2),
                         constraints: BoxConstraints.tightFor(),
                         splashRadius: 12,
                         style: IconButton.styleFrom(
                           visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        icon: Icon(AppIcons.delete, size: 17, color: Colors.red),
+                        icon: Icon(AppIcons.remove, size: 17, color: Colors.red),
                         onPressed: (){
                           unReserve(model);
                         },

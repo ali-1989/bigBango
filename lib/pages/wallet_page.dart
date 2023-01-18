@@ -1,16 +1,20 @@
 import 'dart:async';
 
+import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/structures/models/transactionModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appSheet.dart';
+import 'package:app/tools/app/appSnack.dart';
 
-import 'package:app/views/components/incraseAmountComponent.dart';
+import 'package:app/views/sheets/incraseAmountComponent.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
+import 'package:iris_tools/api/helpers/urlHelper.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -18,6 +22,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/views/states/errorOccur.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class WalletPage extends StatefulWidget {
 
@@ -33,20 +39,14 @@ class _WalletPageState extends StateBase<WalletPage> {
   int walletBalance = 0;
   int withdrawalBalance = 0;
   List<TransactionModel> transactionList = [];
+  bool isInGetWay = false;
 
   @override
   void initState(){
     super.initState();
 
     assistCtr.addState(AssistController.state$loading);
-    /*List.generate(10, (index){
-      final t = TransactionModel();
-      t.id = '$index';
-      t.amount = Generator.getRandomInt(10, 500000);
-      t.date = DateHelper.getNowAsUtcZ();
-
-      transactionList.add(t);
-    });*/
+    EventDispatcherService.attachFunction(EventDispatcher.appResume, onBackOfBankGetWay);
 
     requestTransaction();
   }
@@ -54,6 +54,7 @@ class _WalletPageState extends StateBase<WalletPage> {
   @override
   void dispose(){
     requester.dispose();
+    EventDispatcherService.deAttachFunction(EventDispatcher.appResume, onBackOfBankGetWay);
 
     super.dispose();
   }
@@ -136,7 +137,7 @@ class _WalletPageState extends StateBase<WalletPage> {
                 padding: EdgeInsets.all(12),
                 child: Column(
                   children: [
-                    Text('موجودی'),
+                    Text('کل موجودی'),
                     SizedBox(height: 4),
                     Text('$walletBalance').fsR(5).bold(),
 
@@ -158,7 +159,7 @@ class _WalletPageState extends StateBase<WalletPage> {
                                   children: [
                                     Icon(Icons.percent, size: 12, color: Colors.red),
                                     SizedBox(width: 4),
-                                    Text('بن خرید'),
+                                    Text('قابل برداشت'),
                                   ],
                                 ),
 
@@ -270,17 +271,28 @@ class _WalletPageState extends StateBase<WalletPage> {
     requestTransaction();
   }
 
-  void gotoIncreaseAmount(){
-    AppSheet.showSheetCustom(
+  void onBackOfBankGetWay({data}) {
+    if(isInGetWay){
+      isInGetWay = false;
+      tryAgain();
+    }
+  }
+
+  void gotoIncreaseAmount() async {
+    final res = await AppSheet.showSheetCustom(
         context,
         builder: (ctx){
-          return IncreaseAmountComponent();
+          return IncreaseAmountSheet();
         },
-        routeName: 'IncreaseAmount',
+      routeName: 'IncreaseAmount',
       backgroundColor: Colors.transparent,
       contentColor: Colors.transparent,
       isScrollControlled: true,
     );
+
+    if(res is int){
+      requestInc(res);
+    }
   }
 
   Future<void> requestTransaction() async {
@@ -296,6 +308,8 @@ class _WalletPageState extends StateBase<WalletPage> {
       final data = dataJs['data'];
       final transactions = data['transactions']?? [];
       walletBalance = data['walletBalance']?? 0;
+
+      transactionList.clear();
 
       for(final t in transactions){
         final tik = TransactionModel.fromMap(t);
@@ -313,5 +327,39 @@ class _WalletPageState extends StateBase<WalletPage> {
     requester.request(context);
 
     return co.future;
+  }
+
+  Future<void> requestInc(int amount) async {
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      await hideLoading();
+
+      String msg = 'خطایی رخ داده است';
+
+      if(res != null && res.data != null){
+        final js = JsonHelper.jsonToMap(res.data)?? {};
+
+        msg = js['message']?? msg;
+      }
+
+      AppSnack.showInfo(context, msg);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
+      await hideLoading();
+      final data = dataJs['data'];
+      final url = data['url'];
+
+      if(url != null){
+        isInGetWay = true;
+
+        await UrlHelper.launchLink(url, mode: LaunchMode.externalApplication);
+      }
+    };
+
+    showLoading();
+    requester.methodType = MethodType.post;
+    requester.bodyJson = {'amount': amount};
+    requester.prepareUrl(pathUrl: '/wallet/charge');
+    requester.request(context);
   }
 }

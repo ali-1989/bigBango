@@ -2,23 +2,24 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/currencyTools.dart';
 import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
-class IncreaseAmountComponent extends StatefulWidget {
+class IncreaseAmountSheet extends StatefulWidget {
   final int? amount;
 
-  const IncreaseAmountComponent({
+  const IncreaseAmountSheet({
     Key? key,
     this.amount,
   }) : super(key: key);
 
   @override
-  State<IncreaseAmountComponent> createState() => _IncreaseAmountComponentState();
+  State<IncreaseAmountSheet> createState() => _IncreaseAmountSheetState();
 }
 ///============================================================================================
-class _IncreaseAmountComponentState extends StateBase<IncreaseAmountComponent> {
+class _IncreaseAmountSheetState extends StateBase<IncreaseAmountSheet> {
   late ButtonStyle style;
   int amount = 10000;
   int selectedKeyIndex = 1;
@@ -215,6 +216,6 @@ class _IncreaseAmountComponentState extends StateBase<IncreaseAmountComponent> {
   }
 
   void onPayClick(){
-
+    AppRoute.popTopView(context, data: amount);
   }
 }
