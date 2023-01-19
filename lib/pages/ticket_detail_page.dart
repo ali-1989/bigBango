@@ -10,7 +10,7 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
-import 'package:app/views/components/replyTicketComponent.dart';
+import 'package:app/views/sheets/replyTicketSheet.dart';
 import 'package:app/views/components/ticketDetailBigbangoBubbleComponent.dart';
 import 'package:app/views/components/ticketDetailUserBubbleComponent.dart';
 import 'package:app/views/states/errorOccur.dart';
@@ -202,6 +202,32 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
     requestTicketDetail();
   }
 
+  void closeTicket() {
+    void yesFn(){
+      requestCloseTicket();
+    }
+
+    AppDialogIris.instance.showYesNoDialog(
+      context,
+      yesFn: yesFn,
+      desc: 'آیا می خواهید تیکت بسته شود؟',
+    );
+  }
+
+  void openNewResponse() async {
+    final res = await AppSheet.showSheetCustom(
+      context,
+      builder: (ctx) => ReplyTicketSheet(ticketDetailModel: ticketDetailModel!),
+      routeName: 'ReplyTicketSheet',
+      contentColor: Colors.transparent,
+      isScrollControlled: true,
+    );
+
+    if(res is bool && res){
+      onRefresh();
+    }
+  }
+
   void requestTicketDetail() async {
     requester.httpRequestEvents.onFailState = (req, res) async {
       assistCtr.clearStates();
@@ -222,30 +248,6 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/tickets/details?Id=${ticketModel.id}');
     requester.request(context);
-  }
-
-  void closeTicket() {
-    void yesFn(){
-      requestCloseTicket();
-    }
-
-    AppDialogIris.instance.showYesNoDialog(
-      context,
-      yesFn: yesFn,
-      desc: 'آیا می خواهید تیکت بسته شود؟',
-    );
-  }
-
-  void openNewResponse() async {
-    await AppSheet.showSheetCustom(
-      context,
-      builder: (ctx) => ReplyTicketComponent(ticketDetailModel: ticketDetailModel!),
-      routeName: 'openNewReply',
-      contentColor: Colors.transparent,
-      isScrollControlled: true,
-    );
-
-    assistCtr.updateHead();
   }
 
   void requestCloseTicket(){

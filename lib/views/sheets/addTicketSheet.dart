@@ -33,19 +33,19 @@ import 'package:app/views/widgets/customCard.dart';
 //todo.im
 // بعد از ثبت  باید یک رکورد اضافه شود. اطلاعات بک اند ناقص است
 
-class AddTicketComponent extends StatefulWidget {
+class AddTicketSheet extends StatefulWidget {
   final List<TicketRole> ticketRoles;
 
-  const AddTicketComponent({
+  const AddTicketSheet({
     required this.ticketRoles,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<AddTicketComponent> createState() => _AddTicketComponentState();
+  State<AddTicketSheet> createState() => _AddTicketSheetState();
 }
 ///==================================================================================================
-class _AddTicketComponentState extends StateBase<AddTicketComponent> {
+class _AddTicketSheetState extends StateBase<AddTicketSheet> {
   Requester requester = Requester();
   TextEditingController titleCtr = TextEditingController();
   TextEditingController descriptionCtr = TextEditingController();

@@ -58,7 +58,7 @@ class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBub
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
         child: Stack(
           children: [
             Column(

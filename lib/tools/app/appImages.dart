@@ -93,6 +93,9 @@ class AppImages {
   static const doubleArrow = 'assets/images/doubleArrow.png';
   static const mic = 'assets/images/mic.png';
   static const bigbangoTicket = 'assets/images/bigbangoTicket.png';
+  static const transactionIco = 'assets/images/transactionIco.png';
+  static const notificationIco = 'assets/images/notificationIco.png';
+  static const marketBasket = 'assets/images/marketBasket.png';
 }
 
 

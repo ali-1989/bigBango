@@ -1,4 +1,6 @@
 import 'package:app/pages/about_page.dart';
+import 'package:app/pages/logs_page.dart';
+import 'package:app/pages/transaction_page.dart';
 import 'package:app/pages/wallet_page.dart';
 import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/services/login_service.dart';
@@ -98,7 +100,7 @@ class DrawerMenuBuilder {
             ListTile(
               title: Text('گزارشات و آزمون ها'),
               leading: Image.asset(AppImages.drawerLogIco, width: 16, height: 16),
-              onTap: gotoProfilePage,
+              onTap: gotoLogsPage,
               dense: true,
               horizontalTitleGap: 0,
               visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
@@ -240,6 +242,12 @@ class DrawerMenuBuilder {
   static void gotoSupportPage() async {
     await LayoutComponentState.toggleDrawer();
     AppRoute.push(AppRoute.getLastContext()!, SupportPage());
+  }
+
+  static void gotoLogsPage() async {
+    await LayoutComponentState.toggleDrawer();
+    //AppRoute.push(AppRoute.getLastContext()!, LogsPage());
+    AppRoute.push(AppRoute.getLastContext()!, TransactionsPage());
   }
 
   static void gotoInvitePage() async {

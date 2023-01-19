@@ -7,8 +7,10 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
+import 'package:app/tools/dateTools.dart';
 
 import 'package:app/views/sheets/incraseAmountComponent.dart';
+import 'package:app/views/sheets/wallet@confirmWithdrawalAmount.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
@@ -157,8 +159,8 @@ class _WalletPageState extends StateBase<WalletPage> {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(Icons.percent, size: 12, color: Colors.red),
-                                    SizedBox(width: 4),
+                                    //Icon(Icons.percent, size: 12, color: Colors.red),
+                                    //SizedBox(width: 4),
                                     Text('قابل برداشت'),
                                   ],
                                 ),
@@ -168,6 +170,17 @@ class _WalletPageState extends StateBase<WalletPage> {
                             ),
                           ),
                         ),
+                      ),
+                    ),
+
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          visualDensity: VisualDensity(vertical: -4, horizontal: -2)
+                        ),
+                          onPressed: withdrawalSheetDialog,
+                          child: Text('درخواست برداشت').fsR(-3).color(Colors.blue)
                       ),
                     ),
                   ],
@@ -248,7 +261,7 @@ class _WalletPageState extends StateBase<WalletPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('1401/05/22'),
+                    Text(DateTools.dateAndHmRelative(transaction.date)),
                     SizedBox(width: 5),
                     Icon(AppIcons.calendar, size: 13, color: Colors.black87),
                   ],
@@ -292,6 +305,21 @@ class _WalletPageState extends StateBase<WalletPage> {
 
     if(res is int){
       requestInc(res);
+    }
+  }
+
+  void withdrawalSheetDialog() async {
+    final amount = await AppSheet.showSheetCustom(
+        context, builder: (_){
+          return WalletConfirmWithdrawalAmount();
+    },
+        routeName: 'withdrawalSheetDialog',
+      contentColor: Colors.transparent,
+      isScrollControlled: true,
+    );
+
+    if(amount is int){
+      requestWithdrawal(amount);
     }
   }
 
@@ -360,6 +388,38 @@ class _WalletPageState extends StateBase<WalletPage> {
     requester.methodType = MethodType.post;
     requester.bodyJson = {'amount': amount};
     requester.prepareUrl(pathUrl: '/wallet/charge');
+    requester.request(context);
+  }
+
+  Future<void> requestWithdrawal(int amount) async {
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      await hideLoading();
+
+      String msg = 'خطایی رخ داده است';
+
+      if(res != null && res.data != null){
+        final js = JsonHelper.jsonToMap(res.data)?? {};
+
+        msg = js['message']?? msg;
+      }
+
+      AppSnack.showInfo(context, msg);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
+      await hideLoading();
+      final data = dataJs['data'];
+      String msg = 'نتیجه پس از بررسی اعلام می شود';
+
+      msg = data['message']?? msg;
+
+      AppSnack.showInfo(context, msg);
+    };
+
+    showLoading();
+    requester.methodType = MethodType.post;
+    requester.bodyJson = {'amount': amount};
+    requester.prepareUrl(pathUrl: '/wallet/withdrawal');
     requester.request(context);
   }
 }

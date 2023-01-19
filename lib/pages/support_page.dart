@@ -29,7 +29,7 @@ import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/dateTools.dart';
-import 'package:app/views/components/addTicketComponent.dart';
+import 'package:app/views/sheets/addTicketSheet.dart';
 import 'package:app/views/sheets/supportPlanSheet.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
@@ -243,7 +243,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
                           ActionChip(
                             label: Text('خرید زمان'),
-                            onPressed: showBuySessionTimeSheet,
+                            onPressed: buySessionTimeSheet,
                             visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
@@ -512,18 +512,18 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       ),
     );
   }
-  ///\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+  ///-------------------------------------------------------------------------
   void requesterSupport() {
     final page = TimetablePage();
 
     AppRoute.push(context, page);
   }
 
-  void showBuySessionTimeSheet() async {
+  void buySessionTimeSheet() async {
     final res = await AppSheet.showSheetCustom(
         context,
         builder: (_) => SupportPlanSheet(),
-        routeName: 'showBuySessionTimeSheet',
+        routeName: 'buySessionTimeSheet',
       isDismissible: true,
       isScrollControlled: true,
       contentColor: Colors.transparent,
@@ -547,7 +547,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     AppSheet.showSheetCustom(
       context,
-      builder: (_) => AddTicketComponent(ticketRoles: ticketRoles),
+      builder: (_) => AddTicketSheet(ticketRoles: ticketRoles),
       routeName: 'showAddTicketSheet',
       isScrollControlled: true,
       contentColor: Colors.transparent,
@@ -558,13 +558,13 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   }
 
   void onAddTicketEventCall(param){
-    ticketList.add(param);
+    /*ticketList.add(param);
 
     ticketList.sort((e1, e2){
       return DateHelper.compareDates(e1.createdAt, e2.createdAt, asc: false);
-    });
+    });*/
 
-    assistCtr.updateHead();
+    tryLoadTickets();
   }
 
   void tryLoadTimetable() async {

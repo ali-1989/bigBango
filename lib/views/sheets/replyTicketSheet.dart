@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:app/services/file_upload_service.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/models/ticketModels/ticketDetailModel.dart';
-import 'package:app/structures/models/ticketModels/ticketReplyModel.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/components/attachmentFileTicketComponent.dart';
@@ -23,22 +22,19 @@ import 'package:app/tools/app/appSheet.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/views/widgets/customCard.dart';
 
-//todo.im
-// بعد از ثبت چاسخ باید یک رکورد اضافه شود. اطلاعات بک اند ناقص است
-
-class ReplyTicketComponent extends StatefulWidget {
+class ReplyTicketSheet extends StatefulWidget {
   final TicketDetailModel ticketDetailModel;
 
-  const ReplyTicketComponent({
+  const ReplyTicketSheet({
     required this.ticketDetailModel,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<ReplyTicketComponent> createState() => _ReplyTicketComponentState();
+  State<ReplyTicketSheet> createState() => _ReplyTicketSheetState();
 }
 ///==================================================================================================
-class _ReplyTicketComponentState extends StateBase<ReplyTicketComponent> {
+class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
   Requester requester = Requester();
   TextEditingController descriptionCtr = TextEditingController();
   List<File> attachmentFiles = <File>[];
@@ -229,18 +225,18 @@ class _ReplyTicketComponentState extends StateBase<ReplyTicketComponent> {
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       hideLoading();
 
-      final data = res['data'];
+      //final data = res['data'];
 
-      final trm = TicketReplyModel();
+      /*final trm = TicketReplyModel();
       trm.creator = widget.ticketDetailModel.firstTicket.creator;
-      //trm.description = ;
+      trm.description = ;
+      trm.createdAt = DateHelper.getNowAsUtcZ();
+      widget.ticketDetailModel.replies.add(trm);*/
 
-      widget.ticketDetailModel.replies.add(trm);
-      //tik.createdAt = DateHelper.getNowAsUtcZ();
 
       final message = res['message']?? 'تیکت ثبت شد';
 
-      AppSheet.showSheetOneAction(context, message, (){AppRoute.popTopView(context);},
+      AppSheet.showSheetOneAction(context, message, (){AppRoute.popTopView(context, data: true);},
         buttonText:  'بله',
         dismissOnAction: true,
       );

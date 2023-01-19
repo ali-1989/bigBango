@@ -191,7 +191,7 @@ class _InvitePageState extends StateBase<InvitePage> {
                 return WaitToLoad();
               }
 
-              if(!assistCtr.hasState(AssistController.state$error)){
+              if(assistCtr.hasState(AssistController.state$error)){
                 return ErrorOccur(onRefresh: onRefresh, showBackButton: false);
               }
 
@@ -273,6 +273,8 @@ class _InvitePageState extends StateBase<InvitePage> {
 
     requester.httpRequestEvents.onStatusOk = (requester, map) async {
       final data = map['data'];
+
+      userList.clear();
 
       if(data is List){
         for(final x in data){
