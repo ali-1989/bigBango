@@ -4,17 +4,23 @@ enum QuizType {
   fillInBlank(2),
   recorder(3);
 
-  final int _type;
+  final int number;
 
-  const QuizType(this._type);
+  const QuizType(this.number);
 
-  int type(){
-    return _type;
+  static QuizType fromType(int type){
+    for(final v in QuizType.values){
+      if(v.number == type){
+        return v;
+      }
+    }
+
+    return QuizType.unKnow;
   }
 
-  static QuizType from(int type){
+  static QuizType fromName(String name){
     for(final v in QuizType.values){
-      if(v._type == type){
+      if(v.name == name){
         return v;
       }
     }

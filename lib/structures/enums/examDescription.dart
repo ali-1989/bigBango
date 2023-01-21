@@ -4,17 +4,13 @@ enum ExamDescription {
   fillInBlank(2),
   recorder(3);
 
-  final int _type;
+  final int number;
 
-  const ExamDescription(this._type);
+  const ExamDescription(this.number);
 
-  int type(){
-    return _type;
-  }
-
-  static ExamDescription from(int type){
+  static ExamDescription fromType(int type){
     for(final v in ExamDescription.values){
-      if(v._type == type){
+      if(v.number == type){
         return v;
       }
   }
@@ -22,8 +18,18 @@ enum ExamDescription {
   return ExamDescription.unKnow;
   }
 
-  String getText(){
-    switch(_type){
+  static ExamDescription fromName(String name){
+    for(final v in ExamDescription.values){
+      if(v.name == name){
+        return v;
+      }
+    }
+
+    return ExamDescription.unKnow;
+  }
+
+  String getTypeHuman(){
+    switch(number){
       case 1:
         return 'گزینه ی مناسب را انتخاب کنید';
       case 2:

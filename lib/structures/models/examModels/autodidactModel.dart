@@ -20,7 +20,7 @@ class AutodidactModel extends ExamSuperModel {
     question = js['question'];
     text = js['text'];
     correctAnswer = js['correctAnswer'];
-    replyType = AutodidactReplyType.from(js['replyType']);
+    replyType = AutodidactReplyType.fromType(js['replyType']);
 
     if(js['lastAnswer'] is Map){
       lastAnswer = js['lastAnswer']['text'];
@@ -38,7 +38,7 @@ class AutodidactModel extends ExamSuperModel {
     js['question'] = question;
     js['text'] = text;
     js['correctAnswer'] = correctAnswer;
-    js['replyType'] = replyType.type();
+    js['replyType'] = replyType.number;
     js['lastAnswer'] = {'text': lastAnswer};
     js['voice'] = voice?.toMap();
 

@@ -54,6 +54,7 @@ class ApplicationInitial {
       return true;
     }
     catch (e){
+      print(e);
       _importantInit = false;
       return false;
     }

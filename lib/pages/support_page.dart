@@ -362,7 +362,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
-                      child: Text(model.status.getState(), style: TextStyle(color: Colors.white, fontSize: 10)),
+                      child: Text(model.status.getTypeHuman(), style: TextStyle(color: Colors.white, fontSize: 10)),
                     ),
                   ),
 

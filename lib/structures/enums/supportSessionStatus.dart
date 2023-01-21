@@ -6,16 +6,12 @@ enum SupportSessionStatus {
   done(2),
   canceled(4);
 
-  final int _type;
+  final int number;
 
-  const SupportSessionStatus(this._type);
+  const SupportSessionStatus(this.number);
 
-  int type(){
-    return _type;
-  }
-
-  String getState(){
-    switch(_type){
+  String getTypeHuman(){
+    switch(number){
       case 1:
         return 'در انتظار';
       case 2:
@@ -28,7 +24,7 @@ enum SupportSessionStatus {
   }
 
   Color getStateColor(){
-    switch(_type){
+    switch(number){
       case 1:
         return Colors.blue;
       case 2:
@@ -40,9 +36,19 @@ enum SupportSessionStatus {
     return Colors.black87;
   }
 
-  static SupportSessionStatus from(int type){
+  static SupportSessionStatus fromType(int type){
     for(final v in SupportSessionStatus.values){
-      if(v._type == type){
+      if(v.number == type){
+        return v;
+      }
+    }
+
+    return SupportSessionStatus.unKnow;
+  }
+
+  static SupportSessionStatus fromName(String name){
+    for(final v in SupportSessionStatus.values){
+      if(v.name == name){
         return v;
       }
     }

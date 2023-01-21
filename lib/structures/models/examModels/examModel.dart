@@ -21,7 +21,7 @@ class ExamModel extends ExamSuperModel {
   ExamModel.fromMap(Map js){
     id = js['id']?? '';
     question = js['question'];
-    exerciseType = QuizType.from(js['exerciseType']);
+    exerciseType = QuizType.fromType(js['exerciseType']);
 
     if(js['choices'] is List){
       choices = js['choices'].map<ExamChoiceModel>((e) => ExamChoiceModel.fromMap(e)).toList();
@@ -42,7 +42,7 @@ class ExamModel extends ExamSuperModel {
 
     js['id'] = id;
     js['question'] = question;
-    js['exerciseType'] = exerciseType.type();
+    js['exerciseType'] = exerciseType.number;
     js['choices'] = choices.map((e) => e.toMap()).toList();
     js['solveItems'] = solveItems.map((e) => e.toMap()).toList();
 

@@ -90,7 +90,7 @@ class _ExamPageState extends StateBase<ExamPage> {
     String title = '';
 
     if(currentExam is ExamModel){
-      title = ExamDescription.from((currentExam as ExamModel).exerciseType.type()).getText();
+      title = ExamDescription.fromType((currentExam as ExamModel).exerciseType.number).getTypeHuman();
     }
 
     if(currentItemIdx == 0){

@@ -42,7 +42,7 @@ import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 
 class HomePage extends StatefulWidget {
-  static String id$head = 'id_head';
+  static String id$head = '${identityHashCode(HomePage)}_head';
 
   const HomePage({Key? key}) : super(key: key);
 
@@ -74,6 +74,7 @@ class HomePageState extends StateBase<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Assist(
       controller: assistCtr,
       id: HomePage.id$head,

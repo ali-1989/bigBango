@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:app/services/event_dispatcher_service.dart';
+import 'package:app/structures/enums/walletAmountType.dart';
 import 'package:app/structures/models/transactionModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
+import 'package:app/tools/currencyTools.dart';
 import 'package:app/tools/dateTools.dart';
 
 import 'package:app/views/sheets/incraseAmountComponent.dart';
@@ -17,6 +19,7 @@ import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/urlHelper.dart';
+import 'package:iris_tools/dateSection/dateHelper.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -247,23 +250,35 @@ class _WalletPageState extends StateBase<WalletPage> {
                   children: [
                     CustomCard(
                       radius: 0,
-                        color: AppColors.greenTint,
+                        color: transaction.isAmountPlus()? AppColors.greenTint : AppColors.redTint,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Icon(AppIcons.arrowDown, size: 14, color: AppColors.green),
+                          child: Builder(
+                            builder: (context) {
+                              if(transaction.isAmountPlus()) {
+                                return RotatedBox(
+                                    quarterTurns: 2,
+                                    child: Icon(AppIcons.arrowDown, size: 14, color: AppColors.green)
+                                );
+                              }
+
+                              return Icon(AppIcons.arrowDown, size: 14, color: AppColors.red);
+                            }
+                          ),
                         )
                     ),
                     SizedBox(width: 5),
-                    Text('واریز به حساب'),
+                    Text(CurrencyTools.formatCurrency(transaction.amount)),
+                    SizedBox(width: 5),
+                    //Text(transaction.getAmountHuman()),
                   ],
                 ),
 
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(DateTools.dateAndHmRelative(transaction.date)),
+                    Text(DateTools.dateAndHmRelative(transaction.date)).alpha(),
                     SizedBox(width: 5),
-                    Icon(AppIcons.calendar, size: 13, color: Colors.black87),
+                    Icon(AppIcons.calendar, size: 13, color: Colors.black54),
                   ],
                 ),
               ],
@@ -343,6 +358,24 @@ class _WalletPageState extends StateBase<WalletPage> {
         final tik = TransactionModel.fromMap(t);
         transactionList.add(tik);
       }
+
+      final x = TransactionModel();
+      x.id = 'abc';
+      x.amount = 12000;
+      x.description = 'fvnhaj o,f';
+      x.amountType = WalletAmountType.removable;
+      x.date = DateHelper.getNow();
+
+      transactionList.add(x);
+
+      final x2 = TransactionModel();
+      x2.id = 'efg';
+      x2.amount = -200;
+      x2.description = 'برئاشت خوب';
+      x2.amountType = WalletAmountType.unermovable;
+      x2.date = DateHelper.getNow();
+
+      transactionList.add(x2);
 
       co.complete(null);
 

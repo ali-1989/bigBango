@@ -3,17 +3,23 @@ enum AutodidactReplyType {
   text(1),
   voice(2);
 
-  final int _type;
+  final int number;
 
-  const AutodidactReplyType(this._type);
+  const AutodidactReplyType(this.number);
 
-  int type(){
-    return _type;
+  static AutodidactReplyType fromType(int type){
+    for(final v in AutodidactReplyType.values){
+      if(v.number == type){
+        return v;
+      }
+    }
+
+    return AutodidactReplyType.unKnow;
   }
 
-  static AutodidactReplyType from(int type){
+  static AutodidactReplyType fromName(String name){
     for(final v in AutodidactReplyType.values){
-      if(v._type == type){
+      if(v.name == name){
         return v;
       }
     }

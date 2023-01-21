@@ -1,20 +1,21 @@
+import 'package:app/structures/enums/walletAmountType.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
 class TransactionModel {
   late String id;
   int amount = 0;
-  int amountType = 0;
-  String? title;
+  WalletAmountType amountType = WalletAmountType.unKnow;
+  String? description;
   late DateTime date;
 
   TransactionModel();
 
   TransactionModel.fromMap(Map map){
     id = map['id']?? Generator.generateKey(8);
-    title = map['title'];
+    description = map['description'];
     amount = map['amount'];
-    amountType = map['amountType'];
+    amountType = WalletAmountType.fromType(map['amountType']);
     date = DateHelper.tsToSystemDate(map['createdAt'])!;
   }
 
@@ -22,11 +23,27 @@ class TransactionModel {
     final map = <String, dynamic>{};
 
     map['id'] = id;
-    map['title'] = title;
+    map['description'] = description;
     map['amount'] = amount;
-    map['amountType'] = amountType;
+    map['amountType'] = amountType.number;
     map['createdAt'] = DateHelper.toTimestamp(date);
 
     return map;
+  }
+
+  bool isAmountPlus(){
+    return amount >= 0;
+  }
+
+  String getAmountHuman(){
+    if(isAmountPlus()){
+      return 'واریز به حساب';
+    }
+
+    if(!isAmountPlus()){
+      return 'برداشت از حساب';
+    }
+
+    return '';
   }
 }
