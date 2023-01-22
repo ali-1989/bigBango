@@ -267,8 +267,14 @@ class _WalletPageState extends StateBase<WalletPage> {
                           ),
                         )
                     ),
-                    SizedBox(width: 5),
-                    Text(CurrencyTools.formatCurrency(transaction.amount)),
+                    SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(CurrencyTools.formatCurrencyString(transaction.amount.toString().replaceFirst('-', ''))),
+                        Text(transaction.getAmountHuman()).fsR(-2).color(transaction.isAmountPlus()? AppColors.green : AppColors.red),
+                      ],
+                    ),
                     SizedBox(width: 5),
                     //Text(transaction.getAmountHuman()),
                   ],

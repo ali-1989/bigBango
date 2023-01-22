@@ -19,9 +19,9 @@ class WalletConfirmWithdrawalAmount extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: 20),
-            Text('شما می توانید در صورت تمایل مبلغ قابل برداشت کیف پول خود را دریافت کنید', textAlign: TextAlign.center,).fsR(1),
+            Text('شما می توانید در صورت تمایل مبلغ قابل برداشت کیف پول خود را دریافت کنید', textAlign: TextAlign.center,style: TextStyle(height: 1.4)).fsR(1),
             SizedBox(height: 20),
-            Text('برای این منظور مبلغ مورد نظر خود را وارد کنید'),
+            Text('برای این منظور مبلغ مورد نظر خود را وارد کنید').fsR(-1),
 
             SizedBox(height: 20),
             Row(

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:app/pages/s1.dart';
 import 'package:app/structures/models/transactionModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
@@ -12,9 +11,9 @@ import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/api/generator.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/maxWidth.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
@@ -80,9 +79,6 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
     return Column(
       children: [
         SizedBox(height: 20),
-
-        S1(),
-        //S1(key: ValueKey(Generator.generateKey(5)),),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
           child: Row(

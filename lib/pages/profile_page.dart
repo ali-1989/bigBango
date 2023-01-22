@@ -12,6 +12,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:iris_pic_editor/pic_editor.dart';
 import 'package:iris_tools/api/checker.dart';
+import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/api/helpers/fileHelper.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
@@ -567,6 +568,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
     final editOptions = EditOptions.byPath(imgPath);
     editOptions.cropBoxInitSize = const Size(200, 170);
+    editOptions.primaryColor = ColorHelper.buildMaterialColor(Colors.blue);
+    editOptions.secondaryColor = Colors.yellow;
 
     void onOk(EditOptions op) async {
       final pat = AppDirectories.getSavePathByPath(SavePathType.userProfile, imgPath)!;
@@ -578,7 +581,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     }
 
     editOptions.callOnResult = onOk;
-    final ov = OverlayScreenView(content: PicEditor(editOptions), backgroundColor: Colors.black);
+    final ov = OverlayScreenView(content: PicEditor(editOptions));
     OverlayDialog().show(context, ov).then((value){
       if(!comp.isCompleted){
         comp.complete(null/*imgPath*/);

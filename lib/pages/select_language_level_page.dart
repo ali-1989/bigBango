@@ -52,7 +52,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
           body: SizedBox.expand(
               child: Column(
                 children: [
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
                   SizedBox(
                       width: double.infinity,
                       //height: sh * 0.58,

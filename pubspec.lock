@@ -189,7 +189,7 @@ packages:
       name: dart_jsonwebtoken
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.2"
+    version: "2.6.3"
   dbus:
     dependency: transitive
     description:
@@ -602,19 +602,19 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "29546b088d90d4e29514414b4b20dfa3285d06a5"
+      resolved-ref: "8821ca501d32803eda5971c36554b16abe0c3ff2"
       url: "https://github.com/ali-1989/IrisPicEditor.git"
     source: git
-    version: "0.0.3"
+    version: "0.0.6+14"
   iris_tools:
     dependency: "direct main"
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "0dcf851582ece3a90ba7962466fee33439b68ed3"
+      resolved-ref: "802812fa9e1ae96961838b0ce06e46a3b1089d04"
       url: "https://github.com/ali-1989/IrisTools.git"
     source: git
-    version: "0.0.25"
+    version: "0.0.26+34"
   jiffy:
     dependency: transitive
     description:

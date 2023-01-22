@@ -73,6 +73,15 @@ class DrawerMenuBuilder {
             ListTile(
               title: Text('کیف پول'),
               leading: Image.asset(AppImages.drawerWalletIco, width: 16, height: 16),
+              onTap: gotoWalletPage,
+              dense: true,
+              horizontalTitleGap: 0,
+              visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
+            ),
+
+            ListTile(
+              title: Text('تراکنش ها'),
+              leading: Image.asset(AppImages.drawerWalletIco, width: 16, height: 16),
               onTap: gotoTransactionPage,
               dense: true,
               horizontalTitleGap: 0,
@@ -234,9 +243,14 @@ class DrawerMenuBuilder {
     AppRoute.push(AppRoute.getLastContext()!, AboutPage());
   }
 
-  static void gotoTransactionPage() async {
+  static void gotoWalletPage() async {
     await LayoutComponentState.toggleDrawer();
     AppRoute.push(AppRoute.getLastContext()!, WalletPage());
+  }
+
+  static void gotoTransactionPage() async {
+    await LayoutComponentState.toggleDrawer();
+    AppRoute.push(AppRoute.getLastContext()!, TransactionsPage());
   }
 
   static void gotoSupportPage() async {
@@ -246,8 +260,7 @@ class DrawerMenuBuilder {
 
   static void gotoLogsPage() async {
     await LayoutComponentState.toggleDrawer();
-    //AppRoute.push(AppRoute.getLastContext()!, LogsPage());
-    AppRoute.push(AppRoute.getLastContext()!, TransactionsPage());
+    AppRoute.push(AppRoute.getLastContext()!, LogsPage());
   }
 
   static void gotoInvitePage() async {
