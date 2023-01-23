@@ -1,25 +1,28 @@
 import 'dart:async';
 
+import 'package:app/pages/profile_page.dart';
 import 'package:app/services/event_dispatcher_service.dart';
-import 'package:app/structures/enums/walletAmountType.dart';
 import 'package:app/structures/models/transactionModel.dart';
+import 'package:app/structures/models/withdrawalModel.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/system/session.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/currencyTools.dart';
 import 'package:app/tools/dateTools.dart';
 
 import 'package:app/views/sheets/incraseAmountComponent.dart';
-import 'package:app/views/sheets/wallet@confirmWithdrawalAmount.dart';
+import 'package:app/views/sheets/wallet@withdrawaSheet.dart';
+import 'package:app/views/sheets/wallet@withdrawalListSheet.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/urlHelper.dart';
-import 'package:iris_tools/dateSection/dateHelper.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -44,6 +47,7 @@ class _WalletPageState extends StateBase<WalletPage> {
   int walletBalance = 0;
   int withdrawalBalance = 0;
   List<TransactionModel> transactionList = [];
+  List<WithdrawalModel> withdrawalList = [];
   bool isInGetWay = false;
 
   @override
@@ -178,12 +182,44 @@ class _WalletPageState extends StateBase<WalletPage> {
 
                     Align(
                       alignment: Alignment.centerRight,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          visualDensity: VisualDensity(vertical: -4, horizontal: -2)
-                        ),
-                          onPressed: withdrawalSheetDialog,
-                          child: Text('درخواست برداشت').fsR(-3).color(Colors.blue)
+                      child: Row(
+                        children: [
+                          Visibility(
+                            visible: withdrawalBalance > 0,
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                visualDensity: VisualDensity(vertical: -4, horizontal: -2)
+                              ),
+                                onPressed: showWithdrawalSheet,
+                                child: Text('درخواست برداشت').fsR(-3).color(Colors.blue)
+                            ),
+                          ),
+
+                          Builder(
+                              builder: (_){
+                                if(withdrawalList.isEmpty){
+                                  return SizedBox();
+                                }
+
+                                return Row(
+                                  children: [
+                                    Visibility(
+                                      visible: withdrawalBalance > 0,
+                                        child: Text('/')
+                                    ),
+
+                                    TextButton(
+                                        style: TextButton.styleFrom(
+                                            visualDensity: VisualDensity(vertical: -4, horizontal: -2)
+                                        ),
+                                        onPressed: showWithdrawalListSheet,
+                                        child: Text('درخواست های در حال بررسی').fsR(-3).color(Colors.blue)
+                                    ),
+                                  ],
+                                );
+                              }
+                          )
+                        ],
                       ),
                     ),
                   ],
@@ -222,7 +258,7 @@ class _WalletPageState extends StateBase<WalletPage> {
 
                   return ListView.builder(
                     itemCount: transactionList.length,
-                    itemBuilder: listBuilderForTicket,
+                    itemBuilder: listBuilderForTransaction,
                   );
                 }
             ),
@@ -231,7 +267,7 @@ class _WalletPageState extends StateBase<WalletPage> {
     );
   }
 
-  Widget listBuilderForTicket(_, idx){
+  Widget listBuilderForTransaction(_, idx){
     final transaction = transactionList[idx];
 
     return GestureDetector(
@@ -329,10 +365,19 @@ class _WalletPageState extends StateBase<WalletPage> {
     }
   }
 
-  void withdrawalSheetDialog() async {
+  void showWithdrawalSheet() async {
+    if(Session.getLastLoginUser()!.iban == null){
+      void fn(){
+        AppRoute.push(context, ProfilePage(userModel: Session.getLastLoginUser()!));
+      }
+
+      AppSheet.showSheetOneAction(context, 'ابتدا باید شماره شبای متعلق به خود را در بخش پروفایل وارد کنید', fn, buttonText: 'پروفایل');
+      return;
+    }
+
     final amount = await AppSheet.showSheetCustom(
         context, builder: (_){
-          return WalletConfirmWithdrawalAmount();
+          return WalletWithdrawalSheet(maxAmount: withdrawalBalance);
     },
         routeName: 'withdrawalSheetDialog',
       contentColor: Colors.transparent,
@@ -341,6 +386,21 @@ class _WalletPageState extends StateBase<WalletPage> {
 
     if(amount is int){
       requestWithdrawal(amount);
+    }
+  }
+
+  void showWithdrawalListSheet() async {
+    final state = await AppSheet.showSheetCustom(
+        context, builder: (_){
+          return WalletWithdrawalListSheet(withdrawalList: withdrawalList);
+    },
+        routeName: 'showWithdrawalListSheet',
+      contentColor: Colors.transparent,
+      isScrollControlled: true,
+    );
+
+    if(state is bool && state){
+      requestTransaction();
     }
   }
 
@@ -356,32 +416,22 @@ class _WalletPageState extends StateBase<WalletPage> {
     requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
       final data = dataJs['data'];
       final transactions = data['transactions']?? [];
+      final withdrawalRequests = data['withdrawalRequests']?? [];
       walletBalance = data['walletBalance']?? 0;
+      withdrawalBalance = data['withdrawalBalance']?? 0;
 
       transactionList.clear();
+      withdrawalList.clear();
 
       for(final t in transactions){
         final tik = TransactionModel.fromMap(t);
         transactionList.add(tik);
       }
 
-      final x = TransactionModel();
-      x.id = 'abc';
-      x.amount = 12000;
-      x.description = 'fvnhaj o,f';
-      x.amountType = WalletAmountType.removable;
-      x.date = DateHelper.getNow();
-
-      transactionList.add(x);
-
-      final x2 = TransactionModel();
-      x2.id = 'efg';
-      x2.amount = -200;
-      x2.description = 'برئاشت خوب';
-      x2.amountType = WalletAmountType.unermovable;
-      x2.date = DateHelper.getNow();
-
-      transactionList.add(x2);
+      for(final t in withdrawalRequests){
+        final tik = WithdrawalModel.fromMap(t);
+        withdrawalList.add(tik);
+      }
 
       co.complete(null);
 

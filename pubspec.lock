@@ -503,7 +503,7 @@ packages:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.10"
+    version: "4.0.11"
   image_editor:
     dependency: transitive
     description:
@@ -602,10 +602,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "8821ca501d32803eda5971c36554b16abe0c3ff2"
+      resolved-ref: "65570e49c4bd639d9b2db36d55c1a1a44baf966a"
       url: "https://github.com/ali-1989/IrisPicEditor.git"
     source: git
-    version: "0.0.6+14"
+    version: "0.0.6+16"
   iris_tools:
     dependency: "direct main"
     description:

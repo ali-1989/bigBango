@@ -96,6 +96,7 @@ class AppImages {
   static const transactionIco = 'assets/images/transactionIco.png';
   static const notificationIco = 'assets/images/notificationIco.png';
   static const marketBasket = 'assets/images/marketBasket.png';
+  static const withdrawalIco = 'assets/images/withdrawalIco.png';
 }
 
 

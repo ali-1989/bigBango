@@ -381,7 +381,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                         ),
                         icon: Icon(AppIcons.remove, size: 17, color: Colors.red),
                         onPressed: (){
-                          unReserve(model);
+                          showUnReserveDialog(model);
                         },
                       )
                   ),
@@ -591,6 +591,18 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     requestTickets();
   }
 
+  void showUnReserveDialog(SupportSessionModel model) {
+    void fn(){
+
+    }
+
+    AppDialogIris.instance.showYesNoDialog(
+        context,
+        yesFn: fn,
+        desc: 'آیا می خواهید درخواست را لغو کنید؟'
+    );
+  }
+
   Future<void> requestRoles() async {
     ticketRoles.clear();
     Completer co = Completer();
@@ -743,17 +755,5 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     requester.request(context);
 
     return co.future;
-  }
-
-  void unReserve(SupportSessionModel model) {
-    void fn(){
-
-    }
-
-    AppDialogIris.instance.showYesNoDialog(
-        context,
-      yesFn: fn,
-      desc: 'آیا می خواهید درخواست را لغو کنید؟'
-    );
   }
 }

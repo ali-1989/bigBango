@@ -1,8 +1,12 @@
 import 'package:app/structures/enums/quizType.dart';
+import 'package:app/structures/enums/walletAmountType.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/listeningModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
+import 'package:app/structures/models/transactionModel.dart';
+import 'package:app/structures/models/withdrawalModel.dart';
+import 'package:iris_tools/dateSection/dateHelper.dart';
 
 class Examples {
   Examples._();
@@ -52,6 +56,34 @@ class Examples {
     res.add(x);
     //......................
     return res;
+  }
+
+  void buildTransaction(){
+    final x = TransactionModel();
+    x.id = 'abc';
+    x.amount = 12000;
+    x.description = 'fvnhaj o,f';
+    x.amountType = WalletAmountType.removable;
+    x.date = DateHelper.getNow();
+
+    //transactionList.add(x);
+
+    final x2 = TransactionModel();
+    x2.id = 'efg';
+    x2.amount = -200;
+    x2.description = 'برئاشت خوب';
+    x2.amountType = WalletAmountType.unermovable;
+    x2.date = DateHelper.getNow();
+
+    //transactionList.add(x2);
+
+    final w1 = WithdrawalModel();
+    w1.id = 'efg';
+    w1.amount = 200000;
+    w1.description = 'برئاشت خوب';
+    w1.date = DateHelper.getNow();
+
+    //withdrawalList.add(w1);
   }
 }
 

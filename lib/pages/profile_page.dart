@@ -568,8 +568,10 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
     final editOptions = EditOptions.byPath(imgPath);
     editOptions.cropBoxInitSize = const Size(200, 170);
-    editOptions.primaryColor = ColorHelper.buildMaterialColor(Colors.blue);
-    editOptions.secondaryColor = Colors.yellow;
+    editOptions.primaryColor = ColorHelper.buildMaterialColor(Colors.black87);
+    editOptions.secondaryColor = AppColors.red;
+    editOptions.iconsColor = Colors.white;
+
 
     void onOk(EditOptions op) async {
       final pat = AppDirectories.getSavePathByPath(SavePathType.userProfile, imgPath)!;
@@ -787,6 +789,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       user.birthDate = birthDate;
 
       Session.sinkUserInfo(user);
+      prepare();
+      compareChanges();
       EventDispatcherService.notify(EventDispatcher.userProfileChange);
     };
 

@@ -16,6 +16,7 @@ class UserModel {
   Token? token;
   MediaModel? avatarModel;
   String? email;
+  String? iban;
   CourseLevelModel? courseLevel;
   //---------------- locale
   DateTime? loginDate;
@@ -33,6 +34,7 @@ class UserModel {
     mobile = map[Keys.mobileNumber]?.toString();
     gender = map[Keys.gender];
     email = map['email'];
+    iban = map['iban'];
     courseLevel = PublicAccess.getCourseLevelById(map['courseLevelId']?? 0);
 
     if(map[Keys.token] is Map) {
@@ -78,6 +80,7 @@ class UserModel {
     map[Keys.gender] = gender;
     map['avatar'] = avatarModel?.toMap();
     map['email'] = email;
+    map['iban'] = iban;
     map['courseLevelId'] = courseLevel?.id;
 
     if (token != null) {

@@ -149,6 +149,7 @@ class AppSheet {
     //TextButton.icon(onPressed: fn, label: Text(btnText,), icon: Icon(icon, color: textColor,),);
 
     final content = Text(message, style: txtStyle);
+
     Widget? titleView;
 
     if (title != null) {

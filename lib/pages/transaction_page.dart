@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:app/structures/enums/transactionSectionFilter.dart';
+import 'package:app/structures/enums/transactionStatusFilter.dart';
 import 'package:app/structures/models/transactionModel.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/currencyTools.dart';
 import 'package:app/tools/dateTools.dart';
 
 import 'package:app/views/states/emptyData.dart';
@@ -13,7 +17,6 @@ import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/maxWidth.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
@@ -35,6 +38,8 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
   int pageSize = 100;
   int pageIndex = 1;
   List<TransactionModel> transactionList = [];
+  TransactionStatusFilter? statusFilter;
+  TransactionSectionFilter? sectionFilter;
   String key$downArrangeSelected = 'downArrangeSelected';
   String key$upArrangeSelected = 'upArrangeSelected';
 
@@ -42,8 +47,8 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
   void initState(){
     super.initState();
 
-    //assistCtr.addState(AssistController.state$loading);
-    //requestTransaction();
+    assistCtr.addState(AssistController.state$loading);
+    requestTransaction();
   }
 
   @override
@@ -179,9 +184,25 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
                     return EmptyData();
                   }
 
-                  return ListView.builder(
-                    itemCount: transactionList.length,
-                    itemBuilder: listBuilderForTransaction,
+                  return RefreshConfiguration(
+                    headerBuilder: () => MaterialClassicHeader(),
+                    footerBuilder: () => PublicAccess.classicFooter,
+                    enableScrollWhenRefreshCompleted: true,
+                    enableLoadingWhenFailed : true,
+                    hideFooterWhenNotFull: true,
+                    enableBallisticLoad: true,
+                    enableLoadingWhenNoData: false,
+                    child: SmartRefresher(
+                      enablePullDown: false,
+                      enablePullUp: true,
+                      controller: refreshController,
+                      onRefresh: (){},
+                      onLoading: onLoadingMore,
+                      child: ListView.builder(
+                        itemCount: transactionList.length,
+                        itemBuilder: listBuilderForTransaction,
+                      ),
+                    ),
                   );
                 }
             ),
@@ -208,24 +229,42 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomCard(
-                      radius: 0,
-                        color: AppColors.greenTint,
+                        radius: 0,
+                        color: transaction.isAmountPlus()? AppColors.greenTint : AppColors.redTint,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Icon(AppIcons.arrowDown, size: 14, color: AppColors.green),
+                          child: Builder(
+                              builder: (context) {
+                                if(transaction.isAmountPlus()) {
+                                  return RotatedBox(
+                                      quarterTurns: 2,
+                                      child: Icon(AppIcons.arrowDown, size: 14, color: AppColors.green)
+                                  );
+                                }
+
+                                return Icon(AppIcons.arrowDown, size: 14, color: AppColors.red);
+                              }
+                          ),
                         )
                     ),
+                    SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(CurrencyTools.formatCurrencyString(transaction.amount.toString().replaceFirst('-', ''))),
+                        Text(transaction.getAmountHuman()).fsR(-2).color(transaction.isAmountPlus()? AppColors.green : AppColors.red),
+                      ],
+                    ),
                     SizedBox(width: 5),
-                    Text('واریز به حساب'),
+                    //Text(transaction.getAmountHuman()),
                   ],
                 ),
 
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(DateTools.dateAndHmRelative(transaction.date)),
+                    Text(DateTools.dateAndHmRelative(transaction.date)).alpha(),
                     SizedBox(width: 5),
-                    Icon(AppIcons.calendar, size: 13, color: Colors.black87),
+                    Icon(AppIcons.calendar, size: 13, color: Colors.black54),
                   ],
                 ),
               ],
@@ -246,6 +285,10 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
     requestTransaction();
   }
 
+  void onLoadingMore(){
+    pageIndex++;
+    requestTransaction();
+  }
 
   Future<void> requestTransaction() async {
     Completer co = Completer();
@@ -257,14 +300,23 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
-      final data = dataJs['data'];
-      final transactions = data['transactions']?? [];
+      final data = dataJs['data']?? [];
+      pageIndex = dataJs['pageIndex']?? pageIndex;
+      final hasNextPage = dataJs['hasNextPage']?? true;
 
       transactionList.clear();
 
-      for(final t in transactions){
+      for(final t in data){
         final tik = TransactionModel.fromMap(t);
         transactionList.add(tik);
+      }
+
+      if(refreshController.isLoading) {
+        refreshController.loadComplete();
+      }
+
+      if(!hasNextPage){
+        refreshController.loadNoData();
       }
 
       co.complete(null);
@@ -273,8 +325,18 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
       assistCtr.updateHead();
     };
 
+    String url = '/transactions?Page=$pageIndex&Size=$pageSize';
+
+    if(statusFilter != null){
+      url += '&Status=${statusFilter!.number}';
+    }
+
+    if(sectionFilter != null){
+      url += '&Section=${sectionFilter!.number}';
+    }
+
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/wallet');
+    requester.prepareUrl(pathUrl: url);
     requester.request(context);
 
     return co.future;

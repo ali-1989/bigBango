@@ -1216,3 +1216,22 @@ extension RadioExtension on Radio {
   }
 }
 ///==========================================================================================================
+extension TextHeightBehaviorExtension on TextHeightBehavior {
+  Map<String, dynamic> toMap(){
+    return <String, dynamic>{
+      'applyHeightToFirstAscent': applyHeightToFirstAscent,
+      'applyHeightToLastDescent': applyHeightToLastDescent,
+    };
+  }
+
+  TextHeightBehavior? fromMap(Map<String, dynamic>? map){
+    if(map == null){
+      return null;
+    }
+
+    return TextHeightBehavior(
+        applyHeightToLastDescent: map['applyHeightToLastDescent'],
+        applyHeightToFirstAscent: map['applyHeightToFirstAscent']
+    );
+  }
+}

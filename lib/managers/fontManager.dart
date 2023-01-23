@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appThemes.dart';
+import 'package:app/system/extensions.dart';
 
 class FontManager {
   FontManager._();
@@ -138,21 +139,23 @@ class FontManager {
 
       */
     //------------- fa -------------------------------------------------
-    final shabnamBold = Font.bySize()
-      ..family = 'shabnam_bold'
-      ..fileName = 'ShabnamBoldFD.ttf'
-      ..defaultLanguage = 'fa'
-      ..defaultUsage = FontUsage.bold
-      ..usages = [FontUsage.bold, FontUsage.normal]
-      ..height = 1;
-
     final shabnam = Font.bySize()
       ..family = 'shabnam'
       ..fileName = 'ShabnamMediumFD.ttf'
       ..defaultLanguage = 'fa'
       ..defaultUsage = FontUsage.normal
       ..usages = [FontUsage.sub]
-      ..height = 1;
+      ..textHeightBehavior = TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false)
+      ..height = 1.4;
+
+    final shabnamBold = Font.bySize()
+      ..family = 'shabnam_bold'
+      ..fileName = 'ShabnamBoldFD.ttf'
+      ..defaultLanguage = 'fa'
+      ..defaultUsage = FontUsage.bold
+      ..usages = [FontUsage.normal, FontUsage.bold]
+      ..textHeightBehavior = TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false)
+      ..height = 1.4;
 
 
     _fontList.add(shabnam);
@@ -285,10 +288,11 @@ enum FontUsage {
 class Font {
   String? family;
   String? fileName;
-  double height = 1;
+  double? height;
   double? size;
   FontUsage defaultUsage = FontUsage.normal;
   String? defaultLanguage;
+  TextHeightBehavior? textHeightBehavior;
   List<String> languages = [];
   List<FontUsage> usages = [];
 
@@ -306,7 +310,8 @@ class Font {
     family = map['family'];
     fileName = map['file_name'];
     size = map['size']?? 10;
-    height = map['height']?? 1;
+    height = map['height'];
+    textHeightBehavior = TextHeightBehavior().fromMap(map['textHeightBehavior']);
     defaultUsage = FontUsage.fromName(map['default_usage']);
     defaultLanguage = map['default_language'];
   }
@@ -318,6 +323,7 @@ class Font {
     map['file_name'] = fileName;
     map['size'] = size;
     map['height'] = height;
+    map['textHeightBehavior'] = textHeightBehavior?.toMap();
     map['default_usage'] = defaultUsage.name;
     map['default_language'] = defaultLanguage;
 
