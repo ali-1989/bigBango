@@ -1,25 +1,22 @@
-import 'package:app/structures/models/hoursOfSupportModel.dart';
-import 'package:app/system/keys.dart';
-import 'package:app/tools/app/appRoute.dart';
-import 'package:app/tools/app/appSnack.dart';
+import 'package:app/structures/models/supportModels/supportPlanModel.dart';
+import 'package:app/tools/currencyTools.dart';
 import 'package:flutter/material.dart';
 
-import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
-
-// todo.im
-// باید دو درخواست جدید اضافه شود
+import 'package:iris_tools/widgets/keepAliveWrap.dart';
+import 'package:switch_tab/switch_tab.dart';
 
 class SupportPlanSheet extends StatefulWidget {
+  final List<SupportPlanModel> planList;
 
   const SupportPlanSheet({
     Key? key,
+    required this.planList,
   }) : super(key: key);
 
   @override
@@ -27,15 +24,14 @@ class SupportPlanSheet extends StatefulWidget {
 }
 ///==================================================================================================
 class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
-  Requester requester = Requester();
-  int optionSelectedIdx = 0;
-  int timeSelectedIdx = 1;
-  int minutes = 10;
+  PageController pageCtr = PageController(keepPage: true);
   late ScrollController srcCtr;
+  int optionSelectedIdx = -1;
+  int timeScrollSelectedIdx = 0;
+  int minutes = 0;
 
   @override
   void dispose(){
-    requester.dispose();
     super.dispose();
   }
 
@@ -45,12 +41,6 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
 
     srcCtr = ScrollController();
     srcCtr.addListener(scrollListener);
-
-    addPostOrCall(fn: (){
-      srcCtr.jumpTo(timeSelectedIdx * 18); // 18 is height
-      optionSelectedIdx = 0;
-      assistCtr.updateHead();
-    });
   }
 
   @override
@@ -77,184 +67,38 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
                         children: [
                           Image.asset(AppImages.selectLevelIco2, width: 18),
                           SizedBox(width: 8),
-                          Text('پنل\u200cهای پشتیبانی', style: TextStyle(fontWeight: FontWeight.w700)),
+                          Text('خرید زمان', style: TextStyle(fontWeight: FontWeight.w700)),
                         ],
                       ),
                       SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Text('لطفا یکی از پنل های زیر را انتخاب کنید یا مدت زمان مورد نیاز خود را جهت خرید انتخاب کنید',
-                            style: TextStyle(fontSize: 12, height: 1.4)),
-                      ),
 
-                      SizedBox(height: 10),
-                      GestureDetector(
-                        onTap: (){
-                          onOptionClick(0, 1);
-                        },
-                        child: Card(
-                          color: Colors.grey.shade100,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
-                            child: Row(
-                              children: [
-                                Builder(
-                                    builder: (ctx){
-                                      if(optionSelectedIdx == 0){
-                                        return getSelectedBox();
-                                      }
-
-                                      return getEmptyBox();
-                                    }
-                                ),
-
-                                const SizedBox(width: 18),
-                                Text('پلن 10 دقیقه ای'),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      GestureDetector(
-                        onTap: (){
-                          onOptionClick(1, 3);
-                        },
-                        child: Card(
-                          color: Colors.grey.shade100,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
-                            child: Row(
-                              children: [
-                                Builder(
-                                    builder: (ctx){
-                                      if(optionSelectedIdx == 1){
-                                        return getSelectedBox();
-                                      }
-
-                                      return getEmptyBox();
-                                    }
-                                ),
-
-                                const SizedBox(width: 18),
-                                Text('پلن 20 دقیقه ای'),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      GestureDetector(
-                        onTap: (){
-                          onOptionClick(2, 5);
-                        },
-                        child: Card(
-                          color: Colors.grey.shade100,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
-                            child: Row(
-                              children: [
-                                Builder(
-                                    builder: (ctx){
-                                      if(optionSelectedIdx == 2){
-                                        return getSelectedBox();
-                                      }
-
-                                      return getEmptyBox();
-                                    }
-                                ),
-
-                                const SizedBox(width: 18),
-                                Text('پلن 30 دقیقه ای'),
-                              ],
-                            ),
-                          ),
+                      SizedBox(
+                        height: 60,
+                        child: SwitchTab(
+                          shape: SwitchTabShape.rectangle,
+                          backgroundColour: AppColors.red,
+                          thumbColor: Colors.white,
+                          onValueChanged: (idx){
+                            pageCtr.animateToPage(idx, duration: Duration(milliseconds: 500), curve: Curves.linear);
+                          }, text: [
+                          'طرح تشویقی',
+                          'زمان دلخواه',
+                          ],
                         ),
                       ),
 
                       SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Text('  یا  ').color(AppColors.red),
-                          Expanded(child: Divider(endIndent: 6, color: Colors.black)),
-                        ],
-                      ),
 
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
+                      SizedBox(
+                        height: 150,
+                          child: PageView(
+                            controller: pageCtr,
+                            physics: NeverScrollableScrollPhysics(),
                             children: [
-                              SizedBox(width: 6),
-                              Image.asset(AppImages.watchIco, width: 14),
-                              SizedBox(width: 6),
-                              Text('زمان مورد نظر خود را انتخاب کنید', style: TextStyle(fontSize: 12)),
+                              getPage1(),
+                              getPage2(),
                             ],
-                          ),
-
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 40,
-                                height: 50,
-                                child: Stack(
-                                  children: [
-                                    Center(
-                                      child: DecoratedBox(
-                                        decoration: BoxDecoration(
-                                            color: AppColors.red.withAlpha(50),
-                                            borderRadius: BorderRadius.circular(4)
-                                        ),
-                                        child: SizedBox(
-                                          width: 50,
-                                          height: 20,
-                                        ),
-                                      ),
-                                    ),
-                                    ListWheelScrollView.useDelegate(
-                                      controller: srcCtr,
-                                      useMagnifier: true,
-                                      magnification: 1.4,
-                                      itemExtent: 18,
-                                      onSelectedItemChanged: (x){
-                                        timeSelectedIdx = x;
-                                        optionSelectedIdx = -1;
-
-                                        assistCtr.updateHead();
-                                      },
-                                      childDelegate: ListWheelChildBuilderDelegate(
-                                        childCount: 12,
-                                        builder: (_, index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(top: 3),
-                                            child: Text('${(index+1)*5}',
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  color: timeSelectedIdx == index? AppColors.red : Colors.black
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              SizedBox(width: 4),
-                              Text('دقیقه'),
-
-                              SizedBox(width: 10),
-                            ],
-                          ),
-                        ],
+                          )
                       ),
 
                       SizedBox(height: 10),
@@ -263,7 +107,7 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
                         child: SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                              onPressed: requestFreeTimes,
+                              onPressed: (){},
                               child: Text('ادامه خرید')
                           ),
                         ),
@@ -278,6 +122,172 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
     );
   }
 
+  Widget getPage1(){
+    if(widget.planList.isEmpty){
+      return Center(
+        child: Text('طرحی یافت نشد'),
+      );
+    }
+
+    return Padding(
+        padding: EdgeInsets.all(2),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Text('لطفا یکی از طرح های زیر را انتخاب کنید ',
+                style: TextStyle(fontSize: 12)
+            ),
+          ),
+
+          SizedBox(height: 15),
+
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.planList.length,
+                itemBuilder: itemBuilder
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget getPage2(){
+    return KeepAliveWrap(
+      child: Padding(
+          padding: EdgeInsets.all(2),
+        child: Column(
+          children: [
+            SizedBox(height: 25),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(width: 6),
+                    Image.asset(AppImages.watchIco, width: 14),
+                    SizedBox(width: 6),
+                    Text('زمان مورد نظر خود را انتخاب کنید', style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 40,
+                      height: 50,
+                      child: Stack(
+                        children: [
+                          Center(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                  color: AppColors.red.withAlpha(50),
+                                  borderRadius: BorderRadius.circular(4)
+                              ),
+                              child: SizedBox(
+                                width: 50,
+                                height: 20,
+                              ),
+                            ),
+                          ),
+                          ListWheelScrollView.useDelegate(
+                            controller: srcCtr,
+                            useMagnifier: true,
+                            magnification: 1.4,
+                            itemExtent: 18,
+                            onSelectedItemChanged: (x){
+                              //timeSelectedIdx = x;
+
+                              //assistCtr.updateHead();
+                            },
+                            childDelegate: ListWheelChildBuilderDelegate(
+                              childCount: 12,
+                              builder: (_, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 3),
+                                  child: Text('${(index+1)*5}',
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        color: timeScrollSelectedIdx == index? AppColors.red : Colors.black
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(width: 4),
+                    Text('دقیقه'),
+
+                    SizedBox(width: 10),
+                  ],
+                ),
+              ],
+            ),
+
+            SizedBox(height: 20),
+
+            Row(
+              textDirection: TextDirection.ltr,
+              children: [
+                Text('0 تومان')
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget itemBuilder(BuildContext _, int idx){
+    final itm = widget.planList[idx];
+
+    return GestureDetector(
+      onTap: (){
+        onOptionClick(idx, itm);
+      },
+      child: Card(
+        color: Colors.grey.shade100,
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Row(
+                  children: [
+                    Builder(
+                        builder: (ctx){
+                          if(optionSelectedIdx == idx){
+                            return getSelectedBox();
+                          }
+
+                          return getEmptyBox();
+                        }
+                    ),
+
+                    const SizedBox(width: 18),
+                    Flexible(child: Text('${itm.title}  (${itm.minutes} دقیقه)')),
+                  ],
+                ),
+              ),
+
+              Text(CurrencyTools.formatCurrency(itm.amount)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget getEmptyBox(){
     return Image.asset(AppImages.emptyBoxIco, height: 15);
   }
@@ -288,63 +298,26 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
 
   void scrollListener() {
     optionSelectedIdx = -1;
+
     final a2 = srcCtr.offset / 18;  //18 is height
 
     if(a2.round() <= (a2+ 0.15).round()){
-      timeSelectedIdx = a2.round();
-      minutes = (timeSelectedIdx+1) * 5;
+      timeScrollSelectedIdx = a2.round();
+      minutes = (timeScrollSelectedIdx+1) * 5;
     }
-    else {
+    /*else {
       timeSelectedIdx = -1;
       minutes = 0;
-    }
+    }*/
 
     assistCtr.updateHead();
   }
 
-  void onOptionClick(int idx, int num) {
-    srcCtr.jumpTo(num*18);
-    minutes = (num+1) * 5;
-
+  void onOptionClick(int idx, SupportPlanModel model) {
+    minutes = model.minutes;
     optionSelectedIdx = idx;
+    timeScrollSelectedIdx = -1;
+
     assistCtr.updateHead();
-  }
-
-  void requestFreeTimes(){
-    requester.httpRequestEvents.onAnyState = (req) async {
-      await hideLoading();
-    };
-
-    requester.httpRequestEvents.onFailState = (req, res) async {
-      String msg = 'خطایی رخ داده است';
-
-      if(res != null && res.data != null){
-        final js = JsonHelper.jsonToMap(res.data)?? {};
-
-        msg = js['message']?? msg;
-      }
-
-      AppSnack.showInfo(context, msg);
-    };
-
-    requester.httpRequestEvents.onStatusOk = (req, jsData) async {
-      final data = jsData[Keys.data];
-
-      final List<HoursOfSupportModel> list = [];
-
-      if(data is List){
-        for(final k in data){
-          final g = HoursOfSupportModel.fromMap(k);
-          list.add(g);
-        }
-      }
-
-      AppRoute.popTopView(context, data: list);
-    };
-
-    showLoading();
-    requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/supprtTimes?RequiredMinutes=$minutes');
-    requester.request(context);
   }
 }

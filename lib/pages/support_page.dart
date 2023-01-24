@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app/pages/timetable_page.dart';
 import 'package:app/services/pages_event_service.dart';
 import 'package:app/structures/enums/supportSessionStatus.dart';
+import 'package:app/structures/models/supportModels/supportPlanModel.dart';
 import 'package:app/structures/models/supportModels/supportSessionModel.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -236,14 +237,14 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                         children: [
                           ActionChip(
                             label: Text('درخواست پشتیبانی'),
-                            onPressed: requesterSupport,
+                            onPressed: gotoSupportRequestPage,
                             visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
 
                           ActionChip(
                             label: Text('خرید زمان'),
-                            onPressed: buySessionTimeSheet,
+                            onPressed: showBuySessionTimeSheet,
                             visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
@@ -513,16 +514,33 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     );
   }
   ///-------------------------------------------------------------------------
-  void requesterSupport() {
+  void gotoSupportRequestPage() {
     final page = TimetablePage();
 
     AppRoute.push(context, page);
   }
 
-  void buySessionTimeSheet() async {
+  void showBuySessionTimeSheet() async {
+    final js = await requestSupportTimePlans();
+
+    if(js == null){
+      return;
+    }
+
+    List<SupportPlanModel> pList = [];
+
+    for(final t in js){
+      final p = SupportPlanModel.fromMap(t);
+      pList.add(p);
+    }
+
+    //todo
+    pList.add(SupportPlanModel()..minutes =5..id = '14'..amount = 2000..title = 'طرح طلایی');
+    pList.add(SupportPlanModel()..minutes =25..id = '15'..amount = 80000..title = 'طرح نقره ای');
+
     final res = await AppSheet.showSheetCustom(
         context,
-        builder: (_) => SupportPlanSheet(),
+        builder: (_) => SupportPlanSheet(planList: pList),
         routeName: 'buySessionTimeSheet',
       isDismissible: true,
       isScrollControlled: true,
@@ -752,6 +770,42 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/tickets?Page=$ticketPage');
+    requester.request(context);
+
+    return co.future;
+  }
+
+  Future<List?> requestSupportTimePlans() async {
+    final co = Completer<List?>();
+    final requester = Requester();
+
+    requester.httpRequestEvents.onAnyState = (req) async {
+      await hideLoading();
+      requester.dispose();
+    };
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      String msg = 'خطایی رخ داده است';
+
+      if(res != null && res.data != null){
+        final js = JsonHelper.jsonToMap(res.data)?? {};
+
+        msg = js['message']?? msg;
+      }
+
+      AppSnack.showInfo(context, msg);
+      co.complete(null);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
+      final data = res['data'];
+
+      co.complete(data);
+    };
+
+    showLoading();
+    requester.methodType = MethodType.get;
+    requester.prepareUrl(pathUrl: '/shop/supportPackages');
     requester.request(context);
 
     return co.future;

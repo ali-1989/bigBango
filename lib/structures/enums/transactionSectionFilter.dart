@@ -1,8 +1,10 @@
 
 enum TransactionSectionFilter {
   unKnow(-1),
-  removable(1),
-  unermovable(2);
+  chargeWallet(1),
+  withdrawWallet(2),
+  lessonPurchase(3),
+  supportPurchase(4);
 
   final int number;
 
@@ -31,9 +33,13 @@ enum TransactionSectionFilter {
   String getTypeHuman(){
     switch(number){
       case 1:
-        return 'قابل برداشت';
+        return 'شارژ کیف پول';
       case 2:
-        return 'غیرقابل برداشت';
+        return 'برداشت از حساب';
+      case 3:
+        return 'خرید درس';
+      case 4:
+        return 'خرید پشتیبانی';
     }
 
     return 'ن م';

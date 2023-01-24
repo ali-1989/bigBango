@@ -1,8 +1,11 @@
 
 enum TransactionStatusFilter {
   unKnow(-1),
-  removable(1),
-  unermovable(2);
+  unpaid(1),
+  paid(2),
+  inProgress(3),
+  rejected(4),
+  cancelled(5);
 
   final int number;
 
@@ -31,9 +34,15 @@ enum TransactionStatusFilter {
   String getTypeHuman(){
     switch(number){
       case 1:
-        return 'قابل برداشت';
+        return 'پرداخت نشده';
       case 2:
-        return 'غیرقابل برداشت';
+        return 'پرداخت شده';
+      case 3:
+        return 'در حال بررسی';
+      case 4:
+        return 'رد شده';
+      case 5:
+        return 'لغو شده';
     }
 
     return 'ن م';

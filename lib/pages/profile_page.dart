@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/services/file_upload_service.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
+import 'package:app/structures/enums/genderType.dart';
 import 'package:app/structures/models/mediaModel.dart';
+import 'package:app/tools/app/appInfoDisplay.dart';
 import 'package:app/tools/deviceInfoTools.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +21,7 @@ import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/icon/circularIcon.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:persian_modal_date_picker/button.dart';
@@ -41,6 +44,7 @@ import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/dateTools.dart';
 import 'package:app/tools/permissionTools.dart';
+import 'package:mask_input_formatter/mask_input_formatter.dart';
 
 class ProfilePage extends StatefulWidget {
   final UserModel userModel;
@@ -59,6 +63,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
   TextEditingController familyTextCtr = TextEditingController();
   TextEditingController emailTextCtr = TextEditingController();
   TextEditingController mobileTextCtr = TextEditingController();
+  TextEditingController ibanTextCtr = TextEditingController();
+  late MaskInputFormatter ibanFormatter;
   late UserModel user;
   List<DropdownMenuItem<int>> genderList = [];
   int? currentGender;
@@ -76,19 +82,18 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
     user = widget.userModel;
 
-    Map<String, int> genderText = {
-      'مرد' : 1,
-      'زن' : 0,
-    };
+    List<GenderType> genders = GenderType.values.where((element) => element.number > -1).toList();
 
-    final temp = genderText.map((k, v){
-      return MapEntry<int, DropdownMenuItem<int>>(v, DropdownMenuItem<int>(value: v, child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Text(k),
-      )));
-    }).values.toList();
+    final temp = genders.map<DropdownMenuItem<int>>((k){
+      return DropdownMenuItem<int>(value: k.number, child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Text(k.getTypeHuman()),
+      ));
+    }).toList();
 
     genderList.addAll(temp);
+
+    ibanFormatter = MaskInputFormatter(mask: '## #### #### #### #### ######');
 
     inputDecoration = InputDecoration(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
@@ -112,6 +117,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     familyTextCtr.dispose();
     emailTextCtr.dispose();
     mobileTextCtr.dispose();
+    ibanTextCtr.dispose();
     requester.dispose();
 
     super.dispose();
@@ -360,6 +366,44 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                       ],
                     ),
 
+                    const SizedBox(height: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text('شماره شبا').color(Colors.grey),
+                            SizedBox(width: 5),
+
+                            GestureDetector(
+                              onTap: onIbanQuestionMarkClick,
+                              child: CircularIcon(
+                                size: 15,
+                                icon: AppIcons.questionMark,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+
+                        Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: TextField(
+                              controller: ibanTextCtr,
+                              inputFormatters: [ibanFormatter],
+                              onChanged: (t){
+                                userChangeInfo['iban'] = t;
+                                compareChanges();
+                              },
+                              decoration: inputDecoration.copyWith(
+                                prefixIcon: Text('  IR ').alpha(),
+                                prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
+                              )
+                          ),
+                        ),
+                      ],
+                    ),
+
                     SizedBox(height: 20),
 
                     ElevatedButton(
@@ -383,6 +427,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     familyTextCtr.text = user.lastName?? '';
     emailTextCtr.text = user.email?? '';
     mobileTextCtr.text = user.mobile?? '';
+    ibanTextCtr.text = user.iban?? '';
 
     currentGender = user.gender;
     birthDate = user.birthDate;
@@ -395,6 +440,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     userFixInfo[Keys.lastName] = familyTextCtr.text;
     userFixInfo[Keys.mobileNumber] = mobileTextCtr.text;
     userFixInfo['email'] = emailTextCtr.text;
+    userFixInfo['iban'] = ibanTextCtr.text;
     userFixInfo[Keys.gender] = currentGender;
 
     if(birthDate != null) {
@@ -596,6 +642,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
   void uploadAvatar(String filePath) async {
     showLoading(canBack: false);
     final uploadRes = await FileUploadService.uploadFiles([File(filePath)], FileUploadType.avatar);
+
     bool isOk = false;
     String? message;
 
@@ -668,6 +715,10 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     requester.prepareUrl(pathUrl: '/profile/deleteAvatar');
 
     requester.request(context, false);
+  }
+
+  void onIbanQuestionMarkClick(){
+    AppInfoDisplay.showMiniInfo(context, Text('شماره شبا برای برگرداندن اعتبار کیف پول به شما (در صورت نیاز) استفاده می شود'));
   }
 
   void sendChanges(){
@@ -751,6 +802,9 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     final name = nameTextCtr.text.trim();
     final family = familyTextCtr.text.trim();
     final email = emailTextCtr.text.trim();
+    var iban = ibanTextCtr.text.trim();
+
+    iban = iban.replaceAll(' ', '');
 
     requester.httpRequestEvents.onAnyState = (req) async {
       await hideLoading();
@@ -784,9 +838,16 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       final user = Session.getLastLoginUser()!;
       user.name = name;
       user.lastName = family;
-      user.email = email;
       user.gender = currentGender;
       user.birthDate = birthDate;
+
+      if(iban.isNotEmpty) {
+        user.iban = iban;
+      }
+
+      if(email.isNotEmpty){
+        user.email = email;
+      }
 
       Session.sinkUserInfo(user);
       prepare();
@@ -800,6 +861,10 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     js['lastName'] = family;
     js['gender'] = currentGender;
     js['birthDate'] = DateHelper.dateOnlyToStamp(birthDate!);
+
+    if(iban.isNotEmpty) {
+      js['iban'] = 'IR$iban';
+    }
 
     if(email.isNotEmpty){
       js['email'] = email;
@@ -826,7 +891,6 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
     final js = <String, dynamic>{};
     js['avatarId'] = media.id;
-
 
     requester.bodyJson = js;
     requester.prepareUrl(pathUrl: '/profile/update');

@@ -86,6 +86,7 @@ class AppIcons {
   static const IconData zoomIn = Icons.zoom_in_map;
   static const IconData share = Icons.share;
   static const IconData history = Icons.history;
+  static const IconData questionMark = Icons.question_mark;
   static const IconData lastSeenClock = CommunityMaterialIcons.history;
   static const IconData heartSolid = CommunityMaterialIcons.heart;
   static const IconData heart = CommunityMaterialIcons.heart_outline;
