@@ -1,4 +1,4 @@
-import 'package:app/system/publicAccess.dart';
+import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/urlHelper.dart';
@@ -112,7 +112,7 @@ class _AboutPageState extends StateBase<AboutPage> {
               radius: 0,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Text('${PublicAccess.contacts['description']}'),
+                child: Text('${SystemParameterManager.systemParameters.contacts['description']}'),
               ),
             ),
           ),
@@ -145,9 +145,9 @@ class _AboutPageState extends StateBase<AboutPage> {
                             padding: EdgeInsets.zero,
                           ),
                             onPressed: (){
-                             UrlHelper.launchLink('tel://${PublicAccess.contacts['supportPhoneNumber']}');
+                             UrlHelper.launchLink('tel://${SystemParameterManager.systemParameters.contacts['supportPhoneNumber']}');
                             },
-                            child: Text('${PublicAccess.contacts['supportPhoneNumber']}').bold(),
+                            child: Text('${SystemParameterManager.systemParameters.contacts['supportPhoneNumber']}').bold(),
                         )
                       ],
                     ),
@@ -165,7 +165,7 @@ class _AboutPageState extends StateBase<AboutPage> {
                     SizedBox(width: 2),
                     TextButton(
                         onPressed: (){
-                          UrlHelper.launchLink('${PublicAccess.contacts['conditionTermsLink']}');//http://
+                          UrlHelper.launchLink('${SystemParameterManager.systemParameters.contacts['conditionTermsLink']}');//http://
                         },
                         child: Text('مشاهده قوانین')
                     ),

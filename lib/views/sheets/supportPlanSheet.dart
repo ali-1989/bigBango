@@ -1,5 +1,9 @@
+import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/models/supportModels/supportPlanModel.dart';
+import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/currencyTools.dart';
+import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -107,7 +111,7 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
                         child: SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                              onPressed: (){},
+                              onPressed: onBuyClick,
                               child: Text('ادامه خرید')
                           ),
                         ),
@@ -236,7 +240,11 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
             Row(
               textDirection: TextDirection.ltr,
               children: [
-                Text('0 تومان')
+                CustomCard(
+                color: AppColors.greenTint,
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    child: Text('${calcAmount()} تومان')
+                )
               ],
             ),
           ],
@@ -257,7 +265,7 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 7),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -280,7 +288,12 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
                 ),
               ),
 
-              Text(CurrencyTools.formatCurrency(itm.amount)),
+              Row(
+                children: [
+                  Text(CurrencyTools.formatCurrency(itm.amount)),
+                  Text('  تومان').fsR(-4),
+                ],
+              ),
             ],
           ),
         ),
@@ -294,6 +307,14 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
 
   Widget getSelectedBox(){
     return Image.asset(AppImages.selectLevelIco, height: 15);
+  }
+
+  int calcAmount(){
+    if(timeScrollSelectedIdx < 0){
+      return 0;
+    }
+
+    return SystemParameterManager.getAmountOf1Minutes() * minutes;
   }
 
   void scrollListener() {
@@ -319,5 +340,14 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
     timeScrollSelectedIdx = -1;
 
     assistCtr.updateHead();
+  }
+
+  void onBuyClick(){
+    if(minutes < 1){
+      AppSheet.showSheetOk(context, 'لطفا یکی از طرح ها یا زمان مورد نظر را انتخاب کنید');
+      return;
+    }
+
+    AppRoute.popTopView(context, data: minutes);
   }
 }

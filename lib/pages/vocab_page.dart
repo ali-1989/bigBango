@@ -684,7 +684,7 @@ class _VocabPageState extends StateBase<VocabPage> {
   }
 
   void gotoNextPart(){
-    final page = PublicAccess.getNextPart(widget.injector.lessonModel);
+    final page = PublicAccess.getNextPartOfLesson(widget.injector.lessonModel);
 
     if(page != null) {
       AppRoute.replace(context, page);

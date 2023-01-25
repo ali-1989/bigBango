@@ -1,19 +1,14 @@
 import 'dart:async';
 
 import 'package:app/managers/settingsManager.dart';
-import 'package:app/structures/models/courselevelModel.dart';
 import 'package:app/structures/models/towReturn.dart';
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:dio/dio.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
-import 'package:iris_tools/api/system.dart';
 
-import 'package:app/constants.dart';
-import 'package:app/managers/versionManager.dart';
 import 'package:app/structures/models/countryModel.dart';
-import 'package:app/structures/models/versionModel.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/app/appRoute.dart';
@@ -127,60 +122,6 @@ class LoginService {
       }
 
       result.complete(TwoReturn(r1: request.getBodyAsJson()));
-      return null;
-    });
-
-    return result.future;
-  }
-
-  static Future<HttpRequester?> requestOnSplash() async {
-    final http = HttpItem();
-    final result = Completer<HttpRequester?>();
-
-    var os = 1;
-
-    if(System.isIOS()){
-      os = 2;
-    }
-
-    http.fullUrl = '${PublicAccess.serverApi}/primitiveOptions?CurrentVersion=${Constants.appVersionName}&OperationSystem=$os';
-    http.method = 'GET';
-
-    final request = AppHttpDio.send(http);
-
-    var f = request.response.catchError((e){
-      result.complete(null);
-    });
-
-    f = f.then((Response? response){
-      if(response == null || response.statusCode == null) {
-        result.complete(null);
-        return;
-      }
-
-      final js = JsonHelper.jsonToMap(response.data);
-      final data = js?['data']?? {};
-
-      final courseLevels = data['courseLevels'];
-
-      if(courseLevels is List){
-        for(final k in courseLevels){
-          PublicAccess.courseLevels.add(CourseLevelModel.fromMap(k));
-        }
-      }
-
-      PublicAccess.advertisingVideos = data['advertisingVideos']?? {};
-      PublicAccess.contacts = data['contact']?? {};
-      final versionModel = VersionModel.fromMap(data['version']?? {});
-
-      /* test VersionModel versionModel = VersionModel();
-      versionModel.directLink = 'http://google.com';
-      versionModel.restricted = false;
-      versionModel.newVersionName = '2.0.1';*/
-
-      VersionManager.checkAppHasNewVersion(AppRoute.getLastContext()!, versionModel);
-
-      result.complete(request);
       return null;
     });
 

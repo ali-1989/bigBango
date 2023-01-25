@@ -1,5 +1,5 @@
+import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/services/event_dispatcher_service.dart';
-import 'package:app/system/publicAccess.dart';
 import 'package:app/system/session.dart';
 import 'package:app/views/homeComponents/layoutComponent.dart';
 import 'package:flutter/material.dart';
@@ -127,7 +127,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                               visualDensity: VisualDensity.compact,
                               padding: EdgeInsets.zero
                           ),
-                          child: Text(PublicAccess.getCourseLevelById(Session.getLastLoginUser()?.courseLevel?.id?? 1)?.name?? '-'),
+                          child: Text(SystemParameterManager.getCourseLevelById(Session.getLastLoginUser()?.courseLevel?.id?? 1)?.name?? '-'),
                         ),
                         const SizedBox(width: 5),
                         Image.asset(AppImages.levelBadgeIco),

@@ -1,3 +1,4 @@
+import 'package:app/managers/systemParameterManager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:im_animations/im_animations.dart';
@@ -8,7 +9,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/enums/enums.dart';
-import 'package:app/system/publicAccess.dart';
+
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appColors.dart';
@@ -321,7 +322,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
             body: VideoPlayerView(
               videoSourceType: VideoSourceType.network,
               autoPlay: true,
-              srcAddress: PublicAccess.advertisingVideos['determiningCourseLevel']?? '',
+              srcAddress: SystemParameterManager.systemParameters.advertisingVideos['determiningCourseLevel']?? '',
             ),
           );
         }
@@ -355,13 +356,13 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
 
     requester.httpRequestEvents.onStatusOk = (req, data) async {
       final user = Session.getLastLoginUser()!;
-      user.courseLevel = PublicAccess.getCourseLevelById(1);
+      user.courseLevel = SystemParameterManager.getCourseLevelById(1);
       Session.sinkUserInfo(user);
 
       AppBroadcast.reBuildMaterial();
     };
 
-    requester.bodyJson = {'courseLevelId' : PublicAccess.getCourseLevelById(1)};
+    requester.bodyJson = {'courseLevelId' : SystemParameterManager.getCourseLevelById(1)};
     requester.prepareUrl(pathUrl: '/profile/update');
     requester.methodType = MethodType.put;
 

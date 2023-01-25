@@ -1,7 +1,8 @@
+import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/models/courselevelModel.dart';
+import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:app/structures/models/userModel.dart';
-import 'package:app/system/publicAccess.dart';
+
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appRoute.dart';
@@ -134,7 +135,7 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
   List<Widget> buildChoice(){
     List<Widget> res = [];
 
-    for(final k in PublicAccess.courseLevels){
+    for(final k in SystemParameterManager.systemParameters.courseLevels){
       final itm = GestureDetector(
         onTap: (){
           selectedLevel = k;

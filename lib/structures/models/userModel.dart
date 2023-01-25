@@ -1,6 +1,6 @@
-import 'package:app/structures/models/courselevelModel.dart';
+import 'package:app/managers/systemParameterManager.dart';
+import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
-import 'package:app/system/publicAccess.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
 import 'package:app/services/jwt_service.dart';
@@ -35,7 +35,7 @@ class UserModel {
     gender = map[Keys.gender];
     email = map['email'];
     iban = map['iban'];
-    courseLevel = PublicAccess.getCourseLevelById(map['courseLevelId']?? 0);
+    courseLevel = SystemParameterManager.getCourseLevelById(map['courseLevelId']?? 0);
 
     if(map[Keys.token] is Map) {
       token = Token.fromMap(map[Keys.token]);

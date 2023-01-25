@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:app/pages/grammar_page.dart';
 import 'package:app/pages/idioms_page.dart';
 import 'package:app/pages/listening_page.dart';
@@ -6,15 +9,17 @@ import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
-import 'package:app/structures/models/courselevelModel.dart';
+import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
+import 'package:app/structures/models/towReturn.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
 
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
 import 'package:iris_tools/api/system.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:app/constants.dart';
 import 'package:app/managers/settingsManager.dart';
@@ -23,6 +28,7 @@ import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appRoute.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class PublicAccess {
   PublicAccess._();
@@ -30,15 +36,7 @@ class PublicAccess {
   static late Logger logger;
   static late Reporter reporter;
   static String serverApi = SettingsManager.settingsModel.httpAddress;
-  /// {id: 1, name: پایه, order: 1}, {id: 2, name: مبتدی, order: 2}, {id: 3, name: متوسط, order: 3}, {id: 4, name: پیشرفته, order: 4}
-  static List<CourseLevelModel> courseLevels = [];
-  /// login, determiningCourseLevel
-  static Map advertisingVideos = {};
-  /** "supportPhoneNumber": "031-32355205",
-    "supportEmail": "support@bigbango.ir",
-   "conditionTermsLink": "google.com",
-   "description": "بیگ‌‌بنگو اپلیکیشن آموزش زبان"*/
-  static Map contacts = {};
+
   static ClassicFooter classicFooter = const ClassicFooter(
     loadingText: '',
     idleText: '',
@@ -74,47 +72,6 @@ class PublicAccess {
     return res;
   }
 
-  static WidgetsBinding getAppWidgetsBinding() {
-    return WidgetsBinding.instance;
-  }
-
-  static CourseLevelModel? getCourseLevelById(int id){
-    for(final x in PublicAccess.courseLevels){
-      if(x.id == id){
-        return x;
-      }
-    }
-
-    return null;
-  }
-
-  /*static UpperLower findUpperLower(List<DateFieldMixin> list, bool isAsc){
-    final res = UpperLower();
-
-    if(list.isEmpty){
-      return res;
-    }
-
-    DateTime lower = list[0].date!;
-    DateTime upper = list[0].date!;
-
-    for(final x in list){
-      var c = DateHelper.compareDates(x.date, lower, asc: isAsc);
-
-      if(c < 0){
-        upper = x.date!;
-      }
-
-      c = DateHelper.compareDates(x.date, upper, asc: isAsc);
-
-      if(c > 0){
-        lower = x.date!;
-      }
-    }
-
-    return UpperLower()..lower = lower..upper = upper;
-  }*/
-
   static void sortList(List<DateFieldMixin> list, bool isAsc){
     if(list.isEmpty){
       return;
@@ -127,28 +84,7 @@ class PublicAccess {
     list.sort(sorter);
   }
 
-  static Map<String, dynamic> getHeartMap() {
-    final heart = <String, dynamic>{
-      'heart': 'Heart',
-      //Keys.deviceId: DeviceInfoTools.deviceId,
-      Keys.languageIso: System.getLocalizationsLanguageCode(AppRoute.getLastContext()!),
-      'app_version_code': Constants.appVersionCode,
-      'app_version_name': Constants.appVersionName,
-      'app_name': Constants.appName,
-    };
-
-    final users = [];
-
-    for(var um in Session.currentLoginList) {
-      users.add(um.userId);
-    }
-
-    heart['users'] = users;
-
-    return heart;
-  }
-
-  static Widget? getNextPart(LessonModel lessonModel){
+  static Widget? getNextPartOfLesson(LessonModel lessonModel){
     Widget? page;
 
     if(lessonModel.vocabSegmentModel != null && lessonModel.vocabSegmentModel!.hasIdioms){
@@ -175,12 +111,87 @@ class PublicAccess {
   static void printObj(Object obj){
     print('${'*' * 40}\n ${obj.toString()} \n${'*' * 50}');
   }
-}
-///===================================================================================
-class UpperLower {
-  DateTime? upper;
-  DateTime? lower;
 
-  String? get upperAsTS => DateHelper.toTimestampNullable(upper);
-  String? get lowerAsTS => DateHelper.toTimestampNullable(lower);
+  static Future<TwoReturn<Map, Response>> publicApiCaller(String url, MethodType methodType, Map<String, dynamic>? body){
+    Requester requester = Requester();
+    Completer<TwoReturn<Map, Response>> res = Completer();
+
+    requester.httpRequestEvents.onFailState = (req, response) async {
+      res.complete(TwoReturn(r2: response));
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, data) async {
+      final js = JsonHelper.jsonToMap(data)!;
+
+      res.complete(TwoReturn(r1: js));
+    };
+
+    if(body != null){
+      requester.bodyJson = body;
+    }
+
+    requester.prepareUrl(pathUrl: url);
+    requester.methodType = methodType;
+
+    requester.request(null, false);
+    return res.future;
+  }
+
+  static Future<int?> requestUserBalance() async {
+    final r = await publicApiCaller('/wallet/balance', MethodType.get, null);
+
+    if(r.hasResult1()){
+      final data = r.result1!['data'];
+      return data['amount'];
+    }
+    else {
+      return null;
+    }
+  }
+
+  static Future<int?> requestUserRemainingMinutes() async {
+    final r = await publicApiCaller('/appointments/remainingMinutes', MethodType.get, null);
+
+    if(r.hasResult1()){
+      final data = r.result1!['data'];
+      return max(data['minutes'], 0);
+    }
+    else {
+      return null;
+    }
+  }
 }
+
+
+/*static WidgetsBinding getAppWidgetsBinding() {
+    return WidgetsBinding.instance;
+  }*/
+
+
+
+/*static UpperLower findUpperLower(List<DateFieldMixin> list, bool isAsc){
+    final res = UpperLower();
+
+    if(list.isEmpty){
+      return res;
+    }
+
+    DateTime lower = list[0].date!;
+    DateTime upper = list[0].date!;
+
+    for(final x in list){
+      var c = DateHelper.compareDates(x.date, lower, asc: isAsc);
+
+      if(c < 0){
+        upper = x.date!;
+      }
+
+      c = DateHelper.compareDates(x.date, upper, asc: isAsc);
+
+      if(c > 0){
+        lower = x.date!;
+      }
+    }
+
+    return UpperLower()..lower = lower..upper = upper;
+  }*/

@@ -548,9 +548,31 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       backgroundColor: Colors.transparent,
     );
 
-    if(res is List){
-
+    if(res is int){
+      showSelectPaymentMethodSheet();
     }
+  }
+
+  void showSelectPaymentMethodSheet() async {
+    showLoading();
+    final balance = await PublicAccess.requestUserBalance();
+    await hideLoading();
+
+    if(balance == null){
+      AppSnack.showError(context, 'متاسفانه خطایی رخ داده است');
+      return;
+    }
+
+    AppSheet.showSheetCustom(
+      context,
+      builder: (_) => AddTicketSheet(ticketRoles: ticketRoles),
+      routeName: 'showAddTicketSheet',
+      isScrollControlled: true,
+      contentColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+    );
+
+    //PagesEventService.getEventBus(SupportPage.pageEventId).addEvent(SupportPage.eventFnId$addTicket, onAddTicketEventCall);
   }
 
   void showAddTicketSheet() async {

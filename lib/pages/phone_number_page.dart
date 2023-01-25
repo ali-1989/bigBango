@@ -1,3 +1,4 @@
+import 'package:app/managers/systemParameterManager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:android_sms_retriever/android_sms_retriever.dart';
@@ -15,7 +16,7 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/system/publicAccess.dart';
+
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
@@ -210,7 +211,7 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
             body: VideoPlayerView(
               videoSourceType: VideoSourceType.network,
               autoPlay: true,
-              srcAddress: PublicAccess.advertisingVideos['login']?? '',
+              srcAddress: SystemParameterManager.systemParameters.advertisingVideos['login']?? '',
             ),
           );
         }

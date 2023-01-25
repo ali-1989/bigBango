@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/views/components/firstPageComponent.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:iris_tools/api/system.dart';
 
 import 'package:app/managers/settingsManager.dart';
 import 'package:app/managers/versionManager.dart';
-import 'package:app/services/login_service.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/system/applicationInitialize.dart';
 import 'package:app/system/session.dart';
@@ -106,7 +107,7 @@ class SplashScreenState extends StateBase<SplashPage> {
   }
 
   void connectToServer() async {
-    final serverData = await LoginService.requestOnSplash();
+    final serverData = await SystemParameterManager.requestSystemParameters();
 
     if(serverData == null){
       AppSheet.showSheetOneAction(
