@@ -24,10 +24,12 @@ import 'package:app/tools/app/appImages.dart';
 
 class TimetablePage extends StatefulWidget {
   final LessonModel? lesson;
+  final int maxUserTime;
 
   const TimetablePage({
     Key? key,
     this.lesson,
+    required this.maxUserTime,
   }) : super(key: key);
 
   @override
@@ -204,7 +206,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                           Visibility(
                             visible: dayHourList.isNotEmpty && timeSelectId != '',
                             child: ElevatedButton(
-                              onPressed: requestSupportDialog,
+                              onPressed: showConfirmSheet,
                               child: Text('ثبت درخواست پشتیبانی'),
                             ),
                           ),
@@ -398,7 +400,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
     return days.firstWhere((element) => element.dayOfMonth == currentDay);
   }
 
-  void requestSupportDialog() async {
+  void showConfirmSheet() async {
     final hour = getHourById(timeSelectId);
 
     if(hour == null){
@@ -431,8 +433,8 @@ class _TimetablePageState extends StateBase<TimetablePage> {
     FocusHelper.hideKeyboardByUnFocusRoot();
     await Future.delayed(Duration(milliseconds: 200));
 
-    final title = titleCtr.text.trim();
     final min = timeCtr.text.trim();
+    final title = titleCtr.text.trim();
 
     if(title.isEmpty){
       AppSheet.showSheetOk(context, 'موضوع را وارد کنید');
@@ -455,6 +457,11 @@ class _TimetablePageState extends StateBase<TimetablePage> {
     }
 
     final minNumber = MathHelper.clearToInt(min);
+
+    if(minNumber > widget.maxUserTime){
+      AppSheet.showSheetOk(context, 'شما حداکثر ${widget.maxUserTime} دقیقه امکان درخواست دارید. اگر زمان بیشتری نیاز دارید ابتدا زمان خود را شارژ کنید.');
+      return;
+    }
 
     if(minNumber < 5){
       AppSheet.showSheetOk(context, 'مدت زمان باید بیشتر از 5 دقیقه باشد');

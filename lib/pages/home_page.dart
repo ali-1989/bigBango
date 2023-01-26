@@ -13,8 +13,11 @@ import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
+import 'package:app/system/publicAccess.dart';
+import 'package:app/tools/app/appCache.dart';
 
 import 'package:app/tools/app/appSheet.dart';
+import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/components/selectListeningDialog.dart';
 import 'package:flutter/material.dart';
 
@@ -788,8 +791,21 @@ class HomePageState extends StateBase<HomePage> {
     requester.request(context);
   }
 
-  void requesterSupport(LessonModel lesson) {
-    final page = TimetablePage(lesson: lesson);
+  void requesterSupport(LessonModel lesson) async {
+    if(!AppCache.timeoutCache.existTimeout('a')){
+      showLoading();
+      final userTime = await PublicAccess.requestUserRemainingMinutes();
+      await hideLoading();
+
+      if(userTime == null){
+        AppSnack.showSnack$OperationFailed(context);
+        return;
+      }
+
+      AppCache.timeoutCache.addTimeout('a', Duration(minutes: 2));
+    }
+
+    final page = TimetablePage(lesson: lesson, maxUserTime: 0);
 
     AppRoute.push(context, page);
   }

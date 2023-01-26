@@ -31,7 +31,7 @@ class SystemParameterManager {
 
   static int getAmountOf1Minutes(){
     if(systemParameters.timeTableOption.isEmpty){
-      return 1000;
+      return 0;
     }
 
     return systemParameters.timeTableOption['minuteAmount'];

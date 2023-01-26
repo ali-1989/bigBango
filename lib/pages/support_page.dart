@@ -7,6 +7,7 @@ import 'package:app/structures/models/supportModels/supportPlanModel.dart';
 import 'package:app/structures/models/supportModels/supportSessionModel.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appToast.dart';
+import 'package:app/views/sheets/support@selectBuyMethodSheet.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
@@ -54,11 +55,13 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   late TextStyle tabBarStyle;
   int ticketPage = 1;
   int timetablePage = 1;
+  int? userTime;
   List<TicketRole> ticketRoles = [];
   List<TicketModel> ticketList = [];
   List<SupportSessionModel> sessionList = [];
   String assistId$Timetable = 'assistId_Timetable';
   String assistId$Ticketing = 'assistId_Ticketing';
+  String assistId$userLeftTime = 'assistId_userLeftTime';
 
   @override
   void initState(){
@@ -66,6 +69,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     assistCtr.addState(AssistController.state$loading, sectionId: assistId$Timetable);
     assistCtr.addState(AssistController.state$loading, sectionId: assistId$Ticketing);
+    assistCtr.addState(AssistController.state$loading, sectionId: assistId$userLeftTime);
 
     tabCtr = TabController(length: 2, vsync: this);
 
@@ -76,6 +80,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     requestTimeTable();
     requestTickets();
+    requestUserLeftTime();
   }
 
   @override
@@ -201,16 +206,47 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
                           Row(
                             children: [
-                              DecoratedBox(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade50,
-                                ),
-                                child: Text('20')
-                                    .wrapBoxBorder(
-                                  radius: 2,
-                                  padding: EdgeInsets.symmetric(horizontal:6, vertical: 4),
-                                  color: Colors.grey.shade600,
-                                ),
+                              Assist(
+                                  id: assistId$userLeftTime,
+                                  controller: assistCtr,
+                                  builder: (_, __, data){
+                                    if(userTime != null){
+                                      return DecoratedBox(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade50,
+                                          ),
+                                          child: Text('$userTime')
+                                            .wrapBoxBorder(
+                                          radius: 2,
+                                          padding: EdgeInsets.symmetric(horizontal:6, vertical: 4),
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      );
+                                    }
+
+                                    if(assistCtr.hasState(sectionId: assistId$userLeftTime, AssistController.state$loading)){
+                                      return SizedBox(
+                                        width: 14,
+                                        height: 14,
+                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                      );
+                                    }
+
+                                    return IconButton(
+                                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                        padding: EdgeInsets.zero,
+                                        iconSize: 17,
+                                        splashRadius: 20,
+                                        constraints: BoxConstraints.tightFor(),
+                                        onPressed: (){
+                                          assistCtr.clearStates(sectionId: assistId$userLeftTime);
+                                          assistCtr.addState(AssistController.state$loading, sectionId: assistId$userLeftTime);
+                                          assistCtr.updateAssist(assistId$userLeftTime);
+                                          requestUserLeftTime();
+                                        },
+                                        icon: Icon(AppIcons.refreshCircle, size: 17, color: AppColors.red)
+                                    );
+                                }
                               ),
                               SizedBox(width: 4),
                               Text(' دقیقه'),
@@ -237,7 +273,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                         children: [
                           ActionChip(
                             label: Text('درخواست پشتیبانی'),
-                            onPressed: gotoSupportRequestPage,
+                            onPressed: gotoSupportTimeRequestPage,
                             visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
@@ -514,8 +550,17 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     );
   }
   ///-------------------------------------------------------------------------
-  void gotoSupportRequestPage() {
-    final page = TimetablePage();
+  void gotoSupportTimeRequestPage() async {
+    if(userTime == null){
+      await requestUserLeftTime();
+
+      if(userTime == null){
+        AppSnack.showSnack$OperationFailed(context);
+        return;
+      }
+    }
+
+    final page = TimetablePage(maxUserTime: userTime!);
 
     AppRoute.push(context, page);
   }
@@ -549,11 +594,11 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     );
 
     if(res is int){
-      showSelectPaymentMethodSheet();
+      showSelectPaymentMethodSheet(res);
     }
   }
 
-  void showSelectPaymentMethodSheet() async {
+  void showSelectPaymentMethodSheet(int amount) async {
     showLoading();
     final balance = await PublicAccess.requestUserBalance();
     await hideLoading();
@@ -565,8 +610,8 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     AppSheet.showSheetCustom(
       context,
-      builder: (_) => AddTicketSheet(ticketRoles: ticketRoles),
-      routeName: 'showAddTicketSheet',
+      builder: (_) => SelectBuyMethodSheet(userBalance: balance, amount: amount),
+      routeName: 'showSelectBuyMethodSheet',
       isScrollControlled: true,
       contentColor: Colors.transparent,
       backgroundColor: Colors.transparent,
@@ -633,7 +678,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
   void showUnReserveDialog(SupportSessionModel model) {
     void fn(){
-
+      requestUnReserveTime(model);
     }
 
     AppDialogIris.instance.showYesNoDialog(
@@ -797,6 +842,18 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     return co.future;
   }
 
+  Future<void> requestUserLeftTime() async {
+    userTime = await PublicAccess.requestUserRemainingMinutes();
+
+    assistCtr.clearStates(sectionId: assistId$userLeftTime);
+
+    if(userTime != null){
+      assistCtr.addState(AssistController.state$error, sectionId: assistId$userLeftTime);
+    }
+
+    assistCtr.updateAssist(assistId$userLeftTime);
+  }
+
   Future<List?> requestSupportTimePlans() async {
     final co = Completer<List?>();
     final requester = Requester();
@@ -831,5 +888,37 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     requester.request(context);
 
     return co.future;
+  }
+
+  void requestUnReserveTime(SupportSessionModel sModel) async {
+    requester.httpRequestEvents.onAnyState = (req) async {
+      await hideLoading();
+    };
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      String msg = 'خطایی رخ داده است';
+
+      if(res != null && res.data != null){
+        final js = JsonHelper.jsonToMap(res.data)?? {};
+
+        msg = js['message']?? msg;
+      }
+
+      AppSnack.showInfo(context, msg);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, jdData) async {
+      sessionList.remove(sModel);
+      assistCtr.updateHead();
+
+      String msg = jdData['message']?? 'لغو شد';
+      AppSnack.showInfo(context, msg);
+    };
+
+    showLoading();
+    requester.methodType = MethodType.delete;
+    requester.bodyJson = {'id': sModel.id};
+    requester.prepareUrl(pathUrl: '/appointments/cancel');
+    requester.request(context);
   }
 }
