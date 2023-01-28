@@ -11,7 +11,7 @@ import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
-import 'package:app/structures/models/towReturn.dart';
+import 'package:app/structures/models/towStateReturn.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
@@ -112,18 +112,18 @@ class PublicAccess {
     print('${'*' * 40}\n ${obj.toString()} \n${'*' * 50}');
   }
 
-  static Future<TwoReturn<Map, Response>> publicApiCaller(String url, MethodType methodType, Map<String, dynamic>? body){
+  static Future<TwoStateReturn<Map, Response>> publicApiCaller(String url, MethodType methodType, Map<String, dynamic>? body){
     Requester requester = Requester();
-    Completer<TwoReturn<Map, Response>> res = Completer();
+    Completer<TwoStateReturn<Map, Response>> res = Completer();
 
     requester.httpRequestEvents.onFailState = (req, response) async {
-      res.complete(TwoReturn(r2: response));
+      res.complete(TwoStateReturn(r2: response));
     };
 
     requester.httpRequestEvents.onStatusOk = (req, data) async {
       final js = JsonHelper.jsonToMap(data)!;
 
-      res.complete(TwoReturn(r1: js));
+      res.complete(TwoStateReturn(r1: js));
     };
 
     if(body != null){

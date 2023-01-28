@@ -642,7 +642,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
       assistCtr.clearStates();
 
       if(itemList.isEmpty){
-        assistCtr.addStateAndUpdateHead(AssistController.state$emptyData);
+        assistCtr.addStateAndUpdateHead(AssistController.state$noData);
       }
       else {
         currentItem = itemList[currentItemIdx];

@@ -1,9 +1,9 @@
 
-class TwoReturn<R1, R2> {
+class TwoStateReturn<R1, R2> {
   R1? result1;
   R2? result2;
 
-  TwoReturn({R1? r1, R2? r2}){
+  TwoStateReturn({R1? r1, R2? r2}){
     result1 = r1;
     result2 = r2;
   }

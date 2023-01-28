@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:app/managers/settingsManager.dart';
-import 'package:app/structures/models/towReturn.dart';
+import 'package:app/structures/models/towStateReturn.dart';
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
@@ -96,9 +96,9 @@ class LoginService {
     return result.future;
   }
 
-  static Future<TwoReturn<Map?, Map?>> requestVerifyOtp({CountryModel? countryModel, required String phoneNumber, required String code}) async {
+  static Future<TwoStateReturn<Map?, Map?>> requestVerifyOtp({CountryModel? countryModel, required String phoneNumber, required String code}) async {
     final http = HttpItem();
-    final result = Completer<TwoReturn<Map?, Map?>>();
+    final result = Completer<TwoStateReturn<Map?, Map?>>();
 
     final js = {};
     js['phoneNumber'] = phoneNumber;
@@ -112,16 +112,16 @@ class LoginService {
     final request = AppHttpDio.send(http);
 
     var f = request.response.catchError((e){
-      result.complete(TwoReturn());
+      result.complete(TwoStateReturn());
     });
 
     f = f.then((Response? response){
       if(response == null) {
-        result.complete(TwoReturn(r2: request.getBodyAsJson()));
+        result.complete(TwoStateReturn(r2: request.getBodyAsJson()));
         return;
       }
 
-      result.complete(TwoReturn(r1: request.getBodyAsJson()));
+      result.complete(TwoStateReturn(r1: request.getBodyAsJson()));
       return null;
     });
 

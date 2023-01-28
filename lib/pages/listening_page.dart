@@ -440,7 +440,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       assistCtr.clearStates();
 
       if(itemList.isEmpty){
-        assistCtr.addStateAndUpdateHead(AssistController.state$emptyData);
+        assistCtr.addStateAndUpdateHead(AssistController.state$noData);
       }
       else {
         currentItem = itemList[0];

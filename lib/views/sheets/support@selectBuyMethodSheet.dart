@@ -1,30 +1,34 @@
 
-import 'package:app/pages/support_page.dart';
-import 'package:app/services/pages_event_service.dart';
-import 'package:app/structures/models/ticketModels/ticketModel.dart';
+import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/widgets/customCard.dart';
 
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
+import 'package:iris_tools/api/helpers/urlHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/system/extensions.dart';
 import 'package:iris_tools/widgets/optionsRow/radioRow.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 
 class SelectBuyMethodSheet extends StatefulWidget {
   final int userBalance;
   final int amount;
+  final int minutes;
+  final String? planId;
 
   const SelectBuyMethodSheet({
     required this.userBalance,
     required this.amount,
+    required this.minutes,
+    this.planId,
     Key? key,
   }) : super(key: key);
 
@@ -126,7 +130,7 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                           ),
-                            onPressed: (){},
+                            onPressed: requestBuy,
                             child: Text('پرداخت')
                         ),
                       ),
@@ -140,16 +144,13 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
     );
   }
 
-  void requestSendTicket({List<String>? attachments}){
-    FocusHelper.hideKeyboardByUnFocusRoot();
-
-
-    final body = <String, dynamic>{};
-
-    if(attachments != null) {
-      body['attachments'] = attachments;
+  void requestBuy(){
+    if(radioGroupValue < 1){
+      AppToast.showToast(context, 'لطفا یک گزینه را انتخاب کنید');
+      return;
     }
 
+    FocusHelper.hideKeyboardByUnFocusRoot();
     requester.httpRequestEvents.onFailState = (req, res) async {
       hideLoading();
 
@@ -157,7 +158,7 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
 
       if(res != null && res.data != null){
         final js = JsonHelper.jsonToMap(res.data)!;
-        msg = js['message'];
+        msg = js['message']?? msg;
       }
 
       AppSheet.showSheetOk(context, msg);
@@ -167,27 +168,38 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
       hideLoading();
 
       final data = res['data'];
-      final id = data['id'];
-      final number = data['number']?? 0;
+      final isPaid = data['paid'];
+      final Map bankPortal = data['bankPortal']?? {};
 
-      final tik = TicketModel();
-      tik.id = id;
-      tik.number = number;
+      if(isPaid){
+        final message = res['message']?? 'با موفقیت پرداخت شد';
 
-      PagesEventService.getEventBus(SupportPage.pageEventId).callEvent(SupportPage.eventFnId$addTicket, tik);
-
-      final message = res['message']?? 'تیکت ثبت شد';
-
-      AppSheet.showSheetOneAction(context, message, (){AppRoute.popTopView(context);},
-        buttonText:  'بله',
-        dismissOnAction: true,
-      );
+        AppSheet.showSheetOneAction(context, message, () {
+          AppRoute.popTopView(context);
+        });
+      }
+      else {
+        final url = bankPortal['url']?? '';
+        await UrlHelper.launchLink(url, mode: LaunchMode.externalApplication);
+      }
     };
 
+    final body = <String, dynamic>{};
+    body['fromWallet'] = radioGroupValue == 1;
+
+    if(widget.planId != null) {
+      body['supportPlanId'] = widget.planId;
+    }
+    else {
+      body['minutes'] = widget.minutes;
+    }
+
+    print(body);
+
     showLoading();
-    requester.methodType = MethodType.post;
-    requester.prepareUrl(pathUrl: '/tickets/add');
     requester.bodyJson = body;
+    requester.methodType = MethodType.post;
+    requester.prepareUrl(pathUrl: '/support/purchase');
     requester.request(context);
   }
 }

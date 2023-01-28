@@ -67,9 +67,9 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   void initState(){
     super.initState();
 
-    assistCtr.addState(AssistController.state$loading, sectionId: assistId$Timetable);
-    assistCtr.addState(AssistController.state$loading, sectionId: assistId$Ticketing);
-    assistCtr.addState(AssistController.state$loading, sectionId: assistId$userLeftTime);
+    assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$Timetable);
+    assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$Ticketing);
+    assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$userLeftTime);
 
     tabCtr = TabController(length: 2, vsync: this);
 
@@ -178,7 +178,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
         controller: assistCtr,
         id: assistId$Timetable,
         builder: (_, ctr, data){
-          if(assistCtr.hasState(AssistController.state$loading, sectionId: assistId$Timetable)){
+          if(assistCtr.hasState(AssistController.state$loading, scopeId: assistId$Timetable)){
             return WaitToLoad();
           }
 
@@ -224,7 +224,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                                       );
                                     }
 
-                                    if(assistCtr.hasState(sectionId: assistId$userLeftTime, AssistController.state$loading)){
+                                    if(assistCtr.hasState(scopeId: assistId$userLeftTime, AssistController.state$loading)){
                                       return SizedBox(
                                         width: 14,
                                         height: 14,
@@ -239,8 +239,8 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                                         splashRadius: 20,
                                         constraints: BoxConstraints.tightFor(),
                                         onPressed: (){
-                                          assistCtr.clearStates(sectionId: assistId$userLeftTime);
-                                          assistCtr.addState(AssistController.state$loading, sectionId: assistId$userLeftTime);
+                                          assistCtr.clearStates(scopeId: assistId$userLeftTime);
+                                          assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$userLeftTime);
                                           assistCtr.updateAssist(assistId$userLeftTime);
                                           requestUserLeftTime();
                                         },
@@ -436,7 +436,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
         controller: assistCtr,
         id: assistId$Ticketing,
         builder: (_, ctr, data){
-          if(assistCtr.hasState(AssistController.state$loading, sectionId: assistId$Ticketing)){
+          if(assistCtr.hasState(AssistController.state$loading, scopeId: assistId$Ticketing)){
             return WaitToLoad();
           }
 
@@ -579,10 +579,6 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       pList.add(p);
     }
 
-    //todo
-    pList.add(SupportPlanModel()..minutes =5..id = '14'..amount = 2000..title = 'طرح طلایی');
-    pList.add(SupportPlanModel()..minutes =25..id = '15'..amount = 80000..title = 'طرح نقره ای');
-
     final res = await AppSheet.showSheetCustom(
         context,
         builder: (_) => SupportPlanSheet(planList: pList),
@@ -593,12 +589,12 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       backgroundColor: Colors.transparent,
     );
 
-    if(res is int){
-      showSelectPaymentMethodSheet(res);
+    if(res is Map){
+      showSelectPaymentMethodSheet(res['amount'], res['minutes'], res['planId']);
     }
   }
 
-  void showSelectPaymentMethodSheet(int amount) async {
+  void showSelectPaymentMethodSheet(int amount, int minutes, String? planId) async {
     showLoading();
     final balance = await PublicAccess.requestUserBalance();
     await hideLoading();
@@ -610,7 +606,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     AppSheet.showSheetCustom(
       context,
-      builder: (_) => SelectBuyMethodSheet(userBalance: balance, amount: amount),
+      builder: (_) => SelectBuyMethodSheet(userBalance: balance, amount: amount, minutes: minutes, planId: planId),
       routeName: 'showSelectBuyMethodSheet',
       isScrollControlled: true,
       contentColor: Colors.transparent,
@@ -653,14 +649,14 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   }
 
   void tryLoadTimetable() async {
-    assistCtr.clearStates(sectionId: assistId$Timetable);
+    assistCtr.clearStatesFrom(assistId$Timetable);
     assistCtr.addStateAndUpdateAssist(AssistController.state$loading, assistId$Timetable);
 
     requestTimeTable();
   }
 
   void tryLoadTickets() async {
-    assistCtr.clearStates(sectionId: assistId$Ticketing);
+    assistCtr.clearStatesFrom(assistId$Ticketing);
     assistCtr.addStateAndUpdateAssist(AssistController.state$loading, assistId$Ticketing);
 
     requestTickets();
@@ -768,12 +764,13 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
       co.complete(null);
 
-      assistCtr.clearStates(sectionId: assistId$Timetable);
+      assistCtr.clearStatesFrom(assistId$Timetable);
       assistCtr.updateAssist(assistId$Timetable);
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/appointments?Page=$timetablePage');//&size=200&keyword=
+    ///&keyword=
+    requester.prepareUrl(pathUrl: '/appointments?Page=$timetablePage&status=1&size=200');
     requester.request(context);
 
     return co.future;
@@ -831,7 +828,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
       co.complete(null);
 
-      assistCtr.clearStates(sectionId: assistId$Ticketing);
+      assistCtr.clearStatesFrom(assistId$Ticketing);
       assistCtr.updateAssist(assistId$Ticketing);
     };
 
@@ -845,10 +842,10 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   Future<void> requestUserLeftTime() async {
     userTime = await PublicAccess.requestUserRemainingMinutes();
 
-    assistCtr.clearStates(sectionId: assistId$userLeftTime);
+    assistCtr.clearStatesFrom(assistId$userLeftTime);
 
     if(userTime != null){
-      assistCtr.addState(AssistController.state$error, sectionId: assistId$userLeftTime);
+      assistCtr.addStateTo(state: AssistController.state$error, scopeId: assistId$userLeftTime);
     }
 
     assistCtr.updateAssist(assistId$userLeftTime);

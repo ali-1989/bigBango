@@ -96,7 +96,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       return WaitToLoad();
     }
 
-    if(assistCtr.hasState(AssistController.state$emptyData)){
+    if(assistCtr.hasState(AssistController.state$noData)){
       return Column(
         children: [
           Align(
@@ -432,7 +432,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       }
 
       if(itemList.isEmpty){
-        assistCtr.addStateAndUpdateHead(AssistController.state$emptyData);
+        assistCtr.addStateAndUpdateHead(AssistController.state$noData);
       }
       else {
         currentItem = itemList[currentItemIdx];

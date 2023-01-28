@@ -122,7 +122,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
       return WaitToLoad();
     }
 
-    if(assistCtr.hasState(AssistController.state$emptyData)){
+    if(assistCtr.hasState(AssistController.state$noData)){
       return Column(
         children: [
           Align(
@@ -510,7 +510,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
       }
 
       if(idiomsList.isEmpty){
-        assistCtr.addStateAndUpdateHead(AssistController.state$emptyData);
+        assistCtr.addStateAndUpdateHead(AssistController.state$noData);
       }
       else {
         currentIdiom = idiomsList[currentIdiomIdx];

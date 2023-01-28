@@ -348,6 +348,14 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
       return;
     }
 
-    AppRoute.popTopView(context, data: minutes);
+    final map = {};
+    map['minutes'] = minutes;
+    map['amount'] = optionSelectedIdx < 0 ? calcAmount() : widget.planList[optionSelectedIdx].amount;
+
+    if(optionSelectedIdx > -1) {
+      map['planId'] = widget.planList[optionSelectedIdx].id;
+    }
+
+    AppRoute.popTopView(context, data: map);
   }
 }

@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/models/towReturn.dart';
+import 'package:app/structures/models/towStateReturn.dart';
 import 'package:dio/dio.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/pathHelper.dart';
@@ -12,18 +12,18 @@ import 'package:iris_tools/api/helpers/pathHelper.dart';
 class FileUploadService {
   FileUploadService._();
 
-  static Future<TwoReturn<Map, Response>> uploadFiles(List<File> files, FileUploadType section){
+  static Future<TwoStateReturn<Map, Response>> uploadFiles(List<File> files, FileUploadType section){
     Requester requester = Requester();
-    Completer<TwoReturn<Map, Response>> res = Completer();
+    Completer<TwoStateReturn<Map, Response>> res = Completer();
 
     requester.httpRequestEvents.onFailState = (req, response) async {
-      res.complete(TwoReturn(r2: response));
+      res.complete(TwoStateReturn(r2: response));
     };
 
     requester.httpRequestEvents.onStatusOk = (req, data) async {
       final js = JsonHelper.jsonToMap(data)!;
 
-      res.complete(TwoReturn(r1: js));
+      res.complete(TwoStateReturn(r1: js));
     };
 
     requester.httpItem.addFormField('Section', '${section.number}');
