@@ -1,7 +1,7 @@
 
 enum TransactionStatusFilter {
   unKnow(-1),
-  unpaid(1),
+  //unpaid(1),
   paid(2),
   inProgress(3),
   rejected(4),

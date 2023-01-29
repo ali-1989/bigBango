@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:app/managers/settingsManager.dart';
-import 'package:app/structures/models/towStateReturn.dart';
+
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
@@ -13,6 +13,7 @@ import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/deviceInfoTools.dart';
+import 'package:iris_tools/models/twoStateReturn.dart';
 
 class LoginService {
   LoginService._();

@@ -1,5 +1,11 @@
 import 'dart:async';
 
+import 'package:app/filteringBuilder/filteringBuilder.dart';
+import 'package:app/filteringBuilder/filteringBuilderOption.dart';
+import 'package:app/filteringBuilder/filteringItems/checkboxListFilteringItem.dart';
+import 'package:app/filteringBuilder/filteringItems/dividerFilteringItem.dart';
+import 'package:app/filteringBuilder/filteringItems/filteringItem.dart';
+import 'package:app/filteringBuilder/filteringItems/simpleItem.dart';
 import 'package:app/structures/enums/transactionSectionFilter.dart';
 import 'package:app/structures/enums/transactionStatusFilter.dart';
 import 'package:app/structures/models/transactionModel.dart';
@@ -42,11 +48,14 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
   TransactionSectionFilter? sectionFilter;
   String key$downArrangeSelected = 'downArrangeSelected';
   String key$upArrangeSelected = 'upArrangeSelected';
-
+  FilteringBuilderOptions filteringOptions = FilteringBuilderOptions();
+  List<FilteringItem> filteringList = []
+;
   @override
   void initState(){
     super.initState();
 
+    buildFiltering();
     assistCtr.addState(AssistController.state$loading);
     requestTransaction();
   }
@@ -100,68 +109,6 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
 
               Row(
                 children: [
-                  GestureDetector(
-                    onTap: (){
-                      int last = assistCtr.getValueOr(key$downArrangeSelected, 0);
-
-                      if(last == 0){
-                        assistCtr.setKeyValue(key$downArrangeSelected, 255);
-                        assistCtr.setKeyValue(key$upArrangeSelected, 0);
-                      }
-                      else {
-                        assistCtr.setKeyValue(key$downArrangeSelected, 0);
-                      }
-
-                      assistCtr.updateHead();
-                    },
-                    child: CustomCard(
-                        radius: 0,
-                        color: AppColors.redTint,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(AppIcons.arrowDown, size: 14, color: AppColors.red),
-                        )
-                    ).wrapBoxBorder(
-                      radius: 0,
-                      padding: EdgeInsets.zero,
-                      alpha: assistCtr.getValueOr(key$downArrangeSelected, 0),
-                    ),
-                  ),
-
-
-                  SizedBox(width: 8),
-
-                  GestureDetector(
-                    onTap: (){
-                      int last = assistCtr.getValueOr(key$upArrangeSelected, 0);
-
-                      if(last == 0){
-                        assistCtr.setKeyValue(key$upArrangeSelected, 255);
-                        assistCtr.setKeyValue(key$downArrangeSelected, 0);
-                      }
-                      else {
-                        assistCtr.setKeyValue(key$upArrangeSelected, 0);
-                      }
-
-                      assistCtr.updateHead();
-                    },
-                    child: CustomCard(
-                        radius: 0,
-                        color: AppColors.redTint,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: RotatedBox(
-                              quarterTurns: 2,
-                              child: Icon(AppIcons.arrowDown, size: 14, color: AppColors.green)
-                          ),
-                        )
-                    ).wrapBoxBorder(
-                      radius: 0,
-                      padding: EdgeInsets.zero,
-                      alpha: assistCtr.getValueOr(key$upArrangeSelected, 0),
-                    ),
-                  ),
-
                   SizedBox(width: 10),
                   RotatedBox(
                       quarterTurns: 2,
@@ -171,6 +118,19 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
               ),
             ],
           )
+        ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Align(
+            alignment: Alignment.centerRight,
+              child: FilteringBuilder(
+                  options: filteringOptions,
+                  filteringList: filteringList,
+                  onChangeFiltering: (){},
+                  onRemoveFilter: (x, y){},
+              )
+          ),
         ),
 
         SizedBox(
@@ -340,5 +300,39 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
     requester.request(context);
 
     return co.future;
+  }
+
+  void buildFiltering() {
+    final ckStatus = CheckboxListFilteringItem();
+    ckStatus.title = 'وضعیت تراکنش';
+
+    final l = TransactionStatusFilter.values.where((element) => element.number > -1);
+
+    for(final x in l){
+      final s = SimpleItem();
+      s.isSelected = true;
+      s.title = x.getTypeHuman();
+
+      ckStatus.items.add(s);
+    }
+    //...................................
+    final ckSection = CheckboxListFilteringItem();
+    ckSection.title = 'نوع تراکنش';
+
+    final l2 = TransactionSectionFilter.values.where((element) => element.number > -1);
+
+    for(final x in l2){
+      final s = SimpleItem();
+      s.isSelected = true;
+      s.title = x.getTypeHuman();
+
+      ckSection.items.add(s);
+    }
+    //...................................
+
+    filteringList.add(ckStatus);
+    filteringList.add(DividerFilteringItem());
+    filteringList.add(ckSection);
+    //filteringList.add(DividerFilteringItem(isThin: true));
   }
 }

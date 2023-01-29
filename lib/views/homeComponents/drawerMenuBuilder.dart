@@ -81,7 +81,7 @@ class DrawerMenuBuilder {
 
             ListTile(
               title: Text('تراکنش ها'),
-              leading: Image.asset(AppImages.drawerWalletIco, width: 16, height: 16),
+              leading: Image.asset(AppImages.transactionMenuIco, width: 16, height: 16),
               onTap: gotoTransactionPage,
               dense: true,
               horizontalTitleGap: 0,

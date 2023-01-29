@@ -11,7 +11,6 @@ import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
-import 'package:app/structures/models/towStateReturn.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
@@ -28,6 +27,7 @@ import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appRoute.dart';
+import 'package:iris_tools/models/twoStateReturn.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class PublicAccess {
