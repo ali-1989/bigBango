@@ -32,4 +32,11 @@ class CustomFilteringItem extends FilteringItem {
   void clearFilter(){
     customClearFilter.call();
   }
+
+  @override
+  Map<String, dynamic> toMap() {
+    final res = super.toMap();
+
+    return res;
+  }
 }

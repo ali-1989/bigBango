@@ -9,6 +9,13 @@ class CheckboxFilteringItem extends FilteringItem {
     filteringType = FilteringItemType.checkbox;
   }
 
+  CheckboxFilteringItem.fromMap(Map<String, dynamic> map){
+    isSelected = map['isSelected'];
+    isEnable = map['isEnable'];
+
+    super.fromMap(map);
+  }
+
   @override
   int getSelectedCount(){
     return isSelected ? 1 : 0;
@@ -22,5 +29,14 @@ class CheckboxFilteringItem extends FilteringItem {
   @override
   void clearFilter(){
     isSelected = false;
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    final res = super.toMap();
+    res['isEnable'] = isEnable;
+    res['isSelected'] = isSelected;
+
+    return res;
   }
 }

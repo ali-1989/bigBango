@@ -9,6 +9,12 @@ class DividerFilteringItem extends FilteringItem {
     filteringType = isThin ? FilteringItemType.thinDivider: FilteringItemType.divider;
   }
 
+  DividerFilteringItem.fromMap(Map<String, dynamic> map): isThin = false{
+    isThin = map['isThin'];
+
+    super.fromMap(map);
+  }
+
   @override
   bool hasSelected(){
     return false;
@@ -21,4 +27,12 @@ class DividerFilteringItem extends FilteringItem {
 
   @override
   void clearFilter(){}
+
+  @override
+  Map<String, dynamic> toMap() {
+    final res = super.toMap();
+    res['isThin'] = isThin;
+
+    return res;
+  }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app/filteringBuilder/filteringBuilder.dart';
 import 'package:app/filteringBuilder/filteringBuilderOption.dart';
+import 'package:app/filteringBuilder/filteringItemType.dart';
 import 'package:app/filteringBuilder/filteringItems/checkboxListFilteringItem.dart';
 import 'package:app/filteringBuilder/filteringItems/dividerFilteringItem.dart';
 import 'package:app/filteringBuilder/filteringItems/filteringItem.dart';
@@ -11,7 +12,7 @@ import 'package:app/structures/enums/transactionStatusFilter.dart';
 import 'package:app/structures/models/transactionModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/publicAccess.dart';
-import 'package:app/tools/app/appColors.dart';
+
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/currencyTools.dart';
@@ -44,8 +45,8 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
   int pageSize = 100;
   int pageIndex = 1;
   List<TransactionModel> transactionList = [];
-  TransactionStatusFilter? statusFilter;
-  TransactionSectionFilter? sectionFilter;
+  List<int> statusFilter = [];
+  List<int> sectionFilter = [];
   String key$downArrangeSelected = 'downArrangeSelected';
   String key$upArrangeSelected = 'upArrangeSelected';
   FilteringBuilderOptions filteringOptions = FilteringBuilderOptions();
@@ -127,8 +128,10 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
               child: FilteringBuilder(
                   options: filteringOptions,
                   filteringList: filteringList,
-                  onChangeFiltering: (){},
-                  onRemoveFilter: (x, y){},
+                  onChangeFiltering: onChangeFilter,
+                  onRemoveFilter: (x, y){
+                    onChangeFilter();
+                  },
               )
           ),
         ),
@@ -190,29 +193,22 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
                   children: [
                     CustomCard(
                         radius: 0,
-                        color: transaction.isAmountPlus()? AppColors.greenTint : AppColors.redTint,
+                        color: transaction.getSectionTintColor(),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Builder(
-                              builder: (context) {
-                                if(transaction.isAmountPlus()) {
-                                  return RotatedBox(
-                                      quarterTurns: 2,
-                                      child: Icon(AppIcons.arrowDown, size: 14, color: AppColors.green)
-                                  );
-                                }
-
-                                return Icon(AppIcons.arrowDown, size: 14, color: AppColors.red);
-                              }
+                          child: Image.asset(transaction.getIcon(),
+                              width: 14,
+                              color: transaction.getSectionColor()
                           ),
                         )
                     ),
+
                     SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(CurrencyTools.formatCurrencyString(transaction.amount.toString().replaceFirst('-', ''))),
-                        Text(transaction.getAmountHuman()).fsR(-2).color(transaction.isAmountPlus()? AppColors.green : AppColors.red),
+                        Text('${CurrencyTools.formatCurrencyString(transaction.amount.toString())}  تومان'),
+                        Text(transaction.section.getTypeHuman()).fsR(-2).color(transaction.getSectionColor()),
                       ],
                     ),
                     SizedBox(width: 5),
@@ -221,8 +217,15 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
                 ),
 
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(DateTools.dateAndHmRelative(transaction.date)).alpha(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(DateTools.dateAndHmRelative(transaction.date)).alpha(),
+                        Text(transaction.status.getTypeHuman()).fsR(-2).color(transaction.getStatusColor()).alpha(),
+                      ],
+                    ),
                     SizedBox(width: 5),
                     Icon(AppIcons.calendar, size: 13, color: Colors.black54),
                   ],
@@ -248,6 +251,79 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
   void onLoadingMore(){
     pageIndex++;
     requestTransaction();
+  }
+
+  void onChangeFilter(){
+    sectionFilter.clear();
+    statusFilter.clear();
+
+    for(final x in filteringList) {
+      if(!x.hasSelected()){
+        continue;
+      }
+
+      if (x.scope == 'status') {
+        if(x.filteringType == FilteringItemType.checkboxList){
+          final fcl = x as CheckboxListFilteringItem;
+
+          for(final c in fcl.items){
+            if(c.isSelected){
+              statusFilter.add(c.value);
+            }
+          }
+        }
+      }
+      ///.........................
+      if (x.scope == 'section') {
+        if(x.filteringType == FilteringItemType.checkboxList){
+          final fcl = x as CheckboxListFilteringItem;
+
+          for(final c in fcl.items){
+            if(c.isSelected){
+              sectionFilter.add(c.value);
+            }
+          }
+        }
+      }
+    }
+
+    tryAgain();
+  }
+
+  void buildFiltering() {
+    final ckStatus = CheckboxListFilteringItem();
+    ckStatus.title = 'وضعیت تراکنش';
+    ckStatus.scope = 'status';
+
+    final l = TransactionStatusFilter.values.where((element) => element.number > -1);
+
+    for(final x in l){
+      final s = SimpleItem();
+      s.title = x.getTypeHuman();
+      s.value = x.number;
+
+      ckStatus.items.add(s);
+    }
+    //...................................
+    final ckSection = CheckboxListFilteringItem();
+    ckSection.title = 'نوع تراکنش';
+    ckSection.scope = 'section';
+
+    final l2 = TransactionSectionFilter.values.where((element) => element.number > -1);
+
+    for(final x in l2){
+      final s = SimpleItem();
+      s.title = x.getTypeHuman();
+      s.value = x.number;
+
+      ckSection.items.add(s);
+    }
+    //...................................
+
+    filteringList.add(ckStatus);
+    filteringList.add(DividerFilteringItem(isThin: true));
+    filteringList.add(ckSection);
+    //filteringList.add(DividerFilteringItem(isThin: true));
   }
 
   Future<void> requestTransaction() async {
@@ -287,52 +363,23 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
 
     String url = '/transactions?Page=$pageIndex&Size=$pageSize';
 
-    if(statusFilter != null){
-      url += '&Status=${statusFilter!.number}';
+    if(statusFilter.isNotEmpty){
+      for(final x in statusFilter) {
+        url += '&Statuses=$x';
+      }
     }
 
-    if(sectionFilter != null){
-      url += '&Section=${sectionFilter!.number}';
+    if(sectionFilter.isNotEmpty){
+      for(final x in sectionFilter) {
+        url += '&Sections=$x';
+      }
     }
 
+    print(url);
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: url);
     requester.request(context);
 
     return co.future;
-  }
-
-  void buildFiltering() {
-    final ckStatus = CheckboxListFilteringItem();
-    ckStatus.title = 'وضعیت تراکنش';
-
-    final l = TransactionStatusFilter.values.where((element) => element.number > -1);
-
-    for(final x in l){
-      final s = SimpleItem();
-      s.isSelected = true;
-      s.title = x.getTypeHuman();
-
-      ckStatus.items.add(s);
-    }
-    //...................................
-    final ckSection = CheckboxListFilteringItem();
-    ckSection.title = 'نوع تراکنش';
-
-    final l2 = TransactionSectionFilter.values.where((element) => element.number > -1);
-
-    for(final x in l2){
-      final s = SimpleItem();
-      s.isSelected = true;
-      s.title = x.getTypeHuman();
-
-      ckSection.items.add(s);
-    }
-    //...................................
-
-    filteringList.add(ckStatus);
-    filteringList.add(DividerFilteringItem());
-    filteringList.add(ckSection);
-    //filteringList.add(DividerFilteringItem(isThin: true));
   }
 }

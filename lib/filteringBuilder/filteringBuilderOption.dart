@@ -10,6 +10,7 @@ class FilteringBuilderOptions {
   Color? titleTextColor;
   Color? infoTextColor;
   Color? dividerColor;
+  Color appBarItemColor = Colors.white;
   String filterText = 'فیلتر';
   String applyText = 'اعمال';
   String removeAllText = 'حذف همه';

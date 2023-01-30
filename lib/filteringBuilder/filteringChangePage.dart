@@ -3,13 +3,11 @@ import 'package:app/filteringBuilder/filteringItemType.dart';
 import 'package:app/filteringBuilder/filteringItems/checkboxListFilteringItem.dart';
 import 'package:app/filteringBuilder/filteringItems/filteringItem.dart';
 import 'package:app/filteringBuilder/filteringItems/simpleItem.dart';
-import 'package:app/tools/app/appIcons.dart';
 import 'package:flutter/material.dart';
 
 class FilteringChangePage extends StatefulWidget {
   final FilteringBuilderOptions options;
   final List<FilteringItem> filteringList;
-  final void Function() onChangeFiltering;
   final CheckboxListFilteringItem? filterItem;
   final SimpleItem? simpleItem;
 
@@ -17,7 +15,6 @@ class FilteringChangePage extends StatefulWidget {
     Key? key,
     required this.options,
     required this.filteringList,
-    required this.onChangeFiltering,
     this.filterItem,
     this.simpleItem,
   }) : super(key: key);
@@ -29,7 +26,6 @@ class FilteringChangePage extends StatefulWidget {
 class _FilteringChangePageState extends State<FilteringChangePage> {
   late ThemeData _theme;
   late Color _primaryColor;
-  late TextStyle _mainTextStyle;
   late TextStyle _titleStyle;
   late TextStyle _infoStyle;
   late TextDirection _txtDirection;
@@ -54,7 +50,9 @@ class _FilteringChangePageState extends State<FilteringChangePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: Text('${widget.options.titleText}'),
+        iconTheme: _theme.appBarTheme.iconTheme?.copyWith(color: widget.options.appBarItemColor),
+        foregroundColor: widget.options.appBarItemColor,
+        title: Text('${widget.options.titleText}', style: _theme.appBarTheme.titleTextStyle),
       ),
       body: Column(
         children: [
@@ -81,9 +79,11 @@ class _FilteringChangePageState extends State<FilteringChangePage> {
                 ),
 
                 SizedBox(width: 8),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _primaryColor,
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: _primaryColor, width: 0.5),
+                    foregroundColor: _primaryColor,
+                    //backgroundColor: _primaryColor,
                   ),
                     onPressed: clearFiltering,
                     child: Text(widget.options.removeAllText)
@@ -102,11 +102,10 @@ class _FilteringChangePageState extends State<FilteringChangePage> {
     _txtDirection = widget.options.textDirection?? Directionality.of(context);
 
     final tColor = widget.options.titleTextColor?? _theme.textTheme.bodyText2?.color;
-    final iColor = widget.options.infoTextColor?? _theme.textTheme.bodyText2?.color?.withAlpha(150);
+    final iColor = widget.options.infoTextColor?? _theme.textTheme.bodyText2?.color?.withAlpha(140);
 
     _titleStyle = TextStyle(color: tColor, fontSize: 14);
     _infoStyle = TextStyle(color: iColor, fontSize: 11);
-    _mainTextStyle = TextStyle(color: widget.options.filterTextColor?? _primaryColor, fontSize: 11);
   }
 
   Widget itemsBuilder(_, idx){
@@ -144,12 +143,10 @@ class _FilteringChangePageState extends State<FilteringChangePage> {
       x.clearFilter();
     }
 
-    widget.onChangeFiltering;
     Navigator.of(context).pop(true);
   }
 
   void onApply(){
-    widget.onChangeFiltering;
     Navigator.of(context).pop(true);
   }
 
@@ -188,11 +185,11 @@ class _FilteringChangePageState extends State<FilteringChangePage> {
   }
 
   Widget getThinDivider(){
-    return Divider(thickness: 0.2, color: widget.options.dividerColor?? _theme.dividerColor);
+    return Divider(thickness: 0.2, color: widget.options.dividerColor?? _infoStyle.color);
   }
 
   Widget getDivider(){
-    return Divider(color: widget.options.dividerColor?? _theme.dividerColor);
+    return Divider(color: widget.options.dividerColor?? _infoStyle.color);
   }
 
   Widget getTitle(FilteringItem item){
@@ -232,13 +229,14 @@ class _FilteringChangePageState extends State<FilteringChangePage> {
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: (){
-
+                x.isSelected = !x.isSelected;
+                setState(() {});
               },
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                    border: widget.options.mainBorder?? Border.all(color: _primaryColor, width: 0.8),
+                    border: widget.options.mainBorder?? Border.all(color: _infoStyle.color!, width: 0.5),
                     borderRadius: widget.options.mainBorderRadius?? BorderRadius.circular(15),
-                    color: _primaryColor.withAlpha(20)
+                    //color: _primaryColor.withAlpha(20)
                 ),
                 child: Padding(
                   padding: widget.options.padding,
@@ -246,16 +244,22 @@ class _FilteringChangePageState extends State<FilteringChangePage> {
                     textDirection: _txtDirection,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Flexible(child: Text(x.title, style: _mainTextStyle)),
+                      Flexible(child: Text(x.title, style: _infoStyle)),
                       SizedBox(width: 8),
-                      GestureDetector(
-                          onTap: (){
-                            x.isSelected = false;
-
-                            setState(() {});
-                          },
-                          behavior: HitTestBehavior.translucent,
-                          child: Icon(AppIcons.remove, size: 16, color: _primaryColor)
+                      SizedBox(
+                        height: 17,
+                        width: 17,
+                        child: FittedBox(
+                          child: Checkbox(
+                            value: x.isSelected,
+                            fillColor: MaterialStateProperty.all(_primaryColor),
+                            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                            onChanged: (v){
+                              x.isSelected = !x.isSelected;
+                              setState(() {});
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -270,7 +274,7 @@ class _FilteringChangePageState extends State<FilteringChangePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('${f.title}', style: _titleStyle),
-        SizedBox(height: 5),
+        SizedBox(height: 10),
 
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,

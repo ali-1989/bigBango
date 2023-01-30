@@ -98,6 +98,10 @@ class AppImages {
   static const notificationIco = 'assets/images/notificationIco.png';
   static const marketBasket = 'assets/images/marketBasket.png';
   static const withdrawalIco = 'assets/images/withdrawalIco.png';
+  static const withdrawWalletIc = 'assets/images/withdrawWalletIc.png';
+  static const lessonPurchaseIc = 'assets/images/lessonPurchaseIc.png';
+  static const supportPurchaseIco = 'assets/images/supportPurchaseIco.png';
+  static const chargeWallet = 'assets/images/chargeWallet.png';
 }
 
 

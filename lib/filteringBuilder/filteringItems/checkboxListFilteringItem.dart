@@ -12,6 +12,17 @@ class CheckboxListFilteringItem extends FilteringItem {
     filteringType = FilteringItemType.checkboxList;
   }
 
+  CheckboxListFilteringItem.fromMap(Map<String, dynamic> map){
+    showHorizontalScrolling = map['showHorizontalScrolling'];
+    isEnable = map['isEnable'];
+
+    if(map['items'] is List) {
+      items = (map['items'] as List).map((e) => SimpleItem.fromMap(e)).toList();
+    }
+
+    super.fromMap(map);
+  }
+
   @override
   int getSelectedCount(){
     int c = 0;
@@ -41,5 +52,15 @@ class CheckboxListFilteringItem extends FilteringItem {
     for(final x in items){
       x.isSelected = false;
     }
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    final res = super.toMap();
+    res['items'] = items.map((e) => e.toMap()).toList();
+    res['isEnable'] = isEnable;
+    res['showHorizontalScrolling'] = showHorizontalScrolling;
+
+    return res;
   }
 }

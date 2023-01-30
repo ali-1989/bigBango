@@ -25,7 +25,9 @@ class LessonModel {
     title = map[Keys.title];
     isLock = map['isLock']?? false;
     number = map['number']?? 0;
+
     improvementPercentage = MathHelper.clearToDouble(map['progress']);
+    improvementPercentage = MathHelper.fixPrecision(improvementPercentage, 1);
 
     if(map['vocabulary'] is Map) {
       vocabSegmentModel = VocabularySegmentModel.fromMap(map['vocabulary']);

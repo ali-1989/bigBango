@@ -1,13 +1,19 @@
-import 'package:app/structures/enums/walletAmountType.dart';
+import 'package:app/structures/enums/transactionSectionFilter.dart';
+import 'package:app/structures/enums/transactionStatusFilter.dart';
+import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appImages.dart';
+import 'package:flutter/material.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
 class TransactionModel {
   late String id;
   int amount = 0;
-  WalletAmountType amountType = WalletAmountType.unKnow;
   String? description;
   late DateTime date;
+  TransactionSectionFilter section = TransactionSectionFilter.unKnow;
+  TransactionStatusFilter status = TransactionStatusFilter.unKnow;
+  List items = [];
 
   TransactionModel();
 
@@ -15,8 +21,10 @@ class TransactionModel {
     id = map['id']?? Generator.generateKey(8);
     description = map['description'];
     amount = map['amount'];
-    amountType = WalletAmountType.fromType(map['amountType']?? -1);
+    section = TransactionSectionFilter.fromType(map['section']);
+    status = TransactionStatusFilter.fromType(map['status']);
     date = DateHelper.tsToSystemDate(map['createdAt'])!;
+    items = map['items'];
   }
 
   Map<String, dynamic> toMap(){
@@ -25,23 +33,72 @@ class TransactionModel {
     map['id'] = id;
     map['description'] = description;
     map['amount'] = amount;
-    map['amountType'] = amountType.number;
+    map['section'] = section.number;
+    map['status'] = status.number;
     map['createdAt'] = DateHelper.toTimestamp(date);
 
     return map;
   }
 
-  bool isAmountPlus(){
-    return amount >= 0;
+  bool isPlus(){
+    return section == TransactionSectionFilter.withdrawWallet;
   }
 
-  String getAmountHuman(){
-    if(isAmountPlus()){
-      return 'واریز به حساب';
+  Color getStatusColor(){
+    switch(status){
+      case TransactionStatusFilter.inProgress:
+        return AppColors.blue;
+      case TransactionStatusFilter.cancelled:
+        return Colors.deepOrangeAccent;
+      case TransactionStatusFilter.paid:
+        return AppColors.green;
+      case TransactionStatusFilter.rejected:
+        return AppColors.red;
     }
 
-    if(!isAmountPlus()){
-      return 'برداشت از حساب';
+    return Colors.black;
+  }
+
+  Color getSectionColor(){
+    switch(section){
+      case TransactionSectionFilter.chargeWallet:
+        return AppColors.blue;
+      case TransactionSectionFilter.withdrawWallet:
+        return AppColors.green;
+      case TransactionSectionFilter.lessonPurchase:
+        return AppColors.purple;
+      case TransactionSectionFilter.supportPurchase:
+        return AppColors.purple;
+    }
+
+    return Colors.black;
+  }
+
+  Color getSectionTintColor(){
+    switch(section){
+      case TransactionSectionFilter.chargeWallet:
+        return AppColors.blueTint;
+      case TransactionSectionFilter.withdrawWallet:
+        return AppColors.greenTint;
+      case TransactionSectionFilter.lessonPurchase:
+        return AppColors.purpleTint;
+      case TransactionSectionFilter.supportPurchase:
+        return AppColors.purpleTint;
+    }
+
+    return Colors.black;
+  }
+
+  String getIcon(){
+    switch(section){
+      case TransactionSectionFilter.chargeWallet:
+        return AppImages.chargeWallet;
+      case TransactionSectionFilter.withdrawWallet:
+        return AppImages.withdrawWalletIc;
+      case TransactionSectionFilter.lessonPurchase:
+        return AppImages.lessonPurchaseIc;
+      case TransactionSectionFilter.supportPurchase:
+        return AppImages.supportPurchaseIco;
     }
 
     return '';

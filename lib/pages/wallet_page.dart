@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:app/pages/profile_page.dart';
 import 'package:app/services/event_dispatcher_service.dart';
-import 'package:app/structures/models/transactionModel.dart';
+import 'package:app/structures/models/transactionWalletModel.dart';
 import 'package:app/structures/models/withdrawalModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/session.dart';
@@ -46,7 +46,7 @@ class _WalletPageState extends StateBase<WalletPage> {
   RefreshController refreshController = RefreshController(initialRefresh: false);
   int walletBalance = 0;
   int withdrawalBalance = 0;
-  List<TransactionModel> transactionList = [];
+  List<TransactionWalletModel> transactionList = [];
   List<WithdrawalModel> withdrawalList = [];
   bool isInGetWay = false;
 
@@ -424,7 +424,7 @@ class _WalletPageState extends StateBase<WalletPage> {
       withdrawalList.clear();
 
       for(final t in transactions){
-        final tik = TransactionModel.fromMap(t);
+        final tik = TransactionWalletModel.fromMap(t);
         transactionList.add(tik);
       }
 

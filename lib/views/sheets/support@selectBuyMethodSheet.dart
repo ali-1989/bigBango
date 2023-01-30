@@ -194,8 +194,6 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
       body['minutes'] = widget.minutes;
     }
 
-    print(body);
-
     showLoading();
     requester.bodyJson = body;
     requester.methodType = MethodType.post;

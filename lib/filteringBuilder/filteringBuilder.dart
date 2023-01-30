@@ -74,7 +74,7 @@ class _FilteringBuilderState extends State<FilteringBuilder> {
     res.add(_filterButtonBuilder());
 
     if(getFilterCount() > 0){
-      res.add(SizedBox(width: 10));
+      res.add(SizedBox(width: 5));
     }
 
     for(final f in filterList) {
@@ -113,9 +113,9 @@ class _FilteringBuilderState extends State<FilteringBuilder> {
         },
         child: DecoratedBox(
           decoration: BoxDecoration(
-              border: widget.options.mainBorder?? Border.all(color: _primaryColor, width: 0.8),
+              border: widget.options.mainBorder?? Border.all(color: _primaryColor.withAlpha(100), width: 0.5),
               borderRadius: widget.options.mainBorderRadius?? BorderRadius.circular(15),
-            color: _primaryColor.withAlpha(20)
+            color: _primaryColor.withAlpha(10)
           ),
           child: Padding(
             padding: widget.options.padding,
@@ -190,9 +190,13 @@ class _FilteringBuilderState extends State<FilteringBuilder> {
     final res = <Widget>[];
 
     for(final x in f.items){
-      if(x.isSelected){
-        res.add(
+      if(!x.isSelected){
+        continue;
+      }
+
+      res.add(
           Padding(
+            key: ValueKey(x.id),
             padding: const EdgeInsets.symmetric(horizontal: 2.0),
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
@@ -201,9 +205,9 @@ class _FilteringBuilderState extends State<FilteringBuilder> {
               },
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                    border: widget.options.mainBorder?? Border.all(color: _primaryColor, width: 0.8),
+                    border: widget.options.mainBorder?? Border.all(color: _primaryColor.withAlpha(100), width: 0.5),
                     borderRadius: widget.options.mainBorderRadius?? BorderRadius.circular(15),
-                    color: _primaryColor.withAlpha(20)
+                    color: _primaryColor.withAlpha(10)
                 ),
                 child: Padding(
                   padding: widget.options.padding,
@@ -214,12 +218,12 @@ class _FilteringBuilderState extends State<FilteringBuilder> {
                       Flexible(child: Text(x.title, style: _mainTextStyle)),
                       SizedBox(width: 8),
                       GestureDetector(
-                        onTap: (){
-                          x.isSelected = false;
+                          onTap: (){
+                            x.isSelected = false;
 
-                          setState(() {});
-                          widget.onRemoveFilter.call(f, x);
-                        },
+                            setState(() {});
+                            widget.onRemoveFilter.call(f, x);
+                          },
                           behavior: HitTestBehavior.translucent,
                           child: Icon(AppIcons.remove, size: 16, color: _primaryColor)
                       ),
@@ -229,8 +233,7 @@ class _FilteringBuilderState extends State<FilteringBuilder> {
               ),
             ),
           )
-        );
-      }
+      );
     }
 
     return res;
@@ -246,14 +249,23 @@ class _FilteringBuilderState extends State<FilteringBuilder> {
           return FilteringChangePage(
             options: widget.options,
             filteringList: widget.filteringList,
-            onChangeFiltering: widget.onChangeFiltering,
             filterItem: item,
             simpleItem: simpleItem,
           );
         }
     );
 
-    await Navigator.of(context).push(route);
-    setState(() {});
+    final org = widget.filteringList.map((e) => e.toMap()).toList();
+
+    final res = await Navigator.of(context).push(route);
+
+    if(res is bool && res){
+      setState(() {});
+      widget.onChangeFiltering.call();
+    }
+    else {
+      widget.filteringList.clear();
+      widget.filteringList.addAll(org.map((e) => FilteringItem.builder(e)!).toList());
+    }
   }
 }

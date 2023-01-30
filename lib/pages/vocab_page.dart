@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app/services/review_service.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/system/publicAccess.dart';
+import 'package:app/views/states/emptyData.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -128,6 +129,10 @@ class _VocabPageState extends StateBase<VocabPage> {
 
     if(assistCtr.hasState(AssistController.state$loading)){
       return WaitToLoad();
+    }
+
+    if(vocabList.isEmpty){
+      return EmptyData();
     }
 
     currentVocab = vocabList[currentVocabIdx];
@@ -757,8 +762,10 @@ class _VocabPageState extends StateBase<VocabPage> {
         }
       }
 
-      currentVocab = vocabList[currentVocabIdx];
-      showTranslate = currentVocab.showTranslation;
+      if(vocabList.isNotEmpty) {
+        currentVocab = vocabList[currentVocabIdx];
+        showTranslate = currentVocab.showTranslation;
+      }
 
       assistCtr.clearStates();
       assistCtr.updateHead();

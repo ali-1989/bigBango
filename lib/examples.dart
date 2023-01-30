@@ -4,7 +4,7 @@ import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/listeningModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
-import 'package:app/structures/models/transactionModel.dart';
+import 'package:app/structures/models/transactionWalletModel.dart';
 import 'package:app/structures/models/withdrawalModel.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
@@ -59,7 +59,7 @@ class Examples {
   }
 
   void buildTransaction(){
-    final x = TransactionModel();
+    final x = TransactionWalletModel();
     x.id = 'abc';
     x.amount = 12000;
     x.description = 'fvnhaj o,f';
@@ -68,7 +68,7 @@ class Examples {
 
     //transactionList.add(x);
 
-    final x2 = TransactionModel();
+    final x2 = TransactionWalletModel();
     x2.id = 'efg';
     x2.amount = -200;
     x2.description = 'برئاشت خوب';

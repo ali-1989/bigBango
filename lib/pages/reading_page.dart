@@ -13,6 +13,7 @@ import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/components/idiomClickableComponent.dart';
 import 'package:app/views/components/vocabClickableComponent.dart';
+import 'package:app/views/states/emptyData.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormatter.dart';
@@ -129,6 +130,10 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
     if(assistCtr.hasState(AssistController.state$loading)){
       return WaitToLoad();
+    }
+
+    if(itemList.isEmpty){
+      return EmptyData();
     }
 
     Color preColor = Colors.black;
