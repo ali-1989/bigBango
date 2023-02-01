@@ -76,7 +76,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onRefresh: onRefresh);
+      return ErrorOccur(onTryAgain: onRefresh);
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){

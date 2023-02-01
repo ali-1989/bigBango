@@ -4,6 +4,7 @@ import 'package:app/services/review_service.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appRoute.dart';
+import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:flutter/material.dart';
 
@@ -115,7 +116,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onRefresh: onRefresh);
+      return ErrorOccur(onTryAgain: onRefresh, backButton: BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){

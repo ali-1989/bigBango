@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app/services/review_service.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/tools/app/appToast.dart';
+import 'package:app/views/states/backBtn.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
@@ -39,7 +40,7 @@ class GrammarPage extends StatefulWidget {
   @override
   State<GrammarPage> createState() => _GrammarPageState();
 }
-///======================================================================================================================
+///===========================================================================================================
 class _GrammarPageState extends StateBase<GrammarPage> {
   Requester requester = Requester();
   Requester reviewRequester = Requester();
@@ -89,7 +90,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onRefresh: onRefresh);
+      return ErrorOccur(onTryAgain: onRefresh, backButton: BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
@@ -435,7 +436,17 @@ class _GrammarPageState extends StateBase<GrammarPage> {
         assistCtr.addStateAndUpdateHead(AssistController.state$noData);
       }
       else {
-        currentItem = itemList[currentItemIdx];
+        if(widget.injector.id != null){
+          for(final x in itemList){
+            if(x.id == widget.injector.id){
+              currentItem = x;
+              break;
+            }
+          }
+        }
+        else {
+          currentItem = itemList[currentItemIdx];
+        }
 
         assistCtr.updateHead();
         initVideo();

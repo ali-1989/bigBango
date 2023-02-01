@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:app/services/file_upload_service.dart';
 import 'package:app/structures/enums/autodidactReplyType.dart';
+import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/injectors/autodidactPageInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';
+import 'package:app/structures/models/mediaModel.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
@@ -38,6 +42,8 @@ import 'package:app/system/extensions.dart';
 import 'package:app/structures/interfaces/examStateInterface.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+
+import '../../system/keys.dart';
 
 class AutodidactVoiceComponent extends StatefulWidget {
   final AutodidactPageInjector injector;
@@ -75,7 +81,9 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
 
     autodidactModel = widget.injector.autodidactModel;
     widget.injector.state = this;
-    savePath = 'record.mp4';
+
+    final p = AppDirectories.getAppFolderInInternalStorage();
+    savePath = PathHelper.resolvePath('$p/record.mp4')!;
 
     //answerPlayer.playbackEventStream.listen(answerEventListener);
     answerPlayer.positionStream.listen(durationListener);
@@ -332,7 +340,8 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
 
     if (!await voiceRecorder.isEncoderSupported(recorderCodec)) {
       recorderCodec = Codec.opusWebM;
-      savePath = 'record.WebM';
+      final p = AppDirectories.getAppFolderInInternalStorage();
+      savePath = PathHelper.resolvePath('$p/record.WebM')!;
 
       if (!await voiceRecorder.isEncoderSupported(recorderCodec)) {
         return;
@@ -379,10 +388,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     }
 
     try {
-      final p = AppDirectories.getAppFolderInInternalStorage();
-      final adr = PathHelper.resolvePath('$p/$savePath');
-
-      await voiceRecorder.startRecorder(codec: recorderCodec, toFile: adr, audioSource: rec.AudioSource.microphone);
+      await voiceRecorder.startRecorder(codec: recorderCodec, toFile: savePath, audioSource: rec.AudioSource.microphone);
       isVoiceFileOK = false;
     }
     catch (e){
@@ -562,10 +568,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       await questionPlayer.stop();
     }
 
-    final p = AppDirectories.getAppFolderInInternalStorage();
-    final adr = PathHelper.resolvePath('$p/$savePath')!;
-
-    return answerPlayer.setFilePath(adr).then((dur) {
+    return answerPlayer.setFilePath(savePath).then((dur) {
       answerVoiceIsPrepare = true;
 
       if(dur != null){
@@ -615,11 +618,29 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   void checkAnswers() {
   }
 
-  void sendAnswer(){
+  void sendAnswer() async {
+    String? audioId;
+
     if(autodidactModel.replyType == AutodidactReplyType.text){
       if(answerCtr.text.trim().isEmpty){
         AppSheet.showSheetOk(context, 'لطفا پاسخ خود را بنویسید');
         return;
+      }
+    }
+    else {
+      final twoResponse = await FileUploadService.uploadFiles([File(savePath)], FileUploadType.autodidact);
+
+      if(twoResponse.hasResult2()){
+        AppSheet.showSheet$OperationFailedTryAgain(context);
+        return;
+      }
+      else {
+        final data = twoResponse.result1![Keys.data];
+
+        if(data is List) {
+          final media = MediaModel.fromMap(data[0]['file']);
+          audioId = media.id;
+        }
       }
     }
 
@@ -651,13 +672,14 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       widget.injector.state.checkAnswers();
     };
 
-    final js = <String, dynamic>{'autodidactId' : autodidactModel.id};
+    final js = <String, dynamic>{};
+    js['autodidactId'] - autodidactModel.id;
 
     if(autodidactModel.replyType == AutodidactReplyType.text){
       js['text'] = answerCtr.text.trim();
     }
     else {
-      js['voiceId'] = '';
+      js['voiceId'] = audioId;
     }
 
     requester.methodType = MethodType.post;

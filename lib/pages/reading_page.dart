@@ -13,6 +13,7 @@ import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/components/idiomClickableComponent.dart';
 import 'package:app/views/components/vocabClickableComponent.dart';
+import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:flutter/material.dart';
 
@@ -125,7 +126,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onRefresh: onRefresh);
+      return ErrorOccur(onTryAgain: onRefresh, backButton: BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){

@@ -1,4 +1,5 @@
 import 'package:app/managers/systemParameterManager.dart';
+import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/widgets/customCard.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/urlHelper.dart';
@@ -49,7 +50,7 @@ class _AboutPageState extends StateBase<AboutPage> {
     }
 
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur();
+      return ErrorOccur(backButton: BackBtn());
     }
 
     return DecoratedBox(

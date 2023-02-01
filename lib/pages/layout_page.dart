@@ -1,3 +1,5 @@
+import 'package:app/pages/notification_page.dart';
+import 'package:app/pages/store_page.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/views/homeComponents/drawerMenuBuilder.dart';
 import 'package:app/views/homeComponents/layoutComponent.dart';
@@ -43,8 +45,8 @@ class LayoutPageState extends StateBase<LayoutPage> {
                 children: [
                   HomePage(key: AppBroadcast.homePageKey),
                   LightnerPage(),
-                  HomePage(),
-                  HomePage(),
+                  StorePage(),
+                  NotificationPage(),
                 ],
               ),
             ),

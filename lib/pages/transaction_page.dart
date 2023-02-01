@@ -17,6 +17,7 @@ import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/currencyTools.dart';
 import 'package:app/tools/dateTools.dart';
+import 'package:app/views/states/backBtn.dart';
 
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/waitToLoad.dart';
@@ -84,7 +85,7 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onRefresh: tryAgain);
+      return ErrorOccur(onTryAgain: tryAgain, backButton: BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){

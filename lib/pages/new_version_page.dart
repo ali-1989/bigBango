@@ -18,6 +18,8 @@ import 'package:app/tools/app/appThemes.dart';
 <body>
 <span>\u2705</span><p><strong> اضافه شدن درباره ما</strong></p>
 <span>\u2705</span><p><strong> تکمیل دروس</strong></p>
+<span>\u2705</span><p><strong> تکمیل تراکنش ها</strong></p>
+<span>\u2705</span><p><strong> تکمیل کیف پول</strong></p>
 </body>
 ''';
  */
@@ -203,5 +205,4 @@ class MyCustomPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
    return true;
   }
-
 }

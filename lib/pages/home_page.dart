@@ -18,7 +18,9 @@ import 'package:app/tools/app/appCache.dart';
 
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
-import 'package:app/views/components/selectListeningDialog.dart';
+import 'package:app/tools/app/appToast.dart';
+import 'package:app/views/dialogs/selectGrammarDialog.dart';
+import 'package:app/views/dialogs/selectListeningDialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
@@ -39,7 +41,7 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/views/components/selectVocabIdiomsDialog.dart';
+import 'package:app/views/dialogs/selectVocabIdiomsDialog.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
@@ -84,7 +86,7 @@ class HomePageState extends StateBase<HomePage> {
       builder: (_, ctr, data) {
         if(assistCtr.hasState(state$error)){
           return ErrorOccur(
-            onRefresh: onTryAgain,
+            onTryAgain: onTryAgain,
           );
         }
 
@@ -625,6 +627,12 @@ class HomePageState extends StateBase<HomePage> {
       }
     }
 
+    if(segment is GrammarSegmentModel){
+      if(segment.grammarList.length > 1){
+        dialog = SelectGrammarDialog(lessonModel: lessonModel);
+      }
+    }
+
     if(segment is ListeningSegmentModel){
       if(segment.listeningList.length > 1){
         dialog = SelectListeningDialog(lessonModel: lessonModel);
@@ -678,6 +686,7 @@ class HomePageState extends StateBase<HomePage> {
 
   void onLessonClick(LessonModel model){
     if(model.isLock){
+      AppToast.showToast(context, 'این درس خریداری نشده است');
       return;
     }
 

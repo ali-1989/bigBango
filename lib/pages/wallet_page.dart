@@ -17,6 +17,7 @@ import 'package:app/tools/dateTools.dart';
 import 'package:app/views/sheets/incraseAmountComponent.dart';
 import 'package:app/views/sheets/wallet@withdrawaSheet.dart';
 import 'package:app/views/sheets/wallet@withdrawalListSheet.dart';
+import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
@@ -84,7 +85,7 @@ class _WalletPageState extends StateBase<WalletPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onRefresh: tryAgain);
+      return ErrorOccur(onTryAgain: tryAgain, backButton: BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){

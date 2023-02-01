@@ -641,13 +641,13 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
   void uploadAvatar(String filePath) async {
     showLoading(canBack: false);
-    final uploadRes = await FileUploadService.uploadFiles([File(filePath)], FileUploadType.avatar);
+    final twoResponse = await FileUploadService.uploadFiles([File(filePath)], FileUploadType.avatar);
 
     bool isOk = false;
     String? message;
 
-    if(uploadRes.hasResult1()){
-      final data = uploadRes.result1![Keys.data];
+    if(twoResponse.hasResult1()){
+      final data = twoResponse.result1![Keys.data];
 
       if(data is List) {
         final media = MediaModel.fromMap(data[0]['file']);
@@ -663,7 +663,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       }
     }
     else {
-      final res = uploadRes.result2!.data;
+      final res = twoResponse.result2!.data;
 
       if(res != null){
         final js = JsonHelper.jsonToMap(res)?? {};

@@ -1,5 +1,6 @@
 import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
+import 'package:app/views/states/backBtn.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormatter.dart';
@@ -91,7 +92,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onRefresh: onTryAgain);
+      return ErrorOccur(onTryAgain: onTryAgain, backButton: BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){

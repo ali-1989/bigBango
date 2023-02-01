@@ -187,11 +187,11 @@ class Requester {
 ///================================================================================================
 class HttpRequestEvents {
   Future Function(HttpRequester)? onAnyState;
-  Future Function(HttpRequester, Response?)? onFailState;
+  Future Function(HttpRequester requester, Response? response)? onFailState;
   Future Function(HttpRequester)? onNetworkError;
   Future Function(HttpRequester, Map)? manageResponse;
   Future Function(HttpRequester, Map)? onStatusOk;
-  Future<bool> Function(HttpRequester, Map)? onStatusError;
+  Future<bool> Function(HttpRequester requester, Map jsData)? onStatusError;
 
   void clear(){
     onAnyState = null;

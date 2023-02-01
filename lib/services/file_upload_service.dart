@@ -11,6 +11,7 @@ import 'package:iris_tools/models/twoStateReturn.dart';
 class FileUploadService {
   FileUploadService._();
 
+  /// final data = twoResponse.result1![Keys.data];
   static Future<TwoStateReturn<Map, Response>> uploadFiles(List<File> files, FileUploadType section){
     Requester requester = Requester();
     Completer<TwoStateReturn<Map, Response>> res = Completer();

@@ -1,42 +1,42 @@
 import 'package:app/managers/storeManager.dart';
+import 'package:app/pages/about_page.dart';
+import 'package:app/structures/models/lessonModels/storeModel.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:flutter/material.dart';
 
-import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-import 'package:app/pages/leitner_detail_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/models/lightnerModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/widgets/customCard.dart';
 
-class LightnerPage extends StatefulWidget {
-  const LightnerPage({Key? key}) : super(key: key);
+class StorePage extends StatefulWidget {
+  const StorePage({Key? key}) : super(key: key);
 
   @override
-  State createState() => _LightnerPageState();
+  State createState() => _StorePageState();
 }
 ///========================================================================================
-class _LightnerPageState extends StateBase<LightnerPage> {
-  List<LightnerModel> lightnerItem = [];
+class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin {
+  late TabController tabCtr;
+  int tabIdx = 0;
+  List<String> tabNames = [];
+  List<StoreLessonModel> lessonList = [];
+  late StoreModel currentStore;
 
   @override
   void initState(){
     super.initState();
 
-    List.generate(5, (index) {
-      final i = LightnerModel();
-      i.count = Generator.getRandomInt(2, 18);
-
-      lightnerItem.add(i);
-    });
+    tabCtr = TabController(length: 1, vsync: this);
+    assistCtr.addState(AssistController.state$loading);
+    requestStores();
   }
 
   @override
@@ -65,27 +65,47 @@ class _LightnerPageState extends StateBase<LightnerPage> {
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             children: [
-              SizedBox(height: 70),
-              AspectRatio(
-                  aspectRatio: 5/2.5,
-                  child: Image.asset(AppImages.lightner)
-              ),
-
-              //Expanded(child: SizedBox()),
-              SizedBox(height: 20),
+              SizedBox(height: 80),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('جعبه لایتنر', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
-                  Text('${lightnerItem.fold<int>(0, (p, element) => p + element.count)}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+                  Row(
+                    children: [
+                      Image.asset(AppImages.marketBasket, width: 32, height: 32),
+                      SizedBox(width: 5),
+                      Text('فروشگاه', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+                    ],
+                  ),
+
+                  SizedBox(
+                    height: 28,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                      ),
+                        onPressed: prepareBuy,
+                        child: Text('ثبت سفارش')
+                    ),
+                  )
                 ],
               ),
 
               SizedBox(height: 20),
+              TabBar(
+                controller: tabCtr,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  labelPadding: EdgeInsets.symmetric(vertical: 8),
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+                  labelColor: Colors.red,
+                  unselectedLabelColor: Colors.black,
+                  onTap: onTabClick,
+                  tabs: tabNames.map((e) => Text(e)).toList()
+              ),
+
               Expanded(
                 child: ListView.builder(
-                    itemCount: lightnerItem.length,
+                    itemCount: lessonList.length,
                     shrinkWrap: true,
                     padding: EdgeInsets.zero,
                     itemBuilder: itemBuilder
@@ -99,7 +119,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
   }
 
   Widget itemBuilder(ctx, idx){
-    final itm = lightnerItem[idx];
+    final itm = lessonList[idx];
 
     return GestureDetector(
       onTap: (){
@@ -136,9 +156,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
                           text: TextSpan(
                             children: [
                               TextSpan(text: 'جعبه ی ', style: AppThemes.body2TextStyle()),
-                              TextSpan(text: itm.getNumText(idx+1),
-                                  style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
-                              ),
+                              //TextSpan(text: itm.getNumText(idx+1), style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),),
                             ]
                           ),
                         ),
@@ -152,7 +170,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
 
                 Column(
                   children: [
-                    Text('${itm.count}').bold().fsR(1),
+                    //Text('${itm.count}').bold().fsR(1),
                     SizedBox(height: 8),
                     Text('0').color(AppColors.red).fsR(-2),
                   ],
@@ -165,15 +183,74 @@ class _LightnerPageState extends StateBase<LightnerPage> {
     );
   }
 
+  void onItemClick(StoreLessonModel itm, idx) async {
+
+  }
+
   void tryAgain(){
     assistCtr.addStateWithClear(AssistController.state$loading);
     assistCtr.updateHead();
 
-    //requestStores();
+    requestStores();
   }
 
-  void onItemClick(LightnerModel itm, idx) async {
-    await AppRoute.push(context, LightnerDetailPage(lightnerModel: itm, index: idx));
+  void onTabClick(int value) {
+    tabIdx = value;
+    prepareLessonList();
+  }
+
+  void prepareTabs() {
+    tabCtr = TabController(length: StoreManager.getStoreLessonList().length, vsync: this);
+
+    tabNames.clear();
+
+    StoreManager.getStoreLessonList().forEach((element) {
+      tabNames.add(element.name);
+    });
+  }
+
+  void prepareLessonList() {
+    lessonList.clear();
+    currentStore = StoreManager.getStoreLessonList()[tabIdx];
+
+    lessonList.addAll(currentStore.lessons);
+  }
+
+  void prepareBuy() {
+  }
+
+  void requestStores() async {
+    var res = true;
+
+    if(!StoreManager.isUpdated()) {
+      //showLoading();
+
+
+      Future.delayed(Duration(milliseconds: 50), (){
+        showDialog(
+          context: AppRoute.materialContext!,
+          useSafeArea: false,
+          useRootNavigator: false, // if true:error in internal Navigator
+          barrierDismissible: true,
+          barrierColor: Colors.yellow.shade300.withAlpha(100),
+          builder: (BuildContext context) {
+            return SizedBox(
+              child: Text('gfds'),
+            );
+          },
+        );
+      });
+      res = await StoreManager.requestLessonStores(state: this);
+      //hideLoading();
+    }
+
+    prepareTabs();
+    prepareLessonList();
+    assistCtr.clearStates();
+
+    if(!res) {
+      assistCtr.addState(AssistController.state$error);
+    }
 
     assistCtr.updateHead();
   }
