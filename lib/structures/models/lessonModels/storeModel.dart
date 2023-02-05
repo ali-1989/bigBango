@@ -48,6 +48,7 @@ class StoreLessonModel {
   late String title;
   int number = 0;
   late int amount;
+  bool isSelected = false;
 
   StoreLessonModel();
 
@@ -56,6 +57,7 @@ class StoreLessonModel {
     title = map[Keys.title];
     amount = map['amount']?? 0;
     number = map['number']?? 0;
+    isSelected = map['isSelected']?? false;
   }
 
   Map<String, dynamic> toMap() {
@@ -65,6 +67,7 @@ class StoreLessonModel {
     map[Keys.title] = title;
     map['number'] = number;
     map['amount'] = amount;
+    map['isSelected'] = isSelected;
 
     return map;
   }

@@ -376,7 +376,6 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
       }
     }
 
-    print(url);
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: url);
     requester.request(context);

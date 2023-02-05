@@ -21,14 +21,16 @@ import 'package:url_launcher/url_launcher_string.dart';
 class SelectBuyMethodSheet extends StatefulWidget {
   final int userBalance;
   final int amount;
-  final int minutes;
+  final int? minutes;
   final String? planId;
+  final List<int>? lessonIds;
 
   const SelectBuyMethodSheet({
     required this.userBalance,
     required this.amount,
-    required this.minutes,
+    this.minutes,
     this.planId,
+    this.lessonIds,
     Key? key,
   }) : super(key: key);
 
@@ -181,23 +183,37 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
       else {
         final url = bankPortal['url']?? '';
         await UrlHelper.launchLink(url, mode: LaunchMode.externalApplication);
+
+        AppRoute.popTopView(context);
       }
     };
 
     final body = <String, dynamic>{};
     body['fromWallet'] = radioGroupValue == 1;
 
-    if(widget.planId != null) {
-      body['supportPlanId'] = widget.planId;
+    if(widget.minutes != null) {
+      if (widget.planId != null) {
+        body['supportPlanId'] = widget.planId;
+      }
+      else {
+        body['minutes'] = widget.minutes;
+      }
     }
     else {
-      body['minutes'] = widget.minutes;
+      body['lessonIds'] = widget.lessonIds;
     }
 
     showLoading();
     requester.bodyJson = body;
     requester.methodType = MethodType.post;
-    requester.prepareUrl(pathUrl: '/support/purchase');
+
+    if(widget.minutes != null) {
+      requester.prepareUrl(pathUrl: '/support/purchase');
+    }
+    else {
+      requester.prepareUrl(pathUrl: '/lessons/purchase');
+    }
+
     requester.request(context);
   }
 }

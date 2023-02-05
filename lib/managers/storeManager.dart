@@ -91,10 +91,6 @@ class StoreManager {
 		final requester = Requester();
 		final res = Completer<bool>();
 
-		requester.httpRequestEvents.onAnyState = (req) async {
-			//await state?.hideLoading();
-		};
-
 		requester.httpRequestEvents.onFailState = (req, response) async {
 			if(state == null || !state.mounted){
 				res.complete(false);
@@ -120,8 +116,6 @@ class StoreManager {
 
 			res.complete(true);
 		};
-
-		//state?.showLoading();
 
 		requester.methodType = MethodType.get;
 		requester.prepareUrl(pathUrl: '/shop/lessons');

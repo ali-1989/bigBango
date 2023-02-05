@@ -429,6 +429,10 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     mobileTextCtr.text = user.mobile?? '';
     ibanTextCtr.text = user.iban?? '';
 
+    ibanTextCtr.text = ibanTextCtr.text.replaceAll('IR', '');
+    final te = TextEditingValue(text: ibanTextCtr.text);
+    ibanTextCtr.text = ibanFormatter.formatEditUpdate(te, te).text;
+
     currentGender = user.gender;
     birthDate = user.birthDate;
 
@@ -780,6 +784,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
         final temp = UserModel.fromMap(dataText);
 
         final user = Session.getLastLoginUser()!;
+        temp.loginDate = user.loginDate;
+
         user.matchBy(temp);
 
         user.mobile ??= userFixInfo[Keys.mobileNumber];
@@ -863,7 +869,11 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     js['birthDate'] = DateHelper.dateOnlyToStamp(birthDate!);
 
     if(iban.isNotEmpty) {
-      js['iban'] = 'IR$iban';
+      if (!iban.startsWith('IR')){
+        iban = 'IR$iban';
+      }
+
+      js['iban'] = iban;
     }
 
     if(email.isNotEmpty){
@@ -871,8 +881,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     }
 
     requester.bodyJson = js;
-    requester.prepareUrl(pathUrl: '/profile/update');
     requester.methodType = MethodType.put;
+    requester.prepareUrl(pathUrl: '/profile/update');
 
     showLoading();
     requester.request(context, false);

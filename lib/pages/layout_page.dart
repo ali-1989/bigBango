@@ -61,4 +61,8 @@ class LayoutPageState extends StateBase<LayoutPage> {
     pageController.jumpToPage(idx);
     assistCtr.updateHead();
   }
+
+  void gotoPage(int idx){
+    onPageItemSelect(idx);
+  }
 }

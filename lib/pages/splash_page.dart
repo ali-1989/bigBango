@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:app/managers/systemParameterManager.dart';
-import 'package:app/views/components/firstPageComponent.dart';
+import 'package:app/views/homeComponents/firstPageComponent.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -112,12 +112,14 @@ class SplashScreenState extends StateBase<SplashPage> {
     if(serverData == null){
       AppSheet.showSheetOneAction(
         AppRoute.materialContext!,
-        AppMessages.errorCommunicatingServer, (){
-        AppBroadcast.gotoSplash(2000);
-        connectToServer();
-      },
-          buttonText: AppMessages.tryAgain,
-          isDismissible: false,
+        AppMessages.errorCommunicatingServer,
+         (){
+          AppBroadcast.gotoSplash(2000);
+
+          connectToServer();
+        },
+        buttonText: AppMessages.tryAgain,
+        isDismissible: false,
       );
     }
     else {
