@@ -1,4 +1,5 @@
 import 'package:app/managers/systemParameterManager.dart';
+import 'package:app/structures/models/cityModel.dart';
 import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
@@ -18,6 +19,7 @@ class UserModel {
   String? email;
   String? iban;
   CourseLevelModel? courseLevel;
+  CityModel? cityModel;
   //---------------- locale
   DateTime? loginDate;
 
@@ -45,11 +47,15 @@ class UserModel {
       token?.parseToken();
     }
 
+    if(map['city'] is Map) {
+      cityModel = CityModel.fromMap(map['city']);
+    }
+
     if(map['refreshToken'] != null) {
       token?.refreshToken = map['refreshToken'];
     }
 
-    if(map['avatar'] != null) {
+    if(map['avatar'] is Map) {
       avatarModel = MediaModel.fromMap(map['avatar']);
     }
 
@@ -79,6 +85,7 @@ class UserModel {
     map[Keys.mobileNumber] = mobile;
     map[Keys.gender] = gender;
     map['avatar'] = avatarModel?.toMap();
+    map['city'] = cityModel?.toMap();
     map['email'] = email;
     map['iban'] = iban;
     map['courseLevelId'] = courseLevel?.id;
@@ -103,6 +110,7 @@ class UserModel {
     avatarModel = other.avatarModel;
     email = other.email;
     courseLevel = other.courseLevel;
+    cityModel = other.cityModel;
     token = other.token;
 
     //--------------------------------- local

@@ -314,7 +314,7 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
       return 0;
     }
 
-    return SystemParameterManager.getAmountOf1Minutes() * minutes;
+    return (SystemParameterManager.getAmountOf1Minutes() * minutes).toInt();
   }
 
   void scrollListener() {

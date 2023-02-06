@@ -29,12 +29,12 @@ class SystemParameterManager {
     return null;
   }
 
-  static int getAmountOf1Minutes(){
-    if(systemParameters.timeTableOption.isEmpty){
+  static double getAmountOf1Minutes(){
+    if(systemParameters.timeTable.isEmpty){
       return 0;
     }
 
-    return systemParameters.timeTableOption['minuteAmount'];
+    return systemParameters.timeTable['minuteAmount']?? 0;
   }
 
   static Future<HttpRequester?> requestSystemParameters() async {
@@ -65,17 +65,7 @@ class SystemParameterManager {
       final js = JsonHelper.jsonToMap(response.data);
       final data = js?['data']?? {};
 
-      final courseLevels = data['courseLevels'];
-
-      if(courseLevels is List){
-        for(final k in courseLevels){
-          SystemParameterManager.systemParameters.courseLevels.add(CourseLevelModel.fromMap(k));
-        }
-      }
-
-      SystemParameterManager.systemParameters.advertisingVideos = data['advertisingVideos']?? {};
-      SystemParameterManager.systemParameters.contacts = data['contact']?? {};
-
+      systemParameters = SystemParameterModel.fromMap(data);
 
       /*
       test VersionModel versionModel = VersionModel();
@@ -84,7 +74,7 @@ class SystemParameterManager {
       versionModel.newVersionName = '2.0.1';
       */
 
-      final versionModel = VersionModel.fromMap(data['version']?? {});
+      final versionModel = VersionModel.fromMap(systemParameters.version);
       VersionManager.checkAppHasNewVersion(AppRoute.getLastContext()!, versionModel);
 
       result.complete(request);

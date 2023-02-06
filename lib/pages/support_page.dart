@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app/pages/timetable_page.dart';
+import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/services/pages_event_service.dart';
 import 'package:app/structures/enums/supportSessionStatus.dart';
 import 'package:app/structures/models/supportModels/supportPlanModel.dart';
@@ -56,6 +57,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   int ticketPage = 1;
   int timetablePage = 1;
   int? userTime;
+  bool isInGetWay = false;
   List<TicketRole> ticketRoles = [];
   List<TicketModel> ticketList = [];
   List<SupportSessionModel> sessionList = [];
@@ -66,6 +68,8 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   @override
   void initState(){
     super.initState();
+
+    EventDispatcherService.attachFunction(EventDispatcher.appResume, onBackOfBankGetWay);
 
     assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$Timetable);
     assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$Ticketing);
@@ -85,6 +89,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
   @override
   void dispose(){
+    EventDispatcherService.deAttachFunction(EventDispatcher.appResume, onBackOfBankGetWay);
     requester.dispose();
     PagesEventService.removeFor(SupportPage.pageEventId);
 
@@ -604,7 +609,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       return;
     }
 
-    AppSheet.showSheetCustom(
+    await AppSheet.showSheetCustom(
       context,
       builder: (_) => SelectBuyMethodSheet(userBalance: balance, amount: amount, minutes: minutes, planId: planId),
       routeName: 'showSelectBuyMethodSheet',
@@ -613,7 +618,14 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       backgroundColor: Colors.transparent,
     );
 
-    //PagesEventService.getEventBus(SupportPage.pageEventId).addEvent(SupportPage.eventFnId$addTicket, onAddTicketEventCall);
+    isInGetWay = true;
+  }
+
+  void onBackOfBankGetWay({data}) {
+    if(isInGetWay){
+      isInGetWay = false;
+      requestUserLeftTime();
+    }
   }
 
   void showAddTicketSheet() async {
@@ -844,7 +856,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     assistCtr.clearStatesFrom(assistId$userLeftTime);
 
-    if(userTime != null){
+    if(userTime == null){
       assistCtr.addStateTo(state: AssistController.state$error, scopeId: assistId$userLeftTime);
     }
 

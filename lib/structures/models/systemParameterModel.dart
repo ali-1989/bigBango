@@ -22,12 +22,23 @@ class SystemParameterModel {
   Map contacts = {};
 
   /*
-    minSupportMinutes : 1
-    maxSupportMinutes : 1
-    lessonSupportMinutes : 1
-    minuteAmount : 1
+    minSupportMinutes
+    maxSupportMinutes
+    lessonSupportMinutes
+    minuteAmount
    */
-  Map timeTableOption = {};
+  Map timeTable = {};
+
+
+  /*
+    code
+    isForce
+    downloadLink
+    storeLink
+    description
+    createdAt
+   */
+  Map version = {};
 
 
   SystemParameterModel();
@@ -37,9 +48,10 @@ class SystemParameterModel {
       return;
     }
 
-    contacts = map['contacts'];
-    advertisingVideos = map['advertisingVideos'];
-    timeTableOption = map['timeTableOption'];
+    contacts = map['contacts']?? {};
+    advertisingVideos = map['advertisingVideos']?? {};
+    timeTable = map['timeTable']?? {};
+    version = map['version']?? {};
 
     if(map['courseLevels'] is List) {
       courseLevels = (map['courseLevels'] as List).map<CourseLevelModel>((e) => CourseLevelModel.fromMap(e)).toList();
@@ -49,10 +61,11 @@ class SystemParameterModel {
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{};
 
-    map['courseLevels'] = courseLevels.map((e) => e.toMap()).toList();
     map['advertisingVideos'] = advertisingVideos;
     map['contacts'] = contacts;
-    map['timeTableOption'] = timeTableOption;
+    map['timeTable'] = timeTable;
+    map['version'] = version;
+    map['courseLevels'] = courseLevels.map((e) => e.toMap()).toList();
 
     return map;
   }

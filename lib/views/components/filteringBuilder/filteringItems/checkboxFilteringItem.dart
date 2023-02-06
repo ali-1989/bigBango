@@ -1,5 +1,5 @@
-import 'package:app/filteringBuilder/filteringItemType.dart';
-import 'package:app/filteringBuilder/filteringItems/filteringItem.dart';
+import 'package:app/views/components/filteringBuilder/filteringItemType.dart';
+import 'package:app/views/components/filteringBuilder/filteringItems/filteringItem.dart';
 
 class CheckboxFilteringItem extends FilteringItem {
   bool isSelected = false;

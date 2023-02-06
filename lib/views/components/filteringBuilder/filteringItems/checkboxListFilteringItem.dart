@@ -1,6 +1,6 @@
-import 'package:app/filteringBuilder/filteringItemType.dart';
-import 'package:app/filteringBuilder/filteringItems/filteringItem.dart';
-import 'package:app/filteringBuilder/filteringItems/simpleItem.dart';
+import 'package:app/views/components/filteringBuilder/filteringItemType.dart';
+import 'package:app/views/components/filteringBuilder/filteringItems/filteringItem.dart';
+import 'package:app/views/components/filteringBuilder/filteringItems/simpleItem.dart';
 
 
 class CheckboxListFilteringItem extends FilteringItem {

@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:app/filteringBuilder/filteringBuilder.dart';
-import 'package:app/filteringBuilder/filteringBuilderOption.dart';
-import 'package:app/filteringBuilder/filteringItemType.dart';
-import 'package:app/filteringBuilder/filteringItems/checkboxListFilteringItem.dart';
-import 'package:app/filteringBuilder/filteringItems/dividerFilteringItem.dart';
-import 'package:app/filteringBuilder/filteringItems/filteringItem.dart';
-import 'package:app/filteringBuilder/filteringItems/simpleItem.dart';
+import 'package:app/views/components/filteringBuilder/filteringBuilder.dart';
+import 'package:app/views/components/filteringBuilder/filteringBuilderOption.dart';
+import 'package:app/views/components/filteringBuilder/filteringItemType.dart';
+import 'package:app/views/components/filteringBuilder/filteringItems/checkboxListFilteringItem.dart';
+import 'package:app/views/components/filteringBuilder/filteringItems/dividerFilteringItem.dart';
+import 'package:app/views/components/filteringBuilder/filteringItems/filteringItem.dart';
+import 'package:app/views/components/filteringBuilder/filteringItems/simpleItem.dart';
 import 'package:app/structures/enums/transactionSectionFilter.dart';
 import 'package:app/structures/enums/transactionStatusFilter.dart';
 import 'package:app/structures/models/transactionModel.dart';

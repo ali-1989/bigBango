@@ -5,7 +5,9 @@ import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/services/file_upload_service.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/enums/genderType.dart';
+import 'package:app/structures/models/cityModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
+import 'package:app/structures/models/provinceModel.dart';
 import 'package:app/tools/app/appInfoDisplay.dart';
 import 'package:app/tools/deviceInfoTools.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,9 @@ import 'package:iris_tools/api/checker.dart';
 import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/api/helpers/fileHelper.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
+import 'package:iris_tools/api/helpers/inputFormatter.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
+import 'package:iris_tools/api/helpers/textHelper.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -75,6 +79,13 @@ class _ProfilePageState extends StateBase<ProfilePage> {
   bool hasChanges = false;
   Map<String, dynamic> userFixInfo = {};
   Map<String, dynamic> userChangeInfo = {};
+  String assistId$city = 'assistId_city';
+  List<DropdownMenuItem<ProvinceModel>> provinceDropDownList = [];
+  List<DropdownMenuItem<CityModel>> cityDropDownList = [];
+  List<ProvinceModel> provinceList = [];
+  List<CityModel> cityList = [];
+  CityModel? city;
+  ProvinceModel? province;
 
   @override
   void initState(){
@@ -108,7 +119,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     );
 
     prepare();
-    requestProfile();
+    requestProvinces();
   }
 
   @override
@@ -293,6 +304,89 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                       ],
                     ),
 
+                    const SizedBox(height: 20),
+                    Text('محل سکونت', style: TextStyle(color: Colors.grey)),
+                    const SizedBox(height: 6),
+
+                    Assist(
+                        controller: assistCtr,
+                        id: assistId$city,
+                        builder: (_, ctr, data){
+                          return Row(
+                            children: [
+                              Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: ColoredBox(
+                                      color: Colors.grey.shade100,
+                                      child: DropdownButton2<ProvinceModel>(
+                                        items: provinceDropDownList,
+                                        value: province,
+                                        dropdownWidth: 150,
+                                        buttonWidth: 150,
+                                        buttonHeight: 40,
+                                        itemHeight: 40,
+                                        itemPadding: const EdgeInsets.symmetric(horizontal: 5),
+                                        buttonPadding: const EdgeInsets.symmetric(horizontal: 5),
+                                        dropdownPadding: const EdgeInsets.symmetric(horizontal: 5),
+                                        hint: const Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Text('استان', style: TextStyle(color: Colors.grey)),
+                                        ),
+                                        onChanged: (value) {
+                                          province = value;
+                                          city = null;
+                                          generateCity();
+                                          userChangeInfo['provinceId'] = value?.id;
+                                          compareChanges();
+
+                                          assistCtr.updateAssist(assistId$city);
+                                        },
+                                        underline: const SizedBox(),
+                                      ),
+                                    ),
+                                  )
+                              ),
+
+                              const SizedBox(width: 10),
+
+                              Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: ColoredBox(
+                                      color: Colors.grey.shade100,
+                                      child: DropdownButton2<CityModel>(
+                                        items: cityDropDownList,
+                                        value: city,
+                                        dropdownWidth: 150,
+                                        buttonWidth: 150,
+                                        buttonHeight: 40,
+                                        itemHeight: 40,
+                                        itemPadding: const EdgeInsets.symmetric(horizontal: 5),
+                                        buttonPadding: const EdgeInsets.symmetric(horizontal: 5),
+                                        dropdownPadding: const EdgeInsets.symmetric(horizontal: 5),
+                                        hint: const Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 5),
+                                          child: Text('شهر', style: TextStyle(color: Colors.grey)),
+                                        ),
+                                        onChanged: (value) {
+                                          city = value;
+                                          userChangeInfo['cityId'] = value?.id;
+                                          compareChanges();
+
+                                          assistCtr.updateAssist(assistId$city);
+                                        },
+                                        underline: const SizedBox(),
+                                      ),
+                                    ),
+                                  )
+                              ),
+                            ],
+                          );
+
+                        }
+                    ),
+
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -430,8 +524,9 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     ibanTextCtr.text = user.iban?? '';
 
     ibanTextCtr.text = ibanTextCtr.text.replaceAll('IR', '');
-    final te = TextEditingValue(text: ibanTextCtr.text);
-    ibanTextCtr.text = ibanFormatter.formatEditUpdate(te, te).text;
+    final old = InputFormatter.getTextEditingValue('');
+    final te = InputFormatter.getTextEditingValue(ibanTextCtr.text);
+    ibanTextCtr.text = ibanFormatter.formatEditUpdate(old, te).text;
 
     currentGender = user.gender;
     birthDate = user.birthDate;
@@ -446,6 +541,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     userFixInfo['email'] = emailTextCtr.text;
     userFixInfo['iban'] = ibanTextCtr.text;
     userFixInfo[Keys.gender] = currentGender;
+    userFixInfo['cityId'] = user.cityModel?.id;
+    userFixInfo['provinceId'] = user.cityModel?.provinceId;
 
     if(birthDate != null) {
       userFixInfo[Keys.birthdate] = DateHelper.dateOnlyToStamp(birthDate!);
@@ -554,7 +651,6 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       context,
       widgets,
       'changeAvatar',
-
     );
   }
 
@@ -725,6 +821,28 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     AppInfoDisplay.showMiniInfo(context, Text('شماره شبا برای برگرداندن اعتبار کیف پول به شما (در صورت نیاز) استفاده می شود'));
   }
 
+  void generateProvince(){
+    provinceDropDownList.clear();
+
+    provinceDropDownList.addAll(provinceList.map((k){
+      return DropdownMenuItem<ProvinceModel>(
+          value: k,
+          child: Text(TextHelper.subByCharCountSafe(k.name.trim(), 19), maxLines: 1, softWrap: false)
+      );
+    }).toList());
+  }
+
+  void generateCity(){
+    cityDropDownList.clear();
+
+    cityDropDownList.addAll(cityList.where((element) => element.provinceId == province?.id).map((k){
+      return DropdownMenuItem<CityModel>(
+          value: k,
+          child: Text(TextHelper.subByCharCountSafe(k.name.trim(), 19), maxLines: 1, softWrap: false)
+      );
+    }).toList());
+  }
+
   void sendChanges(){
     final name = nameTextCtr.text.trim();
     final family = familyTextCtr.text.trim();
@@ -764,6 +882,11 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
     if(currentGender == null){
       AppSnack.showError(context, AppMessages.genderNotDefined);
+      return;
+    }
+
+    if(city == null){
+      AppSnack.showError(context, AppMessages.cityNotDefined);
       return;
     }
 
@@ -846,6 +969,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       user.lastName = family;
       user.gender = currentGender;
       user.birthDate = birthDate;
+      user.cityModel = cityList.firstWhereSafe((element) => element.id == city!.id);
 
       if(iban.isNotEmpty) {
         user.iban = iban;
@@ -867,6 +991,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     js['lastName'] = family;
     js['gender'] = currentGender;
     js['birthDate'] = DateHelper.dateOnlyToStamp(birthDate!);
+    js['cityId'] = city?.id;
 
     if(iban.isNotEmpty) {
       if (!iban.startsWith('IR')){
@@ -886,6 +1011,62 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
     showLoading();
     requester.request(context, false);
+  }
+
+  void requestProvinces(){
+    requester.httpRequestEvents.onFailState = (requester, res) async {
+    };
+
+    requester.httpRequestEvents.onStatusOk = (requester, js) async {
+      final data = js[Keys.data];
+
+      if(data is List){
+        for(final x in data){
+          provinceList.add(ProvinceModel.fromMap(x));
+        }
+
+        generateProvince();
+        province = provinceList.firstWhereSafe((element) => element.id == user.cityModel?.provinceId)?? provinceList.first;
+
+        if(cityList.isNotEmpty){
+          generateCity();
+          assistCtr.updateAssist(assistId$city);
+        }
+        else {
+          requestCities();
+        }
+      }
+    };
+
+    requester.prepareUrl(pathUrl: '/provinces');
+    requester.methodType = MethodType.get;
+    requester.request(context);
+  }
+
+  void requestCities(){
+    requester.httpRequestEvents.onFailState = (requester, res) async {
+    };
+
+    requester.httpRequestEvents.onStatusOk = (requester, js) async {
+      final data = js[Keys.data];
+
+      if(data is List){
+        for(final x in data){
+          cityList.add(CityModel.fromMap(x));
+        }
+
+        generateCity();
+
+        city = cityList.firstWhereSafe((element) => element.id == user.cityModel?.id)?? cityList.first;
+
+        assistCtr.updateAssist(assistId$city);
+        requestProfile();
+      }
+    };
+
+    requester.prepareUrl(pathUrl: '/cities');
+    requester.methodType = MethodType.get;
+    requester.request(context);
   }
 
   Future<bool> requestUpdateAvatar(MediaModel media){

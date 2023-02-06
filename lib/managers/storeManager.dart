@@ -25,6 +25,10 @@ class StoreManager {
 	static void setUpdate({DateTime? dt}) {
 		_lastUpdateTime = dt?? DateTime.now();
 	}
+
+	static void setUnUpdate() {
+		_lastUpdateTime = null;
+	}
 	///=========================================================================================
 	static List<StoreModel> getStoreLessonList() => _storeList;
 

@@ -358,6 +358,10 @@ class AppMessages {
     return 'جنسیت خود را انتخاب کنید';
   }
 
+  static String get cityNotDefined {
+    return 'شهر خود را انتخاب کنید';
+  }
+
   static String get emailNotCorrect {
     return 'ایمیل معتبر نیست';
   }

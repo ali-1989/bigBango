@@ -1,7 +1,7 @@
-import 'package:app/filteringBuilder/filteringItemType.dart';
-import 'package:app/filteringBuilder/filteringItems/checkboxFilteringItem.dart';
-import 'package:app/filteringBuilder/filteringItems/checkboxListFilteringItem.dart';
-import 'package:app/filteringBuilder/filteringItems/dividerFilteringItem.dart';
+import 'package:app/views/components/filteringBuilder/filteringItemType.dart';
+import 'package:app/views/components/filteringBuilder/filteringItems/checkboxFilteringItem.dart';
+import 'package:app/views/components/filteringBuilder/filteringItems/checkboxListFilteringItem.dart';
+import 'package:app/views/components/filteringBuilder/filteringItems/dividerFilteringItem.dart';
 
 abstract class FilteringItem {
   FilteringItemType filteringType = FilteringItemType.unKnow;

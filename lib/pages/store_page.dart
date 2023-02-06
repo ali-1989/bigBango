@@ -2,6 +2,7 @@ import 'package:app/managers/storeManager.dart';
 import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/structures/models/lessonModels/storeModel.dart';
 import 'package:app/system/publicAccess.dart';
+import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
@@ -328,7 +329,6 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
       }
 
       await showSelectMethodSheet(balance);
-
       isInGetWay = true;
     }
   }
@@ -364,6 +364,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
   void onBackOfBankGetWay({data}) {
     if(isInGetWay){
       isInGetWay = false;
+      StoreManager.setUnUpdate();
       AppBroadcast.layoutPageKey.currentState!.gotoPage(0);
     }
   }
@@ -383,11 +384,27 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
 
     if(!StoreManager.isUpdated()) {
       res = await StoreManager.requestLessonStores(state: this);
+      StoreManager.setUpdate();
     }
 
     prepareTabs();
-    prepareLessonList();
     assistCtr.clearStates();
+
+    if(StoreManager.getStoreLessonList().isNotEmpty){
+      final level = Session.getLastLoginUser()!.courseLevel;
+
+      for(int i = 0; i < StoreManager.getStoreLessonList().length; i++){
+        final x = StoreManager.getStoreLessonList()[i];
+
+        if(x.id == level?.id){
+          tabCtr.animateTo(i);
+          tabIdx = i;
+          break;
+        }
+      }
+    }
+
+    prepareLessonList();
 
     if(!res) {
       assistCtr.addState(AssistController.state$error);
