@@ -189,7 +189,7 @@ packages:
       name: dart_jsonwebtoken
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.4"
+    version: "2.7.1"
   dbus:
     dependency: transitive
     description:
@@ -503,7 +503,7 @@ packages:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.12"
+    version: "4.0.13"
   image_editor:
     dependency: transitive
     description:
@@ -950,7 +950,7 @@ packages:
       name: popover
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.8"
+    version: "0.2.8+1"
   process:
     dependency: transitive
     description:
@@ -1158,7 +1158,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.8"
+    version: "6.1.9"
   url_launcher_android:
     dependency: transitive
     description:
