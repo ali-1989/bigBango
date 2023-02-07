@@ -19,7 +19,7 @@ class SystemParameterModel {
     "conditionTermsLink": "google.com",
     "description": "بیگ‌‌بنگو اپلیکیشن آموزش زبان"
    */
-  Map contacts = {};
+  Map contact = {};
 
   /*
     minSupportMinutes
@@ -48,7 +48,7 @@ class SystemParameterModel {
       return;
     }
 
-    contacts = map['contacts']?? {};
+    contact = map['contact']?? {};
     advertisingVideos = map['advertisingVideos']?? {};
     timeTable = map['timeTable']?? {};
     version = map['version']?? {};
@@ -62,7 +62,7 @@ class SystemParameterModel {
     final map = <String, dynamic>{};
 
     map['advertisingVideos'] = advertisingVideos;
-    map['contacts'] = contacts;
+    map['contact'] = contact;
     map['timeTable'] = timeTable;
     map['version'] = version;
     map['courseLevels'] = courseLevels.map((e) => e.toMap()).toList();

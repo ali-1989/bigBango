@@ -64,7 +64,9 @@ class SystemParameterManager {
 
       final js = JsonHelper.jsonToMap(response.data);
       final data = js?['data']?? {};
-
+print('0000000000000000--00000000000000000000000');
+print(data);
+print('000000000000000000000000000000000000000');
       systemParameters = SystemParameterModel.fromMap(data);
 
       /*

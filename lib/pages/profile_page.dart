@@ -295,6 +295,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
                         TextField(
                           controller: emailTextCtr,
+                          keyboardType: TextInputType.emailAddress,
                           onChanged: (t){
                             userChangeInfo['email'] = t;
                             compareChanges();
@@ -329,9 +330,13 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                         itemPadding: const EdgeInsets.symmetric(horizontal: 5),
                                         buttonPadding: const EdgeInsets.symmetric(horizontal: 5),
                                         dropdownPadding: const EdgeInsets.symmetric(horizontal: 5),
-                                        hint: const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 10),
-                                          child: Text('استان', style: TextStyle(color: Colors.grey)),
+                                        hint: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                          child: const SizedBox(
+                                            width: 12,
+                                            height: 12,
+                                            child: CircularProgressIndicator(strokeWidth: 2),
+                                          ),
                                         ),
                                         onChanged: (value) {
                                           province = value;
@@ -524,9 +529,12 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     ibanTextCtr.text = user.iban?? '';
 
     ibanTextCtr.text = ibanTextCtr.text.replaceAll('IR', '');
-    final old = InputFormatter.getTextEditingValue('');
-    final te = InputFormatter.getTextEditingValue(ibanTextCtr.text);
-    ibanTextCtr.text = ibanFormatter.formatEditUpdate(old, te).text;
+
+    if(ibanTextCtr.text.isNotEmpty) {
+      final old = InputFormatter.getTextEditingValue('');
+      final te = InputFormatter.getTextEditingValue(ibanTextCtr.text);
+      ibanTextCtr.text = ibanFormatter.formatEditUpdate(old, te).text;
+    }
 
     currentGender = user.gender;
     birthDate = user.birthDate;

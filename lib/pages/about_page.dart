@@ -113,7 +113,7 @@ class _AboutPageState extends StateBase<AboutPage> {
               radius: 0,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Text('${SystemParameterManager.systemParameters.contacts['description']}'),
+                child: Text('${SystemParameterManager.systemParameters.contact['description']}'),
               ),
             ),
           ),
@@ -146,9 +146,9 @@ class _AboutPageState extends StateBase<AboutPage> {
                             padding: EdgeInsets.zero,
                           ),
                             onPressed: (){
-                             UrlHelper.launchLink('tel://${SystemParameterManager.systemParameters.contacts['supportPhoneNumber']}');
+                             UrlHelper.launchLink('tel://${SystemParameterManager.systemParameters.contact['supportPhoneNumber']}');
                             },
-                            child: Text('${SystemParameterManager.systemParameters.contacts['supportPhoneNumber']}').bold(),
+                            child: Text('${SystemParameterManager.systemParameters.contact['supportPhoneNumber']}').bold(),
                         )
                       ],
                     ),
@@ -166,7 +166,7 @@ class _AboutPageState extends StateBase<AboutPage> {
                     SizedBox(width: 2),
                     TextButton(
                         onPressed: (){
-                          UrlHelper.launchLink('${SystemParameterManager.systemParameters.contacts['conditionTermsLink']}');//http://
+                          UrlHelper.launchLink('${SystemParameterManager.systemParameters.contact['conditionTermsLink']}');//http://
                         },
                         child: Text('مشاهده قوانین')
                     ),

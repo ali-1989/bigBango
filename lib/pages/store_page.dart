@@ -310,6 +310,11 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
 
   void prepareLessonList() {
     lessonList.clear();
+
+    if(StoreManager.getStoreLessonList().isEmpty){
+      return;
+    }
+
     currentStore = StoreManager.getStoreLessonList()[tabIdx];
 
     lessonList.addAll(currentStore.lessons);
