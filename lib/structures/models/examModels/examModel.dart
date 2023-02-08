@@ -1,7 +1,7 @@
-import 'package:app/structures/models/examModels/examSuperModel.dart';
-import 'package:app/structures/enums/quizType.dart';
 import 'package:iris_tools/api/generator.dart';
 
+import 'package:app/structures/enums/quizType.dart';
+import 'package:app/structures/models/examModels/examSuperModel.dart';
 
 class ExamModel extends ExamSuperModel {
   late String id;

@@ -1,8 +1,5 @@
 import 'dart:async';
 
-import 'package:app/services/event_dispatcher_service.dart';
-import 'package:app/services/login_service.dart';
-import 'package:app/tools/netListenerTools.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +11,8 @@ import 'package:iris_tools/net/trustSsl.dart';
 
 import 'package:app/constants.dart';
 import 'package:app/services/audio_player_service.dart';
+import 'package:app/services/event_dispatcher_service.dart';
+import 'package:app/services/login_service.dart';
 import 'package:app/system/applicationLifeCycle.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appDb.dart';
@@ -24,6 +23,7 @@ import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/deviceInfoTools.dart';
+import 'package:app/tools/netListenerTools.dart';
 
 class ApplicationInitial {
   ApplicationInitial._();

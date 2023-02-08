@@ -3,10 +3,10 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appThemes.dart';
-import 'package:app/system/extensions.dart';
 
 class FontManager {
   FontManager._();
@@ -189,36 +189,36 @@ class FontManager {
 
     _rawTextTheme = TextTheme(
       /// Drawer {textColor}  [emphasizing text]
-      bodyText1: temp.textTheme.bodyText1!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
+      bodyLarge: temp.textTheme.bodyLarge!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
       ///default for Material
-      bodyText2: temp.textTheme.bodyText2!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
-      overline: temp.textTheme.overline!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
+      bodyMedium: temp.textTheme.bodyMedium!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
+      labelSmall: temp.textTheme.labelSmall!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
       ///   [Extremely large]
-      headline1: temp.textTheme.headline1!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
+      displayLarge: temp.textTheme.displayLarge!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
       ///   [Very, very large]
-      headline2: temp.textTheme.headline2!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
-      headline3: temp.textTheme.headline3!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
-      headline4: temp.textTheme.headline4!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
+      displayMedium: temp.textTheme.displayMedium!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
+      displaySmall: temp.textTheme.displaySmall!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
+      headlineMedium: temp.textTheme.headlineMedium!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
       /// large text in dialogs (month and year ...)
-      headline5: temp.textTheme.headline5!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
+      headlineSmall: temp.textTheme.headlineSmall!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
       ///{appBar and dialogs} Title   (old = subtitle & subhead)
-      headline6: temp.textTheme.headline6!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
+      titleLarge: temp.textTheme.titleLarge!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
       /// textField, list
-      subtitle1: temp.textTheme.subtitle1!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
+      titleMedium: temp.textTheme.titleMedium!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
       ///       [medium emphasis]
-      subtitle2: temp.textTheme.subtitle2!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
+      titleSmall: temp.textTheme.titleSmall!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
       /// Buttons
-      button: temp.textTheme.button!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
+      labelLarge: temp.textTheme.labelLarge!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
       /// images caption
-      caption: temp.textTheme.caption!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
+      bodySmall: temp.textTheme.bodySmall!.copyWith(fontSize: fs, color: c1, decorationColor: c2),
     );
 
     _rawThemeData = ThemeData.from(colorScheme: temp.colorScheme, textTheme: _rawTextTheme);
   }
 
   static String _getDefaultFontFamily(){
-    var ff = _rawTextTheme.bodyText1?.fontFamily;
-    return ff ?? _rawTextTheme.bodyText2?.fontFamily?? (kIsWeb? 'Segoe UI' : 'Roboto');
+    var ff = _rawTextTheme.bodyLarge?.fontFamily;
+    return ff ?? _rawTextTheme.bodyMedium?.fontFamily?? (kIsWeb? 'Segoe UI' : 'Roboto');
   }
 
   static Future<bool> saveFontThemeData(String lang) async {

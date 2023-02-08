@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:dio/dio.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/logger/logger.dart';
+import 'package:iris_tools/api/tools.dart';
 
 import 'package:app/managers/settingsManager.dart';
 import 'package:app/services/jwt_service.dart';
@@ -10,7 +11,6 @@ import 'package:app/system/httpProcess.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/app/appSheet.dart';
-import 'package:iris_tools/api/tools.dart';
 
 ///=============================================================================================
 enum MethodType {

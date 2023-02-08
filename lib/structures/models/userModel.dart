@@ -1,10 +1,10 @@
+import 'package:iris_tools/dateSection/dateHelper.dart';
+
 import 'package:app/managers/systemParameterManager.dart';
+import 'package:app/services/jwt_service.dart';
 import 'package:app/structures/models/cityModel.dart';
 import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
-import 'package:iris_tools/dateSection/dateHelper.dart';
-
-import 'package:app/services/jwt_service.dart';
 import 'package:app/system/keys.dart';
 
 class UserModel {

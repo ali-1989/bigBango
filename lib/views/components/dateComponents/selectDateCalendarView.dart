@@ -178,7 +178,7 @@ class SelectDateCalendarViewState extends State<SelectDateCalendarView> {
                 Directionality(
                   textDirection: TextDirection.ltr,
                   child: SizedBox(
-                    height: AppSizes.webSize(120),
+                    height: AppSizes.webFontSize(120),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
+
 import 'package:app/structures/models/vocabModels/idiomModel.dart';
+import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/system/extensions.dart';
-import 'package:flutter/material.dart';
 
 class IdiomClickableComponent extends StatefulWidget {
   final IdiomModel idiomModel;

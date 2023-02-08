@@ -1,4 +1,3 @@
-import 'package:app/managers/systemParameterManager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:im_animations/im_animations.dart';
@@ -6,10 +5,10 @@ import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
+import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/enums/enums.dart';
-
+import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appColors.dart';

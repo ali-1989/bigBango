@@ -1,7 +1,7 @@
-import 'package:app/structures/models/mediaModel.dart';
-import 'package:app/structures/models/ticketModels/ticketDetailModel.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
+import 'package:app/structures/models/mediaModel.dart';
+import 'package:app/structures/models/ticketModels/ticketDetailModel.dart';
 
 class TicketReplyModel {
   late String id;

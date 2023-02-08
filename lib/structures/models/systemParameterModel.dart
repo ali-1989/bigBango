@@ -1,4 +1,3 @@
-
 import 'package:app/structures/models/courseLevelModel.dart';
 
 class SystemParameterModel {

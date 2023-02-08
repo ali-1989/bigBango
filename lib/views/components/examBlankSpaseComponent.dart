@@ -1,10 +1,10 @@
-import 'package:app/structures/enums/quizType.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/interfaces/examStateInterface.dart';
 import 'package:app/structures/models/examModels/examModel.dart';

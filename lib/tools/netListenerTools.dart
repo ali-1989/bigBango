@@ -1,11 +1,12 @@
-import 'package:app/services/event_dispatcher_service.dart';
-import 'package:app/services/review_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
+import 'package:app/services/event_dispatcher_service.dart';
+import 'package:app/services/review_service.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appCache.dart';
 
 /// this listener not work on start app, work on new event
+
 class NetListenerTools {
   NetListenerTools._();
 
@@ -26,4 +27,15 @@ class NetListenerTools {
       AppCache.clearDownloading();
     }
   }
+
+  /*static void onWsConnectedListener(){
+    AppBroadcast.isWsConnected = true;
+    EventDispatcherService.notify(EventDispatcher.webSocketStateChange);
+    EventDispatcherService.notify(EventDispatcher.webSocketConnected);
+  }
+
+  static void onWsDisConnectedListener(){
+    AppBroadcast.isWsConnected = false;
+    EventDispatcherService.notify(EventDispatcher.webSocketDisConnected);
+  }*/
 }

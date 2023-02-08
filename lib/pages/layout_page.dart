@@ -1,17 +1,17 @@
-import 'package:app/pages/notification_page.dart';
-import 'package:app/pages/store_page.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/views/homeComponents/drawerMenuBuilder.dart';
-import 'package:app/views/homeComponents/layoutComponent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/pages/home_page.dart';
 import 'package:app/pages/leitner_page.dart';
+import 'package:app/pages/notification_page.dart';
+import 'package:app/pages/store_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/views/homeComponents/appBarBuilder.dart';
 import 'package:app/views/homeComponents/bottomNavBarBuilder.dart';
+import 'package:app/views/homeComponents/drawerMenuBuilder.dart';
+import 'package:app/views/homeComponents/layoutComponent.dart';
 
 class LayoutPage extends StatefulWidget {
   const LayoutPage({Key? key}) : super(key: key);

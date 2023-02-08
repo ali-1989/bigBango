@@ -1,6 +1,7 @@
-import 'package:app/structures/enums/walletAmountType.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
+
+import 'package:app/structures/enums/walletAmountType.dart';
 
 class TransactionWalletModel {
   late String id;

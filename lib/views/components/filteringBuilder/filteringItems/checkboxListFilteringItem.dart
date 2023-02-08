@@ -2,7 +2,6 @@ import 'package:app/views/components/filteringBuilder/filteringItemType.dart';
 import 'package:app/views/components/filteringBuilder/filteringItems/filteringItem.dart';
 import 'package:app/views/components/filteringBuilder/filteringItems/simpleItem.dart';
 
-
 class CheckboxListFilteringItem extends FilteringItem {
   List<SimpleItem> items = [];
   bool isEnable = true;

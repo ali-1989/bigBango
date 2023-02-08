@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:app/structures/models/hoursOfSupportModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/models/hoursOfSupportModel.dart';
 import 'package:app/structures/models/supportModels/dayWeekModel.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 /// realWidth: 1080.0, realHeight: 2274.0, pixelRatio: 2.625, Padding(left: 0, top: 83, right: 0, bottom: 0)
 /// realWidth: 720, realHeight: 1280.0, pixelRatio: 2.0, Padding(left: 0, top: 48, right: 0, bottom: 0)
+
 class AppSizes {
   AppSizes._();
 
@@ -12,7 +13,7 @@ class AppSizes {
   static bool _initialState = false;
 
   static double sizeOfBigScreen = 700;
-  static double webMaxDialogSize = 700;
+  static double webMaxDialogSize = 500; // 700;  because used MaxWidth(500) in main
 
   double? realPixelWidth;
   double? realPixelHeight;
@@ -102,6 +103,7 @@ class AppSizes {
       appWidth = constraints.maxWidth;
       appHeight = constraints.maxHeight;
     }
+
     imageMultiplier = appWidth / 100;
     textMultiplier = appHeight / 100;
     heightMultiplier = appHeight / 100;
@@ -134,7 +136,9 @@ class AppSizes {
       return 0;
     }
 
-    return over / 2;
+    return 0;
+    /// if in main used [MaxWidth()],not need to below line
+    //return over / 2;
   }
 
   double mTextSize(double tSize){
@@ -149,21 +153,14 @@ class AppSizes {
     return size * heightMultiplier; // ~6.4
   }
 
-  double fwSize(double s){
-    if(kIsWeb) {
-      return s * 1.3;
-    }
-    return s;
-  }
-
-  static double fwTextFactor(double fact){
+  static double webFontTextFactor(double fact){
     if(kIsWeb) {
       return fact * 1.4;
     }
     return fact;
   }
 
-  static double fwFontSize(double size){
+  static double webFontSize(double size){
     if(kIsWeb) {
       return size * 1.3;
     }

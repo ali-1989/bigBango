@@ -1,7 +1,20 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+
+import 'package:image_picker/image_picker.dart';
+import 'package:iris_pic_editor/pic_editor.dart';
+import 'package:iris_tools/api/helpers/fileHelper.dart';
+import 'package:iris_tools/features/overlayDialog.dart';
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/icon/circularIcon.dart';
+import 'package:iris_tools/widgets/irisImageView.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
+import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
@@ -13,19 +26,6 @@ import 'package:app/tools/permissionTools.dart';
 import 'package:app/views/components/fullScreenImageComponent.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/widgets/customCard.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:iris_pic_editor/pic_editor.dart';
-import 'package:iris_tools/api/helpers/fileHelper.dart';
-import 'package:iris_tools/features/overlayDialog.dart';
-import 'package:app/system/extensions.dart';
-
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:iris_tools/widgets/icon/circularIcon.dart';
-import 'package:iris_tools/widgets/irisImageView.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class AttachmentFileTicketComponent extends StatefulWidget {
   final List<File> files;

@@ -2,12 +2,12 @@
 
 import 'dart:async';
 
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/lessonModels/storeModel.dart';
 import 'package:app/tools/app/appSnack.dart';
-import 'package:iris_tools/api/helpers/jsonHelper.dart';
-
 
 class StoreManager {
 	StoreManager._();

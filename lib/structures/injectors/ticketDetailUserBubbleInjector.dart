@@ -1,4 +1,3 @@
-
 import 'package:app/structures/models/ticketModels/ticketReplyModel.dart';
 
 class TicketDetailBubbleInjector {

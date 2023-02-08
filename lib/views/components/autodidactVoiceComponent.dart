@@ -1,13 +1,32 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import 'package:audio_session/audio_session.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart' as rec;
+import 'package:im_animations/im_animations.dart';
+import 'package:iris_tools/api/duration/durationFormatter.dart';
+import 'package:iris_tools/api/helpers/focusHelper.dart';
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
+import 'package:iris_tools/api/helpers/pathHelper.dart';
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:logger/logger.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:app/services/file_upload_service.dart';
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/autodidactReplyType.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/injectors/autodidactPageInjector.dart';
+import 'package:app/structures/interfaces/examStateInterface.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
+import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
@@ -19,30 +38,6 @@ import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/permissionTools.dart';
 import 'package:app/views/widgets/customCard.dart';
-import 'package:flutter/foundation.dart';
-
-import 'package:flutter_sound/flutter_sound.dart';
-import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart' as rec;
-import 'package:audio_session/audio_session.dart';
-import 'package:im_animations/im_animations.dart';
-import 'package:iris_tools/api/duration/durationFormatter.dart';
-import 'package:iris_tools/api/helpers/focusHelper.dart';
-import 'package:iris_tools/api/helpers/jsonHelper.dart';
-import 'package:iris_tools/api/helpers/pathHelper.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:logger/logger.dart';
-
-import 'package:flutter/material.dart';
-
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/system/extensions.dart';
-
-import 'package:app/structures/interfaces/examStateInterface.dart';
-
-import 'package:permission_handler/permission_handler.dart';
-
 import '../../system/keys.dart';
 
 class AutodidactVoiceComponent extends StatefulWidget {

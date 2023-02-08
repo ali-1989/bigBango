@@ -1,7 +1,6 @@
 import 'package:app/views/components/filteringBuilder/filteringItemType.dart';
 import 'package:app/views/components/filteringBuilder/filteringItems/filteringItem.dart';
 
-
 class DividerFilteringItem extends FilteringItem {
   bool isThin;
 

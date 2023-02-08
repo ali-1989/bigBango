@@ -1,16 +1,16 @@
-import 'package:app/managers/systemParameterManager.dart';
-import 'package:app/services/event_dispatcher_service.dart';
-import 'package:app/system/session.dart';
-import 'package:app/views/homeComponents/layoutComponent.dart';
+import 'package:app/tools/app/appSheet.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
+import 'package:app/managers/systemParameterManager.dart';
+import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/system/session.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
+import 'package:app/views/homeComponents/layoutComponent.dart';
 import 'package:app/views/sheets/changeLanguageLevelSheet.dart';
 
 /*class AppBarCustom2 extends AppBar {
@@ -182,24 +182,23 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
   }
 
   void onLevelClick(){
-    showMaterialModalBottomSheet(
-      context: context,
-      isDismissible: true,
-      bounce: true,
-      expand: false,
-      backgroundColor: Colors.white,
+    AppSheet.showSheetCustom(
+      context,
+        builder: (_){
+          return SizedBox(
+            height: MathHelper.percent(sh, 80),
+            child: const ChangeLanguageLevelSheet(),
+          );
+        },
+        routeName: 'random',
+      contentColor: Colors.white,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20)
           )
-      ),
-      builder: (context) {
-        return SizedBox(
-          height: MathHelper.percent(sh, 80),
-          child: const ChangeLanguageLevelSheet(),
-        );
-      },
+      )
     );
   }
 }

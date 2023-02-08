@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
+
+import 'package:app/tools/app/appIcons.dart';
 import 'package:app/views/components/filteringBuilder/filteringBuilderOption.dart';
 import 'package:app/views/components/filteringBuilder/filteringChangePage.dart';
 import 'package:app/views/components/filteringBuilder/filteringItemType.dart';
 import 'package:app/views/components/filteringBuilder/filteringItems/checkboxListFilteringItem.dart';
 import 'package:app/views/components/filteringBuilder/filteringItems/filteringItem.dart';
 import 'package:app/views/components/filteringBuilder/filteringItems/simpleItem.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:flutter/material.dart';
 
 class FilteringBuilder extends StatefulWidget {
   final FilteringBuilderOptions options;

@@ -1,20 +1,17 @@
 import 'dart:async';
 
-import 'package:app/services/review_service.dart';
-import 'package:app/structures/injectors/grammarPagesInjector.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/views/states/backBtn.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
-
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/maxHeight.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:app/pages/exam_page.dart';
+import 'package:app/services/review_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/injectors/examPageInjector.dart';
+import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/grammarModel.dart';
@@ -23,11 +20,12 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appThemes.dart';
+import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/appbarLesson.dart';
+import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-
 
 class GrammarPage extends StatefulWidget {
   final GrammarPageInjector injector;

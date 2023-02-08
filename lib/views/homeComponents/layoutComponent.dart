@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
+
 import 'package:animator/animator.dart';
+import 'package:iris_tools/modules/stateManagers/refresh.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appSizes.dart';
-import 'package:flutter/material.dart';
-import 'package:iris_tools/modules/stateManagers/refresh.dart';
 
 class LayoutComponent extends StatefulWidget {
   final Widget body;

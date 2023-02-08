@@ -1,4 +1,8 @@
-import 'package:app/structures/models/examModels/examSuperModel.dart';
+import 'package:flutter/material.dart';
+
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/examDescription.dart';
 import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/injectors/autodidactPageInjector.dart';
@@ -6,6 +10,12 @@ import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
+import 'package:app/structures/models/examModels/examSuperModel.dart';
+import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/appMessages.dart';
+import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/autodidactTextComponent.dart';
@@ -13,18 +23,7 @@ import 'package:app/views/components/autodidactVoiceComponent.dart';
 import 'package:app/views/components/examBlankSpaseComponent.dart';
 import 'package:app/views/components/examOptionComponent.dart';
 import 'package:app/views/components/examSelectWordComponent.dart';
-import 'package:flutter/material.dart';
-
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/views/widgets/customCard.dart';
-
 
 class ExamPage extends StatefulWidget {
   final ExamPageInjector injector;

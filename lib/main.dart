@@ -5,6 +5,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import 'package:iris_tools/widgets/maxWidth.dart';
+
 import 'package:app/constants.dart';
 import 'package:app/pages/splash_page.dart';
 import 'package:app/system/applicationInitialize.dart';
@@ -32,10 +34,14 @@ Future<void> main() async {
               initialData: false,
               stream: AppBroadcast.viewUpdaterStream.stream,
               builder: (context, snapshot) {
-              return DefaultTextHeightBehavior(
-                textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false),
-                child: Toaster(
-                  child: MyApp(),
+              return MaxWidth(
+                maxWidth: 520,
+                apply: kIsWeb,
+                child: DefaultTextHeightBehavior(
+                  textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false),
+                  child: Toaster(
+                    child: MyApp(),
+                  ),
                 ),
               );
             }
@@ -80,7 +86,7 @@ class MyApp extends StatelessWidget {
         AppRoute.materialContext = localContext;
 
         return DefaultTextStyle(
-          style: AppThemes.instance.themeData.textTheme.bodyText1?? TextStyle(),
+          style: AppThemes.instance.themeData.textTheme.bodyLarge?? TextStyle(),
           child: Directionality(
               textDirection: AppThemes.instance.textDirection,
               child: home! //materialHomeBuilder(home)

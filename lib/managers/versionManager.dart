@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:app/tools/app/appThemes.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/mathHelper.dart';
@@ -10,6 +9,7 @@ import 'package:app/pages/new_version_page.dart';
 import 'package:app/structures/models/versionModel.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/app/appThemes.dart';
 import '/managers/settingsManager.dart';
 
 class VersionManager {

@@ -1,16 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:app/pages/support_page.dart';
-import 'package:app/services/file_upload_service.dart';
-import 'package:app/services/pages_event_service.dart';
-import 'package:app/structures/enums/fileUploadType.dart';
-import 'package:app/structures/models/ticketModels/ticketModel.dart';
-import 'package:app/system/keys.dart';
-
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/views/components/attachmentFileTicketComponent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -20,16 +10,24 @@ import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
+import 'package:app/pages/support_page.dart';
+import 'package:app/services/file_upload_service.dart';
+import 'package:app/services/pages_event_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/ticketModels/ticketModel.dart';
 import 'package:app/structures/models/ticketModels/ticketRole.dart';
+import 'package:app/system/extensions.dart';
+import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
-import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appSnack.dart';
+import 'package:app/tools/app/appToast.dart';
+import 'package:app/views/components/attachmentFileTicketComponent.dart';
 import 'package:app/views/widgets/customCard.dart';
-
 
 class AddTicketSheet extends StatefulWidget {
   final List<TicketRole> ticketRoles;

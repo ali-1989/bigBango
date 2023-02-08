@@ -1,5 +1,3 @@
-import 'package:app/structures/models/cityModel.dart';
-import 'package:app/structures/models/provinceModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -15,6 +13,8 @@ import 'package:shamsi_date/shamsi_date.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/cityModel.dart';
+import 'package:app/structures/models/provinceModel.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';

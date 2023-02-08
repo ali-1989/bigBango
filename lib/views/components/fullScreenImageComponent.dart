@@ -1,9 +1,9 @@
-import 'package:app/structures/enums/enums.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/api/helpers/colorHelper.dart';
 
+import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:photo_view/photo_view.dart';
 
+import 'package:app/structures/enums/enums.dart';
 
 /// Usage:
 /// final view = ImageFullScreen(heroTag: '');

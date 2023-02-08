@@ -4,15 +4,26 @@ import 'package:app/tools/app/appNavigator.dart';
 
 class AppRoute {
   static BuildContext? materialContext;
+  static bool _isInit = false;
 
   AppRoute._();
 
   static void init() {
+    if(_isInit){
+      return;
+    }
+
+    _isInit = true;
   }
 
   static BuildContext? getLastContext() {
-    var res = WidgetsBinding.instance.focusManager.rootScope.focusedChild?.context;//deep: 50
-    res ??= WidgetsBinding.instance.focusManager.primaryFocus?.context; //deep: 71
+    var res = WidgetsBinding.instance.focusManager.rootScope.focusedChild?.context;//deep: 50,66
+
+    Navigator? nav1 = res?.findAncestorWidgetOfExactType();
+
+    if(res == null || nav1 == null) {
+      res = WidgetsBinding.instance.focusManager.primaryFocus?.context; //deep: 71
+    }
 
     return res?? getBaseContext();
   }

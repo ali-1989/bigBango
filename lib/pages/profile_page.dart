@@ -1,21 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:app/services/event_dispatcher_service.dart';
-import 'package:app/services/file_upload_service.dart';
-import 'package:app/structures/enums/fileUploadType.dart';
-import 'package:app/structures/enums/genderType.dart';
-import 'package:app/structures/models/cityModel.dart';
-import 'package:app/structures/models/mediaModel.dart';
-import 'package:app/structures/models/provinceModel.dart';
-import 'package:app/tools/app/appInfoDisplay.dart';
-import 'package:app/tools/deviceInfoTools.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:iris_pic_editor/pic_editor.dart';
 import 'package:iris_tools/api/checker.dart';
+import 'package:iris_tools/api/helpers/clone.dart';
 import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/api/helpers/fileHelper.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
@@ -27,15 +19,23 @@ import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/icon/circularIcon.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
+import 'package:mask_input_formatter/mask_input_formatter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:persian_modal_date_picker/button.dart';
 import 'package:persian_modal_date_picker/persian_date_picker.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
+import 'package:app/services/event_dispatcher_service.dart';
+import 'package:app/services/file_upload_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/models/userModel.dart';
 import 'package:app/structures/enums/enums.dart';
+import 'package:app/structures/enums/fileUploadType.dart';
+import 'package:app/structures/enums/genderType.dart';
+import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/cityModel.dart';
+import 'package:app/structures/models/mediaModel.dart';
+import 'package:app/structures/models/provinceModel.dart';
+import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';
@@ -43,12 +43,13 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/appInfoDisplay.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/dateTools.dart';
+import 'package:app/tools/deviceInfoTools.dart';
 import 'package:app/tools/permissionTools.dart';
-import 'package:mask_input_formatter/mask_input_formatter.dart';
 
 class ProfilePage extends StatefulWidget {
   final UserModel userModel;
@@ -557,7 +558,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     }
 
     /// create a copy of user for compare changes
-    userChangeInfo = JsonHelper.clone(userFixInfo);
+    userChangeInfo = Clone.cloneShallow(userFixInfo);
   }
 
   void compareChanges(){

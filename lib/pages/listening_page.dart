@@ -1,6 +1,3 @@
-import 'package:app/structures/enums/quizType.dart';
-import 'package:app/structures/injectors/listeningPagesInjector.dart';
-import 'package:app/views/states/backBtn.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormatter.dart';
@@ -8,7 +5,9 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/injectors/examPageInjector.dart';
+import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/listeningModel.dart';
 import 'package:app/system/extensions.dart';
@@ -20,6 +19,7 @@ import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/components/examBlankSpaseComponent.dart';
 import 'package:app/views/components/examOptionComponent.dart';
 import 'package:app/views/components/examSelectWordComponent.dart';
+import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';

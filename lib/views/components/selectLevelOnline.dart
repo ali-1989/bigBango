@@ -1,6 +1,6 @@
-import 'package:app/managers/systemParameterManager.dart';
 import 'package:flutter/material.dart';
 
+import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';

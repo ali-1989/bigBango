@@ -1,15 +1,13 @@
-import 'package:app/pages/grammar_page.dart';
-import 'package:app/structures/injectors/grammarPagesInjector.dart';
-
-import 'package:app/structures/models/lessonModels/lessonModel.dart';
-import 'package:app/tools/app/appColors.dart';
 import 'package:flutter/material.dart';
 
+import 'package:app/pages/grammar_page.dart';
+import 'package:app/structures/injectors/grammarPagesInjector.dart';
+import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/views/widgets/customCard.dart';
-
 
 class SelectGrammarDialog extends StatefulWidget {
   final LessonModel lessonModel;

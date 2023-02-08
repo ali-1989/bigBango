@@ -1,19 +1,19 @@
+import 'package:flutter/material.dart';
+
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/keepAliveWrap.dart';
+import 'package:switch_tab/switch_tab.dart';
+
 import 'package:app/managers/systemParameterManager.dart';
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/models/supportModels/supportPlanModel.dart';
+import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/currencyTools.dart';
 import 'package:app/views/widgets/customCard.dart';
-import 'package:flutter/material.dart';
-
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:iris_tools/widgets/keepAliveWrap.dart';
-import 'package:switch_tab/switch_tab.dart';
 
 class SupportPlanSheet extends StatefulWidget {
   final List<SupportPlanModel> planList;

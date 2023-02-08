@@ -1,7 +1,7 @@
-import 'package:app/views/components/filteringBuilder/filteringItemType.dart';
-import 'package:app/views/components/filteringBuilder/filteringItems/filteringItem.dart';
 import 'package:flutter/material.dart';
 
+import 'package:app/views/components/filteringBuilder/filteringItemType.dart';
+import 'package:app/views/components/filteringBuilder/filteringItems/filteringItem.dart';
 
 typedef CustomBuilder = Widget Function(BuildContext buildContext);
 typedef CustomIsSelected = bool Function();

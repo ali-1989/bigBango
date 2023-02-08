@@ -1,18 +1,17 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
+import 'package:iris_tools/api/system.dart';
+
 import 'package:app/constants.dart';
 import 'package:app/managers/versionManager.dart';
 import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:app/structures/models/systemParameterModel.dart';
 import 'package:app/structures/models/versionModel.dart';
-
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:dio/dio.dart';
-import 'package:iris_tools/api/helpers/jsonHelper.dart';
-import 'package:iris_tools/api/system.dart';
-
 
 class SystemParameterManager {
   static SystemParameterModel systemParameters = SystemParameterModel();
@@ -54,6 +53,7 @@ class SystemParameterManager {
 
     var f = request.response.catchError((e){
       result.complete(null);
+      return null;
     });
 
     f = f.then((Response? response){
@@ -64,9 +64,7 @@ class SystemParameterManager {
 
       final js = JsonHelper.jsonToMap(response.data);
       final data = js?['data']?? {};
-print('0000000000000000--00000000000000000000000');
-print(data);
-print('000000000000000000000000000000000000000');
+
       systemParameters = SystemParameterModel.fromMap(data);
 
       /*

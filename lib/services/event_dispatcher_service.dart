@@ -1,8 +1,6 @@
-
 import 'dart:async';
 
 import 'package:iris_tools/api/generator.dart';
-
 
 /*
 Alternative:

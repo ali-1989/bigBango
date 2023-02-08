@@ -1,15 +1,34 @@
-import 'package:app/managers/settingsManager.dart';
-import 'package:app/structures/models/countryModel.dart';
-import 'package:app/tools/countryTools.dart';
 import 'package:intl/intl.dart';
-import 'package:app/system/extensions.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 
-
+import 'package:app/managers/settingsManager.dart';
+import 'package:app/structures/models/countryModel.dart';
+import 'package:app/system/extensions.dart';
+import 'package:app/tools/countryTools.dart';
 
 class CurrencyTools {
   CurrencyTools._();
 
+  static String formatCurrency(num cur, {String name = '', String? symbol}){
+    final format = NumberFormat.currency(
+      locale: SettingsManager.settingsModel.appLocale.languageCode,
+      name: name,
+      symbol: symbol,
+      decimalDigits: 0,
+      //customPattern: ,
+    );
+
+    return format.format(cur);
+  }
+
+  static String formatCurrencyString(String? cur, {String name = '', String? symbol}){
+    if(cur == null || cur.isEmpty){
+      return '';
+    }
+
+    return formatCurrency(MathHelper.clearToDouble(cur), name: name, symbol: symbol);
+  }
+  
   static CurrencyModel getCurrencyBy(String currencyCode, String countryIso) {
     final Map countryMap = CountryTools.countriesMap!;
     final itr = countryMap.entries;
@@ -35,25 +54,7 @@ class CurrencyTools {
     return res;
   }
 
-  static String formatCurrency(num cur, {String name = '', String? symbol}){
-    final format = NumberFormat.currency(
-      locale: SettingsManager.settingsModel.appLocale.languageCode,
-      name: name,
-      symbol: symbol,
-      decimalDigits: 0,
-      //customPattern: ,
-    );
-
-    return format.format(cur);
-  }
-
-  static String formatCurrencyString(String? cur, {String name = '', String? symbol}){
-    if(cur == null || cur.isEmpty){
-      return '';
-    }
-
-    return formatCurrency(MathHelper.clearToDouble(cur), name: name, symbol: symbol);
-  }
+  
 }
 
 

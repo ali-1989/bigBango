@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:app/structures/enums/fileUploadType.dart';
-import 'package:app/structures/middleWare/requester.dart';
 import 'package:dio/dio.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/pathHelper.dart';
 import 'package:iris_tools/models/twoStateReturn.dart';
+
+import 'package:app/structures/enums/fileUploadType.dart';
+import 'package:app/structures/middleWare/requester.dart';
 
 class FileUploadService {
   FileUploadService._();

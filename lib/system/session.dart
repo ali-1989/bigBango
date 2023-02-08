@@ -1,8 +1,8 @@
-import 'package:app/services/event_dispatcher_service.dart';
 import 'package:iris_db/iris_db.dart';
 import 'package:iris_tools/api/checker.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
+import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/tools/app/appDb.dart';
 import '/managers/settingsManager.dart';
@@ -14,10 +14,7 @@ class Session {
 
 	static UserModel? _lastLoginUser;
 	static List<UserModel> currentLoginList = [];
-	//static final List<Function(UserModel user)> _loginListeners = [];
-	//static final List<Function(UserModel user)> _logoffListeners = [];
-	//static final List<Function(UserModel user, Map? old)> _profileChangeListeners = [];
-
+	
 	static Future<int> fetchLoginUsers() async {
 		final list = AppDB.db.query(AppDB.tbUsers,
 				Conditions().add(Condition(ConditionType.DefinedNotNull)..key = Keys.setting$lastLoginDate));
@@ -80,6 +77,8 @@ class Session {
 		}
 
 		final newUser = UserModel.fromMap(json);
+
+		//newUser.token?.refreshToken = json['refreshToken'];
 
 		newUser.loginDate = DateHelper.getNow().toUtc();
 

@@ -46,7 +46,6 @@ class AppIcons {
   static const IconData message = Icons.message;
   static const IconData email = Icons.email;
   static const IconData sendMessage = Icons.send;
-  static const IconData whatsapp = Icons.whatsapp;
   static const IconData search = Icons.search;
   static const IconData fileUpload = Icons.upload_file;
   static const IconData file = Icons.insert_drive_file_sharp;
@@ -63,7 +62,7 @@ class AppIcons {
   static const IconData pauseCircle = Icons.pause_circle;
   static const IconData chartBar = Icons.bar_chart;
   static const IconData edit = Icons.edit;
-  static const IconData dDownload = Icons.file_download;
+  static const IconData download = Icons.file_download;
   static const IconData downloadCloud = Icons.cloud_download_rounded;
   static const IconData downloadSolidCircle = Icons.download_for_offline;
   static const IconData downloadFile = Icons.file_download_outlined;
@@ -78,6 +77,7 @@ class AppIcons {
   static const IconData pushPin = Icons.push_pin;
   static const IconData dotsVer = Icons.more_vert;
   static const IconData dotsHor = Icons.more_horiz;
+  static const IconData backupCloud = Icons.backup;
   static const IconData settings = Icons.settings;
   static const IconData wallet = Icons.account_balance_wallet;
   static const IconData report = Icons.analytics;

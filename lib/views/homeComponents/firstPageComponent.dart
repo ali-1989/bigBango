@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+
+import 'package:iris_tools/api/system.dart';
+import 'package:iris_tools/dateSection/dateHelper.dart';
+
 import 'package:app/pages/layout_page.dart';
 import 'package:app/pages/phone_number_page.dart';
 import 'package:app/pages/register_form_page.dart';
@@ -6,9 +11,6 @@ import 'package:app/system/keys.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appDb.dart';
-import 'package:flutter/material.dart';
-import 'package:iris_tools/api/system.dart';
-import 'package:iris_tools/dateSection/dateHelper.dart';
 
 class FirstPageComponent extends StatelessWidget {
   const FirstPageComponent({Key? key}) : super(key: key);

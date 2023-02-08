@@ -1,12 +1,9 @@
-import 'package:app/managers/storeManager.dart';
-import 'package:app/views/states/emptyData.dart';
-import 'package:app/views/states/errorOccur.dart';
-import 'package:app/views/states/waitToLoad.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
+import 'package:app/managers/storeManager.dart';
 import 'package:app/pages/leitner_detail_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/models/lightnerModel.dart';
@@ -15,6 +12,9 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appThemes.dart';
+import 'package:app/views/states/emptyData.dart';
+import 'package:app/views/states/errorOccur.dart';
+import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 
 class LightnerPage extends StatefulWidget {
