@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -43,7 +44,6 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appInfoDisplay.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
@@ -827,7 +827,13 @@ class _ProfilePageState extends StateBase<ProfilePage> {
   }
 
   void onIbanQuestionMarkClick(){
-    AppInfoDisplay.showMiniInfo(context, Text('شماره شبا برای برگرداندن اعتبار کیف پول به شما (در صورت نیاز) استفاده می شود'));
+    OverlayDialog.showMiniInfo(
+        context,
+        Text('شماره شبا برای برگرداندن اعتبار کیف پول به شما (در صورت نیاز) استفاده می شود'),
+        (_, c){
+          return Bounce(child: c);
+        }
+    );
   }
 
   void generateProvince(){
@@ -1060,6 +1066,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       final data = js[Keys.data];
 
       if(data is List){
+        cityList.clear();
+
         for(final x in data){
           cityList.add(CityModel.fromMap(x));
         }

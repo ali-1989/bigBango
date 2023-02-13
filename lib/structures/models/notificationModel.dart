@@ -1,42 +1,39 @@
-import 'package:flutter/material.dart';
-
-import 'package:app/constants.dart';
-import 'package:app/tools/app/appThemes.dart';
+import 'package:app/structures/models/mediaModel.dart';
 
 class NotificationModel {
-  String name = '${Constants.appName}_channel';
-  bool enableLights = true;
-  bool enableVibration = true;
-  bool playSound = true;
-  bool isPublic = true;
-  bool importanceIsHigh = false;
-  Color defaultColor = AppThemes.instance.currentTheme.successColor;
-  Color ledColor = AppThemes.instance.currentTheme.successColor;
+  late String id;
+  late String title;
+  late String body;
+  int type = 1;
+  int status = 1;
+  String? data;
+  MediaModel? image;
 
   NotificationModel.fromMap(Map? map){
     if(map == null){
       return;
     }
 
-    enableLights = map['enableLights']?? true;
-    enableVibration = map['enableVibration']?? true;
-    playSound = map['playSound']?? true;
-    isPublic = map['isPublic']?? true;
-    importanceIsHigh = map['importanceIsHigh']?? false;
-    defaultColor = map['defaultColor']?? AppThemes.instance.currentTheme.successColor;
-    ledColor = map['ledColor']?? AppThemes.instance.currentTheme.successColor;
+    id = map['id'];
+    title = map['title'];
+    body = map['body'];
+    data = map['data'];
+
+    if(map['image'] is Map){
+      image = MediaModel.fromMap(map['image']);
+    }
   }
 
   Map<String, dynamic> toMap(){
     final map = <String, dynamic>{};
 
-    map['enableLights'] = enableLights;
-    map['enableVibration'] = enableVibration;
-    map['playSound'] = playSound;
-    map['isPublic'] = isPublic;
-    map['importanceIsHigh'] = importanceIsHigh;
-    map['defaultColor'] = defaultColor;
-    map['ledColor'] = ledColor;
+    map['id'] = id;
+    map['title'] = title;
+    map['body'] = body;
+    map['data'] = data;
+    map['image'] = image?.toMap();
+    map['status'] = status;
+    map['type'] = type;
 
     return map;
   }
