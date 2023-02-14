@@ -1,11 +1,13 @@
+import 'package:app/structures/enums/notificationStatus.dart';
+import 'package:app/structures/enums/notificationType.dart';
 import 'package:app/structures/models/mediaModel.dart';
 
 class NotificationModel {
   late String id;
   late String title;
   late String body;
-  int type = 1;
-  int status = 1;
+  NotificationType type = NotificationType.unKnow;
+  NotificationStatus status = NotificationStatus.unKnow;
   String? data;
   MediaModel? image;
 
@@ -18,6 +20,8 @@ class NotificationModel {
     title = map['title'];
     body = map['body'];
     data = map['data'];
+    type = NotificationType.fromType(map['type']);
+    status = NotificationStatus.fromType(map['status']);
 
     if(map['image'] is Map){
       image = MediaModel.fromMap(map['image']);
@@ -32,9 +36,19 @@ class NotificationModel {
     map['body'] = body;
     map['data'] = data;
     map['image'] = image?.toMap();
-    map['status'] = status;
-    map['type'] = type;
+    map['status'] = status.number;
+    map['type'] = type.number;
 
     return map;
+  }
+
+  void matchBy(NotificationModel other){
+    id = other.id;
+    title = other.title;
+    body = other.body;
+    data = other.data;
+    image = other.image;
+    status = other.status;
+    type = other.type;
   }
 }

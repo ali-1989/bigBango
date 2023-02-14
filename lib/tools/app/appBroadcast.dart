@@ -21,6 +21,7 @@ class AppBroadcast {
   static final rootNavigatorKey = GlobalKey<NavigatorState>();
   static final layoutPageKey = GlobalKey<LayoutPageState>();
   static final homePageKey = GlobalKey<HomePageState>();
+  static final assistId$notificationPage = 'assistId_notificationPage';
 
   //static final homePageBadges = <int, int>{};
   static bool isNetConnected = true;
