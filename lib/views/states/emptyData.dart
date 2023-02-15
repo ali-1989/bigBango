@@ -5,12 +5,14 @@ import 'package:app/tools/app/appImages.dart';
 class EmptyData extends StatelessWidget {
   final TextStyle? textStyle;
   final String? message;
+  final VoidCallback? onTryAgain;
   final Widget? backButton;
   final Color? backgroundColor;
 
   const EmptyData({
     this.textStyle,
     this.message,
+    this.onTryAgain,
     this.backgroundColor,
     this.backButton,
     Key? key,
@@ -47,8 +49,33 @@ class EmptyData extends StatelessWidget {
                   Flexible(
                     flex: 1,
                     child: Center(
-                      child: Text(message?? 'داده ای یافت نشد',
-                        style: textStyle?? const TextStyle(fontWeight: FontWeight.bold),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(message?? 'داده ای یافت نشد',
+                            style: textStyle?? const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+
+                          /// --- onTryAgain
+                          Visibility(
+                              visible: onTryAgain != null,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(width: 10),
+                                  IconButton(
+                                    padding: EdgeInsets.zero,
+                                    iconSize: 23,
+                                    constraints: BoxConstraints.tightFor(),
+                                    onPressed: (){
+                                      onTryAgain?.call();
+                                    },
+                                    icon: Icon(Icons.refresh, color: Colors.blue),
+                                  )
+                                ],
+                              )
+                          )
+                        ],
                       ),
                     ),
                   ),

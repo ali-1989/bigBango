@@ -99,7 +99,7 @@ class ReviewService {
       final lesson = LessonModel.fromMap(data);
       lessonModel.matchBy(lesson);
 
-      AssistController.commonUpdateAssist(HomePage.id$head);
+      AssistController.updateAssistGlobal(HomePage.id$head);
       completer.complete(true);
     };
 

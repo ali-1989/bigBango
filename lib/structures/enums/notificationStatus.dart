@@ -1,8 +1,8 @@
 
 enum NotificationStatus {
   unKnow(-1),
-  paid(1),
-  cancelled(2);
+  unRead(1),
+  read(2);
 
   final int number;
 
@@ -31,9 +31,9 @@ enum NotificationStatus {
   String getTypeHuman(){
     switch(number){
       case 1:
-        return 'پرداخت نشده';
+        return 'خوانده نشده';
       case 2:
-        return 'پرداخت شده';
+        return 'خوانده شده';
     }
 
     return 'ن م';

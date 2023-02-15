@@ -8,8 +8,11 @@ class NotificationModel {
   late String body;
   NotificationType type = NotificationType.unKnow;
   NotificationStatus status = NotificationStatus.unKnow;
+  late DateTime createAt;
   String? data;
   MediaModel? image;
+
+  NotificationModel();
 
   NotificationModel.fromMap(Map? map){
     if(map == null){
@@ -20,6 +23,7 @@ class NotificationModel {
     title = map['title'];
     body = map['body'];
     data = map['data'];
+    createAt = map['createAt'];
     type = NotificationType.fromType(map['type']);
     status = NotificationStatus.fromType(map['status']);
 
@@ -36,6 +40,7 @@ class NotificationModel {
     map['body'] = body;
     map['data'] = data;
     map['image'] = image?.toMap();
+    map['createAt'] = createAt;
     map['status'] = status.number;
     map['type'] = type.number;
 
@@ -48,6 +53,7 @@ class NotificationModel {
     body = other.body;
     data = other.data;
     image = other.image;
+    createAt = other.createAt;
     status = other.status;
     type = other.type;
   }

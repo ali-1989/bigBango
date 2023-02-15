@@ -1,11 +1,9 @@
 // ignore_for_file: empty_catches
-
 import 'dart:core';
 
 import 'package:app/structures/models/notificationModel.dart';
-import 'package:iris_pic_editor/picEditor/state_manager.dart';
+import 'package:app/structures/structure/notificationStateStructure.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
-
 
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/tools/app/appBroadcast.dart';
@@ -15,9 +13,8 @@ class NotificationManager {
   
   static final List<NotificationModel> _notificationList = [];
   static List<NotificationModel> get notificationList => _notificationList;
-  static int page = 1;
-  static bool isRequested = false;
-  static bool isInRequest = false;
+  static int pageIndex = 1;
+  static NotificationStateStructure notificationStateStructure = NotificationStateStructure();
   ///-----------------------------------------------------------------------------------------
   static DateTime? lastUpdateTime;
 
@@ -30,6 +27,13 @@ class NotificationManager {
     if(lastUpdateTime == null || DateHelper.isPastOf(lastUpdateTime, Duration(minutes: 29))){
       requestNotification();
     }
+  }
+
+  static void reset() async {
+    _notificationList.clear();
+    pageIndex = 1;
+
+    requestNotification();
   }
 
   static NotificationModel? getById(String? id){
@@ -73,49 +77,66 @@ class NotificationManager {
     _notificationList.removeWhere((element) => element.id == id);
   }
 
-  /*static void sortList(bool asc) async {
+  static void sortList(bool asc) async {
     _notificationList.sort((NotificationModel p1, NotificationModel p2){
-      final d1 = p1.date;
-      final d2 = p2.date;
+      final d1 = p1.createAt;
+      final d2 = p2.createAt;
 
-      if(d1 == null){
+      /*if(d1 == null){
         return asc? 1: 1;
       }
 
       if(d2 == null){
         return asc? 1: 1;
-      }
+      }*/
 
       return asc? d1.compareTo(d2) : d2.compareTo(d1);
     });
-  }*/
+  }
 
   static Future removeNotMatchByServer(List<String> serverIds) async {
     _notificationList.removeWhere((element) => !serverIds.contains(element.id));
   }
 
 
-  static Future requestNotification() async {
+  static void requestNotification() async {
+    if(AppBroadcast.notifyMessageNotifier.states.isInRequest){
+      return;
+    }
+
+    AppBroadcast.notifyMessageNotifier.states.isInRequest = true;
     final requester = Requester();
 
     requester.httpRequestEvents.onAnyState = (req) async {
       requester.dispose();
-      isRequested = true;
-      isInRequest = false;
+    };
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      AppBroadcast.notifyMessageNotifier.states.errorOccur();
     };
 
     requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
       lastUpdateTime = DateHelper.getNowToUtc();
 
-      final data = dataJs['data'];
+      final List data = dataJs['data']?? [];
+      final hasNextPage = dataJs['hasNextPage']?? true;
+      pageIndex = dataJs['pageIndex']?? pageIndex;
+
+      if(hasNextPage || data.length >= 100){
+        pageIndex++;
+      }
+
+      AppBroadcast.notifyMessageNotifier.states.hasNextPage = hasNextPage;
 
       addItemsFromMap(data);
+      addItem(NotificationModel()..id = 'a'..title = 'title'..body = 'ffgg ffggf fgffg'..createAt = DateTime.now());
 
-      AssistController.commonUpdateAssist(AppBroadcast.assistId$notificationPage);
+      AppBroadcast.notifyMessageNotifier.states.dataIsOk();
+      AppBroadcast.notifyMessageNotifier.notify();
     };
 
-    isInRequest = true;
-    requester.prepareUrl(pathUrl: '/notifications?Page=$page&Size=100');
+
+    requester.prepareUrl(pathUrl: '/notifications?Page=$pageIndex&Size=100');
     requester.methodType = MethodType.get;
     requester.request(null, false);
   }

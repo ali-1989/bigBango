@@ -1,6 +1,7 @@
 
 class AppBadge {
   AppBadge._();
+ //static final homePageBadges = <int, int>{};
 
   /*static void prepareBadgesAndRefresh() async {
     final user = Session.getLastLoginUser();

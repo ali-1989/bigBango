@@ -829,8 +829,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
   void onIbanQuestionMarkClick(){
     OverlayDialog.showMiniInfo(
         context,
-        Text('شماره شبا برای برگرداندن اعتبار کیف پول به شما (در صورت نیاز) استفاده می شود'),
-        (_, c){
+        child: Text('شماره شبا برای برگرداندن اعتبار کیف پول به شما (در صورت نیاز) استفاده می شود'),
+        builder :(_, c){
           return Bounce(child: c);
         }
     );

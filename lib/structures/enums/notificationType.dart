@@ -1,8 +1,10 @@
 
 enum NotificationType {
   unKnow(-1),
-  paid(1),
-  cancelled(2);
+  ticket(1),
+  timeTable(2),
+  withdrawWallet(3),
+  other(100);
 
   final int number;
 
@@ -31,9 +33,13 @@ enum NotificationType {
   String getTypeHuman(){
     switch(number){
       case 1:
-        return 'پرداخت نشده';
+        return 'تیکت';
       case 2:
-        return 'پرداخت شده';
+        return 'پشتیبان';
+      case 3:
+        return 'برداشت پول';
+      case 100:
+        return 'عمومی';
     }
 
     return 'ن م';

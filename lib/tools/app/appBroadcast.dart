@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:app/managers/notificationManager.dart';
+import 'package:app/services/stateNotifier.dart';
+import 'package:app/structures/structure/notificationStateStructure.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +18,7 @@ class AppBroadcast {
 
   static final StreamController<bool> viewUpdaterStream = StreamController<bool>();
   static final RefreshController drawerMenuRefresher = RefreshController();
+  static final StateNotifier<NotificationStateStructure> notifyMessageNotifier = StateNotifier(NotificationManager.notificationStateStructure);
   //---------------------- keys
   static LocalKey materialAppKey = UniqueKey();
   static final rootScaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -23,7 +27,7 @@ class AppBroadcast {
   static final homePageKey = GlobalKey<HomePageState>();
   static final assistId$notificationPage = 'assistId_notificationPage';
 
-  //static final homePageBadges = <int, int>{};
+  //---------------------- status
   static bool isNetConnected = true;
   static bool isWsConnected = false;
 
