@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:app/managers/notificationManager.dart';
+import 'package:app/services/firebase_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -136,13 +138,11 @@ class ApplicationInitial {
         AppSizes.instance.addMetricListener(onSizeCheng);
       }
 
-      /*await FireBaseService.init();
-      FireBaseService.getToken().then((value) {
-        FireBaseService.subscribeToTopic(PublicAccess.fcmTopic);
-      });*/
+      NotificationManager.requestUnReadCount();
 
-      /*if(AppRoute.materialContext != null) {
-      }*/
+      EventDispatcherService.attachFunction(EventDispatcher.firebaseTokenReceived, ({data}) {NotificationManager.requestSetFirebaseToken();});
+      await FireBaseService.init();
+      FireBaseService.getToken();
     }
     catch (e){
       _callLazyInit = false;

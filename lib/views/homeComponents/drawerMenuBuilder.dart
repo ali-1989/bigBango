@@ -106,14 +106,14 @@ class DrawerMenuBuilder {
               visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
             ),
 
-            ListTile(
+            /*ListTile(
               title: Text('گزارشات و آزمون ها'),
               leading: Image.asset(AppImages.drawerLogIco, width: 16, height: 16),
               onTap: gotoLogsPage,
               dense: true,
               horizontalTitleGap: 0,
               visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
-            ),
+            ),*/
 
             ListTile(
               title: Text(AppMessages.aboutUs),

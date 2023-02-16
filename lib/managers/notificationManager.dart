@@ -1,8 +1,14 @@
 // ignore_for_file: empty_catches
 import 'dart:core';
 
+import 'package:app/services/event_dispatcher_service.dart';
+import 'package:app/services/firebase_service.dart';
+import 'package:app/structures/enums/notificationStatus.dart';
 import 'package:app/structures/models/notificationModel.dart';
 import 'package:app/structures/structure/notificationStateStructure.dart';
+import 'package:app/tools/app/appBadge.dart';
+import 'package:app/tools/app/appCache.dart';
+import 'package:app/tools/deviceInfoTools.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
 import 'package:app/structures/middleWare/requester.dart';
@@ -13,18 +19,32 @@ class NotificationManager {
   
   static final List<NotificationModel> _notificationList = [];
   static List<NotificationModel> get notificationList => _notificationList;
-  static int pageIndex = 1;
   static NotificationStateStructure notificationStateStructure = NotificationStateStructure();
+  static int pageIndex = 1;
   ///-----------------------------------------------------------------------------------------
-  static DateTime? lastUpdateTime;
+  static DateTime? _lastUpdateTime;
 
+  static bool isUpdated({Duration duration = const Duration(minutes: 30)}) {
+    var now = DateTime.now();
+    now = now.subtract(duration);
+
+    return _lastUpdateTime != null && _lastUpdateTime!.isAfter(now);
+  }
+
+  static void setUpdate({DateTime? dt}) {
+    _lastUpdateTime = dt?? DateHelper.getNowToUtc();
+  }
+
+  static void setUnUpdate() {
+    _lastUpdateTime = null;
+  }
+  ///-----------------------------------------------------------------------------------------
   static void init() async {
     check();
   }
 
   static void check() async {
-    await Future.delayed(Duration(seconds: 8), (){}); // for avoid call fast after init
-    if(lastUpdateTime == null || DateHelper.isPastOf(lastUpdateTime, Duration(minutes: 29))){
+    if(_lastUpdateTime == null || DateHelper.isPastOf(_lastUpdateTime, Duration(minutes: 29))){
       requestNotification();
     }
   }
@@ -116,7 +136,7 @@ class NotificationManager {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
-      lastUpdateTime = DateHelper.getNowToUtc();
+      setUpdate();
 
       final List data = dataJs['data']?? [];
       final hasNextPage = dataJs['hasNextPage']?? true;
@@ -129,7 +149,8 @@ class NotificationManager {
       AppBroadcast.notifyMessageNotifier.states.hasNextPage = hasNextPage;
 
       addItemsFromMap(data);
-      addItem(NotificationModel()..id = 'a'..title = 'title'..body = 'ffgg ffggf fgffg'..createAt = DateTime.now());
+      addItem(NotificationModel()..id = 'a'..title = 'خرید درس'..body = 'سلام چطوری'..createAt = DateTime.now());
+      addItem(NotificationModel()..id = 'b'..title = 'برداشت پول'..body = 'خرید شما انجام شد'..createAt = DateTime.now());
 
       AppBroadcast.notifyMessageNotifier.states.dataIsOk();
       AppBroadcast.notifyMessageNotifier.notify();
@@ -139,5 +160,111 @@ class NotificationManager {
     requester.prepareUrl(pathUrl: '/notifications?Page=$pageIndex&Size=100');
     requester.methodType = MethodType.get;
     requester.request(null, false);
+  }
+
+  static void requestUpdateNotification(List<NotificationModel> notifyList) async {
+    final requester = Requester();
+
+    requester.httpRequestEvents.onAnyState = (req) async {
+      requester.dispose();
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
+      for(final x in notifyList){
+        x.status = NotificationStatus.read;
+      }
+    };
+
+    List<Map> ids = [];
+
+    for(final x in notifyList){
+      if(x.status == NotificationStatus.unRead) {
+        ids.add({'id': x.id, 'status': 1});
+      }
+    }
+
+    final js = <String, dynamic>{};
+    js['items'] = ids;
+
+    requester.prepareUrl(pathUrl: '/notifications/update');
+    requester.methodType = MethodType.put;
+    requester.bodyJson = js;
+    requester.request(null, false);
+  }
+
+  static void requestUnReadCount() async {
+    final requester = Requester();
+
+    requester.httpRequestEvents.onAnyState = (req) async {
+      requester.dispose();
+    };
+
+    requester.httpRequestEvents.onNetworkError = (req) async {
+      EventDispatcherService.attachFunction(EventDispatcher.networkConnected, _onNetConnected);
+    };
+
+    requester.httpRequestEvents.onFailState = (req, dataJs) async {
+      if(AppCache.timeoutCache.addTimeout('requestUnReadCount', Duration(minutes: 1))){
+        requestUnReadCount();
+      }
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
+      final data = dataJs['data'];
+      final count = data['unreadCount'];
+
+      AppBadge.setNotifyMessageBadge(count);
+      AppBadge.refreshViews();
+    };
+
+
+    requester.prepareUrl(pathUrl: '/notifications/count');
+    requester.methodType = MethodType.get;
+    requester.request(null, false);
+  }
+
+  static void requestSetFirebaseToken() async {
+    if(FireBaseService.token == null){
+      return;
+    }
+
+    final requester = Requester();
+
+    requester.httpRequestEvents.onAnyState = (req) async {
+      requester.dispose();
+    };
+
+    requester.httpRequestEvents.onNetworkError = (req) async {
+      EventDispatcherService.attachFunction(EventDispatcher.networkConnected, _onNetConnected);
+    };
+
+    requester.httpRequestEvents.onFailState = (req, dataJs) async {
+      if(AppCache.timeoutCache.addTimeout('requestSetFirebaseToken', Duration(minutes: 1))){
+        requestSetFirebaseToken();
+      }
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
+      final data = dataJs['data'];
+      final count = data['unreadCount'];
+
+      AppBadge.setNotifyMessageBadge(count);
+      AppBadge.refreshViews();
+    };
+
+    final js = <String, dynamic>{};
+    js['clientSecret'] = DeviceInfoTools.deviceId;
+    js['token'] = FireBaseService.token;
+
+    requester.prepareUrl(pathUrl: '/messagingDevices/add');
+    requester.methodType = MethodType.post;
+    requester.bodyJson = js;
+    requester.request(null, false);
+  }
+
+  static void _onNetConnected({data}) {
+    EventDispatcherService.deAttachFunction(EventDispatcher.networkConnected, _onNetConnected);
+    requestUnReadCount();
+    requestSetFirebaseToken();
   }
 }

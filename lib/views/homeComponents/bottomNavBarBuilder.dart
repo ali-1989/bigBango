@@ -1,3 +1,4 @@
+import 'package:app/tools/app/appBadge.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/tools/app/appColors.dart';
@@ -92,30 +93,33 @@ class BottomNavBarState extends State<BottomNavBar> {
       onTap: (){
         widget.onSelectItem.call(idx);
       },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          icon,
-          Text(text, style: TextStyle(color: _isSelected(idx)? selectedColor: Colors.black)),
+      child: Badge(
+        label: AppBadge.getBadge(idx) > 0 ? Text('${AppBadge.getBadge(idx)}') : null,
+        backgroundColor: AppBadge.getBadge(idx) > 0 ? null : Colors.transparent,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            icon,
+            Text(text, style: TextStyle(color: _isSelected(idx)? selectedColor: Colors.black)),
 
-          const SizedBox(height: 5),
+            const SizedBox(height: 5),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: SizedBox(
-                height: 3,
-                width: 100,
-                child: ColoredBox(
-                  color: _isSelected(idx)? selectedColor: unSelectedColor,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: SizedBox(
+                  height: 3,
+                  width: 100,
+                  child: ColoredBox(
+                    color: _isSelected(idx)? selectedColor: unSelectedColor,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
-///================================================================================================

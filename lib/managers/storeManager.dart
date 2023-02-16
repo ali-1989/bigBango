@@ -112,6 +112,7 @@ class StoreManager {
 		};
 
 		requester.httpRequestEvents.onStatusOk = (req, jsData) async {
+			setUpdate();
 			final data = jsData['data'];
 
 			if(data is List){

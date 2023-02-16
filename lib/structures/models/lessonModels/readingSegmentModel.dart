@@ -42,4 +42,15 @@ class ReadingSegmentModel extends ISegmentModel {
     readingList.clear();
     readingList.addAll(others.readingList);
   }
+
+  @override
+  String toString() {
+    String models = '';
+
+    for(final x in readingList){
+      models +=  '${x.segments}';
+    }
+
+    return 'id:$id | title:$title | models:{$models}';
+  }
 }

@@ -6,15 +6,15 @@ import 'package:photo_view/photo_view.dart';
 import 'package:app/structures/enums/enums.dart';
 
 /// Usage:
-/// final view = ImageFullScreen(heroTag: '');
-/// AppNavigator.pushNextPageExtra(context, view, name: ImageFullScreen.screenName);
+/// final view = FullScreenImageComponent();
+/// AppRoute.push(context, view);
 
 ///===============================================================================================================
 class FullScreenImageComponent extends StatefulWidget {
   static const screenName = 'ImageFullScreen';
   late final ImageType imageType;
   late final dynamic imageObj;
-  late final String heroTag;
+  final String? heroTag;
   final String? info;
   final Color? appBarColor;
   final TextStyle? infoStyle;
@@ -23,7 +23,7 @@ class FullScreenImageComponent extends StatefulWidget {
     Key? key,
     required this.imageType,
     required this.imageObj,
-    required this.heroTag,
+    this.heroTag,
     this.info,
     this.appBarColor,
     this.infoStyle,
@@ -101,7 +101,7 @@ class FullScreenImageComponentState extends State<FullScreenImageComponent> {
                 maxScale: 3.0,
                 gestureDetectorBehavior: HitTestBehavior.translucent,
                 //initialScale: 1.0,
-                heroAttributes: PhotoViewHeroAttributes(tag: widget.heroTag,),
+                heroAttributes: PhotoViewHeroAttributes(tag: widget.heroTag?? ''),
               ),
             ),
 

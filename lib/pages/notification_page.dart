@@ -1,11 +1,15 @@
 import 'package:app/managers/notificationManager.dart';
+import 'package:app/structures/enums/enums.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appBadge.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/dateTools.dart';
+import 'package:app/views/components/fullScreenImageComponent.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
@@ -37,6 +41,13 @@ class _NotificationPageState extends StateBase<NotificationPage> {
     else if(!AppBroadcast.notifyMessageNotifier.states.isRequested){
       assistCtr.addStateWithClear(AssistController.state$loading);
       NotificationManager.requestNotification();
+    }
+    else {
+      AppBadge.setNotifyMessageBadge(0);
+      AppBadge.refreshViews();
+
+      NotificationManager.check();
+      NotificationManager.requestUpdateNotification(NotificationManager.notificationList);
     }
   }
 
@@ -70,7 +81,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
             SizedBox(height: 80),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
                 children: [
                   Image.asset(AppImages.drawerSendIco, width: 32, height: 32, color: AppColors.red),
@@ -80,12 +91,12 @@ class _NotificationPageState extends StateBase<NotificationPage> {
               ),
             ),
 
-            SizedBox(height: 40),
+            SizedBox(height: 30),
 
             /// list
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: RefreshConfiguration(
                   headerBuilder: () => MaterialClassicHeader(),
                   footerBuilder: () => PublicAccess.classicFooter,
@@ -131,6 +142,12 @@ class _NotificationPageState extends StateBase<NotificationPage> {
     }
 
     assistCtr.updateHead();
+
+    if(mounted){
+      NotificationManager.requestUpdateNotification(NotificationManager.notificationList);
+      AppBadge.setNotifyMessageBadge(0);
+      AppBadge.refreshViews();
+    }
   }
 
   void onLoadingMoreCall(){
@@ -147,44 +164,73 @@ class _NotificationPageState extends StateBase<NotificationPage> {
   Widget buildListItem(_, int idx) {
     final notify = NotificationManager.notificationList[idx];
 
-    return IntrinsicHeight(
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          SizedBox(
-            width: 2,
-              height: double.infinity,
-              child: ColoredBox(color: AppColors.red)
-          ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: IntrinsicHeight(
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(
+              width: 2,
+                height: double.infinity,
+                child: ColoredBox(color: AppColors.red)
+            ),
 
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(notify.title).bold(),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(notify.title).bold(),
 
-                      Row(
-                        children: [
-                          Text(DateTools.dateAndHmRelative(notify.createAt)),
-                          SizedBox(width: 5),
-                          Icon(AppIcons.calendar, size: 12)
-                        ],
-                      ),
-                    ],
-                  ),
+                        Row(
+                          children: [
+                            Text(DateTools.dateAndHmRelative(notify.createAt)).alpha(),
+                            SizedBox(width: 5),
+                            Icon(AppIcons.calendar, size: 12).alpha()
+                          ],
+                        ),
+                      ],
+                    ),
 
-                  Text(notify.body),
-                ],
+                    SizedBox(height: 8),
+                    Text(notify.body).fsR(-1).alpha(),
+                    SizedBox(height: 5),
+
+                    Visibility(
+                      visible: notify.hasContent(),
+                        child: InputChip(
+                          visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                          backgroundColor: Colors.black26,
+                          elevation: 0,
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: -2),
+                          label: Text('نمایش محتوا').fsR(-3).color(Colors.white),
+                          onPressed: (){
+                            if(notify.image?.fileLocation != null){
+                              final view = FullScreenImageComponent(
+                                heroTag: '',
+                                imageObj: notify.image!.fileLocation,
+                                imageType: ImageType.network,
+                              );
+
+                              AppRoute.push(context, view);
+                            }
+                          },
+                        )
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

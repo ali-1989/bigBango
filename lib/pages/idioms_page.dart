@@ -123,17 +123,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
     }
 
     if(assistCtr.hasState(AssistController.state$noData)){
-      return Column(
-        children: [
-          Align(
-              alignment: Alignment.topRight,
-              child: BackButton()
-          ),
-          Expanded(
-              child: EmptyData()
-          ),
-        ],
-      );
+      return EmptyData(backButton: BackBtn());
     }
 
     Color preColor = Colors.black;

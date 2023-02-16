@@ -57,4 +57,8 @@ class NotificationModel {
     status = other.status;
     type = other.type;
   }
+
+  bool hasContent(){
+    return image?.fileLocation != null;
+  }
 }

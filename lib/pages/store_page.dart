@@ -389,7 +389,10 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
 
     if(!StoreManager.isUpdated()) {
       res = await StoreManager.requestLessonStores(state: this);
-      StoreManager.setUpdate();
+    }
+
+    if(!mounted){
+      return;
     }
 
     prepareTabs();

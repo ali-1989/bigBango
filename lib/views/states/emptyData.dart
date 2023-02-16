@@ -23,6 +23,7 @@ class EmptyData extends StatelessWidget {
     return ColoredBox(
       color: backgroundColor?? Colors.transparent,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Visibility(
             visible: backButton != null,

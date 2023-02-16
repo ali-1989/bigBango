@@ -90,4 +90,9 @@ class LessonModel {
       listeningModel?.matchBy(others.listeningModel!);
     }
   }
+
+  @override
+  String toString() {
+    return 'id:$id | title:$title | number:$number | isLock:$isLock | reading:[${readingModel.toString()}]';
+  }
 }

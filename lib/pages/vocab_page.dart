@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/views/states/backBtn.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -123,7 +124,7 @@ class _VocabPageState extends StateBase<VocabPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onTryAgain: onRefresh);
+      return ErrorOccur(onTryAgain: onRefresh, backButton: BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
@@ -131,7 +132,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     }
 
     if(vocabList.isEmpty){
-      return EmptyData();
+      return EmptyData(backButton: BackBtn());
     }
 
     currentVocab = vocabList[currentVocabIdx];
@@ -764,14 +765,14 @@ class _VocabPageState extends StateBase<VocabPage> {
       if(vocabList.isNotEmpty) {
         currentVocab = vocabList[currentVocabIdx];
         showTranslate = currentVocab.showTranslation;
+
+        if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentVocab.id)) {
+          sendReview(currentVocab.id);
+        }
       }
 
       assistCtr.clearStates();
       assistCtr.updateHead();
-
-      if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentVocab.id)) {
-        sendReview(currentVocab.id);
-      }
     };
 
     requester.methodType = MethodType.get;
