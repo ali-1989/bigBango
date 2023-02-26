@@ -5,8 +5,6 @@ import 'package:app/services/review_service.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appCache.dart';
 
-/// this listener not work on start app, work on new event
-
 class NetListenerTools {
   NetListenerTools._();
 

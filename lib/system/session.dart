@@ -54,6 +54,14 @@ class Session {
 		return currentLoginList.isNotEmpty;
 	}
 
+	/*static bool isGuestCurrent(){
+		if(!hasAnyLogin()){
+			return false;
+		}
+
+		return getLastLoginUser()!.userType == UserType.guest;
+	}*/
+
 	static bool isLogin(String userId){
 		return currentLoginList.firstWhereSafe((element) => element.userId == userId) != null;
 	}
@@ -285,4 +293,15 @@ class Session {
 
 		return '-';
 	}
+	
+	/*static UserModel getGuestUser(){
+		final g = UserModel();
+		g.userId = '0';
+		g.userName = 'مهمان';
+		g.userType = UserType.guest;
+		g.name = 'مهمان';
+		g.family = '';
+
+		return g;
+	}*/
 }

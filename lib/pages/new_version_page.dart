@@ -118,7 +118,7 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
                           thumbVisibility: true,
                           trackVisibility: false,
                           child: SingleChildScrollView(
-                            child: HTML.toRichText(context, html, defaultTextStyle: AppThemes.body2TextStyle()),
+                            child: HTML.toRichText(context, html, defaultTextStyle: AppThemes.bodyTextStyle()),
                           ),
                         ),
                       ),

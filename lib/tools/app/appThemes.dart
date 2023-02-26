@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -182,46 +183,46 @@ class AppThemes {
 
 		final primaryTextTheme = TextTheme(
 				//fontSize: raw.textTheme.bodyText1.fontSize + fontSize
-				bodyLarge: raw.textTheme.bodyLarge!.copyWith(
-						fontFamily: baseFamily, color: th.textColor, fontSize: fontSize, height: height,
-				),
-				bodyMedium: raw.textTheme.bodyMedium!.copyWith(
-						fontFamily: baseFamily, color: th.textColor, fontSize: fontSize, height: height,
-				),
-				titleMedium: raw.textTheme.titleMedium!.copyWith(
-						fontFamily: baseFamily, color: th.textColor, fontSize: fontSize, height: height,
-				),
-				titleSmall: raw.textTheme.titleSmall!.copyWith(
-						fontFamily: subFamily, color: th.textColor, fontSize: fontSize-1, height: height,
-				),
-				labelSmall: raw.textTheme.labelSmall!.copyWith(
-						fontFamily: subFamily, color: th.textColor, fontSize: fontSize, height: height,
-				),
-				displayLarge: raw.textTheme.displayLarge!.copyWith(
-						fontFamily: boldFamily, color: th.textColor, fontSize: fontSize + 6, height: height,
-				),
-				displayMedium: raw.textTheme.displayMedium!.copyWith(
-						fontFamily: boldFamily, color: th.textColor, fontSize: fontSize + 5, height: height,
-				),
-				displaySmall: raw.textTheme.displaySmall!.copyWith(
-						fontFamily: boldFamily, color: th.textColor, fontSize: fontSize + 4, height: height,
-				),
-				headlineMedium: raw.textTheme.headlineMedium!.copyWith(
-						fontFamily: baseFamily, color: th.textColor, fontSize: fontSize + 3, height: height,
-				),
-				headlineSmall: raw.textTheme.headlineSmall!.copyWith(
-						fontFamily: baseFamily, color: th.textColor, fontSize: fontSize + 2, height: height,
-				),
-				titleLarge: raw.textTheme.titleLarge!.copyWith(
-						fontFamily: baseFamily, color: th.appBarItemColor, fontSize: fontSize + 1,
-					fontWeight: FontWeight.bold, height: height,
-				),
-				labelLarge: raw.textTheme.labelLarge!.copyWith(
-						fontFamily: boldFamily, color: th.buttonTextColor, fontSize: fontSize, height: height,
-				),
-				bodySmall: raw.textTheme.bodySmall!.copyWith(
-						fontFamily: subFamily, color: th.textColor, fontSize: fontSize, height: height,
-				),
+			bodyLarge: raw.textTheme.bodyLarge!.copyWith(
+				fontFamily: baseFamily, color: th.textColor, fontSize: fontSize, height: height,
+			),
+			bodyMedium: raw.textTheme.bodyMedium!.copyWith(
+				fontFamily: baseFamily, color: th.textColor, fontSize: fontSize, height: height,
+			),
+			bodySmall: raw.textTheme.bodySmall!.copyWith(
+				fontFamily: subFamily, color: th.textColor, fontSize: fontSize, height: height,
+			),
+			titleMedium: raw.textTheme.titleMedium!.copyWith(
+				fontFamily: baseFamily, color: th.textColor, fontSize: fontSize, height: height,
+			),
+			titleSmall: raw.textTheme.titleSmall!.copyWith(
+				fontFamily: subFamily, color: th.textColor, fontSize: fontSize-1, height: height,
+			),
+			labelSmall: raw.textTheme.labelSmall!.copyWith(
+				fontFamily: subFamily, color: th.textColor, fontSize: fontSize, height: height,
+			),
+			displayLarge: raw.textTheme.displayLarge!.copyWith(
+				fontFamily: boldFamily, color: th.textColor, fontSize: fontSize + 6, height: height,
+			),
+			displayMedium: raw.textTheme.displayMedium!.copyWith(
+				fontFamily: boldFamily, color: th.textColor, fontSize: fontSize + 5, height: height,
+			),
+			displaySmall: raw.textTheme.displaySmall!.copyWith(
+				fontFamily: boldFamily, color: th.textColor, fontSize: fontSize + 4, height: height,
+			),
+			headlineMedium: raw.textTheme.headlineMedium!.copyWith(
+				fontFamily: baseFamily, color: th.textColor, fontSize: fontSize + 3, height: height,
+			),
+			headlineSmall: raw.textTheme.headlineSmall!.copyWith(
+				fontFamily: baseFamily, color: th.textColor, fontSize: fontSize + 2, height: height,
+			),
+			titleLarge: raw.textTheme.titleLarge!.copyWith(
+				fontFamily: baseFamily, color: th.appBarItemColor, fontSize: fontSize + 1,
+				fontWeight: FontWeight.bold, height: height,
+			),
+			labelLarge: raw.textTheme.labelLarge!.copyWith(
+				fontFamily: boldFamily, color: th.buttonTextColor, fontSize: fontSize, height: height,
+			),
 		);
 
 		final chipBack = checkPrimaryByWB(th.primaryColor, th.buttonBackColor);
@@ -247,7 +248,7 @@ class AppThemes {
 		);
 
 		final iconTheme = raw.iconTheme.copyWith(
-			color: th.textColor,
+				color: th.textColor,
 		);
 
 		final appAppBarTheme = AppBarTheme(
@@ -323,9 +324,19 @@ class AppThemes {
 
 		/// https://flutter.dev/docs/release/breaking-changes/buttons
 
+		final buttonTheme = ButtonThemeData(
+		);
+
+		final iconButtonTheme = IconButtonThemeData(
+			style: ButtonStyle(
+				minimumSize: kIsWeb? MaterialStateProperty.all(Size(20, 45)): null,
+			),
+		);
+
 		final elevatedButtonTheme = ElevatedButtonThemeData(
 			style: ButtonStyle(
 					tapTargetSize: MaterialTapTargetSize.padded,
+				minimumSize: kIsWeb? MaterialStateProperty.all(Size(20, 45)) : null,// default: 28
 				//backgroundColor: MaterialStateProperty.all(th.buttonBackColor),
 				foregroundColor: MaterialStateProperty.all(th.buttonTextColor),
 				backgroundColor: MaterialStateProperty.resolveWith<Color>(
@@ -431,7 +442,7 @@ class AppThemes {
 			selectionColor: th.differentColor.withAlpha(180),
 			selectionHandleColor: th.textColor,
 		);
-
+		
 		///-------------- themeData ----------------------------------
 		final myThemeData = ThemeData(
 			visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -451,6 +462,8 @@ class AppThemes {
 			inputDecorationTheme: inputDecoration,
 			textSelectionTheme: textSelectionTheme,
 			cardTheme: cardTheme,
+			iconButtonTheme: iconButtonTheme,
+			buttonTheme: buttonTheme,
 			textButtonTheme: textButtonTheme,
 			elevatedButtonTheme: elevatedButtonTheme,
 			outlinedButtonTheme: outlinedButtonTheme,
@@ -514,7 +527,7 @@ class AppThemes {
 		return AppThemes._instance.currentTheme.subTextStyle;
 	}
 
-	static TextStyle? body2TextStyle() {
+	static TextStyle? bodyTextStyle() {
 		return AppThemes._instance.themeData.textTheme.bodyMedium;
 	}
 

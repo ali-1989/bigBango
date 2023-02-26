@@ -626,7 +626,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     examPageInjector.answerUrl = '/reading/exercises/solving';
 
     final examPage = ExamPage(injector: examPageInjector);
-    await AppRoute.push(context, examPage);
+    await AppRoute.pushPage(context, examPage);
   }
 
   void requestReading(){

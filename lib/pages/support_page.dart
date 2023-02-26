@@ -503,7 +503,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () async {
-        await AppRoute.push(context, TicketDetailPage(ticketModel: tik));
+        await AppRoute.pushPage(context, TicketDetailPage(ticketModel: tik));
         assistCtr.updateHead();
       },
       child: Padding(
@@ -566,7 +566,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     final page = TimetablePage(maxUserTime: userTime!);
 
-    AppRoute.push(context, page);
+    AppRoute.pushPage(context, page);
   }
 
   void showBuySessionTimeSheet() async {

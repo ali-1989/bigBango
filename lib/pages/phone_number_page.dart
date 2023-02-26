@@ -264,6 +264,6 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
       return;
     }
 
-    AppRoute.push(context, OtpPage(phoneNumber: phoneNumber, sign: sign));
+    AppRoute.pushPage(context, OtpPage(phoneNumber: phoneNumber, sign: sign));
   }
 }

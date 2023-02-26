@@ -1,6 +1,6 @@
-import 'package:app/tools/app/appBadge.dart';
 import 'package:flutter/material.dart';
 
+import 'package:app/tools/app/appBadge.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 

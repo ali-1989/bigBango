@@ -390,7 +390,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     examPageInjector.answerUrl = '/grammars/exercises/solving';
 
     final examPage = ExamPage(injector: examPageInjector);
-    await AppRoute.push(context, examPage);
+    await AppRoute.pushPage(context, examPage);
   }
 
   void onRefresh(){

@@ -1,4 +1,3 @@
-
 import 'package:app/tools/app/appBroadcast.dart';
 
 class AppBadge {
@@ -6,11 +5,11 @@ class AppBadge {
 
   static final _homePageBadges = <int, int>{};
 
-  static void setNotifyMessageBadge(int count) async {
+  static void setMessageBadge(int count) async {
     _homePageBadges[3] = count;
   }
 
-  static int getNotifyMessageBadge(int itemIdx) {
+  static int getMessageBadge() {
     return getBadge(3);
   }
 

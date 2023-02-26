@@ -11,7 +11,6 @@ import 'package:iris_tools/widgets/border/dottedBorder.dart';
 import 'package:app/tools/app/appThemes.dart';
 import '/managers/fontManager.dart';
 import '/managers/settingsManager.dart';
-import '/tools/app/appSizes.dart';
 
 // usage: import 'package:common_version/tools/centers/extensions.dart';
 ///==========================================================================================================
@@ -841,7 +840,7 @@ extension TextExtension on Text {
 
   Text fs(double size) {
     var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(fontSize: AppSizes.webFontSize(size));
+    ts = ts.copyWith(fontSize: size);
 
     return Text(
       data!,
@@ -862,8 +861,7 @@ extension TextExtension on Text {
   }
 
   Text fsR(double size, {double? max /*20*/}) {
-    final ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    var siz = ts.fontSize;
+    var siz = style?.fontSize;
     siz ??= AppThemes.instance.currentTheme.baseTextStyle.fontSize;
 
     siz = siz! + size;
@@ -1023,7 +1021,7 @@ extension TextFieldExtension on TextField {
       inputFormatters: inputFormatters,
       autofillHints: autofillHints,
       buildCounter: buildCounter,
-      toolbarOptions: toolbarOptions,
+      contextMenuBuilder: contextMenuBuilder,
       focusNode: focusNode,
       autofocus: autofocus,
       readOnly: readOnly,
@@ -1115,7 +1113,7 @@ extension TextFormFieldExtension on TextFormField {
       inputFormatters: my.inputFormatters,
       autofillHints: my.autofillHints,
       buildCounter: my.buildCounter,
-      toolbarOptions: my.toolbarOptions,
+      contextMenuBuilder: my.contextMenuBuilder,
       focusNode: my.focusNode,
       autofocus: my.autofocus,
       readOnly: my.readOnly,

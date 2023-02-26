@@ -1,7 +1,6 @@
 import 'dart:async';
+import 'dart:developer';
 
-import 'package:app/managers/notificationManager.dart';
-import 'package:app/services/firebase_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -12,8 +11,10 @@ import 'package:iris_tools/net/netManager.dart';
 import 'package:iris_tools/net/trustSsl.dart';
 
 import 'package:app/constants.dart';
+import 'package:app/managers/messageManager.dart';
 import 'package:app/services/audio_player_service.dart';
 import 'package:app/services/event_dispatcher_service.dart';
+import 'package:app/services/firebase_service.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/system/applicationLifeCycle.dart';
 import 'package:app/system/publicAccess.dart';
@@ -34,6 +35,7 @@ class ApplicationInitial {
   static bool _callInSplashInit = false;
   static bool _isInitialOk = false;
   static bool _callLazyInit = false;
+  static String errorInInit = '';
 
   static bool isInit() {
     return _isInitialOk;
@@ -57,6 +59,8 @@ class ApplicationInitial {
     }
     catch (e){
       _importantInit = false;
+      errorInInit = '$e\n\n${StackTrace.current}';
+      log('$e\n\n${StackTrace.current}');
       return false;
     }
   }
@@ -138,9 +142,9 @@ class ApplicationInitial {
         AppSizes.instance.addMetricListener(onSizeCheng);
       }
 
-      NotificationManager.requestUnReadCount();
+      MessageManager.requestUnReadCount();
 
-      EventDispatcherService.attachFunction(EventDispatcher.firebaseTokenReceived, ({data}) {NotificationManager.requestSetFirebaseToken();});
+      EventDispatcherService.attachFunction(EventDispatcher.firebaseTokenReceived, ({data}) {MessageManager.requestSetFirebaseToken();});
       await FireBaseService.init();
       FireBaseService.getToken();
     }

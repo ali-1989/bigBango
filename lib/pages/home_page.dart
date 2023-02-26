@@ -675,7 +675,7 @@ class HomePageState extends StateBase<HomePage> {
     }
 
     if(page != null) {
-      AppRoute.push(context, page);
+      AppRoute.pushPage(context, page);
     }
   }
 
@@ -785,7 +785,7 @@ class HomePageState extends StateBase<HomePage> {
 
           final examPage = ExamPage(injector: examPageInjector);
 
-          AppRoute.push(context, examPage);
+          AppRoute.pushPage(context, examPage);
         }
         else {
           AppSheet.showSheetNotice(context, 'آزمونی ثبت نشده است');
@@ -815,7 +815,7 @@ class HomePageState extends StateBase<HomePage> {
 
     final page = TimetablePage(lesson: lesson, maxUserTime: 0);
 
-    AppRoute.push(context, page);
+    AppRoute.pushPage(context, page);
   }
 }
 

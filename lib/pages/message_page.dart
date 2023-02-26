@@ -1,7 +1,13 @@
-import 'package:app/managers/notificationManager.dart';
+import 'package:flutter/material.dart';
+
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import 'package:app/managers/messageManager.dart';
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
-import 'package:app/system/publicAccess.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appBadge.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appColors.dart';
@@ -9,15 +15,10 @@ import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/dateTools.dart';
-import 'package:app/views/components/fullScreenImageComponent.dart';
+import 'package:app/views/components/fullScreenImage.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:flutter/material.dart';
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -33,27 +34,29 @@ class _NotificationPageState extends StateBase<NotificationPage> {
   void initState(){
     super.initState();
 
-    AppBroadcast.notifyMessageNotifier.addListener(notifierListener);
+    AppBroadcast.messagePageIsOpen = true;
+    AppBroadcast.messageStateNotifier.addListener(notifierListener);
 
-    if(AppBroadcast.notifyMessageNotifier.states.isInRequest){
+    if(AppBroadcast.messageStateNotifier.states.isInRequest){
       assistCtr.addStateWithClear(AssistController.state$loading);
     }
-    else if(!AppBroadcast.notifyMessageNotifier.states.isRequested){
+    else if(!AppBroadcast.messageStateNotifier.states.isRequested){
       assistCtr.addStateWithClear(AssistController.state$loading);
-      NotificationManager.requestNotification();
+      MessageManager.requestMessages();
     }
     else {
-      AppBadge.setNotifyMessageBadge(0);
+      AppBadge.setMessageBadge(0);
       AppBadge.refreshViews();
 
-      NotificationManager.check();
-      NotificationManager.requestUpdateNotification(NotificationManager.notificationList);
+      MessageManager.check();
+      MessageManager.requestUpdateMessageSeen(MessageManager.messageList);
     }
   }
 
   @override
   void dispose(){
-    AppBroadcast.notifyMessageNotifier.removeListener(notifierListener);
+    AppBroadcast.messagePageIsOpen = false;
+    AppBroadcast.messageStateNotifier.removeListener(notifierListener);
 
     super.dispose();
   }
@@ -61,7 +64,6 @@ class _NotificationPageState extends StateBase<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Assist(
-      id: AppBroadcast.assistId$notificationPage,
       controller: assistCtr,
       builder: (_, ctr, data){
         if(assistCtr.hasState(AssistController.state$error)){
@@ -72,7 +74,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
           return WaitToLoad();
         }
 
-        if(NotificationManager.notificationList.isEmpty){
+        if(MessageManager.messageList.isEmpty){
           return EmptyData(message: 'اعلانی وجود ندارد', onTryAgain: tryLoadClick);
         }
 
@@ -112,7 +114,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
                     onRefresh: (){},
                     onLoading: onLoadingMoreCall,
                     child: ListView.builder(
-                      itemCount: NotificationManager.notificationList.length,
+                      itemCount: MessageManager.messageList.length,
                       itemBuilder: buildListItem,
                     ),
                   ),
@@ -126,15 +128,24 @@ class _NotificationPageState extends StateBase<NotificationPage> {
   }
 
   void notifierListener(notifier){
+    if(AppBroadcast.messageStateNotifier.states.receivedNewFirebaseMessage){
+      AppBroadcast.messageStateNotifier.states.receivedNewFirebaseMessage = false;
+      MessageManager.reset();
+
+      assistCtr.addStateWithClear(AssistController.state$loading);
+      assistCtr.updateHead();
+      return;
+    }
+
     if(refreshController.isLoading) {
       refreshController.loadComplete();
     }
 
-    if(!AppBroadcast.notifyMessageNotifier.states.hasNextPage){
+    if(!AppBroadcast.messageStateNotifier.states.hasNextPage){
       refreshController.loadNoData();
     }
 
-    if(AppBroadcast.notifyMessageNotifier.states.isOk()){
+    if(AppBroadcast.messageStateNotifier.states.isOk()){
       assistCtr.clearStates();
     }
     else {
@@ -144,25 +155,25 @@ class _NotificationPageState extends StateBase<NotificationPage> {
     assistCtr.updateHead();
 
     if(mounted){
-      NotificationManager.requestUpdateNotification(NotificationManager.notificationList);
-      AppBadge.setNotifyMessageBadge(0);
+      MessageManager.requestUpdateMessageSeen(MessageManager.messageList);
+      AppBadge.setMessageBadge(0);
       AppBadge.refreshViews();
     }
   }
 
   void onLoadingMoreCall(){
-    NotificationManager.requestNotification();
+    MessageManager.requestMessages();
   }
 
   void tryLoadClick() async {
     assistCtr.clearStates();
     assistCtr.addStateAndUpdateHead(AssistController.state$loading);
 
-    NotificationManager.requestNotification();
+    MessageManager.requestMessages();
   }
 
   Widget buildListItem(_, int idx) {
-    final notify = NotificationManager.notificationList[idx];
+    final notify = MessageManager.messageList[idx];
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
@@ -214,13 +225,13 @@ class _NotificationPageState extends StateBase<NotificationPage> {
                           label: Text('نمایش محتوا').fsR(-3).color(Colors.white),
                           onPressed: (){
                             if(notify.image?.fileLocation != null){
-                              final view = FullScreenImageComponent(
+                              final view = FullScreenImage(
                                 heroTag: '',
                                 imageObj: notify.image!.fileLocation,
                                 imageType: ImageType.network,
                               );
 
-                              AppRoute.push(context, view);
+                              AppRoute.pushPage(context, view);
                             }
                           },
                         )

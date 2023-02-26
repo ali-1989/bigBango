@@ -364,7 +364,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
     final page = PublicAccess.getNextPartOfLesson(widget.injector.lessonModel);
 
     if(page != null) {
-      AppRoute.replace(context, page);
+      AppRoute.pushReplacePage(context, page);
     }
   }
 

@@ -1,29 +1,43 @@
-import 'package:app/services/event_dispatcher_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:iris_tools/dateSection/ADateStructure.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
+import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/system/applicationInitialize.dart';
+import 'package:app/tools/app/appBadge.dart';
+import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appNotification.dart';
 
 Future<void> _fbMessagingBackgroundHandler(RemoteMessage message) async {
-  //_sendNotification(message);
+  print('---> back Notification  --- ${message.notification?.body}');
+  //_onNewNotification(message);
 }
 
 Future<void> _onNewNotification(RemoteMessage message) async {
   await ApplicationInitial.prepareDirectoriesAndLogger();
-  //await PublicAccess.logger.logToAll('---> Notification  --- ${message.notification?.body}');
   await ApplicationInitial.inSplashInit();
 
-  /*int? id;
 
   try{
-    id = message.data['id'];
-  }
-  catch (e){}*/
+    if(AppBroadcast.messagePageIsOpen){
+      print('---> new Notification A --- ${message.notification?.body}');
+      AppBroadcast.messageStateNotifier.states.receivedNewFirebaseMessage = true;
+      AppBroadcast.messageStateNotifier.notify();
+    }
+    else {
+      print('---> new Notification B --- ${message.notification?.body}');
+      if(message.notification != null && message.notification!.body != null) {
+        //MessageManager.addItem(MessageModel()..id = 'a'..title = 'خرید درس'..body = 'سلام چطوری'..createAt = DateTime.now());
+        int old = AppBadge.getMessageBadge();
+        AppBadge.setMessageBadge(old + 1);
+        AppBadge.refreshViews();
 
-  AppNotification.sendNotification(message.notification!.title, message.notification!.body!);
+        AppNotification.sendNotification(message.notification!.title, message.notification!.body!);
+      }
+    }
+  }
+  catch (e){}
 }
 ///================================================================================================
 class FireBaseService {
@@ -65,7 +79,7 @@ class FireBaseService {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
-      //print('=================== ${initialMessage.notification?.body} ');//todo
+      print('==================initialMessage= ${initialMessage.notification?.body} ');//todo
     }
   }
 
@@ -99,11 +113,6 @@ class FireBaseService {
       EventDispatcherService.attachFunction(EventDispatcher.networkConnected, _onNetConnected);
       return null;
     }
-  }
-
-  static void _onNetConnected({data}) {
-    EventDispatcherService.deAttachFunction(EventDispatcher.networkConnected, _onNetConnected);
-    getTokenForce();
   }
 
   static Future<String?> getToken() async {
@@ -143,5 +152,10 @@ class FireBaseService {
     };
 
     return js;
+  }
+
+  static void _onNetConnected({data}) {
+    EventDispatcherService.deAttachFunction(EventDispatcher.networkConnected, _onNetConnected);
+    getTokenForce();
   }
 }

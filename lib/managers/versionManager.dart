@@ -87,7 +87,7 @@ class VersionManager {
   }
 
   static void showUpdateDialog(BuildContext context, VersionModel vm) {
-    AppRoute.push(context, NewVersionPage(versionModel: vm));
+    AppRoute.pushPage(context, NewVersionPage(versionModel: vm));
     /*void closeApp(){
       System.exitApp();
     }

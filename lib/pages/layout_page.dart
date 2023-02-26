@@ -4,7 +4,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/pages/home_page.dart';
 import 'package:app/pages/leitner_page.dart';
-import 'package:app/pages/notification_page.dart';
+import 'package:app/pages/message_page.dart';
 import 'package:app/pages/store_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/tools/app/appBroadcast.dart';

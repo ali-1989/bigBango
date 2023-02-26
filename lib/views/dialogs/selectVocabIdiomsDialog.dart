@@ -62,7 +62,7 @@ class _SelectVocabIdiomsDialog extends State<SelectVocabIdiomsDialog> {
                           child: GestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onTap: (){
-                              AppRoute.push(context, VocabPage(injector: widget.injector));
+                              AppRoute.pushPage(context, VocabPage(injector: widget.injector));
                             },
                             child: CustomCard(
                               color: Colors.grey.shade300,
@@ -90,7 +90,7 @@ class _SelectVocabIdiomsDialog extends State<SelectVocabIdiomsDialog> {
                       Expanded(
                           child: GestureDetector(
                             onTap: (){
-                              AppRoute.push(context, IdiomsPage(injector: widget.injector));
+                              AppRoute.pushPage(context, IdiomsPage(injector: widget.injector));
                             },
                             child: CustomCard(
                               color: Colors.grey.shade300,

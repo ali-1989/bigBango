@@ -15,8 +15,8 @@ import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
-import 'package:app/views/components/splashScreen.dart';
-import 'package:app/views/homeComponents/firstPageComponent.dart';
+import 'package:app/views/homeComponents/routeDispatcher.dart';
+import 'package:app/views/homeComponents/splashScreen.dart';
 import 'package:app/views/states/waitToLoad.dart';
 
 bool _isInit = false;
@@ -26,20 +26,14 @@ bool isInSplashTimer = true;
 int splashWaitingMil = 2000;
 
 class SplashPage extends StatefulWidget {
-  final Widget? firstPage;
 
-  SplashPage({this.firstPage, super.key});
+  SplashPage({super.key});
 
   @override
   SplashScreenState createState() => SplashScreenState();
 }
 ///======================================================================================================
 class SplashScreenState extends StateBase<SplashPage> {
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +58,11 @@ class SplashScreenState extends StateBase<SplashPage> {
   }
   ///==================================================================================================
   Widget getFirstPage(){
-    return FirstPageComponent();
+    if(kIsWeb && !ApplicationInitial.isInit()){
+      return SizedBox();
+    }
+
+    return RouteDispatcher.dispatch();
   }
 
   bool waitInSplash(){
@@ -90,7 +88,7 @@ class SplashScreenState extends StateBase<SplashPage> {
     _isInit = true;
 
     await ApplicationInitial.inSplashInit();
-    await ApplicationInitial.inSplashInitWithContext(AppRoute.getLastContext()!);
+    await ApplicationInitial.inSplashInitWithContext(context);
     final settingsLoad = SettingsManager.loadSettings();
 
     if (settingsLoad) {

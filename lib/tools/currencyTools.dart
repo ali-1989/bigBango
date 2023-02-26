@@ -53,8 +53,6 @@ class CurrencyTools {
 
     return res;
   }
-
-  
 }
 
 

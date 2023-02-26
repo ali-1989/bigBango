@@ -111,12 +111,13 @@ class Requester {
       httpRequestEvents.onAnyState?.call(_httpRequester);
       httpRequestEvents.onFailState?.call(_httpRequester, null);
       httpRequestEvents.onNetworkError?.call(_httpRequester);
+
       return null;
     });
 
     f = f.then((val) async {
-      Tools.verbosePrint('@@@@@@@@@@  response ================= [${_httpRequester.responseData?.statusCode}] $val');//todo
-      if(_httpRequester.responseData?.statusCode == 401){ //n
+      Tools.verbosePrint('@@@@@@@@ [${_httpRequester.requestOptions?.uri}]  response ========== [${_httpRequester.responseData?.statusCode}] $val');//todo
+      if(_httpRequester.responseData?.statusCode == 401 && Session.getLastLoginUser() != null){ //n
         final getNewToken = await JwtService.requestNewToken(Session.getLastLoginUser()!);
 
         /// try request old api again
@@ -168,10 +169,8 @@ class Requester {
       else {
         await httpRequestEvents.onFailState?.call(_httpRequester, val);
 
-        //final managedByUser = await httpRequestEvents.onStatusError?.call(_httpRequester, js)?? false;
-
         if(context != null) {
-          if (/*!managedByUser &&*/ promptErrors && !HttpProcess.processCommonRequestError(context, _httpRequester, js)) {
+          if (promptErrors && !HttpProcess.processCommonRequestError(context, _httpRequester, js)) {
             await AppSheet.showSheet$ServerNotRespondProperly(context);
           }
         }
@@ -192,14 +191,12 @@ class HttpRequestEvents {
   Future Function(HttpRequester)? onNetworkError;
   Future Function(HttpRequester, Map)? manageResponse;
   Future Function(HttpRequester, Map)? onStatusOk;
-  //Future<bool> Function(HttpRequester requester, Map jsData)? onStatusError;
-
+  
   void clear(){
     onAnyState = null;
     onFailState = null;
     onNetworkError = null;
     manageResponse = null;
     onStatusOk = null;
-    //onStatusError = null;
   }
 }

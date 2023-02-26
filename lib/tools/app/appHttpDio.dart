@@ -4,8 +4,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:iris_tools/api/converter.dart';
@@ -19,7 +19,7 @@ class AppHttpDio {
 
 	static BaseOptions _genOptions(){
 		return BaseOptions(
-			connectTimeout: 15000,
+			connectTimeout: Duration(seconds: 15),
 		);
 	}
 
@@ -48,7 +48,7 @@ class AppHttpDio {
 
 			///  add proxy
 			if(item.useProxy && item.proxyAddress != null) {
-				(dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
+				(dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
 					client.findProxy = (uri) {
 						return 'PROXY ${item.proxyAddress}';
 					};
@@ -109,7 +109,7 @@ class AppHttpDio {
 								final res = Response<dynamic>(
 										requestOptions: ro,
 										statusCode: err.response?.statusCode,
-										data: err.response ?? DioError(requestOptions: ro, error: err.error, type: DioErrorType.response)
+										data: err.response ?? DioError(requestOptions: ro, error: err.error, type: DioErrorType.connectionError)
 								);
 
 								/*itemRes._response = res;
@@ -157,7 +157,7 @@ class AppHttpDio {
 			final uri = correctUri(item.fullUrl)!;
 
 			if(item.useProxy && item.proxyAddress != null) {
-				(dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
+				(dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
 					client.findProxy = (uri) {
 						return 'PROXY ${item.proxyAddress}';
 					};
@@ -197,7 +197,6 @@ class AppHttpDio {
 								//Response res = Response<ResponseBody>(requestOptions: ro, data: ResponseBody.fromString('$err', 404));
 								//Response res = Response<DioError>(requestOptions: ro, data: DioError(requestOptions: ro));
 								itemRes._response = res;
-								err.response = res;
 								itemRes.isOk = false;
 
 								//handler.next(err);   < this take log error
@@ -526,12 +525,25 @@ class HttpItem {
 		body = system_convert.json.encode(js);
 	}
 
+	List? _getFormField(){
+		if(body is! FormData) {
+			return null;
+		}
+
+		return (body as FormData).fields;
+	}
+
+	void clearFormField(){
+		formDataItems.clear();
+		_getFormField()?.clear();
+	}
+
 	void addFormField(String key, String value){
 		if(body is! FormData) {
 			body = FormData();
 		}
 
-		(body as FormData).fields.add(MapEntry(key, value));
+		_getFormField()!.add(MapEntry(key, value));
 	}
 
 	void addFormFile(String partName, String fileName, File file){

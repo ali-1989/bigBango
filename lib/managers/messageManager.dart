@@ -1,25 +1,26 @@
 // ignore_for_file: empty_catches
+
 import 'dart:core';
+
+import 'package:iris_tools/dateSection/dateHelper.dart';
 
 import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/services/firebase_service.dart';
-import 'package:app/structures/enums/notificationStatus.dart';
-import 'package:app/structures/models/notificationModel.dart';
-import 'package:app/structures/structure/notificationStateStructure.dart';
+import 'package:app/structures/enums/messageStatus.dart';
+import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/messageModel.dart';
+import 'package:app/structures/structure/messageStateStructure.dart';
 import 'package:app/tools/app/appBadge.dart';
+import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appCache.dart';
 import 'package:app/tools/deviceInfoTools.dart';
-import 'package:iris_tools/dateSection/dateHelper.dart';
 
-import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-
-class NotificationManager {
-  NotificationManager._();
+class MessageManager {
+  MessageManager._();
   
-  static final List<NotificationModel> _notificationList = [];
-  static List<NotificationModel> get notificationList => _notificationList;
-  static NotificationStateStructure notificationStateStructure = NotificationStateStructure();
+  static final List<MessageModel> _messageList = [];
+  static List<MessageModel> get messageList => _messageList;
+  static MessageStateStructure messageStateStructure = MessageStateStructure();
   static int pageIndex = 1;
   ///-----------------------------------------------------------------------------------------
   static DateTime? _lastUpdateTime;
@@ -45,31 +46,31 @@ class NotificationManager {
 
   static void check() async {
     if(_lastUpdateTime == null || DateHelper.isPastOf(_lastUpdateTime, Duration(minutes: 29))){
-      requestNotification();
+      requestMessages();
     }
   }
 
   static void reset() async {
-    _notificationList.clear();
+    _messageList.clear();
     pageIndex = 1;
 
-    requestNotification();
+    requestMessages();
   }
 
-  static NotificationModel? getById(String? id){
+  static MessageModel? getById(String? id){
     try {
-      return _notificationList.firstWhere((element) => element.id == id);
+      return _messageList.firstWhere((element) => element.id == id);
     }
     catch(e){
       return null;
     }
   }
 
-  static NotificationModel addItem(NotificationModel item){
+  static MessageModel addItem(MessageModel item){
     final existItem = getById(item.id);
 
     if(existItem == null) {
-      _notificationList.add(item);
+      _messageList.add(item);
       return item;
     }
     else {
@@ -78,12 +79,12 @@ class NotificationManager {
     }
   }
 
-  static List<NotificationModel> addItemsFromMap(List? itemList, {String? domain}){
-    final res = <NotificationModel>[];
+  static List<MessageModel> addItemsFromMap(List? itemList, {String? domain}){
+    final res = <MessageModel>[];
 
     if(itemList != null){
       for(final row in itemList){
-        final itm = NotificationModel.fromMap(row, /*domain: domain*/);
+        final itm = MessageModel.fromMap(row, /*domain: domain*/);
         addItem(itm);
 
         res.add(itm);
@@ -94,11 +95,11 @@ class NotificationManager {
   }
 
   static Future removeItem(String id/*, bool fromDb*/) async {
-    _notificationList.removeWhere((element) => element.id == id);
+    _messageList.removeWhere((element) => element.id == id);
   }
 
   static void sortList(bool asc) async {
-    _notificationList.sort((NotificationModel p1, NotificationModel p2){
+    _messageList.sort((MessageModel p1, MessageModel p2){
       final d1 = p1.createAt;
       final d2 = p2.createAt;
 
@@ -115,16 +116,16 @@ class NotificationManager {
   }
 
   static Future removeNotMatchByServer(List<String> serverIds) async {
-    _notificationList.removeWhere((element) => !serverIds.contains(element.id));
+    _messageList.removeWhere((element) => !serverIds.contains(element.id));
   }
 
 
-  static void requestNotification() async {
-    if(AppBroadcast.notifyMessageNotifier.states.isInRequest){
+  static void requestMessages() async {
+    if(AppBroadcast.messageStateNotifier.states.isInRequest){
       return;
     }
 
-    AppBroadcast.notifyMessageNotifier.states.isInRequest = true;
+    AppBroadcast.messageStateNotifier.states.isInRequest = true;
     final requester = Requester();
 
     requester.httpRequestEvents.onAnyState = (req) async {
@@ -132,7 +133,7 @@ class NotificationManager {
     };
 
     requester.httpRequestEvents.onFailState = (req, res) async {
-      AppBroadcast.notifyMessageNotifier.states.errorOccur();
+      AppBroadcast.messageStateNotifier.states.errorOccur();
     };
 
     requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
@@ -146,14 +147,13 @@ class NotificationManager {
         pageIndex++;
       }
 
-      AppBroadcast.notifyMessageNotifier.states.hasNextPage = hasNextPage;
+      AppBroadcast.messageStateNotifier.states.hasNextPage = hasNextPage;
 
       addItemsFromMap(data);
-      addItem(NotificationModel()..id = 'a'..title = 'خرید درس'..body = 'سلام چطوری'..createAt = DateTime.now());
-      addItem(NotificationModel()..id = 'b'..title = 'برداشت پول'..body = 'خرید شما انجام شد'..createAt = DateTime.now());
+      sortList(true);
 
-      AppBroadcast.notifyMessageNotifier.states.dataIsOk();
-      AppBroadcast.notifyMessageNotifier.notify();
+      AppBroadcast.messageStateNotifier.states.dataIsOk();
+      AppBroadcast.messageStateNotifier.notify();
     };
 
 
@@ -162,7 +162,7 @@ class NotificationManager {
     requester.request(null, false);
   }
 
-  static void requestUpdateNotification(List<NotificationModel> notifyList) async {
+  static void requestUpdateMessageSeen(List<MessageModel> notifyList) async {
     final requester = Requester();
 
     requester.httpRequestEvents.onAnyState = (req) async {
@@ -171,14 +171,14 @@ class NotificationManager {
 
     requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
       for(final x in notifyList){
-        x.status = NotificationStatus.read;
+        x.status = MessageStatus.read;
       }
     };
 
     List<Map> ids = [];
 
     for(final x in notifyList){
-      if(x.status == NotificationStatus.unRead) {
+      if(x.status == MessageStatus.unRead) {
         ids.add({'id': x.id, 'status': 1});
       }
     }
@@ -211,9 +211,9 @@ class NotificationManager {
 
     requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
       final data = dataJs['data'];
-      final count = data['unreadCount'];
+      final count = data['unreadCount']?? 0;
 
-      AppBadge.setNotifyMessageBadge(count);
+      AppBadge.setMessageBadge(count);
       AppBadge.refreshViews();
     };
 
@@ -245,11 +245,6 @@ class NotificationManager {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
-      final data = dataJs['data'];
-      final count = data['unreadCount'];
-
-      AppBadge.setNotifyMessageBadge(count);
-      AppBadge.refreshViews();
     };
 
     final js = <String, dynamic>{};

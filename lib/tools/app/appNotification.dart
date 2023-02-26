@@ -1,16 +1,16 @@
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:iris_tools/api/generator.dart';
 
 import 'package:app/constants.dart';
 import 'package:app/structures/models/statusBarNotificationModel.dart';
 import 'package:app/system/keys.dart';
+import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDb.dart';
 
-// https://github.com/rafaelsetragni/awesome_notifications/blob/master/example/lib/utils/notification_util.dart
+// icon generator:
+// https://romannurik.github.io/AndroidAssetStudio/icons-notification.html#source.type=image&source.space.trim=1&source.space.pad=0&name=notif
 
 ///---------------------------------------------------------------------
 /*@pragma('vm:entry-point')
@@ -92,7 +92,7 @@ class AppNotification {
 
 		///* resource://drawable/app_icon
 		AwesomeNotifications().initialize(
-			'resource://drawable/ic_stat_app_icon',
+			'resource://drawable/notif',
 			[nc1,],
 			debug: false,
 		);
@@ -173,7 +173,7 @@ class AppNotification {
 			title: title,
 			body: text,
 			autoDismissible: true,
-			color: Colors.orange,
+			color: AppColors.red,
 			category: NotificationCategory.Message,
 			notificationLayout: NotificationLayout.Default,
 		);

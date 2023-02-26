@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:iris_pic_editor/pic_editor.dart';
@@ -1072,9 +1072,23 @@ class _ProfilePageState extends StateBase<ProfilePage> {
           cityList.add(CityModel.fromMap(x));
         }
 
+
         generateCity();
 
         city = cityList.firstWhereSafe((element) => element.id == user.cityModel?.id)?? cityList.first;
+        print('================================================ ${city?.name}');
+        for(var x in cityList){
+          if(x == city){
+            print(x.name);
+          }
+        }
+
+        print('====================2============================');
+        for(var x in cityDropDownList){
+          if(x.value == city){
+            print(city?.name);
+          }
+        }
 
         assistCtr.updateAssist(assistId$city);
         requestProfile();

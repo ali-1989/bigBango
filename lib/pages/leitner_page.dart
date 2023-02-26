@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-import 'package:app/managers/storeManager.dart';
 import 'package:app/pages/leitner_detail_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/models/lightnerModel.dart';
@@ -25,27 +24,26 @@ class LightnerPage extends StatefulWidget {
 }
 ///========================================================================================
 class _LightnerPageState extends StateBase<LightnerPage> {
-  List<LightnerModel> lightnerItem = [];
+  List<LightnerModel> lightnerItems = [];
 
   @override
   void initState(){
     super.initState();
 
+    //assistCtr.addState(AssistController.state$loading);
+
     List.generate(5, (index) {
       final i = LightnerModel();
       i.count = Generator.getRandomInt(2, 18);
 
-      lightnerItem.add(i);
+      lightnerItems.add(i);
     });
   }
 
   @override
-  void dispose(){
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    print('(((((((((((((((');
+    print(lightnerItems.length);
     return Assist(
       controller: assistCtr,
       builder: (_, ctr, data){
@@ -57,7 +55,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
           return WaitToLoad();
         }
 
-        if(StoreManager.getStoreLessonList().isEmpty){
+        if(lightnerItems.isEmpty){
           return EmptyData();
         }
 
@@ -78,14 +76,14 @@ class _LightnerPageState extends StateBase<LightnerPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('جعبه لایتنر', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
-                  Text('${lightnerItem.fold<int>(0, (p, element) => p + element.count)}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+                  Text('${lightnerItems.fold<int>(0, (p, element) => p + element.count)}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
                 ],
               ),
 
               SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
-                    itemCount: lightnerItem.length,
+                    itemCount: lightnerItems.length,
                     shrinkWrap: true,
                     padding: EdgeInsets.zero,
                     itemBuilder: itemBuilder
@@ -99,7 +97,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
   }
 
   Widget itemBuilder(ctx, idx){
-    final itm = lightnerItem[idx];
+    final itm = lightnerItems[idx];
 
     return GestureDetector(
       onTap: (){
@@ -135,7 +133,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
                         RichText(
                           text: TextSpan(
                             children: [
-                              TextSpan(text: 'جعبه ی ', style: AppThemes.body2TextStyle()),
+                              TextSpan(text: 'جعبه ی ', style: AppThemes.bodyTextStyle()),
                               TextSpan(text: itm.getNumText(idx+1),
                                   style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
                               ),
@@ -173,7 +171,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
   }
 
   void onItemClick(LightnerModel itm, idx) async {
-    await AppRoute.push(context, LightnerDetailPage(lightnerModel: itm, index: idx));
+    await AppRoute.pushPage(context, LightnerDetailPage(lightnerModel: itm, index: idx));
 
     assistCtr.updateHead();
   }

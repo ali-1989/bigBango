@@ -1,31 +1,31 @@
 
-enum NotificationStatus {
+enum MessageStatus {
   unKnow(-1),
   unRead(1),
   read(2);
 
   final int number;
 
-  const NotificationStatus(this.number);
+  const MessageStatus(this.number);
 
-  static NotificationStatus fromType(int num){
-    for(final x in NotificationStatus.values){
+  static MessageStatus fromType(int num){
+    for(final x in MessageStatus.values){
       if(x.number == num){
         return x;
       }
     }
 
-    return NotificationStatus.unKnow;
+    return MessageStatus.unKnow;
   }
 
-  static NotificationStatus fromName(String name){
-    for(final x in NotificationStatus.values){
+  static MessageStatus fromName(String name){
+    for(final x in MessageStatus.values){
       if(x.name == name){
         return x;
       }
     }
 
-    return NotificationStatus.unKnow;
+    return MessageStatus.unKnow;
   }
 
   String getTypeHuman(){

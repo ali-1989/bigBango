@@ -39,7 +39,7 @@ if (targetSdkVersionVal == null) {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion compileSdkVersionVal.toInteger()
@@ -126,7 +126,7 @@ flutter {
 }
 
 dependencies {
-    //implementation platform('com.google.firebase:firebase-bom:30.2.0')
+    implementation platform('com.google.firebase:firebase-bom:31.2.2')
     //implementation 'androidx.annotation:annotation:1.4.0'
     //implementation 'androidx.multidex:multidex:2.0.1'
 }

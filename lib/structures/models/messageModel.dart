@@ -1,20 +1,20 @@
-import 'package:app/structures/enums/notificationStatus.dart';
+import 'package:app/structures/enums/messageStatus.dart';
 import 'package:app/structures/enums/notificationType.dart';
 import 'package:app/structures/models/mediaModel.dart';
 
-class NotificationModel {
+class MessageModel {
   late String id;
   late String title;
   late String body;
   NotificationType type = NotificationType.unKnow;
-  NotificationStatus status = NotificationStatus.unKnow;
+  MessageStatus status = MessageStatus.unKnow;
   late DateTime createAt;
   String? data;
   MediaModel? image;
 
-  NotificationModel();
+  MessageModel();
 
-  NotificationModel.fromMap(Map? map){
+  MessageModel.fromMap(Map? map){
     if(map == null){
       return;
     }
@@ -25,7 +25,7 @@ class NotificationModel {
     data = map['data'];
     createAt = map['createAt'];
     type = NotificationType.fromType(map['type']);
-    status = NotificationStatus.fromType(map['status']);
+    status = MessageStatus.fromType(map['status']);
 
     if(map['image'] is Map){
       image = MediaModel.fromMap(map['image']);
@@ -47,7 +47,7 @@ class NotificationModel {
     return map;
   }
 
-  void matchBy(NotificationModel other){
+  void matchBy(MessageModel other){
     id = other.id;
     title = other.title;
     body = other.body;

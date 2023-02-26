@@ -235,37 +235,37 @@ class DrawerMenuBuilder {
 
   static void gotoProfilePage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.push(AppRoute.getLastContext()!, ProfilePage(userModel: Session.getLastLoginUser()!));
+    AppRoute.pushPage(AppRoute.getLastContext()!, ProfilePage(userModel: Session.getLastLoginUser()!));
   }
 
   static void gotoAboutPage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.push(AppRoute.getLastContext()!, AboutPage());
+    AppRoute.pushPage(AppRoute.getLastContext()!, AboutPage());
   }
 
   static void gotoWalletPage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.push(AppRoute.getLastContext()!, WalletPage());
+    AppRoute.pushPage(AppRoute.getLastContext()!, WalletPage());
   }
 
   static void gotoTransactionPage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.push(AppRoute.getLastContext()!, TransactionsPage());
+    AppRoute.pushPage(AppRoute.getLastContext()!, TransactionsPage());
   }
 
   static void gotoSupportPage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.push(AppRoute.getLastContext()!, SupportPage());
+    AppRoute.pushPage(AppRoute.getLastContext()!, SupportPage());
   }
 
   static void gotoLogsPage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.push(AppRoute.getLastContext()!, LogsPage());
+    AppRoute.pushPage(AppRoute.getLastContext()!, LogsPage());
   }
 
   static void gotoInvitePage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.push(AppRoute.getLastContext()!, InvitePage());
+    AppRoute.pushPage(AppRoute.getLastContext()!, InvitePage());
   }
 
   static void onLogoffCall() async {

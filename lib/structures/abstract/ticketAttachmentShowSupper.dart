@@ -10,7 +10,7 @@ import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSizes.dart';
-import 'package:app/views/components/fullScreenImageComponent.dart';
+import 'package:app/views/components/fullScreenImage.dart';
 import 'package:app/views/widgets/customCard.dart';
 
 abstract class TicketAttachmentShowSupper {
@@ -144,13 +144,13 @@ abstract class TicketAttachmentShowSupper {
   }
 
   void showFullScreen(String pathOrUrl) {
-    final view = FullScreenImageComponent(
+    final view = FullScreenImage(
       heroTag: 'heroTag',
       imageObj: pathOrUrl,
       imageType: ImageType.network,
       appBarColor: Colors.black,
     );
 
-    AppNavigator.pushNextPageExtra(AppRoute.getLastContext()!, view, name: FullScreenImageComponent.screenName);
+    AppNavigator.pushNextPageExtra(AppRoute.getLastContext()!, view, name: FullScreenImage.screenName);
   }
 }

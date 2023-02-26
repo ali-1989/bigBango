@@ -119,6 +119,6 @@ void gotoExam(LessonModel model){
     pageInjector.description = 'ddd dff dfdf';
     final examPage = ExamPage(injector: pageInjector);
 
-    AppRoute.push(context, examPage);
+    AppRoute.pushPage(context, examPage);
   }
  */

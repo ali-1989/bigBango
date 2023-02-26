@@ -1,35 +1,35 @@
 import 'dart:async';
 
-import 'package:app/managers/notificationManager.dart';
-import 'package:app/services/stateNotifier.dart';
-import 'package:app/structures/structure/notificationStateStructure.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/refresh.dart';
 
+import 'package:app/managers/messageManager.dart';
 import 'package:app/pages/home_page.dart';
 import 'package:app/pages/layout_page.dart';
-import 'package:app/pages/splash_page.dart';
+import 'package:app/services/stateNotifier.dart';
+import 'package:app/structures/structure/messageStateStructure.dart';
 import 'package:app/tools/app/appThemes.dart';
+import 'package:app/views/homeComponents/splashPage.dart';
 
 class AppBroadcast {
   AppBroadcast._();
 
   static final StreamController<bool> viewUpdaterStream = StreamController<bool>();
   static final RefreshController drawerMenuRefresher = RefreshController();
-  static final StateNotifier<NotificationStateStructure> notifyMessageNotifier = StateNotifier(NotificationManager.notificationStateStructure);
+  static final StateNotifier<MessageStateStructure> messageStateNotifier = StateNotifier(MessageManager.messageStateStructure);
   //---------------------- keys
   static LocalKey materialAppKey = UniqueKey();
   static final rootScaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   static final rootNavigatorKey = GlobalKey<NavigatorState>();
   static final layoutPageKey = GlobalKey<LayoutPageState>();
   static final homePageKey = GlobalKey<HomePageState>();
-  static final assistId$notificationPage = 'assistId_notificationPage';
 
   //---------------------- status
   static bool isNetConnected = true;
   static bool isWsConnected = false;
+  static bool messagePageIsOpen = false;
 
 
   /// this call build() method of all widgets

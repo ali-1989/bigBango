@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:app/views/states/backBtn.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -25,6 +24,7 @@ import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/components/greetingView.dart';
+import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
@@ -692,7 +692,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     final page = PublicAccess.getNextPartOfLesson(widget.injector.lessonModel);
 
     if(page != null) {
-      AppRoute.replace(context, page);
+      AppRoute.pushReplacePage(context, page);
     }
   }
 

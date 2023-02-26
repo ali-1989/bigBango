@@ -84,7 +84,7 @@ class _SelectVocabIdiomsDialog extends State<SelectGrammarDialog> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: (){
-        AppRoute.push(context, GrammarPage(injector: GrammarPageInjector(widget.lessonModel, id: itm.id)));
+        AppRoute.pushPage(context, GrammarPage(injector: GrammarPageInjector(widget.lessonModel, id: itm.id)));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),

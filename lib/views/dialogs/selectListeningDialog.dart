@@ -84,7 +84,7 @@ class _SelectVocabIdiomsDialog extends State<SelectListeningDialog> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: (){
-        AppRoute.push(context, ListeningPage(injector: ListeningPageInjector(widget.lessonModel, itm.id)));
+        AppRoute.pushPage(context, ListeningPage(injector: ListeningPageInjector(widget.lessonModel, itm.id)));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),

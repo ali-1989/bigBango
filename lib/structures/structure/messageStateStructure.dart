@@ -1,10 +1,11 @@
 import 'package:app/services/stateNotifier.dart';
 
-class NotificationStateStructure<String> extends StateHolder<String> {
+class MessageStateStructure<String> extends StateHolder<String> {
   bool isRequested = false;
   bool isInRequest = false;
   bool hasErrorInReceiveData = false;
   bool hasNextPage = true;
+  bool receivedNewFirebaseMessage = false;
 
   void errorOccur(){
     isRequested = true;

@@ -25,19 +25,9 @@ class LightnerDetailPage extends StatefulWidget {
   @override
   State<LightnerDetailPage> createState() => _LightnerDetailPageState();
 }
-///======================================================================================================================
+///==================================================================================================================
 class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
   bool showTranslate = false;
-
-  @override
-  void initState(){
-    super.initState();
-  }
-
-  @override
-  void dispose(){
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -183,9 +173,9 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                           RichText(
                               text: TextSpan(
                                 children: [
-                                  TextSpan(text: '[ ', style: AppThemes.body2TextStyle()),
-                                  TextSpan(text: 'thangk', style: AppThemes.body2TextStyle()),
-                                  TextSpan(text: ' ]', style: AppThemes.body2TextStyle()),
+                                  TextSpan(text: '[ ', style: AppThemes.bodyTextStyle()),
+                                  TextSpan(text: 'thangk', style: AppThemes.bodyTextStyle()),//todo
+                                  TextSpan(text: ' ]', style: AppThemes.bodyTextStyle()),
                                 ]
                               )
                           ),

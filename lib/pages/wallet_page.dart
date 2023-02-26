@@ -367,7 +367,7 @@ class _WalletPageState extends StateBase<WalletPage> {
   void showWithdrawalSheet() async {
     if(Session.getLastLoginUser()!.iban == null){
       void fn(){
-        AppRoute.push(context, ProfilePage(userModel: Session.getLastLoginUser()!));
+        AppRoute.pushPage(context, ProfilePage(userModel: Session.getLastLoginUser()!));
       }
 
       AppSheet.showSheetOneAction(context, 'ابتدا باید شماره شبای متعلق به خود را در بخش پروفایل وارد کنید', fn, buttonText: 'پروفایل');

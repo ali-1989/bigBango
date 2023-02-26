@@ -23,7 +23,7 @@ import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/permissionTools.dart';
-import 'package:app/views/components/fullScreenImageComponent.dart';
+import 'package:app/views/components/fullScreenImage.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/widgets/customCard.dart';
 
@@ -342,13 +342,13 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
   }
 
   void showFullScreen(String pathOrUrl) {
-    final view = FullScreenImageComponent(
+    final view = FullScreenImage(
         heroTag: 'heroTag',
         imageObj: File(pathOrUrl),
         imageType: ImageType.file,
       appBarColor: Colors.black,
     );
 
-    AppNavigator.pushNextPageExtra(context, view, name: FullScreenImageComponent.screenName);
+    AppNavigator.pushNextPageExtra(context, view, name: FullScreenImage.screenName);
   }
 }

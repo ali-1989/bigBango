@@ -160,7 +160,8 @@ class AppNavigator {
     }
 
     //List children = nav.focusScopeNode.descendants.toList();    << exist repeat node
-    final List children = nav.focusScopeNode.children.toList();
+    //dep final List children = nav.focusScopeNode.children.toList();
+    final List children = nav.focusNode.children.toList();
 
     for(FocusNode f in children) {
       final m = getModalRouteOf(f.context!);
@@ -592,12 +593,12 @@ class AppNavigator {
     return ModalRoute.of(context)?.isCurrent?? false;
   }
 
-  static OverlayState? getOverlay(BuildContext context) {
+  static OverlayState getOverlay(BuildContext context) {
     return Overlay.of(context);
   }
 
-  static OverlayState? insertOverlay(BuildContext context, OverlayEntry entry) {
-    return Overlay.of(context)?..insert(entry);
+  static OverlayState insertOverlay(BuildContext context, OverlayEntry entry) {
+    return Overlay.of(context)..insert(entry);
   }
   ///--------------------------------------------------------------------------------------------------
   static Future pushNextPageIfNotExist(BuildContext context, Widget next, {required String name, dynamic arguments, bool maintainState = true}) {
@@ -661,11 +662,13 @@ class AppNavigator {
   }
 
   static Future<T?> pushNextPage<T>(BuildContext context, Widget next, {required String name, dynamic arguments, bool maintainState = true}) {
-    return Navigator.push<T>(context,
-        MaterialPageRoute(builder: (ctx) {return next;},
-            settings: RouteSettings(name: name, arguments: arguments),
-            maintainState: maintainState)
+    final p = MaterialPageRoute<T>(
+        builder: (ctx) {return next;},
+        settings: RouteSettings(name: name, arguments: arguments),
+        maintainState: maintainState,
     );
+
+    return Navigator.of(context).push<T>(p);
   }
 
   static Future<T?> pushNextPageExtra<T>(BuildContext context, Widget next, {
