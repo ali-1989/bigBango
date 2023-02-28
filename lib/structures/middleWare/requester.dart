@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:dio/dio.dart';
@@ -116,7 +117,10 @@ class Requester {
     });
 
     f = f.then((val) async {
-      Tools.verbosePrint('@@@@@@@@ [${_httpRequester.requestOptions?.uri}]  response ========== [${_httpRequester.responseData?.statusCode}] $val');//todo
+      if(kDebugMode) {
+        Tools.verbosePrint('@@@>> [${_httpRequester.requestOptions?.uri}]  response ======= [${_httpRequester.responseData?.statusCode}] $val');
+      }
+
       if(_httpRequester.responseData?.statusCode == 401 && Session.getLastLoginUser() != null){ //n
         final getNewToken = await JwtService.requestNewToken(Session.getLastLoginUser()!);
 

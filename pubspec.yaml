@@ -95,8 +95,7 @@ dependency_overrides:
   path: ^1.8.3
   ffi: ^2.0.1
   shamsi_date: ^1.0.1
-  image: ^4.0.15
-  dio: ^5.0.1
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:

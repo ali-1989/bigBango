@@ -10,23 +10,19 @@ import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appNotification.dart';
 
 Future<void> _fbMessagingBackgroundHandler(RemoteMessage message) async {
-  print('---> back Notification  --- ${message.notification?.body}');
-  //_onNewNotification(message);
+  // firebase it self sending a notification
 }
 
 Future<void> _onNewNotification(RemoteMessage message) async {
   await ApplicationInitial.prepareDirectoriesAndLogger();
   await ApplicationInitial.inSplashInit();
 
-
   try{
     if(AppBroadcast.messagePageIsOpen){
-      print('---> new Notification A --- ${message.notification?.body}');
       AppBroadcast.messageStateNotifier.states.receivedNewFirebaseMessage = true;
       AppBroadcast.messageStateNotifier.notify();
     }
     else {
-      print('---> new Notification B --- ${message.notification?.body}');
       if(message.notification != null && message.notification!.body != null) {
         //MessageManager.addItem(MessageModel()..id = 'a'..title = 'خرید درس'..body = 'سلام چطوری'..createAt = DateTime.now());
         int old = AppBadge.getMessageBadge();
@@ -47,14 +43,14 @@ class FireBaseService {
   FireBaseService._();
 
   static Future init() async {
-    /*const firebaseOptions = FirebaseOptions(
-      appId: '1:731359726004:android:fbbd8cd236c4fc31b20ae1',
-      apiKey: 'AIzaSyBVuGcqQFjUl1t5mIUJ04rfr9EKkDRqYxM',
-      projectId: 'vosate-zehn-7d8fe',
-      messagingSenderId: '731359726004',
-    );*/
+    const firebaseOptions = FirebaseOptions(
+      appId: '1:749269012345:android:81c6b4bdda067517a029a8',
+      apiKey: 'AIzaSyDK_jAmfkPi7AKQfqHOM8YBLttSL3HRvGY',
+      projectId: 'bigbango-messaging',
+      messagingSenderId: '',
+    );
 
-    await Firebase.initializeApp();//options: firebaseOptions
+    await Firebase.initializeApp(options: firebaseOptions);
     //FirebaseMessaging.instance.setAutoInitEnabled(false);
 
     try {
@@ -79,7 +75,6 @@ class FireBaseService {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
-      print('==================initialMessage= ${initialMessage.notification?.body} ');//todo
     }
   }
 
@@ -98,13 +93,9 @@ class FireBaseService {
 
   static Future<String?> getTokenForce() async {
     token = await FirebaseMessaging.instance.getToken();
-    //PublicAccess.logger.logToAll(' token ==> $token');
 
     if(token != null) {
-      final gd = GregorianDate();
-      gd.moveLocalToUTC();
-
-      lastUpdateToken = gd.convertToSystemDate();
+      lastUpdateToken = DateHelper.getNow();
       EventDispatcherService.notify(EventDispatcher.firebaseTokenReceived);
 
       return token;

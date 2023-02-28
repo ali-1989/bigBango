@@ -1074,21 +1074,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
 
         generateCity();
-
         city = cityList.firstWhereSafe((element) => element.id == user.cityModel?.id)?? cityList.first;
-        print('================================================ ${city?.name}');
-        for(var x in cityList){
-          if(x == city){
-            print(x.name);
-          }
-        }
-
-        print('====================2============================');
-        for(var x in cityDropDownList){
-          if(x.value == city){
-            print(city?.name);
-          }
-        }
 
         assistCtr.updateAssist(assistId$city);
         requestProfile();

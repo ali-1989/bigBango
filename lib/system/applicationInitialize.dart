@@ -132,6 +132,7 @@ class ApplicationInitial {
       ApplicationLifeCycle.init();
 
       /// login & logoff
+      EventDispatcherService.attachFunction(EventDispatcher.userLogin, LoginService.onLoginObservable);
       EventDispatcherService.attachFunction(EventDispatcher.userLogoff, LoginService.onLogoffObservable);
 
       if (System.isWeb()) {

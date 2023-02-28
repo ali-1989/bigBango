@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/managers/messageManager.dart';
 import 'package:dio/dio.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/models/twoStateReturn.dart';
@@ -16,6 +17,11 @@ import 'package:app/tools/deviceInfoTools.dart';
 
 class LoginService {
   LoginService._();
+
+  static void onLoginObservable({dynamic data}){
+    MessageManager.requestSetFirebaseToken();
+    MessageManager.requestUnReadCount();
+  }
 
   static void onLogoffObservable({dynamic data}){
     if(data is UserModel){
@@ -49,9 +55,6 @@ class LoginService {
     if (isCurrent) {
       AppRoute.backToRoot(AppRoute.getLastContext()!);
       AppBroadcast.reBuildMaterial();
-      /*Future.delayed(Duration(milliseconds: 400), (){
-        AppRoute.replaceNamed(AppRoute.getContext(), LoginPage.route.name!);
-      });*/
     }
   }
 
@@ -113,6 +116,7 @@ class LoginService {
 
     var f = request.response.catchError((e){
       result.complete(TwoStateReturn());
+      return null;
     });
 
     f = f.then((Response? response){
