@@ -1,11 +1,11 @@
+import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/leitner/leitnerBoxModel.dart';
 import 'package:flutter/material.dart';
 
-import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/pages/leitner_detail_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/models/lightnerModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -24,26 +24,27 @@ class LightnerPage extends StatefulWidget {
 }
 ///========================================================================================
 class _LightnerPageState extends StateBase<LightnerPage> {
-  List<LightnerModel> lightnerItems = [];
+  Requester requester = Requester();
+  List<LeitnerBoxModel> boxItems = [];
 
   @override
   void initState(){
     super.initState();
 
-    //assistCtr.addState(AssistController.state$loading);
+    assistCtr.addState(AssistController.state$loading);
+    requestLeitner();
+  }
 
-    List.generate(5, (index) {
-      final i = LightnerModel();
-      i.count = Generator.getRandomInt(2, 18);
+  @override
+  void dispose(){
+    requester.dispose();
 
-      lightnerItems.add(i);
-    });
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('(((((((((((((((');
-    print(lightnerItems.length);
+
     return Assist(
       controller: assistCtr,
       builder: (_, ctr, data){
@@ -55,7 +56,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
           return WaitToLoad();
         }
 
-        if(lightnerItems.isEmpty){
+        if(boxItems.isEmpty){
           return EmptyData();
         }
 
@@ -76,14 +77,16 @@ class _LightnerPageState extends StateBase<LightnerPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('جعبه لایتنر', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
-                  Text('${lightnerItems.fold<int>(0, (p, element) => p + element.count)}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+                  Text('${boxItems.fold<int>(0, (sum, element) => sum + element.count)}',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)
+                  ),
                 ],
               ),
 
               SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
-                    itemCount: lightnerItems.length,
+                    itemCount: boxItems.length,
                     shrinkWrap: true,
                     padding: EdgeInsets.zero,
                     itemBuilder: itemBuilder
@@ -97,7 +100,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
   }
 
   Widget itemBuilder(ctx, idx){
-    final itm = lightnerItems[idx];
+    final itm = boxItems[idx];
 
     return GestureDetector(
       onTap: (){
@@ -152,7 +155,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
                   children: [
                     Text('${itm.count}').bold().fsR(1),
                     SizedBox(height: 8),
-                    Text('0').color(AppColors.red).fsR(-2),
+                    Text('${itm.readyToLearnCount}').color(AppColors.red).fsR(-2),
                   ],
                 ),
               ],
@@ -167,12 +170,42 @@ class _LightnerPageState extends StateBase<LightnerPage> {
     assistCtr.addStateWithClear(AssistController.state$loading);
     assistCtr.updateHead();
 
-    //requestStores();
+    requestLeitner();
   }
 
-  void onItemClick(LightnerModel itm, idx) async {
-    await AppRoute.pushPage(context, LightnerDetailPage(lightnerModel: itm, index: idx));
+  void onItemClick(LeitnerBoxModel itm, idx) async {
+    if(itm.readyToLearnCount == 0){
+      return;
+    }
 
-    assistCtr.updateHead();
+    await AppRoute.pushPage(context, LightnerDetailPage(lightnerBox: itm));
+
+    requestLeitner();
+  }
+
+  void requestLeitner() async {
+    requester.httpRequestEvents.onFailState = (req, dataJs) async {
+      assistCtr.addStateWithClear(AssistController.state$error);
+      assistCtr.updateHead();
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
+      final data = dataJs['data']?? {};
+      final boxes = data['boxes']?? [];
+
+      if(boxes is List){
+        for(final x in boxes){
+          boxItems.add(LeitnerBoxModel.fromMap(x));
+        }
+      }
+
+      assistCtr.clearStates();
+      assistCtr.updateHead();
+    };
+
+
+    requester.prepareUrl(pathUrl: '/leitner/boxes');
+    requester.methodType = MethodType.get;
+    requester.request(null, false);
   }
 }

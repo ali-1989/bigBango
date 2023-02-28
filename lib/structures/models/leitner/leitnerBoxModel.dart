@@ -1,7 +1,26 @@
 
-class LightnerModel {
-  int id = 0;
+class LeitnerBoxModel {
+  int number = 0;
   int count = 0;
+  int readyToLearnCount = 0;
+
+  LeitnerBoxModel();
+
+  LeitnerBoxModel.fromMap(Map map){
+    number = map['number'];
+    count = map['count'];
+    readyToLearnCount = map['readyToLearnCount'];
+  }
+
+  Map toMap(){
+    final map = <String, dynamic>{};
+
+    map['number'] = number;
+    map['count'] = count;
+    map['readyToLearnCount'] = readyToLearnCount;
+
+    return map;
+  }
 
   String getNumText(int id){
     switch (id){

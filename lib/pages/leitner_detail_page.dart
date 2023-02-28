@@ -1,9 +1,13 @@
+import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/models/leitner/leitnerBoxModel.dart';
+import 'package:app/views/states/errorOccur.dart';
+import 'package:app/views/states/waitToLoad.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/models/lightnerModel.dart';
+import 'package:app/structures/models/leitner/leitnerModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -13,12 +17,10 @@ import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/widgets/customCard.dart';
 
 class LightnerDetailPage extends StatefulWidget {
-  final LightnerModel lightnerModel;
-  final int index;
+  final LeitnerBoxModel lightnerBox;
 
   const LightnerDetailPage({
-    required this.lightnerModel,
-    required this.index,
+    required this.lightnerBox,
     Key? key
   }) : super(key: key);
 
@@ -27,15 +29,40 @@ class LightnerDetailPage extends StatefulWidget {
 }
 ///==================================================================================================================
 class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
+  Requester requester = Requester();
+  List<LeitnerModel> leitnerItems = [];
   bool showTranslate = false;
+  int currentIdx = 0;
+
+  @override
+  void initState(){
+    super.initState();
+
+    assistCtr.addState(AssistController.state$loading);
+    requestLeitner();
+  }
+
+  @override
+  void dispose(){
+    requester.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Assist(
       controller: assistCtr,
         builder: (ctx, ctr, data){
+          if(assistCtr.hasState(AssistController.state$error)){
+            return ErrorOccur(onTryAgain: tryAgain);
+          }
+
+          if(assistCtr.hasState(AssistController.state$loading)){
+            return WaitToLoad();
+          }
+
           return Scaffold(
-            //appBar: buildAppbar(),
             body: SafeArea(
                 child: buildBody()
             ),
@@ -45,6 +72,8 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
   }
 
   Widget buildBody(){
+    final current = leitnerItems[currentIdx];
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SingleChildScrollView(
@@ -102,19 +131,20 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
 
 
             SizedBox(height: 14),
+
             /// 7/20
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    Text('جعبه ی ${widget.lightnerModel.getNumText(widget.index)}').color(Colors.black45)
+                    Text('جعبه ی ${widget.lightnerBox.getNumText(widget.lightnerBox.number)}').color(Colors.black45)
                   ],
                 ),
 
                 Row(
                   children: [
-                    Text('20').englishFont().fsR(4),
+                    Text('${leitnerItems.length}').englishFont().fsR(4),
 
                     SizedBox(width: 10),
 
@@ -125,7 +155,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                     CustomCard(
                       color: Colors.grey.shade200,
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                        child: Text('7').englishFont().bold().fsR(4)
+                        child: Text('${currentIdx+1}').englishFont().bold().fsR(4)
                     )
                   ],
                 ),
@@ -133,10 +163,11 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
             ),
 
             SizedBox(height: 14),
+
             /// progressbar
             Directionality(
                 textDirection: TextDirection.ltr,
-                child: LinearProgressIndicator(value: 0.3, backgroundColor: AppColors.red.withAlpha(50))
+                child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
             ),
 
             SizedBox(height: 60),
@@ -170,14 +201,17 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                           ),
 
                           SizedBox(width: 8),
-                          RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(text: '[ ', style: AppThemes.bodyTextStyle()),
-                                  TextSpan(text: 'thangk', style: AppThemes.bodyTextStyle()),//todo
-                                  TextSpan(text: ' ]', style: AppThemes.bodyTextStyle()),
-                                ]
-                              )
+                          Visibility(
+                            visible: current.contentType == 1,
+                            child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(text: '[ ', style: AppThemes.bodyTextStyle()),
+                                    TextSpan(text: '${current.getPronunciation()}', style: AppThemes.bodyTextStyle()),
+                                    TextSpan(text: ' ]', style: AppThemes.bodyTextStyle()),
+                                  ]
+                                )
+                            ),
                           ),
                         ]
                       ),
@@ -186,7 +220,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                       Divider(color: Colors.black45,),
                       SizedBox(height: 50),
 
-                      Text('thank').fsR(10),
+                      Text(current.getContent()).fsR(10),
 
                       AnimatedCrossFade(
                           firstChild: TextButton(
@@ -203,7 +237,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                           ),
                           secondChild: Padding(
                             padding: const EdgeInsets.only(top: 14.0),
-                            child: Text('تشکر / سپاس'),
+                            child: Text(current.getTranslate()),
                           ),
                           crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
                           duration: Duration(milliseconds: 250)
@@ -261,5 +295,42 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
         ),
       ),
     );
+  }
+
+  double calcProgress(){
+    int r = ((currentIdx+1) * 100) ~/ leitnerItems.length;
+    return r/100;
+  }
+
+  void tryAgain(){
+    assistCtr.addStateWithClear(AssistController.state$loading);
+    assistCtr.updateHead();
+
+    requestLeitner();
+  }
+
+  void requestLeitner() async {
+    requester.httpRequestEvents.onFailState = (req, dataJs) async {
+      assistCtr.addStateWithClear(AssistController.state$error);
+      assistCtr.updateHead();
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
+      final data = dataJs['data']?? [];
+
+      if(data is List){
+        for(final x in data){
+          leitnerItems.add(LeitnerModel.fromMap(x));
+        }
+      }
+
+      assistCtr.clearStates();
+      assistCtr.updateHead();
+    };
+
+
+    requester.prepareUrl(pathUrl: '/leitner/contents?BoxNumber=${widget.lightnerBox.number}');
+    requester.methodType = MethodType.get;
+    requester.request(null, false);
   }
 }

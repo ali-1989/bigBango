@@ -309,7 +309,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                 children: [
                                                   GestureDetector(
                                                     onTap: (){
-                                                      //leitnerClick();
+                                                      leitnerClick();
                                                     },
                                                     child: CustomCard(
                                                       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 7),
@@ -429,6 +429,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                             ],
                                           ),
 
+                                          /// divider
                                           Padding(
                                             padding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
                                             child: SizedBox(
@@ -793,8 +794,13 @@ class _VocabPageState extends StateBase<VocabPage> {
       //assistCtr.updateHead();
     };
 
+    final js = <String, dynamic>{};
+    js['contentId'] = vocab.id;
+    js['contentType'] = 1;
+
     requester.methodType = MethodType.post;
-    requester.prepareUrl(pathUrl: '/setLeitner?vocabId=${widget.injector.lessonModel.id}?state=$state');
+    requester.prepareUrl(pathUrl: '/leitner/addOrRemove');
+    requester.bodyJson = js;
     requester.request(context);
   }
 

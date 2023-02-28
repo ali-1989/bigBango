@@ -119,7 +119,6 @@ class MessageManager {
     _messageList.removeWhere((element) => !serverIds.contains(element.id));
   }
 
-
   static void requestMessages() async {
     if(AppBroadcast.messageStateNotifier.states.isInRequest){
       return;
