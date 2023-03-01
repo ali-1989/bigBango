@@ -177,6 +177,10 @@ class DrawerMenuBuilder {
                                 width: 60,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                 beforeLoadWidget: CircularProgressIndicator(),
+                                onDownloadFn: (bytes, path){
+                                  user.avatarModel?.bytes = bytes;
+                                },
+                                bytes: user.avatarModel?.bytes,
                                 url: user.avatarModel?.fileLocation,
                               ),
                             );

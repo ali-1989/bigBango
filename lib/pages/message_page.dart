@@ -1,3 +1,6 @@
+import 'package:app/pages/ticket_detail_page.dart';
+import 'package:app/structures/enums/notificationType.dart';
+import 'package:app/structures/models/messageModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -45,8 +48,10 @@ class _NotificationPageState extends StateBase<NotificationPage> {
       MessageManager.requestMessages();
     }
     else {
-      AppBadge.setMessageBadge(0);
-      AppBadge.refreshViews();
+      addPostOrCall(fn: (){
+        AppBadge.setMessageBadge(0);
+        AppBadge.refreshViews();
+      });
 
       MessageManager.check();
       MessageManager.requestUpdateMessageSeen(MessageManager.messageList);
@@ -88,7 +93,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
                 children: [
                   Image.asset(AppImages.drawerSendIco, width: 32, height: 32, color: AppColors.red),
                   SizedBox(width: 5),
-                  Text('اعلانات', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+                  Text('اعلانات', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w200)),
                 ],
               ),
             ),
@@ -113,9 +118,12 @@ class _NotificationPageState extends StateBase<NotificationPage> {
                     controller: refreshController,
                     onRefresh: (){},
                     onLoading: onLoadingMoreCall,
-                    child: ListView.builder(
+                    child: ListView.separated(
                       itemCount: MessageManager.messageList.length,
                       itemBuilder: buildListItem,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Divider();
+                      },
                     ),
                   ),
                 )
@@ -175,74 +183,87 @@ class _NotificationPageState extends StateBase<NotificationPage> {
   Widget buildListItem(_, int idx) {
     final notify = MessageManager.messageList[idx];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
-      child: IntrinsicHeight(
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBox(
-              width: 2,
-                height: double.infinity,
-                child: ColoredBox(color: AppColors.red)
-            ),
+    return GestureDetector(
+      onTap: (){
+        onItemClick(notify);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6.0),
+        child: IntrinsicHeight(
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              SizedBox(
+                width: 2,
+                  height: double.infinity,
+                  child: ColoredBox(color: AppColors.red)
+              ),
 
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(notify.title).bold(),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(notify.title),
 
-                        Row(
-                          children: [
-                            Text(DateTools.dateAndHmRelative(notify.createAt)).alpha(),
-                            SizedBox(width: 5),
-                            Icon(AppIcons.calendar, size: 12).alpha()
-                          ],
-                        ),
-                      ],
-                    ),
+                          Row(
+                            children: [
+                              Text(DateTools.dateAndHmRelative(notify.createAt)).alpha(alpha: 220),
+                              SizedBox(width: 5),
+                              Icon(AppIcons.calendar, size: 12).alpha(alpha: 220)
+                            ],
+                          ),
+                        ],
+                      ),
 
-                    SizedBox(height: 8),
-                    Text(notify.body).fsR(-1).alpha(),
-                    SizedBox(height: 5),
+                      SizedBox(height: 8),
+                      Text(notify.body).fsR(-1).alpha(),
+                      SizedBox(height: 5),
 
-                    Visibility(
-                      visible: notify.hasContent(),
-                        child: InputChip(
-                          visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                          backgroundColor: Colors.black26,
-                          elevation: 0,
-                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: -2),
-                          label: Text('نمایش محتوا').fsR(-3).color(Colors.white),
-                          onPressed: (){
-                            if(notify.image?.fileLocation != null){
-                              final view = FullScreenImage(
-                                heroTag: '',
-                                imageObj: notify.image!.fileLocation,
-                                imageType: ImageType.network,
-                              );
+                      Visibility(
+                        visible: notify.hasContent(),
+                          child: InputChip(
+                            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                            backgroundColor: Colors.black26,
+                            elevation: 0,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: -2),
+                            label: Text('نمایش محتوا').fsR(-3).color(Colors.white),
+                            onPressed: (){
+                              if(notify.image?.fileLocation != null){
+                                final view = FullScreenImage(
+                                  heroTag: '',
+                                  imageObj: notify.image!.fileLocation,
+                                  imageType: ImageType.network,
+                                );
 
-                              AppRoute.pushPage(context, view);
-                            }
-                          },
-                        )
-                    ),
-                  ],
+                                AppRoute.pushPage(context, view);
+                              }
+                            },
+                          )
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void onItemClick(MessageModel notify) async {
+    if(notify.type == NotificationType.ticket){
+      if(notify.data is Map) {
+        await AppRoute.pushPage(context, TicketDetailPage(ticketId: notify.data!['id']));
+      }
+    }
   }
 }

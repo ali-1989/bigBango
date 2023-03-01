@@ -178,7 +178,7 @@ class MessageManager {
 
     for(final x in notifyList){
       if(x.status == MessageStatus.unRead) {
-        ids.add({'id': x.id, 'status': 1});
+        ids.add({'id': x.id, 'status': 2});
       }
     }
 

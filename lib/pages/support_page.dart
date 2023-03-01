@@ -503,7 +503,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () async {
-        await AppRoute.pushPage(context, TicketDetailPage(ticketModel: tik));
+        await AppRoute.pushPage(context, TicketDetailPage(ticketModel: tik, ticketId: tik.id));
         assistCtr.updateHead();
       },
       child: Padding(

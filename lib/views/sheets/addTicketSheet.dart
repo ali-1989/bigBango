@@ -155,10 +155,23 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                                   child: DropdownButton2<String>(
                                     items: dropList,
                                     value: selectedTicketRoleId,
-                                    offset: Offset(0,0),
-                                    buttonPadding: EdgeInsets.symmetric(horizontal: 5),
-                                    itemHeight: 30,
-                                    buttonHeight: 50,
+                                    dropdownStyleData: DropdownStyleData(
+                                      width: 150,
+                                      decoration:BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                                      elevation: 8,
+                                      isOverButton: false,
+                                      scrollbarTheme: ScrollbarThemeData(
+                                          radius: const Radius.circular(40),
+                                          thickness: MaterialStateProperty.all<double>(5)
+                                      ),
+                                    ),
+                                    menuItemStyleData: MenuItemStyleData(
+                                      height: 40,
+                                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                                    ),
                                     onChanged: (value) {
                                       setState(() {
                                         selectedTicketRoleId = value as String;

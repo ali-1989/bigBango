@@ -6,7 +6,7 @@ class LeitnerVocabModel {
   late String word;
   late String translation;
   String? pronunciation;
-  String description = '';
+  String? description;
   MediaModel? britishVoice;
   MediaModel? americanVoice;
 

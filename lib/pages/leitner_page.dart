@@ -107,6 +107,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
         onItemClick(itm, idx);
       },
       child: Padding(
+        key: ValueKey(itm.number),
         padding: const EdgeInsets.symmetric(vertical: 4.0),
         child: DecoratedBox(
           decoration: BoxDecoration(
@@ -192,6 +193,8 @@ class _LightnerPageState extends StateBase<LightnerPage> {
     requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
       final data = dataJs['data']?? {};
       final boxes = data['boxes']?? [];
+
+      boxItems.clear();
 
       if(boxes is List){
         for(final x in boxes){

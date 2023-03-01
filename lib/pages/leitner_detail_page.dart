@@ -1,5 +1,9 @@
+import 'package:animator/animator.dart';
+import 'package:app/services/audio_player_service.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/leitner/leitnerBoxModel.dart';
+import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/app/appSheet.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +34,7 @@ class LightnerDetailPage extends StatefulWidget {
 ///==================================================================================================================
 class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
   Requester requester = Requester();
+  String assistId$player = 'assistId_player';
   List<LeitnerModel> leitnerItems = [];
   bool showTranslate = false;
   int currentIdx = 0;
@@ -45,29 +50,33 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
   @override
   void dispose(){
     requester.dispose();
+    AudioPlayerService.getAudioPlayer().stop();
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Assist(
-      controller: assistCtr,
-        builder: (ctx, ctr, data){
-          if(assistCtr.hasState(AssistController.state$error)){
-            return ErrorOccur(onTryAgain: tryAgain);
-          }
+    return ColoredBox(
+      color: Colors.white,
+      child: Assist(
+        controller: assistCtr,
+          builder: (ctx, ctr, data){
+            if(assistCtr.hasState(AssistController.state$error)){
+              return ErrorOccur(onTryAgain: tryAgain);
+            }
 
-          if(assistCtr.hasState(AssistController.state$loading)){
-            return WaitToLoad();
-          }
+            if(assistCtr.hasState(AssistController.state$loading)){
+              return WaitToLoad();
+            }
 
-          return Scaffold(
-            body: SafeArea(
-                child: buildBody()
-            ),
-          );
-        }
+            return Scaffold(
+              body: SafeArea(
+                  child: buildBody()
+              ),
+            );
+          }
+      ),
     );
   }
 
@@ -184,41 +193,67 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                   child: Column(
                     children: [
                       SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children:[
-                          /*CustomCard(
-                            padding: EdgeInsets.all(5),
-                              color: AppColors.red,
-                              child: Image.asset(AppImages.lightnerIcoBlack, width: 20, color: Colors.white)
-                          ),*/
+                      Visibility(
+                        visible: current.contentType == 1,
+                        child: Column(
+                          children: [
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children:[
+                                  SizedBox(width: 8),
+                                  GestureDetector(
+                                    onTap: (){
+                                      playSound(current);
+                                    },
+                                    child: Assist(
+                                        controller: assistCtr,
+                                        id: assistId$player,
+                                        builder: (_, __, data) {
+                                          return AnimateWidget(
+                                              resetOnRebuild: true,
+                                              triggerOnRebuild: true,
+                                              duration: Duration(milliseconds: 500),
+                                              cycles: data == 'prepare' ? 100 : 1,
+                                            builder: (_, animate) {
+                                              Color color = Colors.grey.shade200;
 
-                          SizedBox(width: 8),
-                          CustomCard(
-                            padding: EdgeInsets.all(5),
-                              color: Colors.grey.shade200,
-                              child: Image.asset(AppImages.speaker2Ico, width: 20,)
-                          ),
+                                              if(data == 'prepare'){
+                                                color = animate.fromTween((v) => ColorTween(begin: AppColors.red, end: AppColors.red.withAlpha(50)))!;
+                                              }
+                                              else if(data == 'play'){
+                                                color = AppColors.red;
+                                              }
 
-                          SizedBox(width: 8),
-                          Visibility(
-                            visible: current.contentType == 1,
-                            child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(text: '[ ', style: AppThemes.bodyTextStyle()),
-                                    TextSpan(text: '${current.getPronunciation()}', style: AppThemes.bodyTextStyle()),
-                                    TextSpan(text: ' ]', style: AppThemes.bodyTextStyle()),
-                                  ]
-                                )
+                                              return CustomCard(
+                                                padding: EdgeInsets.all(5),
+                                                color: color,//Colors.grey.shade200,
+                                                child: Image.asset(AppImages.speaker2Ico, width: 20)
+                                        );
+                                            }
+                                          );
+                                      }
+                                    ),
+                                  ),
+
+                                  SizedBox(width: 8),
+                                  RichText(
+                                      text: TextSpan(
+                                          children: [
+                                            TextSpan(text: '[ ', style: AppThemes.bodyTextStyle()),
+                                            TextSpan(text: '${current.getPronunciation()}', style: AppThemes.bodyTextStyle()),
+                                            TextSpan(text: ' ]', style: AppThemes.bodyTextStyle()),
+                                          ]
+                                      )
+                                  ),
+                                ]
                             ),
-                          ),
-                        ]
-                      ),
 
-                      SizedBox(height: 10),
-                      Divider(color: Colors.black45,),
-                      SizedBox(height: 50),
+                            SizedBox(height: 10),
+                            Divider(color: Colors.black45),
+                            SizedBox(height: 50),
+                          ],
+                        ),
+                      ),
 
                       Text(current.getContent()).fsR(10),
 
@@ -252,30 +287,18 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                                   backgroundColor: Colors.green
                                 ),
                                 onPressed: (){
-                                  showTranslate = !showTranslate;
-                                  assistCtr.updateHead();
+                                  requestSetReview(current, true);
                                 },
                                 child: Text('بلدم'),
                               )
                           ),
 
-                          SizedBox(width: 10),
-                          Expanded(
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.orange
-                                ),
-                                onPressed: (){},
-                                child: Text('بازم ببینم'),
-                              )
-                          ),
 
-                          SizedBox(width: 10),
+                          SizedBox(width: 20),
                           Expanded(
                               child: ElevatedButton(
                                 onPressed: (){
-                                  showTranslate = !showTranslate;
-                                  assistCtr.updateHead();
+                                  requestSetReview(current, false);
                                 },
                                 child: Text('بلد نیستم'),
                               )
@@ -297,9 +320,35 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
     );
   }
 
+  void playSound(LeitnerModel model){
+    assistCtr.updateAssist(assistId$player, stateData: 'prepare');
+
+    AudioPlayerService.networkVoicePlayer(model.vocabulary?.americanVoice?.fileLocation?? '').then((player) async {
+      assistCtr.updateAssist(assistId$player, stateData: 'play');
+      await player.play();
+      assistCtr.updateAssist(assistId$player, stateData: null);
+      player.stop();
+    });
+  }
+
   double calcProgress(){
     int r = ((currentIdx+1) * 100) ~/ leitnerItems.length;
     return r/100;
+  }
+
+  void next(){
+    if(currentIdx < leitnerItems.length-1){
+      currentIdx++;
+    }
+    else {
+      AppSheet.showSheetOneAction(
+          context,
+          'تبریک شما محتوای این جعبه را تمام کردید',
+          (){
+            AppRoute.popTopView(context);
+          }
+      );
+    }
   }
 
   void tryAgain(){
@@ -331,6 +380,30 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
 
     requester.prepareUrl(pathUrl: '/leitner/contents?BoxNumber=${widget.lightnerBox.number}');
     requester.methodType = MethodType.get;
+    requester.request(null, false);
+  }
+
+  void requestSetReview(LeitnerModel model, bool state) async {
+    requester.httpRequestEvents.onFailState = (req, dataJs) async {
+      hideLoading();
+      AppSheet.showSheet$OperationFailed(context);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
+      hideLoading();
+
+      next();
+      assistCtr.updateHead();
+    };
+
+    final js = <String, dynamic>{};
+    js['id'] = model.id;
+    js['isCorrect'] = state;
+
+    showLoading();
+    requester.prepareUrl(pathUrl: '/leitner/review');
+    requester.methodType = MethodType.put;
+    requester.bodyJson = js;
     requester.request(null, false);
   }
 }

@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:iris_tools/dateSection/ADateStructure.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
 import 'package:app/services/event_dispatcher_service.dart';
@@ -29,7 +28,11 @@ Future<void> _onNewNotification(RemoteMessage message) async {
         AppBadge.setMessageBadge(old + 1);
         AppBadge.refreshViews();
 
-        AppNotification.sendNotification(message.notification!.title, message.notification!.body!);
+        AppNotification.sendNotification(
+            message.notification!.title,
+            message.notification!.body!,
+          payload: {'key': 'message'}
+        );
       }
     }
   }

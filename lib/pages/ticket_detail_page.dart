@@ -1,3 +1,4 @@
+import 'package:app/views/states/backBtn.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -24,10 +25,12 @@ import 'package:app/views/states/waitToLoad.dart';
 import 'package:app/views/widgets/customCard.dart';
 
 class TicketDetailPage extends StatefulWidget {
-  final TicketModel ticketModel;
+  final TicketModel? ticketModel;
+  final String ticketId;
 
   const TicketDetailPage({
-    required this.ticketModel,
+    this.ticketModel,
+    required this.ticketId,
     Key? key,
   }) : super(key: key);
 
@@ -37,15 +40,13 @@ class TicketDetailPage extends StatefulWidget {
 ///=================================================================================================
 class _TicketDetailPageState extends StateBase<TicketDetailPage> {
   Requester requester = Requester();
-  late TicketModel ticketModel;
   late UserModel userModel;
-  TicketDetailModel? ticketDetailModel;
+  late TicketDetailModel ticketDetailModel;
 
   @override
   void initState(){
     super.initState();
 
-    ticketModel = widget.ticketModel;
     assistCtr.addState(AssistController.state$loading);
     userModel = Session.getLastLoginUser()!;
 
@@ -65,7 +66,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
       builder: (_, ctr, data){
         return Scaffold(
           body: buildBody(),
-          floatingActionButton: ElevatedButton(
+          floatingActionButton: assistCtr.existAnyStates([AssistController.state$error, AssistController.state$loading]) ? null: ElevatedButton(
             onPressed: openNewResponse,
             child: Text('پاسخ دادن'),
           ),
@@ -76,7 +77,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onTryAgain: onRefresh);
+      return ErrorOccur(onTryAgain: onRefresh, backButton: BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
@@ -105,16 +106,16 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(ticketModel.title).bold().fsR(1),
+                      Text(ticketDetailModel.title).bold().fsR(1),
                       DecoratedBox(
                         decoration: BoxDecoration(
-                            color: ticketModel.status == 1 ? AppColors.greenTint : AppColors.redTint,
+                            color: ticketDetailModel.status == 1 ? AppColors.greenTint : AppColors.redTint,
                             borderRadius: BorderRadius.circular(4)
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
-                          child: Text(ticketModel.status == 1 ? 'باز' : 'بسته',
-                              style: TextStyle(color: ticketModel.status == 1 ? AppColors.green : Colors.red, fontSize: 10)
+                          child: Text(ticketDetailModel.status == 1 ? 'باز' : 'بسته',
+                              style: TextStyle(color: ticketDetailModel.status == 1 ? AppColors.green : Colors.red, fontSize: 10)
                           ),
                         ),
                       )
@@ -126,7 +127,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
               Row(
                 children: [
                   Visibility(
-                    visible: widget.ticketModel.status == 1,
+                    visible: ticketDetailModel.status == 1,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.zero,
@@ -167,7 +168,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
         /// content
         Expanded(
             child: ListView.builder(
-                itemCount: ticketDetailModel!.replies.length +1,
+                itemCount: ticketDetailModel.replies.length +1,
                 itemBuilder: buildList,
             ),
         ),
@@ -178,11 +179,11 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
   Widget buildList(_, int idx) {
     if (idx == 0) {
       return TicketDetailUserBubbleComponent(
-        injector: TicketDetailBubbleInjector(ticketDetailModel!.firstTicket),
+        injector: TicketDetailBubbleInjector(ticketDetailModel.firstTicket),
       );
     }
 
-    final item = ticketDetailModel!.replies[idx-1];
+    final item = ticketDetailModel.replies[idx-1];
 
     if (item.creator.id == userModel.userId) {
       return TicketDetailUserBubbleComponent(
@@ -217,7 +218,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
   void openNewResponse() async {
     final res = await AppSheet.showSheetCustom(
       context,
-      builder: (ctx) => ReplyTicketSheet(ticketDetailModel: ticketDetailModel!),
+      builder: (ctx) => ReplyTicketSheet(ticketDetailModel: ticketDetailModel),
       routeName: 'ReplyTicketSheet',
       contentColor: Colors.transparent,
       isScrollControlled: true,
@@ -246,7 +247,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/tickets/details?Id=${ticketModel.id}');
+    requester.prepareUrl(pathUrl: '/tickets/details?Id=${widget.ticketId}');
     requester.request(context);
   }
 
@@ -260,12 +261,12 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
       hideLoading();
       AppSnack.showSnack$operationSuccess(context);
 
-      widget.ticketModel.status = 2;
+      widget.ticketModel?.status = 2;
       assistCtr.updateHead();
     };
 
     final js = <String, dynamic>{};
-    js['ticketId'] = widget.ticketModel.id;
+    js['ticketId'] = widget.ticketId;
 
     showLoading();
     requester.methodType = MethodType.post;

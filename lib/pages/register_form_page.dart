@@ -201,13 +201,24 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                                           child: DropdownButton2<ProvinceModel>(
                                                             items: provinceDropDownList,
                                                             value: province,
-                                                            dropdownWidth: 150,
-                                                            buttonWidth: 150,
-                                                            buttonHeight: 40,
-                                                            itemHeight: 40,
-                                                            itemPadding: const EdgeInsets.symmetric(horizontal: 5),
-                                                            buttonPadding: const EdgeInsets.symmetric(horizontal: 5),
-                                                            dropdownPadding: const EdgeInsets.symmetric(horizontal: 5),
+                                                            dropdownStyleData: DropdownStyleData(
+                                                              width: 200,
+                                                              elevation: 8,
+                                                              maxHeight: 500,
+                                                              isOverButton: false,
+                                                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                              scrollbarTheme: ScrollbarThemeData(
+                                                                  radius: const Radius.circular(20),
+                                                                  thickness: MaterialStateProperty.all<double>(4)
+                                                              ),
+                                                              decoration:BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(10),
+                                                              ),
+                                                            ),
+                                                            menuItemStyleData: MenuItemStyleData(
+                                                              height: 40,
+                                                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                            ),
                                                             hint: const Padding(
                                                               padding: EdgeInsets.symmetric(horizontal: 10),
                                                               child: Text('استان', style: TextStyle(color: Colors.grey)),
@@ -235,13 +246,24 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                                           child: DropdownButton2<CityModel>(
                                                             items: cityDropDownList,
                                                             value: city,
-                                                            dropdownWidth: 150,
-                                                            buttonWidth: 150,
-                                                            buttonHeight: 40,
-                                                            itemHeight: 40,
-                                                            itemPadding: const EdgeInsets.symmetric(horizontal: 5),
-                                                            buttonPadding: const EdgeInsets.symmetric(horizontal: 5),
-                                                            dropdownPadding: const EdgeInsets.symmetric(horizontal: 5),
+                                                            dropdownStyleData: DropdownStyleData(
+                                                              width: 200,
+                                                              elevation: 8,
+                                                              maxHeight: 500,
+                                                              isOverButton: false,
+                                                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                              scrollbarTheme: ScrollbarThemeData(
+                                                                  radius: const Radius.circular(20),
+                                                                  thickness: MaterialStateProperty.all<double>(4)
+                                                              ),
+                                                              decoration:BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(10),
+                                                              ),
+                                                            ),
+                                                            menuItemStyleData: MenuItemStyleData(
+                                                              height: 40,
+                                                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                            ),
                                                             hint: const Padding(
                                                               padding: EdgeInsets.symmetric(horizontal: 5),
                                                               child: Text('شهر', style: TextStyle(color: Colors.grey)),
@@ -273,19 +295,32 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                                     child: DropdownButton2<int>(
                                                       items: genderList,
                                                       value: gender,
+                                                      dropdownStyleData: DropdownStyleData(
+                                                        width: 200,
+                                                        elevation: 8,
+                                                        maxHeight: 500,
+                                                        isOverButton: false,
+                                                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                        scrollbarTheme: ScrollbarThemeData(
+                                                            radius: const Radius.circular(20),
+                                                            thickness: MaterialStateProperty.all<double>(4)
+                                                        ),
+                                                        decoration:BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(10),
+                                                        ),
+                                                      ),
+                                                      menuItemStyleData: MenuItemStyleData(
+                                                        height: 40,
+                                                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                      ),
                                                       hint: const Padding(
                                                         padding: EdgeInsets.symmetric(horizontal: 10),
                                                         child: Text('جنسیت', style: TextStyle(color: Colors.grey)),
                                                       ),
-                                                      itemPadding: const EdgeInsets.symmetric(horizontal: 10),
-                                                      dropdownPadding: const EdgeInsets.symmetric(horizontal: 10),
                                                       onChanged: (value) {
                                                         gender = value;
                                                         assistCtr.updateHead();
                                                       },
-                                                      buttonHeight: 40,
-                                                      buttonWidth: 140,
-                                                      itemHeight: 40,
                                                       underline: const SizedBox(),
                                                     ),
                                                   ),

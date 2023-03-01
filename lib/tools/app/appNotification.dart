@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:app/tools/app/appBroadcast.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:iris_tools/api/generator.dart';
 
@@ -93,7 +94,7 @@ class AppNotification {
 		///* resource://drawable/app_icon
 		AwesomeNotifications().initialize(
 			'resource://drawable/notif',
-			[nc1,],
+			[nc1],
 			debug: false,
 		);
 
@@ -134,12 +135,16 @@ class AppNotification {
 	}
 
 	static void startListenTap() {
-	/*AwesomeNotifications().setListeners(
-				onActionReceivedMethod: onActionReceivedMethod,
-				onNotificationCreatedMethod:onNotificationCreatedMethod,
-				onNotificationDisplayedMethod: onNotificationDisplayedMethod,
-				onDismissActionReceivedMethod: onDismissActionReceivedMethod
-		);*/
+		listener(ReceivedNotification receivedNotification){
+			if(receivedNotification.payload is Map){
+				final key = receivedNotification.payload!['key'];
+				if(key == 'message'){
+					AppBroadcast.layoutPageKey.currentState?.gotoPage(3);
+				}
+			}
+		}
+
+		AwesomeNotifications().actionStream.listen(listener);
 	}
 
 	static void removeChannel(String channelKey) {
@@ -166,7 +171,7 @@ class AppNotification {
 		AwesomeNotifications().showNotificationConfigPage();
 	}
 
-	static void sendNotification(String? title, String text, {int? id}) {
+	static void sendNotification(String? title, String text, {int? id, Map<String, String>? payload}) {
 		final n = NotificationContent(
 			id: id ?? Generator.generateIntId(5),
 			channelKey: fetchChannelKey()?? '',
@@ -176,6 +181,7 @@ class AppNotification {
 			color: AppColors.red,
 			category: NotificationCategory.Message,
 			notificationLayout: NotificationLayout.Default,
+			payload: payload,
 		);
 
 		AwesomeNotifications().createNotification(

@@ -156,6 +156,10 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                             width: 40,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                             beforeLoadWidget: CircularProgressIndicator(),
+                            onDownloadFn: (bytes, path){
+                              user.avatarModel?.bytes = bytes;
+                            },
+                            bytes: user.avatarModel?.bytes,
                             url: user.avatarModel?.fileLocation,
                           ),
                         );

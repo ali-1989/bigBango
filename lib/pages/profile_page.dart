@@ -324,13 +324,31 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                       child: DropdownButton2<ProvinceModel>(
                                         items: provinceDropDownList,
                                         value: province,
-                                        dropdownWidth: 150,
-                                        buttonWidth: 150,
-                                        buttonHeight: 40,
-                                        itemHeight: 40,
-                                        itemPadding: const EdgeInsets.symmetric(horizontal: 5),
-                                        buttonPadding: const EdgeInsets.symmetric(horizontal: 5),
-                                        dropdownPadding: const EdgeInsets.symmetric(horizontal: 5),
+                                        barrierColor: Colors.black26,
+                                        buttonStyleData: ButtonStyleData(
+                                          height: 40,
+                                          width: double.infinity,
+                                          overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                        ),
+                                        dropdownStyleData: DropdownStyleData(
+                                          width: 200,
+                                          elevation: 8,
+                                          maxHeight: 500,
+                                          isOverButton: false,
+                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                          scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(20),
+                                              thickness: MaterialStateProperty.all<double>(4)
+                                          ),
+                                          decoration:BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        menuItemStyleData: MenuItemStyleData(
+                                          height: 40,
+                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                        ),
                                         hint: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                           child: const SizedBox(
@@ -364,13 +382,31 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                       child: DropdownButton2<CityModel>(
                                         items: cityDropDownList,
                                         value: city,
-                                        dropdownWidth: 150,
-                                        buttonWidth: 150,
-                                        buttonHeight: 40,
-                                        itemHeight: 40,
-                                        itemPadding: const EdgeInsets.symmetric(horizontal: 5),
-                                        buttonPadding: const EdgeInsets.symmetric(horizontal: 5),
-                                        dropdownPadding: const EdgeInsets.symmetric(horizontal: 5),
+                                        barrierColor: Colors.black26,
+                                        buttonStyleData: ButtonStyleData(
+                                          height: 40,
+                                          width: double.infinity,
+                                          overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                        ),
+                                        dropdownStyleData: DropdownStyleData(
+                                          width: 200,
+                                          elevation: 8,
+                                          maxHeight: 500,
+                                          isOverButton: false,
+                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                          scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(20),
+                                              thickness: MaterialStateProperty.all<double>(4)
+                                          ),
+                                          decoration:BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        menuItemStyleData: MenuItemStyleData(
+                                          height: 40,
+                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                        ),
                                         hint: const Padding(
                                           padding: EdgeInsets.symmetric(horizontal: 5),
                                           child: Text('شهر', style: TextStyle(color: Colors.grey)),
@@ -403,28 +439,50 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                 Text('جنسیت', style: TextStyle(color: Colors.grey)),
                                 const SizedBox(height: 6),
 
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: ColoredBox(
-                                    color: Colors.grey.shade100,
-                                    child: DropdownButton2<int>(
-                                      items: genderList,
-                                      value: currentGender,
-                                      hint: const Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 10),
-                                        child: Text('جنسیت', style: TextStyle(color: Colors.grey)),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: ColoredBox(
+                                      color: Colors.grey.shade100,
+                                      child: DropdownButton2<int>(
+                                        items: genderList,
+                                        value: currentGender,
+                                        barrierColor: Colors.black26,
+                                        buttonStyleData: ButtonStyleData(
+                                          height: 40,
+                                          width: double.infinity,
+                                          overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                        ),
+                                        dropdownStyleData: DropdownStyleData(
+                                          width: sw/2,
+                                          decoration:BoxDecoration(
+                                            borderRadius: BorderRadius.circular(14),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                          elevation: 8,
+                                          isOverButton: false,
+                                          scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(40),
+                                              thickness: MaterialStateProperty.all<double>(5)
+                                          ),
+                                        ),
+                                        menuItemStyleData: MenuItemStyleData(
+                                          height: 40,
+                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                        ),
+                                        hint: const Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Text('جنسیت', style: TextStyle(color: Colors.grey)),
+                                        ),
+                                        onChanged: (value) {
+                                          currentGender = value;
+                                          userChangeInfo[Keys.gender] = currentGender;
+                                          compareChanges();
+                                        },
+                                        underline: const SizedBox(),
                                       ),
-                                      itemPadding: const EdgeInsets.symmetric(horizontal: 10),
-                                      dropdownPadding: const EdgeInsets.symmetric(horizontal: 10),
-                                      onChanged: (value) {
-                                        currentGender = value;
-                                        userChangeInfo[Keys.gender] = currentGender;
-                                        compareChanges();
-                                      },
-                                      buttonHeight: 40,
-                                      buttonWidth: 140,
-                                      itemHeight: 40,
-                                      underline: const SizedBox(),
                                     ),
                                   ),
                                 ),

@@ -2,7 +2,7 @@ import 'package:app/structures/models/leitner/leitnerIdiomModel.dart';
 import 'package:app/structures/models/leitner/leitnerVocabModel.dart';
 
 class LeitnerModel {
-  int id = 0;
+  String id = '';
   int contentType = 0;
   LeitnerVocabModel? vocabulary;
   LeitnerIdiomModel? idiom;

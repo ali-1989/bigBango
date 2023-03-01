@@ -301,10 +301,10 @@ packages:
     dependency: "direct main"
     description:
       name: dropdown_button2
-      sha256: "604b87283e251e0e4a0cb1d0fdfa91fd527702b06e80999c4054cecc603e10e7"
+      sha256: "4458d81bfd24207f3d58f66f78097064e02f810f94cf1bc80bf20fe7685ebc80"
       url: "https://pub.dev"
     source: hosted
-    version: "1.9.4"
+    version: "2.0.0"
   ed25519_edwards:
     dependency: transitive
     description:
@@ -601,18 +601,18 @@ packages:
     dependency: "direct main"
     description:
       name: image_picker
-      sha256: "22207768556b82d55ec70166824350fee32298732d5efa4d6e756f848f51f66a"
+      sha256: "715d68a53d6bcc2eae26005097dc74c375a04c0d7c0e657da84deebbbbbf51ed"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.6+3"
+    version: "0.8.6+4"
   image_picker_android:
     dependency: transitive
     description:
       name: image_picker_android
-      sha256: "68d067baf7f6e401b1124ee83dd6967e67847314250fd68012aab34a69beb344"
+      sha256: "845f793834d5d3af887ce39e3c97186996928cd43c8350a23e5499268398cc16"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.5+7"
+    version: "0.8.5+8"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -625,10 +625,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker_ios
-      sha256: "39aa70b5f1e5e7c94585b9738632d5fdb764a5655e40cd9e7b95fbd2fc50c519"
+      sha256: "93b4403350b54f45a5061632721ee29a563c8b45b1e22feda9049b8329bd1337"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.6+9"
+    version: "0.8.7"
   image_picker_platform_interface:
     dependency: transitive
     description:
@@ -692,10 +692,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: ecd369158a206027231f6265389fa3e8ff95b420
+      resolved-ref: "83368985641f07d1a50f1dc281486f7fd17283c9"
       url: "https://github.com/ali-1989/IrisTools.git"
     source: git
-    version: "0.0.31+3"
+    version: "0.0.31+4"
   jiffy:
     dependency: transitive
     description:
@@ -1068,10 +1068,10 @@ packages:
     dependency: "direct main"
     description:
       name: popover
-      sha256: "4255a09e3bb64cada6aebdeeeb15453a2790802d4eecb9256ff5c895863582ea"
+      sha256: "59f4a55ebb484d012c8aaa273ad58eee571945231b71fb938c5a69f63b5a94d4"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.8+1"
+    version: "0.2.8+2"
   process:
     dependency: transitive
     description:

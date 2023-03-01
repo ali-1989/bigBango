@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
 class MediaModel {
@@ -7,6 +8,7 @@ class MediaModel {
   DateTime? date;
   int? volume;
   int? fileType;
+  Uint8List? bytes;
 
   MediaModel();
 

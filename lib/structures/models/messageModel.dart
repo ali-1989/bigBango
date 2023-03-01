@@ -1,6 +1,7 @@
 import 'package:app/structures/enums/messageStatus.dart';
 import 'package:app/structures/enums/notificationType.dart';
 import 'package:app/structures/models/mediaModel.dart';
+import 'package:iris_tools/dateSection/dateHelper.dart';
 
 class MessageModel {
   late String id;
@@ -9,7 +10,7 @@ class MessageModel {
   NotificationType type = NotificationType.unKnow;
   MessageStatus status = MessageStatus.unKnow;
   late DateTime createAt;
-  String? data;
+  Map? data;
   MediaModel? image;
 
   MessageModel();
@@ -23,7 +24,7 @@ class MessageModel {
     title = map['title'];
     body = map['body'];
     data = map['data'];
-    createAt = map['createAt'];
+    createAt = DateHelper.tsToSystemDate(map['createdAt'])!;
     type = NotificationType.fromType(map['type']);
     status = MessageStatus.fromType(map['status']);
 
@@ -40,7 +41,7 @@ class MessageModel {
     map['body'] = body;
     map['data'] = data;
     map['image'] = image?.toMap();
-    map['createAt'] = createAt;
+    map['createdAt'] = DateHelper.toTimestamp(createAt);
     map['status'] = status.number;
     map['type'] = type.number;
 
