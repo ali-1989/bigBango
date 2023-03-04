@@ -20,7 +20,7 @@ import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/components/attachmentFileTicketComponent.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class ReplyTicketSheet extends StatefulWidget {
   final TicketDetailModel ticketDetailModel;

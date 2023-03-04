@@ -20,7 +20,7 @@ class RouteDispatcher {
 
   static Widget dispatch(){
     if(web.getCurrentWebAddress() != web.getBaseWebAddress()) {
-      //print('dispatch >>>>>>>>>>>>>>>>> ${web.getCurrentWebAddress()}');
+      //log('dispatch >>>>>>>>>>>>>>>>> ${web.getCurrentWebAddress()}');
     }
 
     if(Session.hasAnyLogin()){

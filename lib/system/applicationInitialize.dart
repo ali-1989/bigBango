@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:app/managers/leitnerManager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -144,6 +145,7 @@ class ApplicationInitial {
       }
 
       MessageManager.requestUnReadCount();
+      LeitnerManager.requestLeitnerCount();
 
       EventDispatcherService.attachFunction(EventDispatcher.firebaseTokenReceived, ({data}) {MessageManager.requestSetFirebaseToken();});
       await FireBaseService.init();

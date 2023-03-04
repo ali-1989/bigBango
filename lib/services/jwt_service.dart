@@ -91,7 +91,6 @@ class JwtService {
     if(a.responseData?.statusCode == 200){
       final dataJs = a.getBodyAsJson()!;
       um.token?.token = dataJs['data'];
-
       Session.sinkUserInfo(um);
 
       return true;

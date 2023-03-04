@@ -27,7 +27,7 @@ import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class TransactionsPage extends StatefulWidget {
 

@@ -7,7 +7,7 @@ import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class SelectGrammarDialog extends StatefulWidget {
   final LessonModel lessonModel;

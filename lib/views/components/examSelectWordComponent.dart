@@ -14,7 +14,7 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/app/appToast.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class ExamSelectWordComponent extends StatefulWidget {
   final ExamPageInjector injector;

@@ -23,7 +23,7 @@ import 'package:app/views/components/autodidactVoiceComponent.dart';
 import 'package:app/views/components/examBlankSpaseComponent.dart';
 import 'package:app/views/components/examOptionComponent.dart';
 import 'package:app/views/components/examSelectWordComponent.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class ExamPage extends StatefulWidget {
   final ExamPageInjector injector;

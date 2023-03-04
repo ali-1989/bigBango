@@ -108,10 +108,6 @@ class PublicAccess {
     return page;
   }
 
-  static void printObj(Object obj){
-    print('${'*' * 40}\n ${obj.toString()} \n${'*' * 50}');
-  }
-
   static Future<TwoStateReturn<Map, Response>> publicApiCaller(String url, MethodType methodType, Map<String, dynamic>? body){
     Requester requester = Requester();
     Completer<TwoStateReturn<Map, Response>> res = Completer();

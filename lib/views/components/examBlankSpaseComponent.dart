@@ -12,7 +12,7 @@ import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/views/widgets/animationPositionScale.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class ExamBlankSpaceComponent extends StatefulWidget {
   final ExamPageInjector injector;

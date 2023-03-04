@@ -25,7 +25,7 @@ import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/permissionTools.dart';
 import 'package:app/views/components/fullScreenImage.dart';
 import 'package:app/views/states/emptyData.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class AttachmentFileTicketComponent extends StatefulWidget {
   final List<File> files;

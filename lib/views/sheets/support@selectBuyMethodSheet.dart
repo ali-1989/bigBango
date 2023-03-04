@@ -13,7 +13,7 @@ import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appToast.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class SelectBuyMethodSheet extends StatefulWidget {
   final int userBalance;

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/"> <!-- <base href="$FLUTTER_BASE_HREF"> -->
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Big bango">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="vosate_zehn">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>بیگ بنگو</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+		body {
+		height: 100%;
+		width: 100%;
+		background-color: #eeeeee;
+		}
+  
+		.centered {
+		top: 50%;
+		left: 50%;
+		transform: translate(-50% , -50%);
+		position: absolute;
+	}
+
+        .loading {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 0;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+        }
+
+        .loader {
+          border: 12px solid #f3f3f3;
+          border-radius: 50%;
+          border: 11px solid ;
+          border-top: 12px solid #e77212;
+          border-right: 12px solid white;
+          border-bottom: 12px solid #e77212;
+          border-left: 12px solid white;
+          width: 50px;
+          height: 50px;
+          -webkit-animation: spin 2s linear infinite;
+          animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+          0% {
+            -webkit-transform: rotate(0deg);
+          }
+          100% {
+            -webkit-transform: rotate(360deg);
+          }
+        }
+
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+  </style>
+  
+  <script>
+    //window.flutterWebRenderer = "html";
+    var serviceWorkerVersion = null;
+  </script>
+
+  <script src="flutter.js" defer></script>
+</head>
+<body>
+
+	<div class='centered'>
+	<!-- <img src="loading.gif" alt="loading-image"> -->
+      <div class="loader"></div>
+    </div>
+	
+  <script>
+    window.addEventListener('load', function(ev) {
+      // Download main.dart.js
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        }
+      }).then(function(engineInitializer) {
+        return engineInitializer.initializeEngine();
+      }).then(function(appRunner) {
+        return appRunner.runApp();
+      });
+    });
+  </script>
+</body>
+</html>

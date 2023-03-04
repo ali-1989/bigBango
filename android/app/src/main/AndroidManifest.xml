@@ -6,7 +6,7 @@
       installLocation: auto | preferExternal
        ============================================== -->
 
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <!--<uses-permission android:name="android.permission.GET_ACCOUNTS"/>-->
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -65,11 +65,12 @@
     <!--<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>-->
 
     <!-- ..........................  Call SMS -->
-    <!--<uses-permission android:name="android.permission.READ_CALL_LOG" />-->
-    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS"/>
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <!--<uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS"/>
     <uses-permission android:name="android.permission.NEW_OUTGOING_CALL"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>-->
 
     <!-- ..........................  others -->
     <uses-permission android:name="android.permission.VIBRATE"/>
@@ -82,6 +83,12 @@
     <!-- ============================== uses-feature ============================================== -->
     <uses-feature
             android:name="android.hardware.fingerprint"
+            android:required="false"/>
+    <uses-feature
+            android:name="android.hardware.camera"
+            android:required="false"/>
+    <uses-feature
+            android:name="android.hardware.location"
             android:required="false"/>
     <uses-feature
             android:name="android.hardware.location.network"
@@ -158,6 +165,11 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
 
@@ -166,5 +178,39 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
+        <meta-data
+                android:name="com.google.firebase.messaging.default_notification_icon"
+                android:resource="@drawable/notif" />
+
+        <meta-data
+                android:name="com.google.firebase.messaging.default_notification_color"
+                android:resource="@color/colorAccent" />
+
+        <meta-data
+                android:name="com.google.firebase.messaging.default_notification_channel_id"
+                android:value="@string/default_notification_channel_id"/>
+        
+	<!-- .......................... BOOT RECEIVER -->
+        <receiver
+                android:name=".BootReceiver"
+                android:exported="true"
+                android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="android.intent.action.USER_UNLOCKED"/>
+                <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE"/>
+                <action android:name="android.intent.action.MEDIA_BAD_REMOVAL"/>
+                <action android:name="android.intent.action.MEDIA_EJECT"/>
+                <action android:name="android.intent.action.MEDIA_MOUNTED"/>
+                <action android:name="android.intent.action.MEDIA_REMOVED"/>
+                <action android:name="android.intent.action.MEDIA_SHARED"/>
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

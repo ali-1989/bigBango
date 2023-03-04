@@ -12,7 +12,7 @@ import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appToast.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class VocabClickableComponent extends StatefulWidget {
   final ClickableVocabModel clickableVocabModel;

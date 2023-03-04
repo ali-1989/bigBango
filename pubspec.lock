@@ -447,10 +447,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_plugin_android_lifecycle
-      sha256: "4bef634684b2c7f3468c77c766c831229af829a0cd2d4ee6c1b99558bd14e5d2"
+      sha256: c224ac897bed083dabf11f238dd11a239809b446740be0c2044608c50029ffdf
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.8"
+    version: "2.0.9"
   flutter_sound:
     dependency: "direct main"
     description:
@@ -529,10 +529,10 @@ packages:
     dependency: transitive
     description:
       name: html
-      sha256: d9793e10dbe0e6c364f4c59bf3e01fb33a9b2a674bc7a1081693dba0614b6269
+      sha256: "79d498e6d6761925a34ee5ea8fa6dfef38607781d2fa91e37523474282af55cb"
       url: "https://pub.dev"
     source: hosted
-    version: "0.15.1"
+    version: "0.15.2"
   html_unescape:
     dependency: transitive
     description:
@@ -609,10 +609,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker_android
-      sha256: "845f793834d5d3af887ce39e3c97186996928cd43c8350a23e5499268398cc16"
+      sha256: ca14b663fecbe7f5ddda83782abfb2e1dd2a23d6da49b6ed344bf8cf3871225a
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.5+8"
+    version: "0.8.5+9"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -692,10 +692,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "83368985641f07d1a50f1dc281486f7fd17283c9"
+      resolved-ref: c23b290cee1b362db892625d1caeb326b33eac55
       url: "https://github.com/ali-1989/IrisTools.git"
     source: git
-    version: "0.0.31+4"
+    version: "0.0.32+2"
   jiffy:
     dependency: transitive
     description:
@@ -1401,10 +1401,10 @@ packages:
     dependency: "direct main"
     description:
       name: video_player
-      sha256: "6cec15c21974282994577ffcfb5b42e64a699d38583138ec8dcb3d0a6902a41c"
+      sha256: "58dc3d6ceb199b82e652ec27f16485e33167ef021fe4221a954ff1aa12b1a5c0"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.2"
+    version: "2.5.3"
   video_player_android:
     dependency: transitive
     description:
@@ -1417,10 +1417,10 @@ packages:
     dependency: transitive
     description:
       name: video_player_avfoundation
-      sha256: "5df5411ff9d316f1dcbfee284e9838aa686e314f2a722b15c02cb7ce40ef9446"
+      sha256: c29bdae387091ee988a29bbb6f94341e2134a337d0bf7f6b8a087b4ba49d4d2f
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.9"
+    version: "2.4.0"
   video_player_platform_interface:
     dependency: transitive
     description:

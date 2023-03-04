@@ -27,7 +27,7 @@ import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/attachmentFileTicketComponent.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class AddTicketSheet extends StatefulWidget {
   final List<TicketRole> ticketRoles;
@@ -156,15 +156,15 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                                     items: dropList,
                                     value: selectedTicketRoleId,
                                     dropdownStyleData: DropdownStyleData(
-                                      width: 150,
-                                      decoration:BoxDecoration(
-                                        borderRadius: BorderRadius.circular(14),
+                                      //width: 150,
+                                      elevation: 0,
+                                      isOverButton: false,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(4),
                                       ),
                                       padding: const EdgeInsets.symmetric(horizontal: 5),
-                                      elevation: 8,
-                                      isOverButton: false,
                                       scrollbarTheme: ScrollbarThemeData(
-                                          radius: const Radius.circular(40),
+                                          radius: const Radius.circular(4),
                                           thickness: MaterialStateProperty.all<double>(5)
                                       ),
                                     ),

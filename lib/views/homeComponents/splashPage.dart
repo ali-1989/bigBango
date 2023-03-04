@@ -92,7 +92,6 @@ class SplashScreenState extends StateBase<SplashPage> {
     final settingsLoad = SettingsManager.loadSettings();
 
     if (settingsLoad) {
-      await Session.fetchLoginUsers();
       await VersionManager.checkInstallVersion();
       connectToServer();
 
@@ -121,7 +120,6 @@ class SplashScreenState extends StateBase<SplashPage> {
     }
     else {
       _isConnectToServer = true;
-      /// this is for CourseLevelId
       Session.fetchLoginUsers();
       callState();
     }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/managers/leitnerManager.dart';
 import 'package:app/managers/messageManager.dart';
 import 'package:dio/dio.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
@@ -21,6 +22,7 @@ class LoginService {
   static void onLoginObservable({dynamic data}){
     MessageManager.requestSetFirebaseToken();
     MessageManager.requestUnReadCount();
+    LeitnerManager.requestLeitnerCount();
   }
 
   static void onLogoffObservable({dynamic data}){

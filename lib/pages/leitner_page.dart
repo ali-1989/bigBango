@@ -1,3 +1,4 @@
+import 'package:app/managers/leitnerManager.dart';
 import 'package:app/structures/middleWare/requester.dart';
 import 'package:app/structures/models/leitner/leitnerBoxModel.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class LightnerPage extends StatefulWidget {
   const LightnerPage({Key? key}) : super(key: key);
@@ -33,6 +34,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
 
     assistCtr.addState(AssistController.state$loading);
     requestLeitner();
+    LeitnerManager.requestLeitnerCount();
   }
 
   @override
@@ -182,6 +184,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
     await AppRoute.pushPage(context, LightnerDetailPage(lightnerBox: itm));
 
     requestLeitner();
+    LeitnerManager.requestLeitnerCount();
   }
 
   void requestLeitner() async {

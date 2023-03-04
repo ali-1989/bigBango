@@ -7,7 +7,8 @@ import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
+
 
 class SelectListeningDialog extends StatefulWidget {
   final LessonModel lessonModel;
@@ -88,22 +89,25 @@ class _SelectVocabIdiomsDialog extends State<SelectListeningDialog> {
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: CustomCard(
-          color: Colors.grey.shade300,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Column(
-              children: [
-                SizedBox(height: 10),
-                CustomCard(
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 11),
-                    radius: 14,
-                    child: Image.asset(AppImages.speakerIco, width: 25, color: AppColors.red,)
-                ),
-                SizedBox(height: 15),
-                Text('« ${itm.title} »'),
-                SizedBox(height: 15),
-              ],
+        child: ConstrainedBox(
+          constraints: BoxConstraints.tightFor(width: 100),
+          child: CustomCard(
+            color: Colors.grey.shade300,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  CustomCard(
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 11),
+                      radius: 14,
+                      child: Image.asset(AppImages.speakerIco, width: 25, color: AppColors.red,)
+                  ),
+                  SizedBox(height: 15),
+                  Text('« ${itm.title} »', maxLines: 2,),
+                  SizedBox(height: 15),
+                ],
+              ),
             ),
           ),
         ),

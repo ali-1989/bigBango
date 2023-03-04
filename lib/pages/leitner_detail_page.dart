@@ -18,7 +18,7 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appThemes.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class LightnerDetailPage extends StatefulWidget {
   final LeitnerBoxModel lightnerBox;

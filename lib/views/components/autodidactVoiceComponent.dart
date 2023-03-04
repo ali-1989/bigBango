@@ -37,7 +37,7 @@ import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/permissionTools.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 import '../../system/keys.dart';
 
 class AutodidactVoiceComponent extends StatefulWidget {

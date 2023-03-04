@@ -22,7 +22,7 @@ import 'package:app/views/components/examSelectWordComponent.dart';
 import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 import 'package:app/views/widgets/sliders.dart';
 
 class ListeningPage extends StatefulWidget {

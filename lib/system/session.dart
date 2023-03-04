@@ -2,6 +2,7 @@ import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:iris_db/iris_db.dart';
 import 'package:iris_tools/api/checker.dart';
+import 'package:iris_tools/api/tools.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
 import 'package:app/services/event_dispatcher_service.dart';
@@ -23,9 +24,6 @@ class Session {
 
 		if(list.isNotEmpty){
 			for (final row in list) {
-				print('0000000000000000000000000000000 user fetch 00000000000000000000000000000000000000000\n\n');
-				print(row);
-				print('\n\n=======================================================');
 				final isCur = getExistLoginUserById(row[Keys.userId]);
 
 				final n = (row as Map).map<String, dynamic>((k, v){
@@ -175,9 +173,10 @@ class Session {
 	static UserModel createOrUpdateUserModel(Map<String, dynamic> map, UserModel? user) {
 		final res = UserModel.fromMap(map);
 
+		Tools.verbosePrint('${user?.courseLevel?.name} | resUser: ${res.courseLevel?.name}');
+
 		if(user != null) {
 			user.matchBy(res);
-
 			return user;
 		}
 
@@ -214,7 +213,6 @@ class Session {
 		//final old = (await fetchUserById(user.userId))?.toMap();
 
 		if(user.courseLevel == null){
-			print('999999999999999999999999999999 courseLevel  null 99999999999999999999999999999999999');
 			AppToast.showToast(AppRoute.getBaseContext()!, 'courseLevel = null');
 		}
 

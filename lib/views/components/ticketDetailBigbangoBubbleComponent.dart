@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/irisImageView.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/abstract/ticketAttachmentShowSupper.dart';
@@ -13,6 +11,7 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/dateTools.dart';
+
 
 class TicketDetailBigbangoBubbleComponent extends StatefulWidget {
   final TicketDetailBubbleInjector injector;
@@ -81,33 +80,44 @@ class TicketDetailBigbangoBubbleComponentState extends StateBase<TicketDetailBig
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Row(
-                            mainAxisSize: MainAxisSize.min,
+                            //mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              SizedBox(width: 5),
-                              Image.asset(AppImages.bigbangoTicket),
-                              SizedBox(width: 12),
-                              Text(DateTools.dateAndHmRelative(widget.injector.ticketReply.createdAt)).alpha(),
-
-                              Visibility(
-                                visible: widget.injector.ticketReply.attachments.isNotEmpty,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SizedBox(width: 8),
-                                    IconButton(
-                                      padding: EdgeInsets.zero,
-                                      iconSize: 17,
-                                      splashRadius: 14,
-                                      constraints: BoxConstraints.tightFor(),
-                                      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                                        onPressed: (){
-                                          showAttachment(context, widget.injector.ticketReply);
-                                        },
-                                        icon: Icon(AppIcons.attach, size: 17, color: AppColors.red),
-                                    ),
-                                  ],
-                                ),
+                              Row(
+                                children: [
+                                  SizedBox(width: 5),
+                                  Image.asset(AppImages.bigbangoTicket),
+                                ],
                               ),
+
+                              Row(
+                                children: [
+                                  SizedBox(width: 12),
+                                  Text(DateTools.dateAndHmRelative(widget.injector.ticketReply.createdAt)).alpha(),
+
+                                  Visibility(
+                                    visible: widget.injector.ticketReply.attachments.isNotEmpty,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        SizedBox(width: 8),
+                                        IconButton(
+                                          padding: EdgeInsets.zero,
+                                          iconSize: 17,
+                                          splashRadius: 14,
+                                          constraints: BoxConstraints.tightFor(),
+                                          visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                          onPressed: (){
+                                            showAttachment(context, widget.injector.ticketReply);
+                                          },
+                                          icon: Icon(AppIcons.attach, size: 17, color: AppColors.red),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+
                             ],
                           ),
 

@@ -11,7 +11,7 @@ import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSizes.dart';
 import 'package:app/views/components/fullScreenImage.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 abstract class TicketAttachmentShowSupper {
 

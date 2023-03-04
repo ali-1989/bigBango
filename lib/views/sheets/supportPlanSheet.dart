@@ -13,7 +13,7 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/currencyTools.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class SupportPlanSheet extends StatefulWidget {
   final List<SupportPlanModel> planList;

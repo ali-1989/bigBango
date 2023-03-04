@@ -1,3 +1,4 @@
+import 'package:app/tools/permissionTools.dart';
 import 'package:app/views/states/backBtn.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,7 @@ import 'package:app/views/components/ticketDetailUserBubbleComponent.dart';
 import 'package:app/views/sheets/replyTicketSheet.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:app/views/widgets/customCard.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class TicketDetailPage extends StatefulWidget {
   final TicketModel? ticketModel;
@@ -42,11 +43,13 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
   Requester requester = Requester();
   late UserModel userModel;
   late TicketDetailModel ticketDetailModel;
+  late ScrollController srcCtr;
 
   @override
   void initState(){
     super.initState();
 
+    srcCtr = ScrollController();
     assistCtr.addState(AssistController.state$loading);
     userModel = Session.getLastLoginUser()!;
 
@@ -168,6 +171,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
         /// content
         Expanded(
             child: ListView.builder(
+              controller: srcCtr,
                 itemCount: ticketDetailModel.replies.length +1,
                 itemBuilder: buildList,
             ),
@@ -229,6 +233,27 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
     }
   }
 
+  void scrollToEnd(){
+    srcCtr.animateTo(srcCtr.position.maxScrollExtent, duration: Duration(milliseconds: 100), curve: Curves.linear);
+  }
+
+  void requestPermission(){
+    bool need = ticketDetailModel.firstTicket.creator.hasAvatar();
+
+    if(!need){
+      for(final x in ticketDetailModel.replies){
+        if(x.creator.hasAvatar()){
+          need = true;
+          break;
+        }
+      }
+    }
+
+    if(need){
+      PermissionTools.requestStoragePermission();
+    }
+  }
+
   void requestTicketDetail() async {
     requester.httpRequestEvents.onFailState = (req, res) async {
       assistCtr.clearStates();
@@ -242,8 +267,12 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
         ticketDetailModel = TicketDetailModel.fromMap(data);
       }
 
+      requestPermission();
+
       assistCtr.clearStates();
       assistCtr.updateHead();
+
+      addPostOrCall(fn: scrollToEnd);
     };
 
     requester.methodType = MethodType.get;
