@@ -10,7 +10,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:app/services/file_upload_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/ticketModels/ticketDetailModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';

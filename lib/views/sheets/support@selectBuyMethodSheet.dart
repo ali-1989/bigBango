@@ -8,7 +8,7 @@ import 'package:iris_tools/widgets/optionsRow/radioRow.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';

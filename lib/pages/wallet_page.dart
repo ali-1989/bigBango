@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:app/pages/profile_page.dart';
 import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/transactionWalletModel.dart';
 import 'package:app/structures/models/withdrawalModel.dart';
 import 'package:app/system/extensions.dart';

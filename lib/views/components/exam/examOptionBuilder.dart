@@ -1,3 +1,4 @@
+import 'package:app/structures/contents/examBuilderContent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -5,25 +6,22 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/quizType.dart';
-import 'package:app/structures/injectors/examPageInjector.dart';
-import 'package:app/structures/interfaces/examStateInterface.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/system/extensions.dart';
 
-class ExamOptionComponent extends StatefulWidget {
-  final ExamPageInjector injector;
+class ExamOptionBuilder extends StatefulWidget {
+  final ExamBuilderContent content;
 
-  const ExamOptionComponent({
-    required this.injector,
+  const ExamOptionBuilder({
+    required this.content,
     Key? key
   }) : super(key: key);
 
   @override
-  State<ExamOptionComponent> createState() => _ExamOptionComponentState();
+  State<ExamOptionBuilder> createState() => _ExamOptionBuilderState();
 }
-///======================================================================================================================
-class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implements ExamStateInterface {
-  //Map<String, int?> selectedAnswers = {};
+///==============================================================================================================
+class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
   List<ExamModel> examList = [];
   bool showAnswers = false;
   late TextStyle questionNormalStyle;
@@ -32,8 +30,7 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
   void initState(){
     super.initState();
 
-    widget.injector.state = this;
-    examList.addAll(widget.injector.examList.where((element) => element.exerciseType == QuizType.multipleChoice));
+    examList.addAll(widget.content.examList.where((element) => element.quizType == QuizType.multipleChoice));
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
   }
 
@@ -116,7 +113,7 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
   List<Widget> buildOptions(ExamModel curExam){
     List<Widget> res = [];
 
-    for(final opt in curExam.choices){
+    for(final opt in curExam.options){
       final w = GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: (){
@@ -130,7 +127,7 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
             curExam.userAnswers.removeWhere((element) => element.id == opt.id);
           }
           else {
-            final ex = ExamChoiceModel()..order = opt.order;
+            final ex = ExamOptionModel()..order = opt.order;
             ex.id = opt.id;
 
             curExam.userAnswers.clear();
@@ -145,7 +142,7 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
           duration: Duration(milliseconds: 400),
           cycles: 1,
           builder: (_, animate){
-            final optionIdx = curExam.choices.indexOf(opt);
+            final optionIdx = curExam.options.indexOf(opt);
             bool isSelected = curExam.getUserChoiceById(opt.id) != null;
             bool isCorrect = optionIdx == curExam.getIndexOfCorrectChoice();
 
@@ -192,23 +189,6 @@ class _ExamOptionComponentState extends StateBase<ExamOptionComponent> implement
     }
 
     return res;
-  }
-
-  @override
-  bool isAllAnswer(){
-    for(final k in examList){
-      if(k.userAnswers.isEmpty){
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  @override
-  void checkAnswers() {
-    showAnswers = !showAnswers;
-    assistCtr.updateHead();
   }
 }
 

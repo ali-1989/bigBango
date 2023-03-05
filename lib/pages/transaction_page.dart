@@ -8,7 +8,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/transactionSectionFilter.dart';
 import 'package:app/structures/enums/transactionStatusFilter.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/transactionModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/publicAccess.dart';

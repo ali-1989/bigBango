@@ -1,5 +1,5 @@
 import 'package:app/managers/leitnerManager.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/leitner/leitnerBoxModel.dart';
 import 'package:flutter/material.dart';
 

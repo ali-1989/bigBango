@@ -15,7 +15,7 @@ import 'package:app/services/file_upload_service.dart';
 import 'package:app/services/pages_event_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/ticketModels/ticketModel.dart';
 import 'package:app/structures/models/ticketModels/ticketRole.dart';
 import 'package:app/system/extensions.dart';

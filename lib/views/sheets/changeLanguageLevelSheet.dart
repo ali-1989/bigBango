@@ -5,7 +5,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/session.dart';

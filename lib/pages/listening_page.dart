@@ -1,3 +1,4 @@
+import 'package:app/structures/contents/examBuilderContent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormatter.dart';
@@ -6,9 +7,9 @@ import 'package:just_audio/just_audio.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/quizType.dart';
-import 'package:app/structures/injectors/examPageInjector.dart';
+
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/listeningModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
@@ -16,14 +17,15 @@ import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/appbarLesson.dart';
-import 'package:app/views/components/examBlankSpaseComponent.dart';
-import 'package:app/views/components/examOptionComponent.dart';
-import 'package:app/views/components/examSelectWordComponent.dart';
+import 'package:app/views/components/exam/examBlankSpaseBuilder.dart';
+import 'package:app/views/components/exam/examOptionBuilder.dart';
+import 'package:app/views/components/exam/examSelectWordBuilder.dart';
 import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 import 'package:app/views/widgets/sliders.dart';
+
 
 class ListeningPage extends StatefulWidget {
   final ListeningPageInjector injector;
@@ -42,7 +44,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   AudioPlayer player = AudioPlayer();
   Duration totalTime = Duration();
   Duration currentTime = Duration();
-  ExamPageInjector examPageInjector = ExamPageInjector();
+  ExamBuilderContent examContent = ExamBuilderContent();
   Widget examComponent = SizedBox();
   int currentItemIdx = 0;
   bool voiceIsOk = false;
@@ -57,13 +59,11 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   void initState(){
     super.initState();
 
+    examContent.showSendButton = false;
     assistCtr.addState(AssistController.state$loading);
 
     player.playbackEventStream.listen(eventListener);
     player.positionStream.listen(durationListener);
-
-    examPageInjector.lessonModel = widget.injector.lessonModel;
-    examPageInjector.answerUrl = '/listening/exercises/solving';
 
     requestListening();
   }
@@ -268,7 +268,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
                     ),
                     onPressed: (){
-                      examPageInjector.state.checkAnswers();
+                      examContent.controller.showAnswers(true);
                     },
                     child: Text('ثبت')
                 ),
@@ -305,16 +305,16 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   }
 
   void buildExamView(){
-    if(currentItem!.quiz.exerciseType == QuizType.fillInBlank){
-      examComponent = ExamBlankSpaceComponent(injector: examPageInjector);
+    if(currentItem!.quiz.quizType == QuizType.fillInBlank){
+      examComponent = ExamBlankSpaceBuilder(content: examContent);
       description = 'با توجه به صوت جای خالی را پر کنید';
     }
-    else if(currentItem!.quiz.exerciseType == QuizType.recorder){
-      examComponent = ExamSelectWordComponent(injector: examPageInjector);
+    else if(currentItem!.quiz.quizType == QuizType.recorder){
+      examComponent = ExamSelectWordBuilder(content: examContent);
       description = 'با توجه به صوت کلمه ی مناسب را انتخاب کنید';
     }
-    else if(currentItem!.quiz.exerciseType == QuizType.multipleChoice){
-      examComponent = ExamOptionComponent(injector: examPageInjector);
+    else if(currentItem!.quiz.quizType == QuizType.multipleChoice){
+      examComponent = ExamOptionBuilder(content: examContent);
       description = 'با توجه به صوت گزینه ی مناسب را انتخاب کنید';
     }
   }
@@ -349,7 +349,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       await prepareVoice();
       playerSliderValue = 0;
 
-      examPageInjector.prepareExamList([currentItem!.quiz]);
+      examContent.prepareExamList([currentItem!.quiz]);
       buildExamView();
 
       assistCtr.updateHead();
@@ -365,7 +365,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       await prepareVoice();
       playerSliderValue = 0;
 
-      examPageInjector.prepareExamList([currentItem!.quiz]);
+      examContent.prepareExamList([currentItem!.quiz]);
       buildExamView();
 
       assistCtr.updateHead();
@@ -446,7 +446,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       else {
         currentItem = itemList[0];
         prepareVoice();
-        examPageInjector.prepareExamList([currentItem!.quiz]);
+        examContent.prepareExamList([currentItem!.quiz]);
         buildExamView();
         assistCtr.updateHead();
       }

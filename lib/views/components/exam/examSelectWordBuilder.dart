@@ -1,3 +1,4 @@
+import 'package:app/structures/contents/examBuilderContent.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -5,8 +6,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/quizType.dart';
-import 'package:app/structures/injectors/examPageInjector.dart';
-import 'package:app/structures/interfaces/examStateInterface.dart';
+
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
@@ -16,20 +16,19 @@ import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
-class ExamSelectWordComponent extends StatefulWidget {
-  final ExamPageInjector injector;
+class ExamSelectWordBuilder extends StatefulWidget {
+  final ExamBuilderContent content;
 
-  const ExamSelectWordComponent({
-    required this.injector,
+  const ExamSelectWordBuilder({
+    required this.content,
     Key? key
   }) : super(key: key);
 
   @override
-  State<ExamSelectWordComponent> createState() => _ExamSelectWordComponentState();
+  State<ExamSelectWordBuilder> createState() => _ExamSelectWordBuilderState();
 }
 ///===============================================================================================================
-class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> implements ExamStateInterface {
-  bool showAnswers = false;
+class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
   late TextStyle questionNormalStyle;
   int currentSelectIndex = -1;
   List<ExamModel> examList = [];
@@ -38,13 +37,17 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
   void initState() {
     super.initState();
 
-    widget.injector.state = this;
-    examList.addAll(widget.injector.examList.where((element) => element.exerciseType == QuizType.recorder));
+    examList.addAll(widget.content.examList.where((element) => element.quizType == QuizType.recorder));
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
+
+    widget.content.controller.setShowAnswer(showAnswer);
+    widget.content.controller.setShowAnswers(showAnswers);
   }
 
   @override
   void dispose() {
+    widget.content.controller.dispose();
+
     super.dispose();
   }
 
@@ -147,7 +150,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
 
         final tapRecognizer = TapGestureRecognizer()
           ..onTapUp = (gesDetail) {
-            if (showAnswers) {
+            if (model.showAnswer) {
               return;
             }
 
@@ -168,7 +171,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
             assistCtr.updateHead();
           };
 
-        if (showAnswers) {
+        if (model.showAnswer) {
           final correctAnswer = model.getChoiceByOrder(i)!.text;
           final userAnswer = model.getUserChoiceByOrder(i)!.text;
 
@@ -238,7 +241,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
     return spans;
   }
 
-  void onWordClick(ExamModel model, ExamChoiceModel ec) {
+  void onWordClick(ExamModel model, ExamOptionModel ec) {
     if (currentSelectIndex < 0) {
       for (final k in model.userAnswers){
         if(k.id == ec.id){
@@ -261,12 +264,12 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
       }
     }
 
-    if (selectedWordIds.length + 1 == model.choices.length) {
+    if (selectedWordIds.length + 1 == model.options.length) {
       for (final k in model.userAnswers) {
         if (k.id.isEmpty) {
-          ExamChoiceModel? examChoiceModel;
+          ExamOptionModel? examChoiceModel;
 
-          for (final kk in model.choices) {
+          for (final kk in model.options) {
             if (!selectedWordIds.contains(kk.id)) {
               examChoiceModel = kk;
               break;
@@ -283,7 +286,7 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
     assistCtr.updateHead();
   }
 
-  void setUserAnswer(ExamModel model, int order, ExamChoiceModel? ec) {
+  void setUserAnswer(ExamModel model, int order, ExamOptionModel? ec) {
     if (ec != null) {
       model.getUserChoiceByOrder(order)!.text = ec.text;
       model.getUserChoiceByOrder(order)!.id = ec.id;
@@ -340,21 +343,16 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
     );
   }
 
-  @override
-  bool isAllAnswer(){
-    for(final k in examList){
-      for(final x in k.userAnswers) {
-        if (x.text.isEmpty) {
-          return false;
-        }
+  void showAnswer(String id, bool state) {
+    for (final model in examList) {
+      if(model.id == id){
+        model.showAnswer = state;
+        break;
       }
     }
-
-    return true;
   }
 
-  @override
-  void checkAnswers() {
+  void showAnswers(bool state) {
     bool isAllSelected = true;
 
     for (final model in examList) {
@@ -375,7 +373,10 @@ class _ExamSelectWordComponentState extends StateBase<ExamSelectWordComponent> i
       return;
     }
 
-    showAnswers = !showAnswers;
+    for (final element in examList) {
+      element.showAnswer = state;
+    }
+
     assistCtr.updateHead();
   }
 }

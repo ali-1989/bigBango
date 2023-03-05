@@ -1,3 +1,4 @@
+import 'package:app/structures/contents/examBuilderContent.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -5,8 +6,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/quizType.dart';
-import 'package:app/structures/injectors/examPageInjector.dart';
-import 'package:app/structures/interfaces/examStateInterface.dart';
+
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -14,20 +14,19 @@ import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/views/widgets/animationPositionScale.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
-class ExamBlankSpaceComponent extends StatefulWidget {
-  final ExamPageInjector injector;
+class ExamBlankSpaceBuilder extends StatefulWidget {
+  final ExamBuilderContent content;
 
-  const ExamBlankSpaceComponent({
-    required this.injector,
+  const ExamBlankSpaceBuilder({
+    required this.content,
     Key? key
   }) : super(key: key);
 
   @override
-  State<ExamBlankSpaceComponent> createState() => ExamBlankSpaceComponentState();
+  State<ExamBlankSpaceBuilder> createState() => ExamBlankSpaceBuilderState();
 }
 ///======================================================================================================================
-class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> implements ExamStateInterface {
-  bool showAnswers = false;
+class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
   late TextStyle questionNormalStyle;
   List<ExamModel> examList = [];
 
@@ -35,13 +34,18 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
   void initState(){
     super.initState();
 
-    examList.addAll(widget.injector.examList.where((element) => element.exerciseType == QuizType.fillInBlank));
-    widget.injector.state = this;
+    examList.addAll(widget.content.examList.where((element) => element.quizType == QuizType.fillInBlank));
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
+
+    widget.content.controller.setShowAnswer(showAnswer);
+    widget.content.controller.setShowAnswers(showAnswers);
+    widget.content.controller.setIsAnswerToAll(isAnswerToAll);
   }
 
   @override
   void dispose(){
+    widget.content.controller.dispose();
+
     super.dispose();
   }
 
@@ -111,6 +115,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 20),
+
           ///=== number box
           Visibility(
             visible: examList.length > 1,
@@ -150,7 +155,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
         bool hasUserAnswer = exam.userAnswers[i].text.isNotEmpty;
 
         final tapRecognizer = TapGestureRecognizer()..onTapUp = (gesDetail){
-          if(showAnswers){
+          if(exam.showAnswer){
             return;
           }
 
@@ -226,12 +231,12 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
           });
         };
 
-        if(showAnswers){
+        if(exam.showAnswer){
           Color trueColor = Colors.green;
           Color falseColor = Colors.red;
 
           ///answer is correct
-          if(exam.userAnswers[i].text == exam.choices[i].text){
+          if(exam.userAnswers[i].text == exam.options[i].text){
             blankSpan = WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: Row(
@@ -268,7 +273,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
                       SizedBox(width: 4),
                       //Image.asset(AppImages.trueCheckIco),
                       SizedBox(width: 2),
-                      Text(exam.choices[i].text,
+                      Text(exam.options[i].text,
                           style: questionNormalStyle.copyWith(
                               color: trueColor,
                               decorationStyle: TextDecorationStyle.solid,
@@ -281,7 +286,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
               );
             }
             else {
-              blankText = exam.choices[i].text;// '[\u00A0_\u00A0]';
+              blankText = exam.options[i].text;// '[\u00A0_\u00A0]';
 
               /// answer is wrong
               blankSpan = WidgetSpan(
@@ -291,7 +296,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
                     children: [
                       Image.asset(AppImages.falseCheckIco),
                       SizedBox(width: 2),
-                      Text(blankText, style: questionNormalStyle.copyWith(color: falseColor), )
+                      Text(blankText, style: questionNormalStyle.copyWith(color: falseColor))
                     ],
                   )
               );
@@ -328,8 +333,7 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
     return spans;
   }
 
-  @override
-  bool isAllAnswer(){
+  bool isAnswerToAll(){
     for(final k in examList){
       for(final x in k.userAnswers) {
         if (x.text.isEmpty) {
@@ -341,9 +345,22 @@ class ExamBlankSpaceComponentState extends StateBase<ExamBlankSpaceComponent> im
     return true;
   }
 
-  @override
-  void checkAnswers() {
-    showAnswers = !showAnswers;
+  void showAnswers(bool state) {
+    for (final element in examList) {
+      element.showAnswer = state;
+    }
+
+    assistCtr.updateHead();
+  }
+
+  void showAnswer(String examId, bool state) {
+    for (final element in examList) {
+      if(element.id == examId){
+        element.showAnswer = state;
+        break;
+      }
+    }
+
     assistCtr.updateHead();
   }
 }

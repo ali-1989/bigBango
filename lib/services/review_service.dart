@@ -4,7 +4,7 @@ import 'package:iris_db/iris_db.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/pages/home_page.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/tools/app/appDb.dart';
 

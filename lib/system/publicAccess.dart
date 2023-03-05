@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:app/structures/mixins/dateFieldMixin.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dio/dio.dart';
@@ -22,8 +23,7 @@ import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
-import 'package:app/structures/middleWare/requester.dart';
-import 'package:app/structures/mixin/dateFieldMixin.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/keys.dart';

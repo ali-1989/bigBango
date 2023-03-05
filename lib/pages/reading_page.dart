@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/structures/contents/examBuilderContent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/callAction/taskQueueCaller.dart';
@@ -13,9 +14,9 @@ import 'package:app/pages/exam_page.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/services/vocab_clickable_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/injectors/examPageInjector.dart';
+
 import 'package:app/structures/injectors/readingPagesInjector.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/readingModel.dart';
 import 'package:app/structures/models/vocabModels/clickableVocabModel.dart';
@@ -604,7 +605,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     requestReading();
   }
 
-  void startExercise() async{
+  void startExercise() async {
     if(examList.isEmpty){
       showLoading();
       await requestExercise();
@@ -620,12 +621,11 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
   }
 
   void gotoExamPage() async {
-    final examPageInjector = ExamPageInjector();
-    examPageInjector.lessonModel = widget.injector.lessonModel;
-    examPageInjector.examList = examList;
-    examPageInjector.answerUrl = '/reading/exercises/solving';
+    final content = ExamBuilderContent();
+    content.prepareExamList(examList);
+    content.answerUrl = '/reading/exercises/solving';
 
-    final examPage = ExamPage(injector: examPageInjector);
+    final examPage = ExamPage(content: content);
     await AppRoute.pushPage(context, examPage);
   }
 

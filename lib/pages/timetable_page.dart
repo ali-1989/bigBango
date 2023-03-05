@@ -8,7 +8,7 @@ import 'package:iris_tools/dateSection/ADateStructure.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/hoursOfSupportModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/supportModels/dayWeekModel.dart';

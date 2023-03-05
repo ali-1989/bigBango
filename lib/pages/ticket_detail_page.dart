@@ -6,7 +6,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/injectors/ticketDetailUserBubbleInjector.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/ticketModels/ticketDetailModel.dart';
 import 'package:app/structures/models/ticketModels/ticketModel.dart';
 import 'package:app/structures/models/userModel.dart';

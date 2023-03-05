@@ -32,7 +32,7 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/enums/genderType.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/cityModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
 import 'package:app/structures/models/provinceModel.dart';

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 
 class LogsPage extends StatefulWidget {
   const LogsPage({Key? key}) : super(key: key);

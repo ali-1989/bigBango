@@ -7,7 +7,7 @@ import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/services/firebase_service.dart';
 import 'package:app/structures/enums/messageStatus.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/messageModel.dart';
 import 'package:app/structures/structure/messageStateStructure.dart';
 import 'package:app/tools/app/appBadge.dart';

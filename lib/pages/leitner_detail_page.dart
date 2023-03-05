@@ -1,6 +1,6 @@
 import 'package:animator/animator.dart';
 import 'package:app/services/audio_player_service.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/leitner/leitnerBoxModel.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';

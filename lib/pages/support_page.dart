@@ -14,7 +14,7 @@ import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/services/pages_event_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/supportSessionStatus.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/supportModels/supportPlanModel.dart';
 import 'package:app/structures/models/supportModels/supportSessionModel.dart';
 import 'package:app/structures/models/ticketModels/ticketModel.dart';

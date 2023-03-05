@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app/system/keys.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -21,9 +22,8 @@ import 'package:app/services/file_upload_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/autodidactReplyType.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
-import 'package:app/structures/injectors/autodidactPageInjector.dart';
-import 'package:app/structures/interfaces/examStateInterface.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/contents/autodidactBuilderContent.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
 import 'package:app/system/extensions.dart';
@@ -38,13 +38,12 @@ import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/permissionTools.dart';
 import 'package:iris_tools/widgets/customCard.dart';
-import '../../system/keys.dart';
 
 class AutodidactVoiceComponent extends StatefulWidget {
-  final AutodidactPageInjector injector;
+  final AutodidactBuilderContent content;
 
   const AutodidactVoiceComponent({
-    required this.injector,
+    required this.content,
     Key? key
   }) : super(key: key);
 
@@ -52,7 +51,7 @@ class AutodidactVoiceComponent extends StatefulWidget {
   State<AutodidactVoiceComponent> createState() => AutodidactVoiceComponentState();
 }
 ///=================================================================================================================
-class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> implements ExamStateInterface {
+class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> {
   late AutodidactModel autodidactModel;
   Requester requester = Requester();
   FlutterSoundRecorder voiceRecorder = FlutterSoundRecorder();
@@ -74,8 +73,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   void initState(){
     super.initState();
 
-    autodidactModel = widget.injector.autodidactModel;
-    widget.injector.state = this;
+    autodidactModel = widget.content.autodidactModel;
 
     final p = AppDirectories.getAppFolderInInternalStorage();
     savePath = PathHelper.resolvePath('$p/record.mp4')!;
@@ -604,15 +602,6 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     });
   }
 
-  @override
-  bool isAllAnswer(){
-    return true;
-  }
-
-  @override
-  void checkAnswers() {
-  }
-
   void sendAnswer() async {
     String? audioId;
 
@@ -664,7 +653,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       final message = res['message']?? 'پاسخ شما ثبت شد';
 
       AppSnack.showInfo(context, message);
-      widget.injector.state.checkAnswers();
+      widget.content.controller.showAnswers(true);
     };
 
     final js = <String, dynamic>{};

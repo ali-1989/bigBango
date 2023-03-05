@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/structures/contents/examBuilderContent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
@@ -10,9 +11,9 @@ import 'package:video_player/video_player.dart';
 import 'package:app/pages/exam_page.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/injectors/examPageInjector.dart';
+
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/grammarModel.dart';
 import 'package:app/system/extensions.dart';
@@ -384,12 +385,11 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   }
 
   void gotoExamPage() async {
-    final examPageInjector = ExamPageInjector();
-    examPageInjector.lessonModel = widget.injector.lessonModel;
-    examPageInjector.examList = examList;
+    final examPageInjector = ExamBuilderContent();
+    examPageInjector.prepareExamList(examList);
     examPageInjector.answerUrl = '/grammars/exercises/solving';
 
-    final examPage = ExamPage(injector: examPageInjector);
+    final examPage = ExamPage(content: examPageInjector);
     await AppRoute.pushPage(context, examPage);
   }
 

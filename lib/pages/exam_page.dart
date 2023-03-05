@@ -1,3 +1,4 @@
+import 'package:app/structures/contents/examBuilderContent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -5,9 +6,9 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/examDescription.dart';
 import 'package:app/structures/enums/quizType.dart';
-import 'package:app/structures/injectors/autodidactPageInjector.dart';
-import 'package:app/structures/injectors/examPageInjector.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/contents/autodidactBuilderContent.dart';
+
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/examModels/examSuperModel.dart';
@@ -18,18 +19,18 @@ import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
-import 'package:app/views/components/autodidactTextComponent.dart';
-import 'package:app/views/components/autodidactVoiceComponent.dart';
-import 'package:app/views/components/examBlankSpaseComponent.dart';
-import 'package:app/views/components/examOptionComponent.dart';
-import 'package:app/views/components/examSelectWordComponent.dart';
+import 'package:app/views/components/exam/autodidactTextComponent.dart';
+import 'package:app/views/components/exam/autodidactVoiceComponent.dart';
+import 'package:app/views/components/exam/examBlankSpaseBuilder.dart';
+import 'package:app/views/components/exam/examOptionBuilder.dart';
+import 'package:app/views/components/exam/examSelectWordBuilder.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 class ExamPage extends StatefulWidget {
-  final ExamPageInjector injector;
+  final ExamBuilderContent content;
 
   const ExamPage({
-    required this.injector,
+    required this.content,
     Key? key
   }) : super(key: key);
 
@@ -47,7 +48,7 @@ class _ExamPageState extends StateBase<ExamPage> {
   void initState(){
     super.initState();
 
-    for (final element in widget.injector.examList) {
+    for (final element in widget.content.examList) {
       if(!element.isPrepare) {
         element.prepare();
       }
@@ -55,7 +56,7 @@ class _ExamPageState extends StateBase<ExamPage> {
       itemList.add(element);
     }
 
-    for (final element in widget.injector.autodidactList) {
+    for (final element in widget.content.autodidactList) {
       itemList.add(element);
     }
 
@@ -89,7 +90,7 @@ class _ExamPageState extends StateBase<ExamPage> {
     String title = '';
 
     if(currentExam is ExamModel){
-      title = ExamDescription.fromType((currentExam as ExamModel).exerciseType.number).getTypeHuman();
+      title = ExamDescription.fromType((currentExam as ExamModel).quizType.number).getTypeHuman();
     }
 
     if(currentItemIdx == 0){
@@ -188,7 +189,7 @@ class _ExamPageState extends StateBase<ExamPage> {
                   ),
 
                   Visibility(
-                    visible: currentExam is! AutodidactModel,
+                    visible: widget.content.showSendButton,
                     child: ElevatedButton(
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
@@ -197,7 +198,7 @@ class _ExamPageState extends StateBase<ExamPage> {
                           shape: StadiumBorder()
                         ),
                         onPressed: sendAnswer,
-                        child: Text('ارسال جواب').englishFont().color(Colors.white),
+                        child: Text(widget.content.sendButtonText).englishFont().color(Colors.white),
                     ),
                   ),
 
@@ -217,27 +218,26 @@ class _ExamPageState extends StateBase<ExamPage> {
 
   Widget buildExamView(ExamSuperModel model){
     if(model is ExamModel){
-      if(model.exerciseType == QuizType.fillInBlank){
-        return ExamBlankSpaceComponent(injector: widget.injector);
+      if(model.quizType == QuizType.fillInBlank){
+        return ExamBlankSpaceBuilder(content: widget.content);
       }
-      else if(model.exerciseType == QuizType.recorder){
-        return ExamSelectWordComponent(injector: widget.injector);
+      else if(model.quizType == QuizType.recorder){
+        return ExamSelectWordBuilder(content: widget.content);
       }
-      else if(model.exerciseType == QuizType.multipleChoice){
-        return ExamOptionComponent(injector: widget.injector);
+      else if(model.quizType == QuizType.multipleChoice){
+        return ExamOptionBuilder(content: widget.content);
       }
     }
 
     else if(model is AutodidactModel){
-      final injector = AutodidactPageInjector();
+      final injector = AutodidactBuilderContent();
       injector.autodidactModel = currentExam as AutodidactModel;
-      injector.lessonModel = widget.injector.lessonModel;
 
       if(model.question == null){
-        return AutodidactTextComponent(injector: injector);
+        return AutodidactTextComponent(content: injector);
       }
       else if(model.voice == null){
-        return AutodidactVoiceComponent(injector: injector);
+        return AutodidactVoiceComponent(content: injector);
       }
     }
 
@@ -274,8 +274,8 @@ class _ExamPageState extends StateBase<ExamPage> {
 
     ExamModel exam = currentExam as ExamModel;
 
-    if(exam.exerciseType == QuizType.multipleChoice){
-      if(!widget.injector.state.isAllAnswer()){
+    if(exam.quizType == QuizType.multipleChoice){
+      if(!widget.content.controller.isAnswerToAll()){
         AppToast.showToast(context, 'لطفا یک گزینه را انتخاب کنید');
         return;
       }
@@ -293,7 +293,7 @@ class _ExamPageState extends StateBase<ExamPage> {
       final message = res['message']?? 'پاسخ شما ثبت شد';
 
       AppSnack.showInfo(context, message);
-      widget.injector.state.checkAnswers();
+      widget.content.controller.showAnswers(true);
     };
 
     final js = <String, dynamic>{};
@@ -306,7 +306,7 @@ class _ExamPageState extends StateBase<ExamPage> {
     ];
 
     requester.methodType = MethodType.post;
-    requester.prepareUrl(pathUrl: widget.injector.answerUrl);
+    requester.prepareUrl(pathUrl: widget.content.answerUrl);
     requester.bodyJson = js;
 
     showLoading();

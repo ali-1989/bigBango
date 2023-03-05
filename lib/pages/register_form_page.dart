@@ -12,7 +12,7 @@ import 'package:persian_modal_date_picker/persian_date_picker.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/cityModel.dart';
 import 'package:app/structures/models/provinceModel.dart';
 import 'package:app/system/keys.dart';

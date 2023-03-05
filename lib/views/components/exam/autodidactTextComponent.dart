@@ -18,9 +18,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/autodidactReplyType.dart';
-import 'package:app/structures/injectors/autodidactPageInjector.dart';
-import 'package:app/structures/interfaces/examStateInterface.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/contents/autodidactBuilderContent.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
@@ -36,10 +35,10 @@ import 'package:app/tools/permissionTools.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 class AutodidactTextComponent extends StatefulWidget {
-  final AutodidactPageInjector injector;
+  final AutodidactBuilderContent content;
 
   const AutodidactTextComponent({
-    required this.injector,
+    required this.content,
     Key? key
   }) : super(key: key);
 
@@ -47,7 +46,7 @@ class AutodidactTextComponent extends StatefulWidget {
   State<AutodidactTextComponent> createState() => AutodidactTextComponentState();
 }
 ///=================================================================================================================
-class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> implements ExamStateInterface {
+class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
   late AutodidactModel autodidactModel;
   Requester requester = Requester();
   FlutterSoundRecorder voiceRecorder = FlutterSoundRecorder();
@@ -67,8 +66,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> im
   void initState(){
     super.initState();
 
-    autodidactModel = widget.injector.autodidactModel;
-    widget.injector.state = this;
+    autodidactModel = widget.content.autodidactModel;
     savePath = 'record.mp4';
 
     player.playbackEventStream.listen(eventListener);
@@ -523,15 +521,6 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> im
     });
   }
 
-  @override
-  bool isAllAnswer(){
-    return true;
-  }
-
-  @override
-  void checkAnswers() {
-  }
-
   void sendAnswer(){
     if(autodidactModel.replyType == AutodidactReplyType.text){
       if(answerCtr.text.trim().isEmpty){
@@ -565,7 +554,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> im
       final message = res['message']?? 'پاسخ شما ثبت شد';
 
       AppSnack.showInfo(context, message);
-      widget.injector.state.checkAnswers();
+      widget.content.controller.showAnswers(true);
     };
 
     final js = <String, dynamic>{'autodidactId' : autodidactModel.id};

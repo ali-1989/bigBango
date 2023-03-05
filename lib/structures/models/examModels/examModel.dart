@@ -6,34 +6,35 @@ import 'package:app/structures/models/examModels/examSuperModel.dart';
 class ExamModel extends ExamSuperModel {
   late String id;
   late String question;
-  QuizType exerciseType = QuizType.unKnow;
-  List<ExamChoiceModel> choices = [];
-  List<ExamSolveModel> solveItems = [];
+  QuizType quizType = QuizType.unKnow;
+  List<ExamOptionModel> options = [];
+  List<ExamSolvedOptionModel> solvedOptions = [];
 
   //----------- local
+  bool showAnswer = false;
   bool isPrepare = false;
-  List<ExamChoiceModel> userAnswers = [];
+  List<ExamOptionModel> userAnswers = [];
   List<String> questionSplit = [];
-  List<ExamChoiceModel> shuffleWords = [];
+  List<ExamOptionModel> shuffleWords = [];
 
   ExamModel();
 
   ExamModel.fromMap(Map js){
     id = js['id']?? '';
     question = js['question'];
-    exerciseType = QuizType.fromType(js['exerciseType']);
+    quizType = QuizType.fromType(js['exerciseType']);
 
     if(js['choices'] is List){
-      choices = js['choices'].map<ExamChoiceModel>((e) => ExamChoiceModel.fromMap(e)).toList();
+      options = js['choices'].map<ExamOptionModel>((e) => ExamOptionModel.fromMap(e)).toList();
     }
 
     if(js['solveItems'] is List){
-      choices = js['solveItems'].map<ExamChoiceModel>((e) => ExamSolveModel.fromMap(e)).toList();
+      options = js['solveItems'].map<ExamOptionModel>((e) => ExamSolvedOptionModel.fromMap(e)).toList();
     }
 
     //----------- local
     if(js['userAnswers'] is List){
-      userAnswers = js['userAnswers'].map<ExamChoiceModel>((e) => ExamChoiceModel.fromMap(e)).toList();
+      userAnswers = js['userAnswers'].map<ExamOptionModel>((e) => ExamOptionModel.fromMap(e)).toList();
     }
   }
 
@@ -42,9 +43,9 @@ class ExamModel extends ExamSuperModel {
 
     js['id'] = id;
     js['question'] = question;
-    js['exerciseType'] = exerciseType.number;
-    js['choices'] = choices.map((e) => e.toMap()).toList();
-    js['solveItems'] = solveItems.map((e) => e.toMap()).toList();
+    js['exerciseType'] = quizType.number;
+    js['choices'] = options.map((e) => e.toMap()).toList();
+    js['solveItems'] = solvedOptions.map((e) => e.toMap()).toList();
 
     //----------- local
     js['userAnswers'] = userAnswers.map((e) => e.toMap()).toList();
@@ -53,15 +54,15 @@ class ExamModel extends ExamSuperModel {
   }
 
   void prepare(){
-    if(exerciseType == QuizType.multipleChoice){
+    if(quizType == QuizType.multipleChoice){
       _generateUserAnswer();
     }
     else {
       _doSplitQuestion();
     }
 
-    if(exerciseType == QuizType.recorder){
-      shuffleWords = [...choices];
+    if(quizType == QuizType.recorder){
+      shuffleWords = [...options];
       shuffleWords.shuffle();
     }
 
@@ -91,9 +92,9 @@ class ExamModel extends ExamSuperModel {
     userAnswers.clear();
 
     for(int i = 0; i < questionSplit.length-1; i++) {
-      final ex = ExamChoiceModel()..order = i;
+      final ex = ExamOptionModel()..order = i;
 
-      if(exerciseType == QuizType.multipleChoice){
+      if(quizType == QuizType.multipleChoice){
         ex.id = '';
       }
 
@@ -102,8 +103,8 @@ class ExamModel extends ExamSuperModel {
   }
 
   int getIndexOfCorrectChoice(){
-    for(int i = 0; i< choices.length; i++){
-      if(choices[i].isCorrect){
+    for(int i = 0; i< options.length; i++){
+      if(options[i].isCorrect){
         return i;
       }
     }
@@ -111,27 +112,27 @@ class ExamModel extends ExamSuperModel {
     return -1;
   }
 
-  ExamChoiceModel? getCorrectChoice(){
-    for(int i = 0; i< choices.length; i++){
-      if(choices[i].isCorrect){
-        return choices[i];
+  ExamOptionModel? getCorrectChoice(){
+    for(int i = 0; i< options.length; i++){
+      if(options[i].isCorrect){
+        return options[i];
       }
     }
 
     return null;
   }
 
-  ExamChoiceModel? getChoiceByOrder(int order){
-    for(int i = 0; i< choices.length; i++){
-      if(choices[i].order == order){
-        return choices[i];
+  ExamOptionModel? getChoiceByOrder(int order){
+    for(int i = 0; i< options.length; i++){
+      if(options[i].order == order){
+        return options[i];
       }
     }
 
     return null;
   }
 
-  ExamChoiceModel? getUserChoiceByOrder(int order){
+  ExamOptionModel? getUserChoiceByOrder(int order){
     for(int i = 0; i< userAnswers.length; i++){
       if(userAnswers[i].order == order){
         return userAnswers[i];
@@ -141,7 +142,7 @@ class ExamModel extends ExamSuperModel {
     return null;
   }
 
-  ExamChoiceModel? getUserChoiceById(String id){
+  ExamOptionModel? getUserChoiceById(String id){
     for(int i = 0; i< userAnswers.length; i++){
       if(userAnswers[i].id == id){
         return userAnswers[i];
@@ -151,10 +152,10 @@ class ExamModel extends ExamSuperModel {
     return null;
   }
 
-  ExamChoiceModel? getChoiceById(String id){
-    for(int i = 0; i< choices.length; i++){
-      if(choices[i].id == id){
-        return choices[i];
+  ExamOptionModel? getChoiceById(String id){
+    for(int i = 0; i< options.length; i++){
+      if(options[i].id == id){
+        return options[i];
       }
     }
 
@@ -162,12 +163,12 @@ class ExamModel extends ExamSuperModel {
   }
 
   String getUserAnswerText(){
-    if(exerciseType == QuizType.multipleChoice){
+    if(quizType == QuizType.multipleChoice){
       if(userAnswers.isNotEmpty){
         return getChoiceById(userAnswers[0].id)!.text;
       }
     }
-    else if (exerciseType == QuizType.recorder){
+    else if (quizType == QuizType.recorder){
       var txt = question;
       var order = 0;
 
@@ -180,7 +181,7 @@ class ExamModel extends ExamSuperModel {
 
       return txt;
     }
-    else if (exerciseType == QuizType.fillInBlank){
+    else if (quizType == QuizType.fillInBlank){
       var txt = question;
       var order = 0;
 
@@ -198,21 +199,21 @@ class ExamModel extends ExamSuperModel {
   }
 
   bool isUserAnswerCorrect(){
-    if(exerciseType == QuizType.multipleChoice){
+    if(quizType == QuizType.multipleChoice){
       if(userAnswers.isEmpty){
         return false;
       }
 
       return userAnswers[0].id == getCorrectChoice()!.id;
     }
-    else if (exerciseType == QuizType.recorder){
+    else if (quizType == QuizType.recorder){
       for (final k in userAnswers) {
         if (k.id.isEmpty) {
           return false;
         }
       }
 
-      for(int i=0; i< choices.length; i++){
+      for(int i=0; i< options.length; i++){
         final correctAnswer = getChoiceByOrder(i)!.text;
         final userAnswer = getUserChoiceByOrder(i)!.text;
 
@@ -223,8 +224,8 @@ class ExamModel extends ExamSuperModel {
 
       return true;
     }
-    else if (exerciseType == QuizType.fillInBlank){
-      for(int i = 0; i < choices.length; i++){
+    else if (quizType == QuizType.fillInBlank){
+      for(int i = 0; i < options.length; i++){
         final correctAnswer = getChoiceByOrder(i)!.text;
         final userAnswer = getUserChoiceByOrder(i)!.text;
 
@@ -240,15 +241,15 @@ class ExamModel extends ExamSuperModel {
   }
 }
 ///==================================================================================================
-class ExamChoiceModel {
+class ExamOptionModel {
   String id = '';
   String text = '';
   bool isCorrect = false;
   int order = 0;
 
-  ExamChoiceModel(): id = Generator.generateKey(5);
+  ExamOptionModel(): id = Generator.generateKey(5);
 
-  ExamChoiceModel.fromMap(Map js){
+  ExamOptionModel.fromMap(Map js){
     id = js['id']?? Generator.generateKey(5);
     text = js['text'];
     isCorrect = js['isCorrect']?? false;
@@ -267,14 +268,14 @@ class ExamChoiceModel {
   }
 }
 ///==================================================================================================
-class ExamSolveModel {
+class ExamSolvedOptionModel {
   String quizId = '';
   String answer = '';
   bool isCorrect = false;
 
-  ExamSolveModel();
+  ExamSolvedOptionModel();
 
-  ExamSolveModel.fromMap(Map js){
+  ExamSolvedOptionModel.fromMap(Map js){
     quizId = js['quizId'];
     answer = js['answer'];
     isCorrect = js['isCorrect']?? false;

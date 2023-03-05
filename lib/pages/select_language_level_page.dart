@@ -8,7 +8,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appColors.dart';

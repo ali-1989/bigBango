@@ -14,7 +14,7 @@ import 'package:app/services/audio_player_service.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/vocabModels/vocabModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/publicAccess.dart';

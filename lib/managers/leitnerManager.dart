@@ -3,7 +3,7 @@ import 'dart:core';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
 import 'package:app/services/event_dispatcher_service.dart';
-import 'package:app/structures/middleWare/requester.dart';
+import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/tools/app/appBadge.dart';
 import 'package:app/tools/app/appCache.dart';
 
