@@ -1,4 +1,6 @@
 import 'package:app/structures/contents/examBuilderContent.dart';
+import 'package:app/structures/controllers/examController.dart';
+import 'package:app/tools/app/appSnack.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormatter.dart';
@@ -46,6 +48,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   Duration currentTime = Duration();
   ExamBuilderContent examContent = ExamBuilderContent();
   Widget examComponent = SizedBox();
+  ExamController examController = ExamController();
   int currentItemIdx = 0;
   bool voiceIsOk = false;
   bool isInPlaying = false;
@@ -72,6 +75,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   void dispose(){
     requester.dispose();
     player.stop();
+    examController.dispose();
 
     super.dispose();
   }
@@ -267,9 +271,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
                     ),
-                    onPressed: (){
-                      examContent.controller.showAnswers(true);
-                    },
+                    onPressed: registerExerciseResult,
                     child: Text('ثبت')
                 ),
               )
@@ -306,15 +308,29 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
   void buildExamView(){
     if(currentItem!.quiz.quizType == QuizType.fillInBlank){
-      examComponent = ExamBlankSpaceBuilder(content: examContent);
+      examComponent = ExamBlankSpaceBuilder(
+          key: ValueKey(currentItem?.id),
+          content: examContent,
+          controller: examController,
+          index: currentItemIdx
+      );
       description = 'با توجه به صوت جای خالی را پر کنید';
     }
     else if(currentItem!.quiz.quizType == QuizType.recorder){
-      examComponent = ExamSelectWordBuilder(content: examContent);
+      examComponent = ExamSelectWordBuilder(
+          key: ValueKey(currentItem?.id),
+          content: examContent,
+          controller: examController,
+          index: currentItemIdx);
       description = 'با توجه به صوت کلمه ی مناسب را انتخاب کنید';
     }
     else if(currentItem!.quiz.quizType == QuizType.multipleChoice){
-      examComponent = ExamOptionBuilder(content: examContent);
+      examComponent = ExamOptionBuilder(
+          key: ValueKey(currentItem?.id),
+          content: examContent,
+          controller: examController,
+          index: currentItemIdx
+      );
       description = 'با توجه به صوت گزینه ی مناسب را انتخاب کنید';
     }
   }
@@ -454,6 +470,52 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/listening?CategoryId=${widget.injector.categoryId}');
+    requester.request(context);
+  }
+
+  void registerExerciseResult() {
+    examController.showAnswers(true);
+    requestSendAnswer();
+  }
+
+  void requestSendAnswer(){
+
+    if(currentItem!.quiz.quizType == QuizType.multipleChoice){
+      if(!examController.isAnswerToAll()){
+        AppToast.showToast(context, 'لطفا یک گزینه را انتخاب کنید');
+        return;
+      }
+    }
+
+    requester.httpRequestEvents.onAnyState = (req) async {
+      await hideLoading();
+    };
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      AppSnack.showSnack$errorCommunicatingServer(context);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
+      final message = res['message']?? 'پاسخ شما ثبت شد';
+
+      AppSnack.showInfo(context, message);
+      examController.showAnswers(true);
+    };
+
+    final js = <String, dynamic>{};
+    js['items'] = [
+      {
+        'exerciseId' : currentItem!.quiz.id,
+        'answer' : currentItem!.quiz.getUserAnswerText(),
+        'isCorrect' : currentItem!.quiz.isUserAnswerCorrect(),
+      }
+    ];
+
+    requester.methodType = MethodType.post;
+    requester.prepareUrl(pathUrl: '/listening/exercises/solving');
+    requester.bodyJson = js;
+
+    showLoading();
     requester.request(context);
   }
 }

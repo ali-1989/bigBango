@@ -554,7 +554,6 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
       final message = res['message']?? 'پاسخ شما ثبت شد';
 
       AppSnack.showInfo(context, message);
-      widget.content.controller.showAnswers(true);
     };
 
     final js = <String, dynamic>{'autodidactId' : autodidactModel.id};

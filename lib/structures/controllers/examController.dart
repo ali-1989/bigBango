@@ -1,3 +1,5 @@
+import 'package:flutter/animation.dart';
+
 typedef ShowAnswerFn = void Function(String id, bool state);
 typedef ShowAnswersFn = void Function(bool state);
 typedef IsAnswerToAll = bool Function();
@@ -7,19 +9,26 @@ class ExamController {
   ShowAnswerFn? _showAnswerFn;
   ShowAnswersFn? _showAnswersFn;
   IsAnswerToAll? _isAnswerToAllFn;
+  VoidCallback? _sendResultCallFn;
+  bool _isInit = false;
 
   ExamController();
 
-  void setShowAnswer(ShowAnswerFn fn){
-    _showAnswerFn = fn;
+  void init(ShowAnswerFn? showAnswerFn, ShowAnswersFn? showAnswersFn, IsAnswerToAll? isAnswerToAll, VoidCallback? sendResult){
+    _showAnswerFn = showAnswerFn;
+    _showAnswersFn = showAnswersFn;
+    _isAnswerToAllFn = isAnswerToAll;
+    _sendResultCallFn = sendResult;
+
+    _isInit = true;
   }
 
-  void setShowAnswers(ShowAnswersFn fn){
-    _showAnswersFn = fn;
+  bool isInit(){
+    return _isInit;
   }
 
-  void setIsAnswerToAll(IsAnswerToAll fn){
-    _isAnswerToAllFn = fn;
+  void assertIsInit(){
+    assert(isInit(), 'must initialization ExamController');
   }
 
   void showAnswer(String id, bool state){
@@ -34,9 +43,16 @@ class ExamController {
     return _isAnswerToAllFn?.call()?? false;
   }
 
+  void sendResult(){
+    _sendResultCallFn?.call();
+  }
+
   void dispose(){
     _showAnswerFn = null;
     _showAnswersFn = null;
     _isAnswerToAllFn = null;
+    _sendResultCallFn = null;
+
+    _isInit = false;
   }
 }

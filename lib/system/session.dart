@@ -173,8 +173,6 @@ class Session {
 	static UserModel createOrUpdateUserModel(Map<String, dynamic> map, UserModel? user) {
 		final res = UserModel.fromMap(map);
 
-		Tools.verbosePrint('${user?.courseLevel?.name} | resUser: ${res.courseLevel?.name}');
-
 		if(user != null) {
 			user.matchBy(res);
 			return user;

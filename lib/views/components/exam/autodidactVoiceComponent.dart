@@ -653,11 +653,10 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       final message = res['message']?? 'پاسخ شما ثبت شد';
 
       AppSnack.showInfo(context, message);
-      widget.content.controller.showAnswers(true);
     };
 
     final js = <String, dynamic>{};
-    js['autodidactId'] - autodidactModel.id;
+    js['autodidactId'] = autodidactModel.id;
 
     if(autodidactModel.replyType == AutodidactReplyType.text){
       js['text'] = answerCtr.text.trim();

@@ -11,8 +11,6 @@ class AutodidactModel extends ExamSuperModel {
   AutodidactReplyType replyType = AutodidactReplyType.unKnow;
   MediaModel? voice;
 
-  //----------- local
-
   AutodidactModel();
 
   AutodidactModel.fromMap(Map js){

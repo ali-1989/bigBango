@@ -133,7 +133,7 @@ class ExamModel extends ExamSuperModel {
   }
 
   ExamOptionModel? getUserChoiceByOrder(int order){
-    for(int i = 0; i< userAnswers.length; i++){
+    for(int i = 0; i < userAnswers.length; i++){
       if(userAnswers[i].order == order){
         return userAnswers[i];
       }
@@ -143,7 +143,7 @@ class ExamModel extends ExamSuperModel {
   }
 
   ExamOptionModel? getUserChoiceById(String id){
-    for(int i = 0; i< userAnswers.length; i++){
+    for(int i = 0; i < userAnswers.length; i++){
       if(userAnswers[i].id == id){
         return userAnswers[i];
       }
@@ -214,8 +214,8 @@ class ExamModel extends ExamSuperModel {
       }
 
       for(int i=0; i< options.length; i++){
-        final correctAnswer = getChoiceByOrder(i)!.text;
-        final userAnswer = getUserChoiceByOrder(i)!.text;
+        final correctAnswer = getChoiceByOrder(i+1)!.text;
+        final userAnswer = getUserChoiceByOrder(i+1)!.text;
 
         if(correctAnswer != userAnswer){
           return false;
@@ -226,8 +226,8 @@ class ExamModel extends ExamSuperModel {
     }
     else if (quizType == QuizType.fillInBlank){
       for(int i = 0; i < options.length; i++){
-        final correctAnswer = getChoiceByOrder(i)!.text;
-        final userAnswer = getUserChoiceByOrder(i)!.text;
+        final correctAnswer = getChoiceByOrder(i+1)?.text;
+        final userAnswer = getUserChoiceByOrder(i+1)?.text;
 
         if(correctAnswer != userAnswer){
           return false;

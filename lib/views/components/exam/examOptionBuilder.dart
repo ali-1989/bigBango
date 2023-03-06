@@ -1,4 +1,5 @@
 import 'package:app/structures/contents/examBuilderContent.dart';
+import 'package:app/structures/controllers/examController.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -11,9 +12,13 @@ import 'package:app/system/extensions.dart';
 
 class ExamOptionBuilder extends StatefulWidget {
   final ExamBuilderContent content;
+  final ExamController controller;
+  final int? index;
 
   const ExamOptionBuilder({
     required this.content,
+    required this.controller,
+    this.index,
     Key? key
   }) : super(key: key);
 
@@ -23,20 +28,21 @@ class ExamOptionBuilder extends StatefulWidget {
 ///==============================================================================================================
 class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
   List<ExamModel> examList = [];
-  bool showAnswers = false;
   late TextStyle questionNormalStyle;
 
   @override
   void initState(){
     super.initState();
 
-    examList.addAll(widget.content.examList.where((element) => element.quizType == QuizType.multipleChoice));
-    questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
-  }
+    if(widget.index == null) {
+      examList.addAll(widget.content.examList.where((element) => element.quizType == QuizType.multipleChoice));
+    }
+    else {
+      examList.add(widget.content.examList[widget.index!]);
+    }
 
-  @override
-  void dispose(){
-    super.dispose();
+    questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
+    widget.controller.init(showAnswer, showAnswers, isAnswerToAll, null);
   }
 
   @override
@@ -56,13 +62,15 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
         children: [
 
           /// exam
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const ScrollPhysics(),
-              itemCount: examList.length *2 -1,
-              itemBuilder: buildQuestionAndOptions,
+          Expanded(
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const ScrollPhysics(),
+                itemCount: examList.length *2 -1,
+                itemBuilder: buildQuestionAndOptions,
+              ),
             ),
           ),
 
@@ -82,6 +90,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
     final curExam = examList[idx~/2];
 
     return Column(
+      key: ValueKey(curExam.id),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 10),
@@ -117,7 +126,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
       final w = GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: (){
-          if(showAnswers){
+          if(curExam.showAnswer){
             return;
           }
 
@@ -148,7 +157,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
 
             Color backColor;
 
-            if(showAnswers){
+            if(curExam.showAnswer){
               if(isCorrect){
                 backColor = Colors.green;
               }
@@ -165,13 +174,13 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
 
             return DecoratedBox(
               decoration: BoxDecoration(
-                  color: (isSelected || (!isSelected && showAnswers && isCorrect))? backColor : Colors.transparent,
+                  color: (isSelected || (!isSelected && curExam.showAnswer && isCorrect))? backColor : Colors.transparent,
                   borderRadius: BorderRadius.circular(5)
               ),
               child: Row(
                 children: [
-                  Text('  ${optionIdx+1} -  ', style: (isSelected || (!isSelected && showAnswers && isCorrect))? selectStl : unSelectStl).englishFont(),
-                  Text(opt.text, style: (isSelected || (!isSelected && showAnswers && isCorrect))? selectStl : unSelectStl).englishFont(),
+                  Text('  ${optionIdx+1} -  ', style: (isSelected || (!isSelected && curExam.showAnswer && isCorrect))? selectStl : unSelectStl).englishFont(),
+                  Text(opt.text, style: (isSelected || (!isSelected && curExam.showAnswer && isCorrect))? selectStl : unSelectStl).englishFont(),
                 ],
               ).wrapBoxBorder(
                   color: Colors.black,
@@ -189,6 +198,35 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
     }
 
     return res;
+  }
+
+  bool isAnswerToAll(){
+    for(final k in examList){
+      if (k.userAnswers.isEmpty) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  void showAnswers(bool state) {
+    for (final element in examList) {
+      element.showAnswer = state;
+    }
+
+    assistCtr.updateHead();
+  }
+
+  void showAnswer(String examId, bool state) {
+    for (final element in examList) {
+      if(element.id == examId){
+        element.showAnswer = state;
+        break;
+      }
+    }
+
+    assistCtr.updateHead();
   }
 }
 

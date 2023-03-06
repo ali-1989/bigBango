@@ -1,4 +1,5 @@
 import 'package:app/structures/contents/examBuilderContent.dart';
+import 'package:app/structures/controllers/examController.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -16,9 +17,13 @@ import 'package:iris_tools/widgets/customCard.dart';
 
 class ExamBlankSpaceBuilder extends StatefulWidget {
   final ExamBuilderContent content;
+  final ExamController controller;
+  final int? index;
 
   const ExamBlankSpaceBuilder({
     required this.content,
+    required this.controller,
+    this.index,
     Key? key
   }) : super(key: key);
 
@@ -34,19 +39,15 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
   void initState(){
     super.initState();
 
-    examList.addAll(widget.content.examList.where((element) => element.quizType == QuizType.fillInBlank));
+    if(widget.index == null) {
+      examList.addAll(widget.content.examList.where((element) => element.quizType == QuizType.fillInBlank));
+    }
+    else {
+      examList.add(widget.content.examList[widget.index!]);
+    }
+
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
-
-    widget.content.controller.setShowAnswer(showAnswer);
-    widget.content.controller.setShowAnswers(showAnswers);
-    widget.content.controller.setIsAnswerToAll(isAnswerToAll);
-  }
-
-  @override
-  void dispose(){
-    widget.content.controller.dispose();
-
-    super.dispose();
+    widget.controller.init(showAnswer, showAnswers, isAnswerToAll, null);
   }
 
   @override

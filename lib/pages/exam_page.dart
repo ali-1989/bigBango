@@ -1,4 +1,5 @@
 import 'package:app/structures/contents/examBuilderContent.dart';
+import 'package:app/structures/controllers/examController.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -40,6 +41,7 @@ class ExamPage extends StatefulWidget {
 ///======================================================================================================================
 class _ExamPageState extends StateBase<ExamPage> {
   Requester requester = Requester();
+  ExamController examController = ExamController();
   int currentItemIdx = 0;
   List<ExamSuperModel> itemList = [];
   late ExamSuperModel currentExam;
@@ -59,13 +61,12 @@ class _ExamPageState extends StateBase<ExamPage> {
     for (final element in widget.content.autodidactList) {
       itemList.add(element);
     }
-
-    currentExam = itemList[0];
   }
 
   @override
   void dispose(){
     super.dispose();
+    examController.dispose();
 
     requester.dispose();
   }
@@ -85,6 +86,15 @@ class _ExamPageState extends StateBase<ExamPage> {
   }
 
   Widget buildBody(){
+    currentExam = itemList[currentItemIdx];
+
+    if(currentExam is AutodidactModel){
+      widget.content.showSendButton = false;
+    }
+    else {
+      widget.content.showSendButton = true;
+    }
+
     Color preColor = Colors.black;
     Color nextColor = Colors.black;
     String title = '';
@@ -217,27 +227,43 @@ class _ExamPageState extends StateBase<ExamPage> {
   }
 
   Widget buildExamView(ExamSuperModel model){
+
     if(model is ExamModel){
       if(model.quizType == QuizType.fillInBlank){
-        return ExamBlankSpaceBuilder(content: widget.content);
+        return ExamBlankSpaceBuilder(
+            key: ValueKey(model.id),
+            content: widget.content,
+            controller: examController,
+            index: currentItemIdx
+        );
       }
       else if(model.quizType == QuizType.recorder){
-        return ExamSelectWordBuilder(content: widget.content);
+        return ExamSelectWordBuilder(
+            key: ValueKey(model.id),
+            content: widget.content,
+            controller: examController,
+            index: currentItemIdx
+        );
       }
       else if(model.quizType == QuizType.multipleChoice){
-        return ExamOptionBuilder(content: widget.content);
+        return ExamOptionBuilder(
+            key: ValueKey(model.id),
+            content: widget.content,
+            controller: examController,
+            index: currentItemIdx
+        );
       }
     }
 
     else if(model is AutodidactModel){
-      final injector = AutodidactBuilderContent();
-      injector.autodidactModel = currentExam as AutodidactModel;
+      final content = AutodidactBuilderContent();
+      content.autodidactModel = currentExam as AutodidactModel;
 
-      if(model.question == null){
-        return AutodidactTextComponent(content: injector);
+      if(model.text != null){
+        return AutodidactTextComponent(content: content);
       }
-      else if(model.voice == null){
-        return AutodidactVoiceComponent(content: injector);
+      else if(model.voice != null){
+        return AutodidactVoiceComponent(content: content);
       }
     }
 
@@ -254,6 +280,7 @@ class _ExamPageState extends StateBase<ExamPage> {
       currentItemIdx++;
 
       currentExam = itemList[currentItemIdx];
+
       assistCtr.updateHead();
     }
   }
@@ -263,6 +290,7 @@ class _ExamPageState extends StateBase<ExamPage> {
       currentItemIdx--;
 
       currentExam = itemList[currentItemIdx];
+
       assistCtr.updateHead();
     }
   }
@@ -275,8 +303,8 @@ class _ExamPageState extends StateBase<ExamPage> {
     ExamModel exam = currentExam as ExamModel;
 
     if(exam.quizType == QuizType.multipleChoice){
-      if(!widget.content.controller.isAnswerToAll()){
-        AppToast.showToast(context, 'لطفا یک گزینه را انتخاب کنید');
+      if(!examController.isAnswerToAll()){
+        AppToast.showToast(context, 'لطفا به سوالات پاسخ دهید');
         return;
       }
     }
@@ -293,7 +321,7 @@ class _ExamPageState extends StateBase<ExamPage> {
       final message = res['message']?? 'پاسخ شما ثبت شد';
 
       AppSnack.showInfo(context, message);
-      widget.content.controller.showAnswers(true);
+      examController.showAnswers(true);
     };
 
     final js = <String, dynamic>{};

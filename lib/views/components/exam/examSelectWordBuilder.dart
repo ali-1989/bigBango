@@ -1,4 +1,5 @@
 import 'package:app/structures/contents/examBuilderContent.dart';
+import 'package:app/structures/controllers/examController.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -18,9 +19,13 @@ import 'package:iris_tools/widgets/customCard.dart';
 
 class ExamSelectWordBuilder extends StatefulWidget {
   final ExamBuilderContent content;
+  final ExamController controller;
+  final int? index;
 
   const ExamSelectWordBuilder({
     required this.content,
+    required this.controller,
+    this.index,
     Key? key
   }) : super(key: key);
 
@@ -37,18 +42,15 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
   void initState() {
     super.initState();
 
-    examList.addAll(widget.content.examList.where((element) => element.quizType == QuizType.recorder));
+    if(widget.index == null) {
+      examList.addAll(widget.content.examList.where((element) => element.quizType == QuizType.recorder));
+    }
+    else {
+      examList.add(widget.content.examList[widget.index!]);
+    }
+
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
-
-    widget.content.controller.setShowAnswer(showAnswer);
-    widget.content.controller.setShowAnswers(showAnswers);
-  }
-
-  @override
-  void dispose() {
-    widget.content.controller.dispose();
-
-    super.dispose();
+    widget.controller.init(showAnswer, showAnswers, isAnswerToAll, null);
   }
 
   @override
@@ -62,25 +64,18 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
   }
 
   Widget buildBody() {
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-
-          /// exam
-          Expanded(
-              child: CustomScrollView(
-                shrinkWrap: true,
-                physics: ScrollPhysics(),
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      listItemBuilder,
-                      childCount: examList.length * 2 - 1,
-                    ),
-                  ),
-                ],
-              )
+      child: CustomScrollView(
+        shrinkWrap: true,
+        physics: ScrollPhysics(),
+        slivers: [
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              listItemBuilder,
+              childCount: examList.length * 2 - 1,
+            ),
           ),
         ],
       ),
@@ -154,7 +149,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
               return;
             }
 
-            setUserAnswer(model, i, null);
+            setUserAnswer(model, i+1, null);
 
             if (currentSelectIndex > -1) {
               if (currentSelectIndex == i) {
@@ -172,8 +167,8 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
           };
 
         if (model.showAnswer) {
-          final correctAnswer = model.getChoiceByOrder(i)!.text;
-          final userAnswer = model.getUserChoiceByOrder(i)!.text;
+          final correctAnswer = model.getChoiceByOrder(i+1)!.text;
+          final userAnswer = model.getUserChoiceByOrder(i+1)!.text;
 
           if (correctAnswer == userAnswer) {
             /// correct span
@@ -207,7 +202,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
           }
         }
         else {
-          final userAnswer = model.getUserChoiceByOrder(i)!.text;
+          final userAnswer = model.getUserChoiceByOrder(i+1)!.text;
 
           if (userAnswer.isNotEmpty) {
             choiceText = userAnswer;
@@ -343,16 +338,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
     );
   }
 
-  void showAnswer(String id, bool state) {
-    for (final model in examList) {
-      if(model.id == id){
-        model.showAnswer = state;
-        break;
-      }
-    }
-  }
-
-  void showAnswers(bool state) {
+  bool isAllQuestionAnswered(){
     bool isAllSelected = true;
 
     for (final model in examList) {
@@ -368,8 +354,21 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
       }
     }
 
-    if (!isAllSelected) {
-      AppSnack.showError(context, 'لطفا همه ی گزینه ها را انتخاب کنید');
+    return isAllSelected;
+  }
+
+  void showAnswer(String id, bool state) {
+    for (final model in examList) {
+      if(model.id == id){
+        model.showAnswer = state;
+        break;
+      }
+    }
+  }
+
+  void showAnswers(bool state) {
+    if (!isAllQuestionAnswered()) {
+      AppSnack.showError(context, 'لطفا همه ی سوالات را پاسخ دهید');
       return;
     }
 
@@ -378,5 +377,17 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
     }
 
     assistCtr.updateHead();
+  }
+
+  bool isAnswerToAll(){
+    for(final k in examList){
+      for(final x in k.userAnswers) {
+        if (x.text.isEmpty || x.id.isEmpty) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 }
