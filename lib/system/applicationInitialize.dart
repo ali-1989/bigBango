@@ -49,12 +49,13 @@ class ApplicationInitial {
 
     try {
       _importantInit = true;
-      await AppDirectories.prepareStoragePaths(Constants.appName);
-      PublicAccess.logger = Logger('${AppDirectories.getTempDir$ex()}/logs');
 
       if (!kIsWeb) {
+        await AppDirectories.prepareStoragePaths(Constants.appName);
         PublicAccess.reporter = Reporter(AppDirectories.getAppFolderInExternalStorage(), 'report');
       }
+
+      PublicAccess.logger = Logger('${AppDirectories.getTempDir$ex()}/logs');
 
       return true;
     }
@@ -73,9 +74,11 @@ class ApplicationInitial {
 
     try {
       _callInSplashInit = true;
+
       await AppDB.init();
       AppThemes.initial();
       TrustSsl.acceptBadCertificate();
+      await AppLocale.localeDelegate().getLocalization().setFallbackByLocale(const Locale('en', 'EE'));
       await DeviceInfoTools.prepareDeviceInfo();
       await DeviceInfoTools.prepareDeviceId();
       AudioPlayerService.init();
@@ -88,7 +91,7 @@ class ApplicationInitial {
       _isInitialOk = true;
     }
     catch (e){
-      PublicAccess.logger.logToAll('error in launchUpInit >> $e');
+      PublicAccess.logger.logToAll('error in inSplashInit >> $e');
     }
 
     return;
@@ -131,6 +134,9 @@ class ApplicationInitial {
 
       /// life cycle
       ApplicationLifeCycle.init();
+
+      /// downloader
+      //DownloadUploadService.init();
 
       /// login & logoff
       EventDispatcherService.attachFunction(EventDispatcher.userLogin, LoginService.onLoginObservable);

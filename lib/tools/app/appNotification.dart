@@ -91,7 +91,7 @@ class AppNotification {
 			ledOffMs: 500,
 		);
 
-		///* resource://drawable/app_icon
+		///* resource://drawable/notif
 		AwesomeNotifications().initialize(
 			'resource://drawable/notif',
 			[nc1],

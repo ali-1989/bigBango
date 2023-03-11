@@ -93,7 +93,7 @@ class MyApp extends StatelessWidget {
       );
     }
 
-    return MaterialApp.router(
+    return MaterialApp(
       key: AppBroadcast.materialAppKey,
       //navigatorKey: AppBroadcast.rootNavigatorKey,
       scaffoldMessengerKey: AppBroadcast.rootScaffoldMessengerKey,
@@ -103,52 +103,23 @@ class MyApp extends StatelessWidget {
       theme: AppThemes.instance.themeData,
       //darkTheme: ThemeData.dark(),
       themeMode: AppThemes.instance.currentThemeMode,
-      //navigatorObservers: [AppNavigatorObserver.instance()],
       scrollBehavior: ScrollConfiguration.of(context).copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,
           PointerDeviceKind.touch,
         },
       ),
-      routerConfig: RouterConfig(routerDelegate: AppRouterDelegate.instance()),
       locale: ApplicationInitial.isInit()? SettingsManager.settingsModel.appLocale : SettingsModel.defaultAppLocale,
       supportedLocales: AppLocale.getAssetSupportedLocales(),
       localizationsDelegates: AppLocale.getLocaleDelegates(), // this do correct Rtl/Ltr
       /*localeResolutionCallback: (deviceLocale, supportedLocales) {
             return SettingsManager.settingsModel.appLocale;
           },*/
-      //home: materialHomeBuilder(),
-      builder: (localContext, home) {
-        AppRoute.materialContext = localContext;
-        return MediaQuery(
-          data: MediaQuery.of(localContext).copyWith(textScaleFactor: 1.0),
-          child: Navigator( // or home!
-            key: AppBroadcast.rootNavigatorKey,
-            //initialRoute: '/',
-            observers: [AppNavigatorObserver.instance()],
-            onUnknownRoute: AppNavigatorObserver.onUnknownRoute,
-            onGenerateRoute: AppNavigatorObserver.onGenerateRoute,
-            onPopPage: AppNavigatorObserver.onPopPage,
-            pages: [
-              MaterialPage(child: materialHomeBuilder())
-            ],
-          ),
-        );
-      },
+      home: Router(
+        routerDelegate: AppRouterDelegate.instance(),
+        backButtonDispatcher: RootBackButtonDispatcher(),
+      ),
     );
-  }
-
-  Widget materialHomeBuilder(){
-    return Builder(
-      builder: (localContext){
-        AppRoute.materialContext = localContext;
-        return SplashPage();
-      },
-    );
-  }
-
-  Future<void> testCodes(BuildContext context) async {
-    //await AppDB.db.clearTable(AppDB.tbKv);
   }
 }
 ///==============================================================================================
@@ -192,7 +163,7 @@ void onErrorCatch(FlutterErrorDetails errorDetails) {
 void zonedGuardedCatch(error, sTrace) {
   var txt = 'ZONED-GUARDED CAUGHT AN ERROR:: ${error.toString()}';
 
-  if(!kIsWeb && !kDebugMode) {
+  if(!kDebugMode/* && !kIsWeb*/) {
     txt += '\n STACK TRACE:: $sTrace';
   }
 
