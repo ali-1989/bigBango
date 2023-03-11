@@ -208,8 +208,9 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
   }
 
   void closeTicket() {
-    void yesFn(){
+    bool yesFn(){
       requestCloseTicket();
+      return false;
     }
 
     AppDialogIris.instance.showYesNoDialog(

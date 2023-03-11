@@ -43,16 +43,6 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
   final ScrollController srlCtr = ScrollController();
 
   @override
-  void dispose(){
-    super.dispose();
-  }
-
-  @override
-  void initState(){
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Assist(
         controller: assistCtr,
@@ -329,9 +319,10 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
   }
 
   void removeImage(File itm) {
-    void yesFn(){
+    bool yesFn(){
       widget.files.removeWhere((element) => element.path == itm.path);
       assistCtr.updateHead();
+      return false;
     }
 
     AppDialogIris.instance.showYesNoDialog(

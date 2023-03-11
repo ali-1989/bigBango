@@ -275,8 +275,9 @@ class DrawerMenuBuilder {
   static void onLogoffCall() async {
     await LayoutComponentState.hideDrawer(millSec: 100);
 
-    void yesFn(){
+    bool yesFn(){
       LoginService.forceLogoff(Session.getLastLoginUser()!.userId);
+      return false;
     }
 
     AppDialogIris.instance.showYesNoDialog(

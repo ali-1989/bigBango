@@ -4,6 +4,7 @@ import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/leitner/leitnerBoxModel.dart';
 import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appSheet.dart';
+import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:flutter/material.dart';
@@ -323,11 +324,16 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
   void playSound(LeitnerModel model){
     assistCtr.updateAssist(assistId$player, stateData: 'prepare');
 
-    AudioPlayerService.networkVoicePlayer(model.vocabulary?.americanVoice?.fileLocation?? '').then((player) async {
-      assistCtr.updateAssist(assistId$player, stateData: 'play');
-      await player.play();
-      assistCtr.updateAssist(assistId$player, stateData: null);
-      player.stop();
+    AudioPlayerService.networkVoicePlayer(model.vocabulary?.americanVoice?.fileLocation?? '').then((twoState) async {
+      if(twoState.hasResult1()){
+        assistCtr.updateAssist(assistId$player, stateData: 'play');
+        await twoState.result1!.play();
+        assistCtr.updateAssist(assistId$player, stateData: null);
+        twoState.result1!.stop();
+      }
+      else {
+        AppToast.showToast(context, 'متاسفانه امکان پخش صدا نیست');
+      }
     });
   }
 

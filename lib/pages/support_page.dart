@@ -684,8 +684,9 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   }
 
   void showUnReserveDialog(SupportSessionModel model) {
-    void fn(){
+    bool fn(){
       requestUnReserveTime(model);
+      return false;
     }
 
     AppDialogIris.instance.showYesNoDialog(

@@ -670,15 +670,20 @@ class _VocabPageState extends StateBase<VocabPage> {
     assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
     assistCtr.updateAssist(sectionId, stateData: 'prepare');
 
-    AudioPlayerService.networkVoicePlayer(voiceUrl!).then((player) async {
+    AudioPlayerService.networkVoicePlayer(voiceUrl!).then((twoState) async {
       if(sectionId != selectedPlayerId){
         return;
       }
 
-      assistCtr.updateAssist(sectionId, stateData: 'play');
-      await player.play();
-      assistCtr.updateAssist(sectionId, stateData: null);
-      player.stop();
+      if(twoState.hasResult1()){
+        assistCtr.updateAssist(sectionId, stateData: 'play');
+        await twoState.result1!.play();
+        assistCtr.updateAssist(sectionId, stateData: null);
+        twoState.result1!.stop();
+      }
+      else {
+        AppToast.showToast(context, 'متاسفانه امکان پخش صدا نیست');
+      }
     });
   }
 

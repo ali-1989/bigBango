@@ -116,8 +116,9 @@ class _WalletWithdrawalListSheetState extends StateBase<WalletWithdrawalListShee
   }
 
   void cancelWithdrawal(WithdrawalModel wModel){
-    void yesFn(){
+    Future<bool> yesFn() async {
       requestCancelWithdrawal(wModel);
+      return false;
     }
 
     AppDialogIris.instance.showYesNoDialog(

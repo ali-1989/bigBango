@@ -1,3 +1,4 @@
+import 'package:iris_tools/models/twoStateReturn.dart';
 import 'package:just_audio/just_audio.dart';
 
 class AudioPlayerService {
@@ -28,7 +29,7 @@ class AudioPlayerService {
     }
   }
 
-  static Future<AudioPlayer> networkVoicePlayer(String source) async {
+  static Future<TwoStateReturn<AudioPlayer?, Exception?>> networkVoicePlayer(String source) async {
     try {
       if (_voicePlayer.playing) {
         await _voicePlayer.stop();
@@ -36,8 +37,10 @@ class AudioPlayerService {
 
       await _voicePlayer.setUrl(source);
     }
-    catch (e) {/**/}
+    catch(e) {
+      return TwoStateReturn(r2: e as Exception);
+    }
 
-    return _voicePlayer;
+    return TwoStateReturn(r1: _voicePlayer);
   }
 }

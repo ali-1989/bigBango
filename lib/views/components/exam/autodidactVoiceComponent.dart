@@ -10,6 +10,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart' as rec;
 import 'package:im_animations/im_animations.dart';
 import 'package:iris_tools/api/duration/durationFormatter.dart';
+import 'package:iris_tools/api/helpers/fileHelper.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/pathHelper.dart';
@@ -57,15 +58,17 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   FlutterSoundRecorder voiceRecorder = FlutterSoundRecorder();
   TextEditingController answerCtr = TextEditingController();
   Codec recorderCodec = Codec.aacMP4;
-  Duration recordTime = Duration();
   bool voiceRecorderIsInit = false;
   bool isVoiceFileOK = false;
   StreamSubscription? _recorderSubscription;
   late String savePath;
   AudioPlayer questionPlayer = AudioPlayer();
   AudioPlayer answerPlayer = AudioPlayer();
-  Duration totalTime = Duration();
-  Duration currentTime = Duration();
+  Duration questionTotalTime = Duration();
+  Duration recordTotalTime = Duration();
+  Duration recordPlayCurrentTime = Duration();
+  Duration questionCurrentTime = Duration();
+  Duration recordDuration = Duration();
   bool questionVoiceIsPrepare = false;
   bool answerVoiceIsPrepare = false;
 
@@ -79,10 +82,8 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     savePath = PathHelper.resolvePath('$p/record.mp4')!;
 
     //answerPlayer.playbackEventStream.listen(answerEventListener);
-    answerPlayer.positionStream.listen(durationListener);
-    questionPlayer.positionStream.listen(durationListener);
-
-    prepareQuestionVoice();
+    answerPlayer.positionStream.listen(answerDurationListener);
+    questionPlayer.positionStream.listen(questionDurationListener);
   }
 
   @override
@@ -136,7 +137,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
                   child: Row(
                     children: [
                       GestureDetector(
-                        onTap: playPauseAnswerVoice,
+                        onTap: playPauseQuestionVoice,
                         child: CustomCard(
                           radius: 50,
                           padding: EdgeInsets.all(14),
@@ -146,10 +147,10 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
 
                       Expanded(
                         child: Slider(
-                          value: percentOfRecordVoice(),
+                          value: percentOfPlayer(),
                           onChanged: (v){
                             var x = v * 100;
-                            x = x * totalTime.inMilliseconds / 100;
+                            x = x * questionTotalTime.inMilliseconds / 100;
 
                             questionPlayer.seek(Duration(milliseconds: x.toInt()));
                           },
@@ -163,6 +164,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
               SizedBox(height: 30),
               Text('پاسخ:'),
               SizedBox(height: 10),
+
               buildReply()
             ],
           ),
@@ -247,7 +249,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
                   value: percentOfRecordVoice(),
                   onChanged: (v){
                     var x = v * 100;
-                    x = x * totalTime.inMilliseconds / 100;
+                    x = x * recordTotalTime.inMilliseconds / 100;
 
                     answerPlayer.seek(Duration(milliseconds: x.toInt()));
                   },
@@ -275,7 +277,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
             padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
             child: SizedBox(
                 width: 60,
-                child: Center(child: Text(DurationFormatter.duration(recordTime, showSuffix: false)).color(Colors.white))
+                child: Center(child: Text(DurationFormatter.duration(recordDuration, showSuffix: false)).color(Colors.white))
             ),
           ),
         ),
@@ -305,11 +307,11 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     );
   }
 
-  Future<void> init() async {
+  Future<void> initRecorder() async {
     if (!kIsWeb) {
       final status = await PermissionTools.requestMicPermission();
       if (status != PermissionStatus.granted) {
-        //throw RecordingPermissionException('Microphone permission not granted');
+        AppToast.showToast(context, 'امکان ضبط صدا نیست');
         return;
       }
     }
@@ -317,11 +319,11 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     voiceRecorder.setLogLevel(Level.nothing);
     await voiceRecorder.openRecorder();
 
-    voiceRecorder.setSubscriptionDuration(Duration(milliseconds: 250));
+    voiceRecorder.setSubscriptionDuration(Duration(milliseconds: 500));
 
     _recorderSubscription = voiceRecorder.onProgress!.listen((e) {
       if( e.duration.inMilliseconds > 100) {
-        recordTime = e.duration;
+        recordDuration = e.duration;
         assistCtr.updateHead();
       }
 
@@ -337,6 +339,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       savePath = PathHelper.resolvePath('$p/record.WebM')!;
 
       if (!await voiceRecorder.isEncoderSupported(recorderCodec)) {
+        AppToast.showToast(context, 'امکان ضبط صدا نیست. فرمت فایل پشتیبانی نمی شود.');
         return;
       }
     }
@@ -377,15 +380,15 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
 
   Future<void> startRecord() async {
     if(!voiceRecorderIsInit){
-      await init();
+      await initRecorder();
     }
 
     try {
-      await voiceRecorder.startRecorder(codec: recorderCodec, toFile: savePath, audioSource: rec.AudioSource.microphone);
       isVoiceFileOK = false;
+      await voiceRecorder.startRecorder(codec: recorderCodec, toFile: savePath, audioSource: rec.AudioSource.microphone);
     }
     catch (e){
-      AppToast.showToast(context, 'متاسفانه امکان ظبط صدا نیست');
+      AppToast.showToast(context, 'متاسفانه ظبط صدا موفق نبود');
     }
   }
 
@@ -397,15 +400,16 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   }
 
  void deleteVoice() {
-    void delFn() async{
+    Future<bool> delFn() async {
       isVoiceFileOK = false;
-      recordTime = Duration();
+      recordDuration = Duration();
 
       if(answerPlayer.playing){
         await answerPlayer.stop();
       }
 
       assistCtr.updateHead();
+      return false;
     }
 
     AppDialogIris.instance.showYesNoDialog(
@@ -482,11 +486,15 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       await prepareAnswerVoice();
     }
 
+    if(isQuestionPlaying()){
+      questionPlayer.pause();
+    }
+
     if(isAnswerPlaying()){
       await answerPlayer.pause();
     }
     else {
-      if(answerPlayer.position.inMilliseconds < totalTime.inMilliseconds) {
+      if(answerPlayer.position.inMilliseconds < questionTotalTime.inMilliseconds) {
         await answerPlayer.play();
       }
       else {
@@ -503,11 +511,15 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       await prepareQuestionVoice();
     }
 
+    if(isAnswerPlaying()){
+      answerPlayer.pause();
+    }
+
     if(isQuestionPlaying()){
       await questionPlayer.pause();
     }
     else {
-      if(questionPlayer.position.inMilliseconds < totalTime.inMilliseconds) {
+      if(questionPlayer.position.inMilliseconds < questionTotalTime.inMilliseconds) {
         await questionPlayer.play();
       }
       else {
@@ -518,12 +530,26 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     }
   }
 
-  double percentOfRecordVoice() {
-    if(currentTime.inMilliseconds <= 0 || currentTime.inMilliseconds <= 0){
+  double percentOfPlayer() {
+    if(questionCurrentTime.inMilliseconds <= 0 || questionTotalTime.inMilliseconds <= 0){
       return 0;
     }
 
-    var x = currentTime.inMilliseconds * 100 / totalTime.inMilliseconds;
+    var x = questionCurrentTime.inMilliseconds * 100 / questionTotalTime.inMilliseconds;
+
+    if(x > 100){
+      x = 100;
+    }
+
+    return x/100;
+  }
+
+  double percentOfRecordVoice() {
+    if(recordPlayCurrentTime.inMilliseconds <= 0 || recordTotalTime.inMilliseconds <= 0){
+      return 0;
+    }
+
+    var x = recordPlayCurrentTime.inMilliseconds * 100 / recordTotalTime.inMilliseconds;
 
     if(x > 100){
       x = 100;
@@ -533,18 +559,28 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   }
 
   bool isQuestionPlaying() {
-    return questionPlayer.playing && questionPlayer.position.inMilliseconds < totalTime.inMilliseconds;
+    return questionPlayer.playing && questionPlayer.position.inMilliseconds < questionTotalTime.inMilliseconds;
   }
 
   bool isAnswerPlaying() {
-    return answerPlayer.playing && answerPlayer.position.inMilliseconds < totalTime.inMilliseconds;
+    return answerPlayer.playing && answerPlayer.position.inMilliseconds < recordTotalTime.inMilliseconds;
   }
 
-  void durationListener(Duration pos) async {
-    currentTime = pos;
+  void answerDurationListener(Duration pos) async {
+    recordPlayCurrentTime = pos;
 
-    if(currentTime.inMilliseconds >= totalTime.inMilliseconds){
+    if(recordPlayCurrentTime.inMilliseconds >= recordTotalTime.inMilliseconds){
       await answerPlayer.stop();
+    }
+
+    assistCtr.updateHead();
+  }
+
+  void questionDurationListener(Duration pos) async {
+    questionCurrentTime = pos;
+
+    if(questionCurrentTime.inMilliseconds >= questionTotalTime.inMilliseconds){
+      await questionPlayer.stop();
     }
 
     assistCtr.updateHead();
@@ -557,15 +593,11 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   Future<void> prepareAnswerVoice() async {
     answerVoiceIsPrepare = false;
 
-    if(questionPlayer.playing){
-      await questionPlayer.stop();
-    }
-
     return answerPlayer.setFilePath(savePath).then((dur) {
       answerVoiceIsPrepare = true;
 
       if(dur != null){
-        totalTime = dur;
+        recordTotalTime = dur;
       }
 
     }).onError((error, stackTrace) {
@@ -581,15 +613,11 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   Future<void> prepareQuestionVoice() async {
     questionVoiceIsPrepare = false;
 
-    if(answerPlayer.playing){
-      await answerPlayer.stop();
-    }
-
-    return answerPlayer.setUrl(autodidactModel.voice!.fileLocation!).then((dur) {
+    return questionPlayer.setUrl(autodidactModel.voice!.fileLocation!).then((dur) {
       questionVoiceIsPrepare = true;
 
       if(dur != null){
-        totalTime = dur;
+        questionTotalTime = dur;
       }
 
     }).onError((error, stackTrace) {
@@ -612,9 +640,18 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       }
     }
     else {
-      final twoResponse = await FileUploadService.uploadFiles([File(savePath)], FileUploadType.autodidact);
+      if(!isVoiceFileOK){
+        AppSheet.showSheetOk(context, 'لطفا پاسخ خود را ضبط کنید');
+        return;
+      }
+
+      showLoading();
+      var newFile = '${File(savePath).parent.path}/record.mp3';
+      FileHelper.renameSync(savePath, newFile);
+      final twoResponse = await FileUploadService.uploadFiles([File(newFile)], FileUploadType.autodidact);
 
       if(twoResponse.hasResult2()){
+        await hideLoading();
         AppSheet.showSheet$OperationFailedTryAgain(context);
         return;
       }
@@ -669,7 +706,6 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     requester.prepareUrl(pathUrl: '/autodidact/solving');
     requester.bodyJson = js;
 
-    showLoading();
     requester.request(context);
   }
 }
