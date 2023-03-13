@@ -16,6 +16,7 @@ abstract class ISegmentModel {
   ISegmentModel.fromMap(Map map) {
     id = map[Keys.id];
     progress = MathHelper.clearToDouble(map['progress']);
+    progress = MathHelper.fixPrecision(progress, 1);
   }
 
   Map<String, dynamic> toMap() {

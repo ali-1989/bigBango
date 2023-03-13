@@ -174,14 +174,14 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
         final message = res['message']?? 'با موفقیت پرداخت شد';
 
         AppSheet.showSheetOneAction(context, message, () {
-          AppRoute.popTopView(context);
+          AppRoute.popTopView(context: context);
         });
       }
       else {
         final url = bankPortal['url']?? '';
         await UrlHelper.launchLink(url, mode: LaunchMode.externalApplication);
 
-        AppRoute.popTopView(context);
+        AppRoute.popTopView(context: context);
       }
     };
 

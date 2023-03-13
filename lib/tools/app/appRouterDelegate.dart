@@ -1,6 +1,10 @@
+import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/tools/app/appNavigatorObserver.dart';
+import 'package:app/tools/app/appRoute.dart';
+import 'package:app/views/homeComponents/splashPage.dart';
 import 'package:flutter/material.dart';
 
-class AppRouterDelegate<T> extends RouterDelegate<T> {
+class AppRouterDelegate<T> extends RouterDelegate<T> with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   static AppRouterDelegate? _instance;
 
   AppRouterDelegate._();
@@ -46,7 +50,7 @@ class AppRouterDelegate<T> extends RouterDelegate<T> {
   Future<bool> popRoute() async {
     /// back button press
     if(AppRoute.canPop(AppRoute.getLastContext()!)) {
-      AppRoute.popTopView(AppRoute.getLastContext()! /*AppRoute.materialContext!*/);
+      AppRoute.popTopView();
       return true;
     }
 

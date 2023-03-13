@@ -12,6 +12,7 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appThemes.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /*
 '''
@@ -105,7 +106,7 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
                         ],
                       ),
 
-                      Text('v ${widget.versionModel.newVersionName}', style: TextStyle(fontSize: 14))
+                      Text(' ${widget.versionModel.newVersionName}', style: TextStyle(fontSize: 14))
                     ],
                   ),
 
@@ -170,7 +171,7 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
   }
 
   void onDirectLinkClick(){
-    UrlHelper.launchLink(widget.versionModel.directLink!);
+    UrlHelper.launchLink(widget.versionModel.directLink!, mode: LaunchMode.externalApplication);
 
     /*if(widget.versionModel.restricted){
       System.exitApp();
@@ -181,7 +182,7 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
   }
 
   void onUpdateClick(){
-    UrlHelper.launchLink(widget.versionModel.storeLink?? '');
+    UrlHelper.launchLink(widget.versionModel.storeLink?? '', mode: LaunchMode.externalApplication);
   }
 }
 ///===============================================================================================

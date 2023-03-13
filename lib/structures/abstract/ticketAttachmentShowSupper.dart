@@ -51,7 +51,7 @@ abstract class TicketAttachmentShowSupper {
                     left: 10,
                     child: GestureDetector(
                       onTap: (){
-                        AppRoute.popTopView(context);
+                        AppRoute.popTopView(context: context);
                       },
                       child: CustomCard(
                           color: Colors.grey.shade200,

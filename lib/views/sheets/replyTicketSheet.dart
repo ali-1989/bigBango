@@ -81,7 +81,7 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
 
                         GestureDetector(
                           onTap: (){
-                            AppRoute.popTopView(context);
+                            AppRoute.popTopView(context: context);
                           },
                           child: CustomCard(
                               color: Colors.grey.shade200,
@@ -236,7 +236,7 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
 
       final message = res['message']?? 'تیکت ثبت شد';
 
-      AppSheet.showSheetOneAction(context, message, (){AppRoute.popTopView(context, data: true);},
+      AppSheet.showSheetOneAction(context, message, (){AppRoute.popTopView(context: context, data: true);},
         buttonText:  'بله',
         dismissOnAction: true,
       );

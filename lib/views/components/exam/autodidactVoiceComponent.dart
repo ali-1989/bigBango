@@ -458,7 +458,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: (){
-                      AppRoute.popTopView(context);
+                      AppRoute.popTopView(context: context);
                     },
                     child: Text('بستن')
                 ),

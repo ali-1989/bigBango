@@ -33,7 +33,7 @@ class InvoiceSheet extends StatelessWidget {
 
                 GestureDetector(
                   onTap: (){
-                    AppRoute.popTopView(context);
+                    AppRoute.popTopView(context: context);
                   },
                   child: CustomCard(
                       color: Colors.grey.shade200,
@@ -78,7 +78,7 @@ class InvoiceSheet extends StatelessWidget {
                     backgroundColor: Colors.green,
                   ),
                     onPressed: (){
-                      AppRoute.popTopView(context, data: true);
+                      AppRoute.popTopView(context: context, data: true);
                     },
                     child: Text('پرداخت')
                 ),

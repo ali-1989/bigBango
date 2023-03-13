@@ -89,7 +89,7 @@ class _WalletWithdrawalSheetState extends State<WalletWithdrawalSheet> {
                   width: 100,
                   child: ElevatedButton(
                     onPressed: (){
-                      AppRoute.popTopView(context, data: MathHelper.clearToInt(txtCtr.text.trim()));
+                      AppRoute.popTopView(context: context, data: MathHelper.clearToInt(txtCtr.text.trim()));
                     },
                     child: Text('تایید'),
                   ),
@@ -105,7 +105,7 @@ class _WalletWithdrawalSheetState extends State<WalletWithdrawalSheet> {
                       foregroundColor: Colors.red,
                     ),
                     onPressed: (){
-                      AppRoute.popTopView(context);
+                      AppRoute.popTopView(context: context);
                     },
                     child: Text('لغو'),
                   ),

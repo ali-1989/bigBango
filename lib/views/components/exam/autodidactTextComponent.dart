@@ -425,7 +425,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: (){
-                      AppRoute.popTopView(context);
+                      AppRoute.popTopView(context: context);
                     },
                     child: Text('بستن')
                 ),

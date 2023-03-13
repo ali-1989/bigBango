@@ -214,7 +214,7 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
       AppBroadcast.homePageKey.currentState?.assistCtr.updateHead();
 
       Future.delayed(Duration(seconds: 1), (){
-        AppRoute.popTopView(context);
+        AppRoute.popTopView(context: context);
       });
     };
 

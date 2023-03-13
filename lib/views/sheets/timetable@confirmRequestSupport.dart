@@ -88,7 +88,7 @@ class TimetableConfirmRequestSupport extends StatelessWidget {
               children: [
                 ElevatedButton(
                     onPressed: (){
-                      AppRoute.popTopView(context, data: true);
+                      AppRoute.popTopView(context: context, data: true);
                     },
                     child: Text('تایید')
                 ),
@@ -101,7 +101,7 @@ class TimetableConfirmRequestSupport extends StatelessWidget {
                       side: BorderSide(color: Colors.red)
                   ),
                     onPressed: (){
-                      AppRoute.popTopView(context);
+                      AppRoute.popTopView(context: context);
                     },
                     child: Text('برگشت')
                 )

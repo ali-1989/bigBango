@@ -59,7 +59,7 @@ class _WalletWithdrawalListSheetState extends StateBase<WalletWithdrawalListShee
                     splashRadius: 14,
                     constraints: BoxConstraints.tightFor(),
                     onPressed: (){
-                      AppRoute.popTopView(context);
+                      AppRoute.popTopView(context: context);
                     },
                     icon: Icon(AppIcons.close, size: 17)
                 ),

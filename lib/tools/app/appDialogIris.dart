@@ -11,7 +11,7 @@ import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSizes.dart';
 import '/tools/app/appThemes.dart';
 
-typedef OnButtonCallback = FutureOr<bool>? Function();
+typedef OnButtonCallback = FutureOr Function();
 
 class AppDialogIris {
 	static final _instance = AppDialogIris._();
@@ -93,7 +93,7 @@ class AppDialogIris {
       positiveButtonText: yesText,
 			title: title,
 			icon: icon,
-			positivePress: (ctx)=> yesFn?.call(),
+			positivePress: (ctx) => yesFn?.call(),
 			dismissOnButtons: dismissOnButtons,
 			decoration: decoration ?? AppDialogIris.instance.dialogDecoration,
 		);

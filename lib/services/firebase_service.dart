@@ -8,18 +8,18 @@ import 'package:app/tools/app/appBadge.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appNotification.dart';
 
-
 // https://firebase.google.com/docs/cloud-messaging/flutter/receive
 // https://firebase.google.com/docs/cloud-messaging/flutter/client
 
 @pragma('vm:entry-point')
 Future<void> _fbMessagingBackgroundHandler(RemoteMessage message) async {
-  // handler runs in its own isolate outside your applications context,
+  /// firebase it self sending a notification
+
+  // this is runs in its own isolate outside your applications context,
   // and can, perform logic such as HTTP requests,
   // perform IO operations (e.g. updating local storage),
   // communicate with other plugins
 
-  /// firebase it self sending a notification
 
   //await Firebase.initializeApp();
   //await ApplicationInitial.prepareDirectoriesAndLogger();
@@ -46,7 +46,7 @@ Future<void> _onNewNotification(RemoteMessage message) async {
       }
     }
   }
-  catch (e){}
+  catch (e){/**/}
 }
 ///================================================================================================
 class FireBaseService {
@@ -55,26 +55,36 @@ class FireBaseService {
 
   FireBaseService._();
 
-  static Future init() async {
-    var firebaseOptions = FirebaseOptions(
-      appId: '1:749269012345:android:81c6b4bdda067517a029a8',
-      apiKey: 'AIzaSyDK_jAmfkPi7AKQfqHOM8YBLttSL3HRvGY',
-      projectId: 'bigbango-messaging',
-      messagingSenderId: '749269012345',
-        measurementId: 'G-RCVHT2215T',
-    );
+  static Future<void> initializeApp() async {
+    try {
+      if(kIsWeb){
+        final firebaseOptions = FirebaseOptions(
+          appId: '1:749269012345:web:4ee1b7c8dbd87deea029a8',
+          apiKey: 'AIzaSyD_Fo5k9gaMc7XH1D9dnwYSmjqamllhi8I',
+          projectId: 'bigbango-messaging',
+          messagingSenderId: '749269012345',
+          measurementId: 'G-RCVHT2215T',
+        );
 
-    if(kIsWeb){
-      firebaseOptions = FirebaseOptions(
-        appId: '1:749269012345:web:4ee1b7c8dbd87deea029a8',
-        apiKey: 'AIzaSyD_Fo5k9gaMc7XH1D9dnwYSmjqamllhi8I',
+        await Firebase.initializeApp(options: firebaseOptions);
+        return;
+      }
+
+      final firebaseOptions = FirebaseOptions(
+        appId: '1:749269012345:android:81c6b4bdda067517a029a8',
+        apiKey: 'AIzaSyDK_jAmfkPi7AKQfqHOM8YBLttSL3HRvGY',
         projectId: 'bigbango-messaging',
         messagingSenderId: '749269012345',
         measurementId: 'G-RCVHT2215T',
       );
-    }
 
-    await Firebase.initializeApp(options: firebaseOptions);
+      await Firebase.initializeApp(options: firebaseOptions);
+    }
+    catch (e){/**/}
+  }
+
+  static Future prepare() async {
+    //FirebaseMessaging.instance.isSupported()
 
     try {
       await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
@@ -92,10 +102,10 @@ class FireBaseService {
 
       /// https://firebase.google.com/docs/cloud-messaging/flutter/client#prevent-auto-init
       //FirebaseMessaging.instance.setAutoInitEnabled(false);
-    }
-    catch (e){}
 
-    setListening();
+      setListening();
+    }
+    catch (e){/**/}
   }
 
   static void setListening() async {

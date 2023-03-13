@@ -356,6 +356,6 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
       map['planId'] = widget.planList[optionSelectedIdx].id;
     }
 
-    AppRoute.popTopView(context, data: map);
+    AppRoute.popTopView(context: context, data: map);
   }
 }

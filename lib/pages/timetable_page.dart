@@ -540,7 +540,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
       hideLoading();
       await AppSheet.showSheetOk(context, msg);
 
-      AppRoute.popTopView(context);
+      AppRoute.popTopView(context: context);
     };
 
     final day = getDay();

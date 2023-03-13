@@ -57,7 +57,7 @@ class _IdiomClickableComponentState extends State<IdiomClickableComponent> {
                         padding: EdgeInsets.zero,
                         visualDensity: VisualDensity(horizontal: -4, vertical: -4)
                     ),
-                    onPressed: (){AppRoute.popTopView(context);},
+                    onPressed: (){AppRoute.popTopView(context: context);},
                     icon: Icon(AppIcons.close, color: Colors.red, size: 14,),
                   ),
                 )

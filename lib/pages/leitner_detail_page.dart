@@ -351,7 +351,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
           context,
           'تبریک شما محتوای این جعبه را تمام کردید',
           (){
-            AppRoute.popTopView(context);
+            AppRoute.popTopView(context: context);
           }
       );
     }

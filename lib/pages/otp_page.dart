@@ -257,7 +257,7 @@ class _OtpPageState extends StateBase<OtpPage> {
   }
 
   void changeNumberClick(){
-    AppRoute.popTopView(context);
+    AppRoute.popTopView(context: context);
   }
 
   void resendOtpCode() async {

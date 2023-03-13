@@ -86,7 +86,7 @@ class AppRoute {
     //AppNavigator.popRoutesUntilRoot(AppRoute.getContext());
 
     while(canPop(context)){
-      popTopView(context);
+      popTopView(context: context);
     }
   }
 
@@ -94,9 +94,9 @@ class AppRoute {
     return AppNavigator.canPop(context);
   }
 
-  static void popTopView(BuildContext context, {dynamic data}) {
-    if(canPop(context)) {
-      AppNavigator.pop(context, result: data);
+  static void popTopView({BuildContext? context, dynamic data}) {
+    if(canPop(context?? getLastContext()!)) {
+      AppNavigator.pop(context?? getLastContext()!, result: data);
     }
   }
 

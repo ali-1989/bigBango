@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:app/managers/leitnerManager.dart';
+import 'package:app/tools/app/appLocale.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
-import 'package:iris_tools/api/system.dart';
 import 'package:iris_tools/net/netManager.dart';
 import 'package:iris_tools/net/trustSsl.dart';
 
@@ -20,11 +20,9 @@ import 'package:app/services/login_service.dart';
 import 'package:app/system/applicationLifeCycle.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appDb.dart';
-import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appNotification.dart';
 import 'package:app/tools/app/appRoute.dart';
-import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/deviceInfoTools.dart';
 import 'package:app/tools/netListenerTools.dart';
@@ -142,20 +140,26 @@ class ApplicationInitial {
       EventDispatcherService.attachFunction(EventDispatcher.userLogin, LoginService.onLoginObservable);
       EventDispatcherService.attachFunction(EventDispatcher.userLogoff, LoginService.onLogoffObservable);
 
-      if (System.isWeb()) {
+      /*if (System.isWeb()) {
         void onSizeCheng(oldW, oldH, newW, newH) {
           AppDialogIris.prepareDialogDecoration();
         }
 
         AppSizes.instance.addMetricListener(onSizeCheng);
-      }
+      }*/
 
       MessageManager.requestUnReadCount();
       LeitnerManager.requestLeitnerCount();
 
-      EventDispatcherService.attachFunction(EventDispatcher.firebaseTokenReceived, ({data}) {MessageManager.requestSetFirebaseToken();});
-      await FireBaseService.init();
-      FireBaseService.getToken();
+      EventDispatcherService.attachFunction(EventDispatcher.firebaseTokenReceived, ({data}) {
+        MessageManager.requestSetFirebaseToken();
+      });
+
+      await FireBaseService.prepare();
+
+      Future.delayed(Duration(seconds: 3), (){
+        FireBaseService.getToken();
+      });
     }
     catch (e){
       _callLazyInit = false;

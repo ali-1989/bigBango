@@ -2,7 +2,6 @@ class VocabInReadingModel {
   late String id;
   late String word;
 
-
   VocabInReadingModel();
 
   VocabInReadingModel.fromMap(Map map) {

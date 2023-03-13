@@ -88,7 +88,7 @@ class AppSheet {
         double elevation = 1.0,
         ShapeBorder? shape,
         String routeName = 'ModalBottomSheet',
-        bool useRootNavigator = true,
+        bool useRootNavigator = false,
         bool isDismissible = true,
         /** isScrollControlled:
           if false: on small sheet show elevation to center page
@@ -130,7 +130,7 @@ class AppSheet {
     final theme = _genTheme();
 
     void close() {
-      AppRoute.popTopView(context);
+      AppRoute.popTopView(context: context);
       fn?.call();
     }
 
@@ -194,12 +194,12 @@ class AppSheet {
     final theme = _genTheme();
 
     void posClose() {
-      AppRoute.popTopView(context);
+      AppRoute.popTopView(context: context);
       posFn?.call();
     }
 
     void negClose() {
-      AppRoute.popTopView(context);
+      AppRoute.popTopView(context: context);
       negFn?.call();
     }
 
@@ -368,6 +368,7 @@ class AppSheet {
       String routeName, {
         Color? backgroundColor,
         bool isDismissible = true,
+        bool useRootNavigator = false,
         EdgeInsets? padding,
       }) {
 
@@ -402,6 +403,7 @@ class AppSheet {
       backgroundColor: backgroundColor ?? Colors.transparent,
       elevation: 0,
       isDismissible: isDismissible,
+      useRootNavigator: useRootNavigator,
     );
   }
 
@@ -436,7 +438,7 @@ class AppSheet {
                         materialColor: AppThemes.instance.currentTheme.primaryColor.withAlpha(70),
                         padding: const EdgeInsets.all(4),
                         onTapDelay: () {
-                          AppRoute.popTopView(context);
+                          AppRoute.popTopView(context: context);
                         }
                     ),
                 ],

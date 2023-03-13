@@ -17,12 +17,10 @@ class ReadingModel {
   List<SegmentOfReadingModel> segments = [];
   List<IdiomInReadingModel> clickableIdioms = [];
   List<VocabInReadingModel> clickableVocabsOrg = [];
+  ///----------------- local
   List<VocabInReadingModel> clickableVocabsScope = [];
-  ///------------------------------------
   List<ReadingTextSplitHolder> textSplits = [];
   List<ReadingTextSplitHolder> translateSplits = [];
-  //List<InlineSpan> spans = [];
-  //List<InlineSpan> spansTranslate = [];
 
   ReadingModel();
 
@@ -70,7 +68,7 @@ class ReadingModel {
     map['translation'] = titleTranslation;
     map['voice'] = media?.toMap();
     map['segments'] = segments.map((e) => e.toMap()).toList();
-    map['vocabularies'] = clickableIdioms.map((e) => e.toMap()).toList();
+    map['vocabularies'] = clickableVocabsOrg.map((e) => e.toMap()).toList();
     map['idioms'] = clickableIdioms.map((e) => e.toMap()).toList();
 
     return map;
@@ -92,12 +90,14 @@ class ReadingModel {
 
     for(final i in textSplits) {
       if(i.isClickable){
+        print(i.text);
         final st = TextSpan(text: i.text, style: clickableStyle, recognizer: TapGestureRecognizer()..onTap = () async {
           onTap.call(i);
         },);
         res.add(st);
       }
       else {
+        print(i.text);
         final st = TextSpan(text: i.text, style: i.segmentId == segmentId ? readStyle : normalStyle);
         res.add(st);
       }
@@ -110,6 +110,7 @@ class ReadingModel {
     translateSplits.clear();
     textSplits.clear();
 
+    /// translate
     for(int i=0; i < segments.length; i++) {
       final segment = segments[i];
       final tsh = ReadingTextSplitHolder();
@@ -120,16 +121,19 @@ class ReadingModel {
       translateSplits.add(tsh);
     }
 
-    ///-----------------------------------------------------
+    ///------- text
     int c = 0;
-    List<ReadingTextSplitHolder> temp = [];
-
+    List<ReadingTextSplitHolder> txtTemp = [];
+    print('txt : ---------- segments ${segments.length}');
     for(final segment in segments) {
       final txt = segment.text!;
-      temp.clear();
+      print('txt: ---------- $txt');
+      txtTemp.clear();
+
       for(final idm in clickableIdioms){
         if(txt.contains(idm.content)){
             final splits = splitForIdiom(txt, idm.content);
+
             for(final x in splits){
               final tsh = ReadingTextSplitHolder();
               tsh.segmentId = segment.id;
@@ -141,7 +145,7 @@ class ReadingModel {
                 tsh.idiom = idm;
               }
 
-              temp.add(tsh);
+              txtTemp.add(tsh);
             }
         }
         else {
@@ -150,20 +154,22 @@ class ReadingModel {
           tsh.text = txt;
           tsh.order = c++;
 
-          temp.add(tsh);
+          txtTemp.add(tsh);
         }
       }
-
-      for(final holder in temp){
+      print('=====================================');
+      for(final holder in txtTemp){
         if(holder.isClickable){
           textSplits.add(holder);
         }
         else {
           final vIndex = getVocabIndex(holder.text, clickableVocabsScope);
+
           if(vIndex.isEmpty){
             final tsh = ReadingTextSplitHolder();
             tsh.segmentId = segment.id;
             tsh.text = holder.text;
+            print('>>>>>>>>>>  holder.text ${ holder.text}');
             tsh.order = c++;
 
             textSplits.add(tsh);
@@ -188,6 +194,7 @@ class ReadingModel {
                 final tsh = ReadingTextSplitHolder();
                 tsh.segmentId = segment.id;
                 tsh.text = holder.text.substring(lastIdx, d.start);
+                print('.......................  tsh.text ${tsh.text}');
                 tsh.order = c++;
 
                 textSplits.add(tsh);
@@ -198,6 +205,7 @@ class ReadingModel {
               final tsh = ReadingTextSplitHolder();
               tsh.segmentId = segment.id;
               tsh.text = d.vocab.word;
+              print('################# tsh.text ${tsh.text}');
               tsh.order = c++;
               tsh.isClickable = true;
               tsh.vocab = d.vocab;
@@ -213,6 +221,7 @@ class ReadingModel {
               final tsh = ReadingTextSplitHolder();
               tsh.segmentId = segment.id;
               tsh.text = holder.text.substring(lastIdx);
+              print('@@@@@@@@@@@@@  text ${tsh.text}');
               tsh.order = c++;
               textSplits.add(tsh);
 
@@ -268,6 +277,7 @@ class ReadingModel {
   }
 
   List<IndexModel> getVocabIndex(String txt, List<VocabInReadingModel> vocabList){
+    print('EEEEEEEEEEEEEEEE getVocabIndex');
     final List<IndexModel> res = [];
     for(final k in vocabList){
       int c = 0;
@@ -369,7 +379,6 @@ class ReadingTextSplitHolder {
 }
 ///=====================================================================================
 class IndexModel {
-
   String id;
   late int start;
   late int end;

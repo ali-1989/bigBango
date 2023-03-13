@@ -135,7 +135,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     }
 
     if(itemList.isEmpty){
-      return EmptyData();
+      return EmptyData(backButton: BackBtn());
     }
 
     Color preColor = Colors.black;
@@ -169,13 +169,14 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                 ),
               ),
 
-              /// title
+
               SizedBox(height: 20),
               Visibility(
                 visible: currentItem?.title != null,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    /// title
                     Chip(
                       label: Text('${showTranslate? currentItem?.titleTranslation: currentItem?.title}',
                           style:TextStyle(color: Colors.black)
@@ -187,6 +188,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                       visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                     ),
 
+                    /// translate button
                     GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: (){
@@ -228,7 +230,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Directionality(
-                        textDirection: showTranslate? TextDirection.rtl : TextDirection.ltr,
+                        textDirection: /*showTranslate? TextDirection.rtl :*/ TextDirection.rtl,
                         child: Stack(
                           children: [
                             AnimatedBuilder(
@@ -238,10 +240,19 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                   offset: Offset(0, anim1Ctr.value),
                                   child: Opacity(
                                     opacity: (anim1Ctr.value/30 -1).abs(),
-                                    child: RichText(
-                                      key: ValueKey(Generator.generateKey(4)),
-                                      text: TextSpan(
-                                          children: currentItem!.genSpans(currentItem!.segments[currentSegmentIdx].id, normalStyle, readStyle, clickableStyle, onVocabClick)
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: RichText(
+                                        key: ValueKey(Generator.generateKey(4)),
+                                        text: TextSpan(
+                                            children: currentItem!.genSpans(
+                                                currentItem!.segments[currentSegmentIdx].id,
+                                                normalStyle,
+                                                readStyle,
+                                                clickableStyle,
+                                                onVocabClick
+                                            )
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -261,7 +272,11 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                         child: RichText(
                                           key: ValueKey(Generator.generateKey(4)),
                                           text: TextSpan(
-                                              children: currentItem!.genTranslateSpans(currentItem!.segments[currentSegmentIdx].id, normalStyle, readStyle)
+                                              children: currentItem!.genTranslateSpans(
+                                                  currentItem!.segments[currentSegmentIdx].id,
+                                                  normalStyle,
+                                                  readStyle
+                                              )
                                           ),
                                         ),
                                       ),
@@ -372,6 +387,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                 ),
                               ),
 
+                              /// progress
                               Expanded(
                                 flex: 2,
                                 child: Align(
@@ -380,7 +396,10 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                       color: Colors.deepOrange,
                                       radius: 4,
                                       padding: EdgeInsets.all(2),
-                                      child: Text('${currentSegmentIdx+1}/${currentItem?.segments.length}', style: TextStyle(fontSize: 11, color: Colors.white))
+                                      child: Text(
+                                          '${currentSegmentIdx+1}/${currentItem?.segments.length}',
+                                          style: TextStyle(fontSize: 11, color: Colors.white)
+                                      )
                                   ),
                                 ),
                               ),
@@ -562,7 +581,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
     final segment = currentItem!.segments[currentSegmentIdx];
 
-    if(pos > segment.end!){
+    if(pos > segment.end! && currentSegmentIdx+1 < currentItem!.segments.length){
       currentSegmentIdx++;
       assistCtr.updateHead();
     }

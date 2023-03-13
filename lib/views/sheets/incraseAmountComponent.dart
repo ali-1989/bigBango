@@ -218,6 +218,6 @@ class _IncreaseAmountSheetState extends StateBase<IncreaseAmountSheet> {
   }
 
   void onPayClick(){
-    AppRoute.popTopView(context, data: amount);
+    AppRoute.popTopView(context: context, data: amount);
   }
 }
