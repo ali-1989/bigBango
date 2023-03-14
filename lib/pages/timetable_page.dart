@@ -46,11 +46,6 @@ class _TimetablePageState extends StateBase<TimetablePage> {
   String timeSelectId = '';
 
   @override
-  void initState(){
-    super.initState();
-  }
-
-  @override
   void dispose(){
     requester.dispose();
 
@@ -529,18 +524,27 @@ class _TimetablePageState extends StateBase<TimetablePage> {
 
     requester.httpRequestEvents.onFailState = (requester, res) async {
       hideLoading();
+
+      String msg = 'خطایی رخ داده است';
+
+      if(res != null && res.data != null){
+        final js = JsonHelper.jsonToMap(res.data)?? {};
+
+        msg = js['message']?? msg;
+      }
+
+      AppSnack.showInfo(context, msg);
     };
 
     requester.httpRequestEvents.onStatusOk = (requester, jsData) async {
-      final data = jsData['data'];
-
-      String msg = 'رزرو شد';
-      msg = data['message']?? msg;
-
       hideLoading();
-      await AppSheet.showSheetOk(context, msg);
 
-      AppRoute.popTopView(context: context);
+      final data = jsData['data'];
+      String msg = data['message']?? 'رزرو شد';
+
+      AppSheet.showSheetOneAction(context, msg, () {
+        AppRoute.popTopView(context: context, data: true);
+      });
     };
 
     final day = getDay();

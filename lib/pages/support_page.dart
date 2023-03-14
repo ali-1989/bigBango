@@ -566,7 +566,14 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     final page = TimetablePage(maxUserTime: userTime!);
 
-    AppRoute.pushPage(context, page);
+    final mustUpdate = await AppRoute.pushPage(context, page);
+
+    if(mustUpdate){
+      assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$Timetable);
+      assistCtr.updateAssist(assistId$Timetable);
+
+      requestTimeTable();
+    }
   }
 
   void showBuySessionTimeSheet() async {
@@ -608,7 +615,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       return;
     }
 
-    await AppSheet.showSheetCustom(
+    final mustUpdate = await AppSheet.showSheetCustom(
       context,
       builder: (_) => SelectBuyMethodSheet(userBalance: balance, amount: amount, minutes: minutes, planId: planId),
       routeName: 'showSelectBuyMethodSheet',
@@ -617,7 +624,12 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       backgroundColor: Colors.transparent,
     );
 
-    isInGetWay = true;
+    if(mustUpdate){
+      requestUserLeftTime();
+    }
+    else {
+      isInGetWay = true;
+    }
   }
 
   void onBackOfBankGetWay({data}) {
@@ -758,6 +770,8 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
       final hasNextPage = res['hasNextPage']?? true;
       ticketPage = res['pageIndex']?? ticketPage;
+
+      sessionList.clear();
 
       if(data is List){
         for(final t in data){

@@ -1,3 +1,4 @@
+import 'package:app/tools/currencyTools.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/focusHelper.dart';
@@ -84,7 +85,7 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
                           CustomCard(
                             color: Colors.grey.shade200,
                               padding: EdgeInsets.all(3),
-                              child: Text('مبلغ : ${widget.amount} تومان')
+                              child: Text('مبلغ : ${CurrencyTools.formatCurrency(widget.amount)} تومان')
                           ),
                         ],
                       ),
@@ -99,8 +100,8 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
                             groupValue: radioGroupValue,
                             description: Row(
                               children: [
-                                Text('پرداخت از کیف پول').alpha(alpha: canPayByWallet? 255: 150),
-                                Text(' (موجودی ${widget.userBalance} تومان)').fsR(-3).alpha(),
+                                Text('پرداخت از کیف پول').fsR(2).alpha(alpha: canPayByWallet? 255: 150),
+                                Text(' (موجودی ${CurrencyTools.formatCurrency(widget.userBalance)} تومان)').fsR(-2).alpha(),
                               ],
                             ),
                             //mainAxisSize: MainAxisSize.min,
@@ -115,7 +116,7 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
                       RadioRow(
                         value: 2,
                         groupValue: radioGroupValue,
-                        description: Text('پرداخت با کارت عضو شتاب'),
+                        description: Text('پرداخت با کارت عضو شتاب').fsR(2),
                         //mainAxisSize: MainAxisSize.min,
                         onChanged: (v){
                           radioGroupValue = 2;
@@ -174,14 +175,14 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
         final message = res['message']?? 'با موفقیت پرداخت شد';
 
         AppSheet.showSheetOneAction(context, message, () {
-          AppRoute.popTopView(context: context);
+          AppRoute.popTopView(context: context, data: true);
         });
       }
       else {
         final url = bankPortal['url']?? '';
         await UrlHelper.launchLink(url, mode: LaunchMode.externalApplication);
 
-        AppRoute.popTopView(context: context);
+        AppRoute.popTopView(context: context, data: false);
       }
     };
 
