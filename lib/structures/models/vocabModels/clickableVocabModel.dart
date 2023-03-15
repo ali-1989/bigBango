@@ -18,7 +18,7 @@ class ClickableVocabModel {
     word = map['word'];
     translation = map['translation'];
     pronunciation = map['pronunciation'];
-    descriptions = map['description'];
+    descriptions = map['description']?? '';
 
     if (map['britishVoice'] is Map) {
       britishVoice = MediaModel.fromMap(map['britishVoice']);

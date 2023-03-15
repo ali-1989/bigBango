@@ -116,9 +116,8 @@ class _WalletWithdrawalListSheetState extends StateBase<WalletWithdrawalListShee
   }
 
   void cancelWithdrawal(WithdrawalModel wModel){
-    Future<bool> yesFn() async {
+    void yesFn() {
       requestCancelWithdrawal(wModel);
-      return false;
     }
 
     AppDialogIris.instance.showYesNoDialog(
@@ -136,7 +135,6 @@ class _WalletWithdrawalListSheetState extends StateBase<WalletWithdrawalListShee
 
       if(res != null && res.data != null){
         final js = JsonHelper.jsonToMap(res.data)?? {};
-
         msg = js['message']?? msg;
       }
 

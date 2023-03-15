@@ -4,7 +4,8 @@ enum TransactionSectionFilter {
   chargeWallet(1),
   withdrawWallet(2),
   lessonPurchase(3),
-  supportPurchase(4);
+  supportPurchase(4),
+  forceChargeWallet(5);
 
   final int number;
 
@@ -40,6 +41,8 @@ enum TransactionSectionFilter {
         return 'خرید درس';
       case 4:
         return 'خرید پشتیبانی';
+      case 5:
+        return 'شارژ توسط مدیر';
     }
 
     return 'ن م';

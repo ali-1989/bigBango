@@ -1,4 +1,4 @@
-import 'package:app/services/stateNotifier.dart';
+import 'package:app/services/state_notifier.dart';
 
 class MessageStateStructure<String> extends StateHolder<String> {
   bool isRequested = false;

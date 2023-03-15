@@ -47,7 +47,7 @@ class _WalletPageState extends StateBase<WalletPage> {
   int withdrawalBalance = 0;
   List<TransactionWalletModel> transactionList = [];
   List<WithdrawalModel> withdrawalList = [];
-  bool isInGetWay = false;
+  bool isInPayGetway = false;
 
   @override
   void initState(){
@@ -147,7 +147,7 @@ class _WalletPageState extends StateBase<WalletPage> {
                   children: [
                     Text('کل موجودی'),
                     SizedBox(height: 4),
-                    Text('$walletBalance').fsR(5).bold(),
+                    Text(CurrencyTools.formatCurrency(walletBalance)).fsR(5).bold(),
 
                     SizedBox(height: 10),
 
@@ -171,7 +171,7 @@ class _WalletPageState extends StateBase<WalletPage> {
                                   ],
                                 ),
 
-                                Text('$withdrawalBalance تومان'),
+                                Text('${CurrencyTools.formatCurrency(withdrawalBalance)} تومان'),
                               ],
                             ),
                           ),
@@ -278,41 +278,46 @@ class _WalletPageState extends StateBase<WalletPage> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomCard(
-                      radius: 0,
-                        color: transaction.isAmountPlus()? AppColors.greenTint : AppColors.redTint,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Builder(
-                            builder: (context) {
-                              if(transaction.isAmountPlus()) {
-                                return RotatedBox(
-                                    quarterTurns: 2,
-                                    child: Icon(AppIcons.arrowDown, size: 14, color: AppColors.green)
-                                );
-                              }
-
-                              return Icon(AppIcons.arrowDown, size: 14, color: AppColors.red);
+                CustomCard(
+                    radius: 0,
+                    color: transaction.isAmountPlus()? AppColors.greenTint : AppColors.redTint,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Builder(
+                          builder: (context) {
+                            if(transaction.isAmountPlus()) {
+                              return RotatedBox(
+                                  quarterTurns: 2,
+                                  child: Icon(AppIcons.arrowDown, size: 14, color: AppColors.green)
+                              );
                             }
-                          ),
-                        )
-                    ),
-                    SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(CurrencyTools.formatCurrencyString(transaction.amount.toString().replaceFirst('-', ''))),
-                        Text(transaction.getAmountHuman()).fsR(-2).color(transaction.isAmountPlus()? AppColors.green : AppColors.red),
-                      ],
-                    ),
-                    SizedBox(width: 5),
-                    //Text(transaction.getAmountHuman()),
-                  ],
+
+                            return Icon(AppIcons.arrowDown, size: 14, color: AppColors.red);
+                          }
+                      ),
+                    )
+                ),
+
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(CurrencyTools.formatCurrencyString(transaction.amount.toString().replaceFirst('-', ''))),
+                          Text(transaction.getAmountHuman()).fsR(-2).color(transaction.isAmountPlus()? AppColors.green : AppColors.red),
+                          SizedBox(height: 5),
+                          Text(transaction.description?? '').fsR(-2).alpha(),
+                        ],
+                      ),
+                      SizedBox(width: 5),
+                      //Text(transaction.getAmountHuman()),
+                    ],
+                  ),
                 ),
 
                 Row(
@@ -341,8 +346,8 @@ class _WalletPageState extends StateBase<WalletPage> {
   }
 
   void onBackOfBankGetWay({data}) {
-    if(isInGetWay){
-      isInGetWay = false;
+    if(isInPayGetway){
+      isInPayGetway = false;
       tryAgain();
     }
   }
@@ -378,7 +383,7 @@ class _WalletPageState extends StateBase<WalletPage> {
         context, builder: (_){
           return WalletWithdrawalSheet(maxAmount: withdrawalBalance);
     },
-        routeName: 'withdrawalSheetDialog',
+      routeName: 'withdrawalSheetDialog',
       contentColor: Colors.transparent,
       isScrollControlled: true,
     );
@@ -389,7 +394,7 @@ class _WalletPageState extends StateBase<WalletPage> {
   }
 
   void showWithdrawalListSheet() async {
-    final state = await AppSheet.showSheetCustom(
+    await AppSheet.showSheetCustom(
         context, builder: (_){
           return WalletWithdrawalListSheet(withdrawalList: withdrawalList);
     },
@@ -398,9 +403,7 @@ class _WalletPageState extends StateBase<WalletPage> {
       isScrollControlled: true,
     );
 
-    if(state is bool && state){
-      requestTransaction();
-    }
+    requestTransaction();
   }
 
   Future<void> requestTransaction() async {
@@ -453,7 +456,6 @@ class _WalletPageState extends StateBase<WalletPage> {
 
       if(res != null && res.data != null){
         final js = JsonHelper.jsonToMap(res.data)?? {};
-
         msg = js['message']?? msg;
       }
 
@@ -466,8 +468,7 @@ class _WalletPageState extends StateBase<WalletPage> {
       final url = data['url'];
 
       if(url != null){
-        isInGetWay = true;
-
+        isInPayGetway = true;
         await UrlHelper.launchLink(url, mode: LaunchMode.externalApplication);
       }
     };
@@ -487,7 +488,6 @@ class _WalletPageState extends StateBase<WalletPage> {
 
       if(res != null && res.data != null){
         final js = JsonHelper.jsonToMap(res.data)?? {};
-
         msg = js['message']?? msg;
       }
 
@@ -502,6 +502,7 @@ class _WalletPageState extends StateBase<WalletPage> {
       msg = data['message']?? msg;
 
       AppSnack.showInfo(context, msg);
+      requestTransaction();
     };
 
     showLoading();

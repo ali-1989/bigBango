@@ -177,6 +177,10 @@ bool maiIsolateError(error, sTrace) {
   txt += '\n**************************************** [END MAIN-ISOLATE]';
   PublicAccess.logger.logToAll(txt);
 
+  if(kDebugMode) {
+    return false;
+  }
+
   return true;
 }
 ///==============================================================================================

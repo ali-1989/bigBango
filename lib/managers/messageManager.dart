@@ -120,11 +120,11 @@ class MessageManager {
   }
 
   static void requestMessages() async {
-    if(AppBroadcast.messageStateNotifier.states.isInRequest){
+    if(AppBroadcast.messageNotifier.states.isInRequest){
       return;
     }
 
-    AppBroadcast.messageStateNotifier.states.isInRequest = true;
+    AppBroadcast.messageNotifier.states.isInRequest = true;
     final requester = Requester();
 
     requester.httpRequestEvents.onAnyState = (req) async {
@@ -132,7 +132,7 @@ class MessageManager {
     };
 
     requester.httpRequestEvents.onFailState = (req, res) async {
-      AppBroadcast.messageStateNotifier.states.errorOccur();
+      AppBroadcast.messageNotifier.states.errorOccur();
     };
 
     requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
@@ -146,13 +146,13 @@ class MessageManager {
         pageIndex++;
       }
 
-      AppBroadcast.messageStateNotifier.states.hasNextPage = hasNextPage;
+      AppBroadcast.messageNotifier.states.hasNextPage = hasNextPage;
 
       addItemsFromMap(data);
       sortList(true);
 
-      AppBroadcast.messageStateNotifier.states.dataIsOk();
-      AppBroadcast.messageStateNotifier.notify();
+      AppBroadcast.messageNotifier.states.dataIsOk();
+      AppBroadcast.messageNotifier.notify();
     };
 
 

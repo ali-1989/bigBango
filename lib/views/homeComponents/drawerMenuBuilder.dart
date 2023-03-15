@@ -89,18 +89,18 @@ class DrawerMenuBuilder {
             ),
 
             ListTile(
-              title: Text('دعوت از دوستان'),
-              leading: Image.asset(AppImages.drawerSendIco, width: 16, height: 16),
-              onTap: gotoInvitePage,
+              title: Text('پشتیبانی'),
+              leading: Image.asset(AppImages.drawerSupportIco, width: 16, height: 16),
+              onTap: gotoSupportPage,
               dense: true,
               horizontalTitleGap: 0,
               visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
             ),
 
             ListTile(
-              title: Text('پشتیبانی'),
-              leading: Image.asset(AppImages.drawerSupportIco, width: 16, height: 16),
-              onTap: gotoSupportPage,
+              title: Text('دعوت از دوستان'),
+              leading: Image.asset(AppImages.drawerSendIco, width: 16, height: 16),
+              onTap: gotoInvitePage,
               dense: true,
               horizontalTitleGap: 0,
               visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),

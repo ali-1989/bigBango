@@ -184,37 +184,45 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomCard(
-                        radius: 0,
-                        color: transaction.getSectionTintColor(),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Image.asset(transaction.getIcon(),
-                              width: 14,
-                              color: transaction.getSectionColor()
-                          ),
-                        )
-                    ),
+                CustomCard(
+                    radius: 0,
+                    color: transaction.getSectionTintColor(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(transaction.getIcon(),
+                          width: 14,
+                          color: transaction.getSectionColor()
+                      ),
+                    )
+                ),
 
-                    SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('${CurrencyTools.formatCurrencyString(transaction.amount.toString())}  تومان'),
-                        Text(transaction.section.getTypeHuman()).fsR(-2).color(transaction.getSectionColor()),
-                      ],
-                    ),
-                    SizedBox(width: 5),
-                    //Text(transaction.getAmountHuman()),
-                  ],
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${CurrencyTools.formatCurrencyString(transaction.amount.toString())}  تومان'),
+                            Text(transaction.section.getTypeHuman()).fsR(-2).color(transaction.getSectionColor()),
+                            SizedBox(height: 5),
+                            Text(transaction.description?? '').fsR(-2).alpha(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      //Text(transaction.getAmountHuman()),
+                    ],
+                  ),
                 ),
 
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
@@ -230,6 +238,16 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
                 ),
               ],
             ),
+
+            /*Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 40.0),
+                  child: Text(transaction.description??'').fsR(-2).alpha(),
+                ),
+              ],
+            ),*/
 
             SizedBox(height: 6),
             Divider(color: Colors.black38),

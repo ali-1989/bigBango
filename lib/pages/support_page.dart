@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/services/data_dispatcher_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
@@ -11,7 +12,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:app/pages/ticket_detail_page.dart';
 import 'package:app/pages/timetable_page.dart';
 import 'package:app/services/event_dispatcher_service.dart';
-import 'package:app/services/pages_event_service.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/supportSessionStatus.dart';
 import 'package:app/structures/middleWares/requester.dart';
@@ -38,8 +39,6 @@ import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 
 class SupportPage extends StatefulWidget {
-  static final pageEventId = 'SupportPageEvent';
-  static final eventFnId$addTicket = 'eventIdAddTicket';
 
   const SupportPage({Key? key}) : super(key: key);
 
@@ -90,7 +89,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   void dispose(){
     EventDispatcherService.deAttachFunction(EventDispatcher.appResume, onBackOfBankGetWay);
     requester.dispose();
-    PagesEventService.removeFor(SupportPage.pageEventId);
+    DataDispatcherService.deAttachFunction(, onAddTicketEventCall);
 
     super.dispose();
   }
@@ -658,7 +657,8 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       backgroundColor: Colors.transparent,
     );
 
-    PagesEventService.getEventBus(SupportPage.pageEventId).addEvent(SupportPage.eventFnId$addTicket, onAddTicketEventCall);
+    DataDispatcherService.attachFunction(key, onAddTicketEventCall);
+    //PagesEventService.getEventBus(SupportPage.pageEventId).addEvent(SupportPage.eventFnId$addTicket, onAddTicketEventCall);
   }
 
   void onAddTicketEventCall(param){

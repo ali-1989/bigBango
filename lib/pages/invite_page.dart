@@ -198,7 +198,7 @@ class _InvitePageState extends StateBase<InvitePage> {
               if(userList.isEmpty){
                 return SizedBox.expand(
                   child: Center(
-                    child: EmptyData(),
+                    child: EmptyData(message: 'کاربری برای شما ثبت نشده'),
                   ),
                 );
               }

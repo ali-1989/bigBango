@@ -1,14 +1,24 @@
 
-typedef StateListenerFunction = void Function(StateNotifier notifier);
+/*
+  Usage:
+    static final StateNotifier<MessageStateStructure, Map> messageNotifier = StateNotifier(MessageManager.messageStateStructure);
+    class MessageStateStructure<String> extends StateHolder<String> {}
+    OR
+    static final StateNotifier<StateHolder, Map> messageNotifier = StateNotifier(MessageManager.messageStateStructure);
+    static final StateNotifier messageNotifier = StateNotifier(MessageManager.messageStateStructure);
+ */
+
+
+typedef StateListenerFunction<T> = void Function(StateNotifier notifier, {T? data});
 ///==============================================================================
-class StateNotifier<SH extends StateHolder> {
+class StateNotifier<SH extends StateHolder, T> {
   late final SH states;
   final Map<String, dynamic> stores = {};
-  final List<StateListenerFunction> _functions = [];
+  final List<StateListenerFunction<T>> _functions = [];
 
   StateNotifier(this.states);
 
-  void addListener(StateListenerFunction func){
+  void addListener(StateListenerFunction<T> func){
     if(!_functions.contains(func)){
       _functions.add(func);
     }
@@ -22,12 +32,12 @@ class StateNotifier<SH extends StateHolder> {
     _functions.clear();
   }
 
-  void notify({Set states = const {}}){
+  void notify({Set states = const {}, T? data}){
     this.states._states.addAll(states);
 
     for(final ef in _functions){
       try{
-        ef.call(this);
+        ef.call(this, data: data);
       }
       catch (e){}
     }
@@ -51,6 +61,10 @@ class StateNotifier<SH extends StateHolder> {
 
   bool existKey(String key){
     return stores.containsKey(key);
+  }
+
+  void clearValues(){
+    stores.clear();
   }
 }
 ///=============================================================================

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app/services/data_dispatcher_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -12,7 +13,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/pages/support_page.dart';
 import 'package:app/services/file_upload_service.dart';
-import 'package:app/services/pages_event_service.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/middleWares/requester.dart';
@@ -353,7 +354,8 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
       tik.trackingRoleName = widget.ticketRoles.firstWhere((element) => element.id == selectedTicketRoleId).name;
       tik.createdAt = DateHelper.getNowAsUtcZ();
 
-      PagesEventService.getEventBus(SupportPage.pageEventId).callEvent(SupportPage.eventFnId$addTicket, tik);
+      DataDispatcherService.notify(AddTicketStructure(), tik);
+      //PagesEventService.getEventBus(SupportPage.pageEventId).callEvent(SupportPage.eventFnId$addTicket, tik);
 
       final message = res['message']?? 'تیکت ثبت شد';
 

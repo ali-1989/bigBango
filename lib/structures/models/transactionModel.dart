@@ -26,7 +26,7 @@ class TransactionModel {
     section = TransactionSectionFilter.fromType(map['section']);
     status = TransactionStatusFilter.fromType(map['status']);
     date = DateHelper.tsToSystemDate(map['createdAt'])!;
-    items = map['items'];
+    items = map['items']?? [];
   }
 
   Map<String, dynamic> toMap(){
@@ -38,6 +38,7 @@ class TransactionModel {
     map['section'] = section.number;
     map['status'] = status.number;
     map['createdAt'] = DateHelper.toTimestamp(date);
+    map['items'] = items;
 
     return map;
   }
@@ -71,6 +72,8 @@ class TransactionModel {
         return AppColors.purple;
       case TransactionSectionFilter.supportPurchase:
         return AppColors.purple;
+      case TransactionSectionFilter.forceChargeWallet:
+        return AppColors.green;
     }
 
     return Colors.black;
@@ -86,6 +89,8 @@ class TransactionModel {
         return AppColors.purpleTint;
       case TransactionSectionFilter.supportPurchase:
         return AppColors.purpleTint;
+      case TransactionSectionFilter.forceChargeWallet:
+        return AppColors.greenTint;
     }
 
     return Colors.black;
@@ -101,6 +106,8 @@ class TransactionModel {
         return AppImages.lessonPurchaseIc;
       case TransactionSectionFilter.supportPurchase:
         return AppImages.supportPurchaseIco;
+      case TransactionSectionFilter.forceChargeWallet:
+        return AppImages.withdrawWalletIc;
     }
 
     return '';

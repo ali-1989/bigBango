@@ -38,12 +38,12 @@ class _NotificationPageState extends StateBase<NotificationPage> {
     super.initState();
 
     AppBroadcast.messagePageIsOpen = true;
-    AppBroadcast.messageStateNotifier.addListener(notifierListener);
+    AppBroadcast.messageNotifier.addListener(notifierListener);
 
-    if(AppBroadcast.messageStateNotifier.states.isInRequest){
+    if(AppBroadcast.messageNotifier.states.isInRequest){
       assistCtr.addStateWithClear(AssistController.state$loading);
     }
-    else if(!AppBroadcast.messageStateNotifier.states.isRequested){
+    else if(!AppBroadcast.messageNotifier.states.isRequested){
       assistCtr.addStateWithClear(AssistController.state$loading);
       MessageManager.requestMessages();
     }
@@ -61,7 +61,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
   @override
   void dispose(){
     AppBroadcast.messagePageIsOpen = false;
-    AppBroadcast.messageStateNotifier.removeListener(notifierListener);
+    AppBroadcast.messageNotifier.removeListener(notifierListener);
 
     super.dispose();
   }
@@ -135,9 +135,9 @@ class _NotificationPageState extends StateBase<NotificationPage> {
     );
   }
 
-  void notifierListener(notifier){
-    if(AppBroadcast.messageStateNotifier.states.receivedNewFirebaseMessage){
-      AppBroadcast.messageStateNotifier.states.receivedNewFirebaseMessage = false;
+  void notifierListener(notifier, {dynamic data}){
+    if(AppBroadcast.messageNotifier.states.receivedNewFirebaseMessage){
+      AppBroadcast.messageNotifier.states.receivedNewFirebaseMessage = false;
       MessageManager.reset();
 
       assistCtr.addStateWithClear(AssistController.state$loading);
@@ -149,11 +149,11 @@ class _NotificationPageState extends StateBase<NotificationPage> {
       refreshController.loadComplete();
     }
 
-    if(!AppBroadcast.messageStateNotifier.states.hasNextPage){
+    if(!AppBroadcast.messageNotifier.states.hasNextPage){
       refreshController.loadNoData();
     }
 
-    if(AppBroadcast.messageStateNotifier.states.isOk()){
+    if(AppBroadcast.messageNotifier.states.isOk()){
       assistCtr.clearStates();
     }
     else {

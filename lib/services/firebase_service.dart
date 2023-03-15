@@ -29,8 +29,8 @@ Future<void> _fbMessagingBackgroundHandler(RemoteMessage message) async {
 Future<void> _onNewNotification(RemoteMessage message) async {
   try{
     if(AppBroadcast.messagePageIsOpen){
-      AppBroadcast.messageStateNotifier.states.receivedNewFirebaseMessage = true;
-      AppBroadcast.messageStateNotifier.notify();
+      AppBroadcast.messageNotifier.states.receivedNewFirebaseMessage = true;
+      AppBroadcast.messageNotifier.notify();
     }
     else {
       if(message.notification != null && message.notification!.body != null) {
