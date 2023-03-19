@@ -69,10 +69,17 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
       builder: (_, ctr, data){
         return Scaffold(
           body: buildBody(),
-          floatingActionButton: assistCtr.existAnyStates([AssistController.state$error, AssistController.state$loading]) ? null: ElevatedButton(
-            onPressed: openNewResponse,
-            child: Text('پاسخ دادن'),
-          ),
+          floatingActionButton: assistCtr.existAnyStates([AssistController.state$error, AssistController.state$loading])
+              ? null
+              : Row(
+                textDirection: TextDirection.rtl,
+                children: [
+                  ElevatedButton(
+                    onPressed: openNewResponse,
+                    child: Text('پاسخ دادن'),
+                  )
+                ],
+              ),
         );
       },
     );

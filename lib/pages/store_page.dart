@@ -1,10 +1,12 @@
+import 'package:app/structures/enums/appEventDispatcher.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/optionsRow/checkRow.dart';
 
 import 'package:app/managers/storeManager.dart';
-import 'package:app/services/event_dispatcher_service.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/models/lessonModels/storeModel.dart';
 import 'package:app/system/extensions.dart';
@@ -43,7 +45,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
   void initState(){
     super.initState();
 
-    EventDispatcherService.attachFunction(EventDispatcher.appResume, onBackOfBankGetWay);
+    EventNotifierService.addListener(EventDispatcher.appResume, onBackOfBankGetWay);
 
     tabCtr = TabController(length: 1, vsync: this);
     assistCtr.addState(AssistController.state$loading);
@@ -52,7 +54,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
 
   @override
   void dispose(){
-    EventDispatcherService.deAttachFunction(EventDispatcher.appResume, onBackOfBankGetWay);
+    EventNotifierService.removeListener(EventDispatcher.appResume, onBackOfBankGetWay);
 
     super.dispose();
   }

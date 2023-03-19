@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:app/structures/enums/appEventDispatcher.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/urlHelper.dart';
@@ -9,7 +11,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:app/pages/profile_page.dart';
-import 'package:app/services/event_dispatcher_service.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/transactionWalletModel.dart';
@@ -54,7 +56,7 @@ class _WalletPageState extends StateBase<WalletPage> {
     super.initState();
 
     assistCtr.addState(AssistController.state$loading);
-    EventDispatcherService.attachFunction(EventDispatcher.appResume, onBackOfBankGetWay);
+    EventNotifierService.addListener(EventDispatcher.appResume, onBackOfBankGetWay);
 
     requestTransaction();
   }
@@ -62,7 +64,7 @@ class _WalletPageState extends StateBase<WalletPage> {
   @override
   void dispose(){
     requester.dispose();
-    EventDispatcherService.deAttachFunction(EventDispatcher.appResume, onBackOfBankGetWay);
+    EventNotifierService.removeListener(EventDispatcher.appResume, onBackOfBankGetWay);
 
     super.dispose();
   }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +9,6 @@ import 'package:iris_tools/modules/stateManagers/refresh.dart';
 import 'package:app/managers/messageManager.dart';
 import 'package:app/pages/home_page.dart';
 import 'package:app/pages/layout_page.dart';
-import 'package:app/services/state_notifier.dart';
 import 'package:app/structures/structure/messageStateStructure.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/homeComponents/splashPage.dart';
@@ -18,14 +18,14 @@ class AppBroadcast {
 
   static final StreamController<bool> viewUpdaterStream = StreamController<bool>();
   static final RefreshController drawerMenuRefresher = RefreshController();
-  static final StateNotifier<MessageStateStructure, Map> messageNotifier = StateNotifier(MessageManager.messageStateStructure);
+  static final StateNotifier<MessageStateStructure> messageNotifier = StateNotifier(MessageManager.messageStateStructure);
   //---------------------- keys
   static LocalKey materialAppKey = UniqueKey();
   static final rootScaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   static final rootNavigatorKey = GlobalKey<NavigatorState>();
   static final layoutPageKey = GlobalKey<LayoutPageState>();
   static final homePageKey = GlobalKey<HomePageState>();
-  static final eventAddTicket = GlobalKey<HomePageState>();
+  static final addTicketNotifier = DataNotifierService.generateKey();
 
   //---------------------- status
   static bool isNetConnected = true;

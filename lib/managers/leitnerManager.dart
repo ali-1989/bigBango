@@ -1,8 +1,9 @@
 import 'dart:core';
 
+import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
-import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/tools/app/appBadge.dart';
 import 'package:app/tools/app/appCache.dart';
@@ -50,7 +51,7 @@ class LeitnerManager {
     };
 
     requester.httpRequestEvents.onNetworkError = (req) async {
-      EventDispatcherService.attachFunction(EventDispatcher.networkConnected, _onNetConnected);
+      EventNotifierService.addListener(EventDispatcher.networkConnected, _onNetConnected);
     };
 
     requester.httpRequestEvents.onFailState = (req, dataJs) async {
@@ -75,7 +76,7 @@ class LeitnerManager {
   }
 
   static void _onNetConnected({data}) {
-    EventDispatcherService.deAttachFunction(EventDispatcher.networkConnected, _onNetConnected);
+    EventNotifierService.removeListener(EventDispatcher.networkConnected, _onNetConnected);
     requestLeitnerCount();
   }
 }

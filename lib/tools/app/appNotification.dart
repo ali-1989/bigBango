@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:iris_tools/api/generator.dart';
 
@@ -33,6 +34,18 @@ Future <void> onDismissActionReceivedMethod(ReceivedAction receivedAction) async
 Future <void> onActionReceivedMethod(ReceivedAction receivedAction) async {
 
 }*/
+
+@pragma('vm:entry-point')
+void notificationTapListener(ReceivedNotification receivedNotification){
+	if(receivedNotification.payload is Map){
+		final key = receivedNotification.payload!['key'];
+
+		if(key == 'message'){ // send from firebase-service
+			AppBroadcast.layoutPageKey.currentState?.gotoPage(3);
+			AppRoute.backToRoot(AppRoute.getBaseContext()!);
+		}
+	}
+}
 
 ///=======================================================================================
 class AppNotification {
@@ -135,16 +148,7 @@ class AppNotification {
 	}
 
 	static void startListenTap() {
-		listener(ReceivedNotification receivedNotification){
-			if(receivedNotification.payload is Map){
-				final key = receivedNotification.payload!['key'];
-				if(key == 'message'){
-					AppBroadcast.layoutPageKey.currentState?.gotoPage(3);
-				}
-			}
-		}
-
-		AwesomeNotifications().actionStream.listen(listener);
+		AwesomeNotifications().actionStream.listen(notificationTapListener);
 	}
 
 	static void removeChannel(String channelKey) {

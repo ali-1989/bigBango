@@ -1,10 +1,12 @@
+import 'package:app/structures/enums/appEventDispatcher.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
 
 import 'package:app/managers/systemParameterManager.dart';
-import 'package:app/services/event_dispatcher_service.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appIcons.dart';
@@ -143,7 +145,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 StreamBuilder(
-                  stream: EventDispatcherService.getStream(EventDispatcher.userProfileChange),
+                  stream: EventNotifierService.getStream(EventDispatcher.userProfileChange),
                   builder: (_, data) {
                       final user = Session.getLastLoginUser();
 
@@ -156,11 +158,11 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                             width: 40,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                             beforeLoadWidget: CircularProgressIndicator(),
+                            bytes: user.avatarModel?.bytes,
+                            url: user.avatarModel?.fileLocation,
                             onDownloadFn: (bytes, path){
                               user.avatarModel?.bytes = bytes;
                             },
-                            bytes: user.avatarModel?.bytes,
-                            url: user.avatarModel?.fileLocation,
                           ),
                         );
                       }

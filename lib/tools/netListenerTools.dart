@@ -1,26 +1,27 @@
+import 'package:app/structures/enums/appEventDispatcher.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appCache.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 
 class NetListenerTools {
   NetListenerTools._();
 
   /// this fn call on app launch: if (wifi/cell data) is on.
   static void onNetListener(ConnectivityResult connectivityResult) async {
-    EventDispatcherService.notify(EventDispatcher.networkStateChange);
+    EventNotifierService.notify(EventDispatcher.networkStateChange);
 
     if(connectivityResult != ConnectivityResult.none) {
       AppBroadcast.isNetConnected = true;
-      EventDispatcherService.notify(EventDispatcher.networkConnected);
+      EventNotifierService.notify(EventDispatcher.networkConnected);
 
       ReviewService.sendReviews();
     }
     else {
       AppBroadcast.isNetConnected = false;
-      EventDispatcherService.notify(EventDispatcher.networkDisConnected);
+      EventNotifierService.notify(EventDispatcher.networkDisConnected);
 
       AppCache.clearDownloading();
     }

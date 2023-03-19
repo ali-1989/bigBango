@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app/structures/enums/appEventDispatcher.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_pic_editor/pic_editor.dart';
 import 'package:iris_tools/api/checker.dart';
 import 'package:iris_tools/api/helpers/clone.dart';
@@ -26,7 +28,6 @@ import 'package:persian_modal_date_picker/button.dart';
 import 'package:persian_modal_date_picker/persian_date_picker.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
-import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/services/file_upload_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
@@ -194,7 +195,11 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                   ),
                                 )
                             ),
+                            bytes: user.avatarModel?.bytes,
                             url: user.avatarModel?.fileLocation,
+                            onDownloadFn: (bytes, path){
+                              user.avatarModel?.bytes = bytes;
+                            },
                           ),
                         ),
                     ),
@@ -825,7 +830,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
           media.path = filePath;
           user.avatarModel = media;
           Session.sinkUserInfo(user);
-          EventDispatcherService.notify(EventDispatcher.userProfileChange);
+
+          EventNotifierService.notify(EventDispatcher.userProfileChange);
         }
       }
     }
@@ -870,7 +876,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     requester.httpRequestEvents.onStatusOk = (req, data) async {
       user.avatarModel = null;
 
-      EventDispatcherService.notify(EventDispatcher.userProfileChange);
+      EventNotifierService.notify(EventDispatcher.userProfileChange);
       Session.sinkUserInfo(user);
 
       assistCtr.updateHead();
@@ -982,6 +988,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
         final user = Session.getLastLoginUser()!;
         temp.loginDate = user.loginDate;
 
+        temp.avatarModel?.bytes = user.avatarModel?.bytes;
+
         user.matchBy(temp);
 
         user.mobile ??= userFixInfo[Keys.mobileNumber];
@@ -1055,7 +1063,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       Session.sinkUserInfo(user);
       prepare();
       compareChanges();
-      EventDispatcherService.notify(EventDispatcher.userProfileChange);
+      EventNotifierService.notify(EventDispatcher.userProfileChange);
     };
 
 

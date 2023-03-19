@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:app/managers/leitnerManager.dart';
+import 'package:app/structures/enums/appEventDispatcher.dart';
 import 'package:app/tools/app/appLocale.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
@@ -14,7 +16,7 @@ import 'package:iris_tools/net/trustSsl.dart';
 import 'package:app/constants.dart';
 import 'package:app/managers/messageManager.dart';
 import 'package:app/services/audio_player_service.dart';
-import 'package:app/services/event_dispatcher_service.dart';
+
 import 'package:app/services/firebase_service.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/system/applicationLifeCycle.dart';
@@ -137,8 +139,8 @@ class ApplicationInitial {
       //DownloadUploadService.init();
 
       /// login & logoff
-      EventDispatcherService.attachFunction(EventDispatcher.userLogin, LoginService.onLoginObservable);
-      EventDispatcherService.attachFunction(EventDispatcher.userLogoff, LoginService.onLogoffObservable);
+      EventNotifierService.addListener(EventDispatcher.userLogin, LoginService.onLoginObservable);
+      EventNotifierService.addListener(EventDispatcher.userLogoff, LoginService.onLogoffObservable);
 
       /*if (System.isWeb()) {
         void onSizeCheng(oldW, oldH, newW, newH) {
@@ -151,7 +153,7 @@ class ApplicationInitial {
       MessageManager.requestUnReadCount();
       LeitnerManager.requestLeitnerCount();
 
-      EventDispatcherService.attachFunction(EventDispatcher.firebaseTokenReceived, ({data}) {
+      EventNotifierService.addListener(EventDispatcher.firebaseTokenReceived, ({data}) {
         MessageManager.requestSetFirebaseToken();
       });
 

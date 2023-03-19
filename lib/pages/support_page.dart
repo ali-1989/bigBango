@@ -1,6 +1,8 @@
 import 'dart:async';
 
-import 'package:app/services/data_dispatcher_service.dart';
+import 'package:iris_notifier/iris_notifier.dart';
+import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:app/tools/app/appBroadcast.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
@@ -11,7 +13,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:app/pages/ticket_detail_page.dart';
 import 'package:app/pages/timetable_page.dart';
-import 'package:app/services/event_dispatcher_service.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/supportSessionStatus.dart';
@@ -67,7 +68,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   void initState(){
     super.initState();
 
-    EventDispatcherService.attachFunction(EventDispatcher.appResume, onBackOfBankGetWay);
+    EventNotifierService.addListener(EventDispatcher.appResume, onBackOfBankGetWay);
 
     assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$Timetable);
     assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$Ticketing);
@@ -87,9 +88,9 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
   @override
   void dispose(){
-    EventDispatcherService.deAttachFunction(EventDispatcher.appResume, onBackOfBankGetWay);
+    EventNotifierService.removeListener(EventDispatcher.appResume, onBackOfBankGetWay);
+    DataNotifierService.removeListener(AppBroadcast.addTicketNotifier, onAddTicketEventCall);
     requester.dispose();
-    DataDispatcherService.deAttachFunction(, onAddTicketEventCall);
 
     super.dispose();
   }
@@ -657,11 +658,10 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       backgroundColor: Colors.transparent,
     );
 
-    DataDispatcherService.attachFunction(key, onAddTicketEventCall);
-    //PagesEventService.getEventBus(SupportPage.pageEventId).addEvent(SupportPage.eventFnId$addTicket, onAddTicketEventCall);
+    DataNotifierService.addListener(AppBroadcast.addTicketNotifier, onAddTicketEventCall);
   }
 
-  void onAddTicketEventCall(param){
+  void onAddTicketEventCall(ticketModel){
     /*ticketList.add(param);
 
     ticketList.sort((e1, e2){
@@ -832,6 +832,8 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
       final hasNextPage = res['hasNextPage']?? true;
       ticketPage = res['pageIndex']?? ticketPage;
+
+      ticketList.clear();
 
       if(data is List){
         for(final t in data){

@@ -1,9 +1,11 @@
+import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:app/tools/app/appRoute.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
-import 'package:app/services/event_dispatcher_service.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:app/tools/app/appBadge.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appNotification.dart';
@@ -119,7 +121,7 @@ class FireBaseService {
 
     FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) {
       token = fcmToken;
-      EventDispatcherService.notify(EventDispatcher.firebaseTokenReceived);
+      EventNotifierService.notify(EventDispatcher.firebaseTokenReceived);
     });
 
     /// it's fire when be click on Fcm notification. (no notification by app)
@@ -136,6 +138,7 @@ class FireBaseService {
   static void _handler(RemoteMessage message) {
     //if (message.data['type'] == 'chat') {
     AppBroadcast.layoutPageKey.currentState?.gotoPage(3);
+    AppRoute.backToRoot(AppRoute.getBaseContext()!);
   }
 
   static Future<String?> getTokenForce() async {
@@ -143,12 +146,12 @@ class FireBaseService {
 
     if(token != null) {
       lastUpdateToken = DateHelper.getNow();
-      EventDispatcherService.notify(EventDispatcher.firebaseTokenReceived);
+      EventNotifierService.notify(EventDispatcher.firebaseTokenReceived);
 
       return token;
     }
     else {
-      EventDispatcherService.attachFunction(EventDispatcher.networkConnected, _onNetConnected);
+      EventNotifierService.addListener(EventDispatcher.networkConnected, _onNetConnected);
       return null;
     }
   }
@@ -193,7 +196,7 @@ class FireBaseService {
   }
 
   static void _onNetConnected({data}) {
-    EventDispatcherService.deAttachFunction(EventDispatcher.networkConnected, _onNetConnected);
+    EventNotifierService.removeListener(EventDispatcher.networkConnected, _onNetConnected);
     getTokenForce();
   }
 }

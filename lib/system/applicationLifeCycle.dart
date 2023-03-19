@@ -1,7 +1,8 @@
+import 'package:app/structures/enums/appEventDispatcher.dart';
 import 'package:flutter/material.dart';
 
-import 'package:app/services/event_dispatcher_service.dart';
 import 'package:app/tools/app/appCache.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/notifiers/appEventListener.dart';
 
 class ApplicationLifeCycle {
@@ -20,7 +21,7 @@ class ApplicationLifeCycle {
       return;
     }
 
-    EventDispatcherService.notify(EventDispatcher.appPause);
+    EventNotifierService.notify(EventDispatcher.appPause);
   }
 
   static void onDetach() async {
@@ -28,10 +29,10 @@ class ApplicationLifeCycle {
       return;
     }
 
-    EventDispatcherService.notify(EventDispatcher.appDeatach);
+    EventNotifierService.notify(EventDispatcher.appDeatach);
   }
 
   static void onResume() {
-    EventDispatcherService.notify(EventDispatcher.appResume);
+    EventNotifierService.notify(EventDispatcher.appResume);
   }
 }

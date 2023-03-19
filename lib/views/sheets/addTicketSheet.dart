@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:app/services/data_dispatcher_service.dart';
+import 'package:app/tools/app/appBroadcast.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/converter.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-import 'package:app/pages/support_page.dart';
 import 'package:app/services/file_upload_service.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
@@ -315,17 +315,7 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
   void requestSendTicket({List<String>? attachments}){
     FocusHelper.hideKeyboardByUnFocusRoot();
 
-    final title = titleCtr.text.trim();
-    final description = descriptionCtr.text.trim();
 
-    final body = <String, dynamic>{};
-    body['title'] = title;
-    body['trackingRoleId'] = selectedTicketRoleId;
-    body['description'] = description;
-
-    if(attachments != null) {
-      body['attachments'] = attachments;
-    }
 
     requester.httpRequestEvents.onFailState = (req, res) async {
       hideLoading();
@@ -354,8 +344,7 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
       tik.trackingRoleName = widget.ticketRoles.firstWhere((element) => element.id == selectedTicketRoleId).name;
       tik.createdAt = DateHelper.getNowAsUtcZ();
 
-      DataDispatcherService.notify(AddTicketStructure(), tik);
-      //PagesEventService.getEventBus(SupportPage.pageEventId).callEvent(SupportPage.eventFnId$addTicket, tik);
+      DataNotifierService.notify(AppBroadcast.addTicketNotifier, tik);
 
       final message = res['message']?? 'تیکت ثبت شد';
 
@@ -364,6 +353,18 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
         dismissOnAction: true,
       );
     };
+
+    final title = titleCtr.text.trim();
+    final description = descriptionCtr.text.trim();
+
+    final body = <String, dynamic>{};
+    body['title'] = title;
+    body['trackingRoleId'] = selectedTicketRoleId;
+    body['description'] = description;
+
+    if(attachments != null) {
+      body['attachmentIds'] = attachments;
+    }
 
     showLoading();
     requester.methodType = MethodType.post;

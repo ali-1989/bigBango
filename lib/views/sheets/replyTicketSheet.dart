@@ -38,6 +38,7 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
   Requester requester = Requester();
   TextEditingController descriptionCtr = TextEditingController();
   List<File> attachmentFiles = <File>[];
+  List<String> attachList = [];
 
   @override
   void dispose(){
@@ -155,15 +156,19 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
   }
 
   void sendClick() async {
-    if(attachmentFiles.isEmpty){
-      requestSendTicket();
-    }
-    else {
+    if(attachmentFiles.isNotEmpty && attachList.isEmpty){
       final files = await requestUploadFiles();
 
       if(files != null){
-        requestSendTicket(attachments: files.map<String>((e) => e['file']['fileLocation']).toList());
+        attachList = files.map<String>((e) => e['file']['fileLocation']).toList();
       }
+    }
+
+    if(attachList.isNotEmpty){
+      requestSendTicket(attachments: attachList);
+    }
+    else {
+      requestSendTicket();
     }
   }
 
@@ -206,7 +211,7 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
     body['description'] = descriptionCtr.text.trim();
 
     if(attachments != null) {
-      body['attachments'] = attachments;
+      body['attachmentIds'] = attachments;
     }
 
     requester.httpRequestEvents.onFailState = (req, res) async {
@@ -216,7 +221,7 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
 
       if(res != null && res.data != null){
         final js = JsonHelper.jsonToMap(res.data)!;
-        msg = js['message'];
+        msg = js['message']?? msg;
       }
 
       AppSheet.showSheetOk(context, msg);
@@ -225,14 +230,7 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       hideLoading();
 
-      //final data = res['data'];
-
-      /*final trm = TicketReplyModel();
-      trm.creator = widget.ticketDetailModel.firstTicket.creator;
-      trm.description = ;
-      trm.createdAt = DateHelper.getNowAsUtcZ();
-      widget.ticketDetailModel.replies.add(trm);*/
-
+      attachList.clear();
 
       final message = res['message']?? 'تیکت ثبت شد';
 

@@ -229,9 +229,10 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                     borderRadius: BorderRadius.circular(6),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Directionality(
-                        textDirection: /*showTranslate? TextDirection.rtl :*/ TextDirection.rtl,
+                      child: SizedBox(
+                        width: sw,
                         child: Stack(
+                          textDirection: showTranslate? TextDirection.rtl : TextDirection.ltr,
                           children: [
                             AnimatedBuilder(
                               animation: anim1Ctr,
@@ -244,6 +245,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                       padding: const EdgeInsets.all(8.0),
                                       child: RichText(
                                         key: ValueKey(Generator.generateKey(4)),
+                                        textDirection: showTranslate? TextDirection.rtl : TextDirection.ltr,
                                         text: TextSpan(
                                             children: currentItem!.genSpans(
                                                 currentItem!.segments[currentSegmentIdx].id,
@@ -261,7 +263,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                             ),
 
                             IgnorePointer(
-                              ignoring: true,
+                                ignoring: true,
                                 child: AnimatedBuilder(
                                   animation: anim2Ctr,
                                   builder: (_, c){

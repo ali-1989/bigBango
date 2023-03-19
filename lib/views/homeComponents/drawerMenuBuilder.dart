@@ -1,4 +1,6 @@
+import 'package:app/structures/enums/appEventDispatcher.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 
 import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/api/helpers/fileHelper.dart';
@@ -12,7 +14,7 @@ import 'package:app/pages/profile_page.dart';
 import 'package:app/pages/support_page.dart';
 import 'package:app/pages/transaction_page.dart';
 import 'package:app/pages/wallet_page.dart';
-import 'package:app/services/event_dispatcher_service.dart';
+
 import 'package:app/services/login_service.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/models/userModel.dart';
@@ -151,7 +153,7 @@ class DrawerMenuBuilder {
 
   static Widget _buildProfileSection(){
     return StreamBuilder(
-      stream: EventDispatcherService.getStream(EventDispatcher.userProfileChange),
+      stream: EventNotifierService.getStream(EventDispatcher.userProfileChange),
       builder: (_, data){
         if(Session.hasAnyLogin()){
           final user = Session.getLastLoginUser()!;
@@ -169,7 +171,8 @@ class DrawerMenuBuilder {
                           //final path = AppDirectories.getSavePathUri(user.avatarModel!.fileLocation?? '', SavePathType.userProfile, user.avatarFileName);
                           //final img = FileHelper.getFile(path);
                           //if(img.existsSync() && img.lengthSync() == (user.avatarModel!.volume?? 0)){
-                            return CircleAvatar(
+
+                          return CircleAvatar(
                               backgroundColor: ColorHelper.textToColor(user.nameFamily),
                               radius: 30,
                               child: IrisImageView(
@@ -177,14 +180,13 @@ class DrawerMenuBuilder {
                                 width: 60,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                 beforeLoadWidget: CircularProgressIndicator(),
+                                bytes: user.avatarModel?.bytes,
+                                url: user.avatarModel?.fileLocation,
                                 onDownloadFn: (bytes, path){
                                   user.avatarModel?.bytes = bytes;
                                 },
-                                bytes: user.avatarModel?.bytes,
-                                url: user.avatarModel?.fileLocation,
                               ),
                             );
-
                         }
 
                         //checkAvatar(user);
