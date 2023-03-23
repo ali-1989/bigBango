@@ -439,28 +439,28 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
     }
 
     await showPersianDatePicker(
-      context,
-       margin: EdgeInsets.only(bottom: 50),
-      (context, Date date) async {
-        birthDate = date.toDateTime();
-        birthDateText = DateTools.dateOnlyRelative(birthDate!);
+        context,
+            (context, Date date) async {
+              birthDate = date.toDateTime();
+            birthDateText = DateTools.dateOnlyRelative(birthDate!);
 
-        setState(() {});
-        Navigator.of(context).pop();
-      },
+            setState(() {});
+            Navigator.of(context).pop();
+        },
         initDay: curBirthdate?.day,
         initMonth: curBirthdate?.month,
         initYear: curBirthdate?.year,
-      border: const BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15)),
-      validate: (ctx, date) {
-        return date.year < 1398;
-      },
-      submitButtonStyle: ButtonsStyle(
-        text: AppMessages.select,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        radius: 10,
-      )
+        margin: EdgeInsets.only(bottom: 50),
+        border: const BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15)),
+        validate: (ctx, date) {
+          return date.year < 1400;
+        },
+        submitButtonStyle: ButtonsStyle(
+          text: AppMessages.select,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          radius: 10,
+        ),
     );
   }
 
