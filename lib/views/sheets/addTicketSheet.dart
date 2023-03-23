@@ -49,6 +49,7 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
   String selectedTicketRoleId = '';
   List<DropdownMenuItem<String>> dropList = [];
   List<File> attachmentFiles = <File>[];
+  List<String> attachmentIdsList = [];
   late TextStyle boldStyle;
   late InputDecoration inputDecoration;
 
@@ -234,6 +235,8 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
   }
 
   void showAttachmentDialog() async {
+    attachmentIdsList.clear();
+
     await AppSheet.showSheetCustom(
       context,
       builder: (ctx) => AttachmentFileTicketComponent(files: attachmentFiles),
@@ -246,15 +249,19 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
   }
 
   void sendClick() async {
-    if(attachmentFiles.isEmpty){
-      requestSendTicket();
-    }
-    else {
+    if(attachmentFiles.isNotEmpty && attachmentIdsList.isEmpty){
       final files = await requestUploadFiles();
 
       if(files != null){
-        requestSendTicket(attachments: files.map<String>((e) => e['file']['id']).toList());
+        attachmentIdsList = files.map<String>((e) => e['file']['id']).toList();
       }
+    }
+
+    if(attachmentIdsList.isNotEmpty){
+      requestSendTicket(attachments: attachmentIdsList);
+    }
+    else {
+      requestSendTicket();
     }
   }
 
@@ -314,7 +321,6 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
 
   void requestSendTicket({List<String>? attachments}){
     FocusHelper.hideKeyboardByUnFocusRoot();
-
 
 
     requester.httpRequestEvents.onFailState = (req, res) async {

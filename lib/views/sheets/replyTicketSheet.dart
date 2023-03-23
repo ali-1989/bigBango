@@ -38,7 +38,7 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
   Requester requester = Requester();
   TextEditingController descriptionCtr = TextEditingController();
   List<File> attachmentFiles = <File>[];
-  List<String> attachList = [];
+  List<String> attachmentIdsList = [];
 
   @override
   void dispose(){
@@ -146,6 +146,8 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
   }
 
   void showAttachmentDialog(){
+    attachmentIdsList.clear();
+
     AppSheet.showSheetCustom(
       context,
       builder: (ctx) => AttachmentFileTicketComponent(files: attachmentFiles),
@@ -156,16 +158,16 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
   }
 
   void sendClick() async {
-    if(attachmentFiles.isNotEmpty && attachList.isEmpty){
+    if(attachmentFiles.isNotEmpty && attachmentIdsList.isEmpty){
       final files = await requestUploadFiles();
 
       if(files != null){
-        attachList = files.map<String>((e) => e['file']['fileLocation']).toList();
+        attachmentIdsList = files.map<String>((e) => e['file']['id']).toList();//fileLocation
       }
     }
 
-    if(attachList.isNotEmpty){
-      requestSendTicket(attachments: attachList);
+    if(attachmentIdsList.isNotEmpty){
+      requestSendTicket(attachments: attachmentIdsList);
     }
     else {
       requestSendTicket();
@@ -230,7 +232,7 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       hideLoading();
 
-      attachList.clear();
+      attachmentIdsList.clear();
 
       final message = res['message']?? 'تیکت ثبت شد';
 

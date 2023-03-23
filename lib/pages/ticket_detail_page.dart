@@ -69,17 +69,13 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
       builder: (_, ctr, data){
         return Scaffold(
           body: buildBody(),
+          floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
           floatingActionButton: assistCtr.existAnyStates([AssistController.state$error, AssistController.state$loading])
               ? null
-              : Row(
-                textDirection: TextDirection.rtl,
-                children: [
-                  ElevatedButton(
-                    onPressed: openNewResponse,
-                    child: Text('پاسخ دادن'),
-                  )
-                ],
-              ),
+              : ElevatedButton(
+                onPressed: openNewResponse,
+                child: Text('پاسخ دادن'),
+          ),
         );
       },
     );
@@ -299,6 +295,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
       AppSnack.showSnack$operationSuccess(context);
 
       widget.ticketModel?.status = 2;
+      ticketDetailModel.status = 2;
       assistCtr.updateHead();
     };
 

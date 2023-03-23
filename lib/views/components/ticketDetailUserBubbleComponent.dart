@@ -37,11 +37,6 @@ class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBub
   }
 
   @override
-  void dispose(){
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Assist(
       controller: assistCtr,
@@ -53,59 +48,68 @@ class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBub
 
   Widget buildBody(){
     return Directionality(
-      textDirection: TextDirection.ltr,
+      textDirection: TextDirection.rtl,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
         child: Stack(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Row(
-                  //mainAxisSize: MainAxisSize.min,  for date and time position
-                  children: [
-                    Icon(AppIcons.calendar, size: 13).alpha(),
-                    SizedBox(width: 8),
-                    Text(DateTools.dateAndHmRelative(widget.injector.ticketReply.createdAt)).alpha(),
-                    SizedBox(width: 8),
+            IntrinsicWidth(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      textDirection: TextDirection.ltr,
+                      children: [
 
-                    Visibility(
-                      visible: widget.injector.ticketReply.attachments.isNotEmpty,
-                      child: IconButton(
-                        padding: EdgeInsets.zero,
-                        iconSize: 17,
-                        splashRadius: 14,
-                        constraints: BoxConstraints.tightFor(),
-                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                          onPressed: (){
-                            showAttachment(context, widget.injector.ticketReply);
-                          },
-                          icon: Icon(AppIcons.attach, size: 17, color: AppColors.red),
-                      ),
+                        Icon(AppIcons.calendar, size: 13).alpha(),
+                        SizedBox(width: 8),
+                        Text(DateTools.dateAndHmRelative(widget.injector.ticketReply.createdAt)).alpha(),
+                        SizedBox(width: 8),
+
+                        Visibility(
+                          visible: widget.injector.ticketReply.attachments.isNotEmpty,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            iconSize: 17,
+                            splashRadius: 14,
+                            constraints: BoxConstraints.tightFor(),
+                            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                              onPressed: (){
+                                showAttachment(context, widget.injector.ticketReply);
+                              },
+                              icon: Icon(AppIcons.attach, size: 17, color: AppColors.red),
+                          ),
+                        ),
+                        SizedBox(width: 60),
+                      ],
                     ),
-                    SizedBox(width: 60),
-                  ],
-                ),
+                  ),
 
-                SizedBox(height: 3),
+                  SizedBox(height: 3),
 
-                ClipRRect(
-                  borderRadius: BorderRadius.only(topLeft: radius, bottomLeft: radius, bottomRight: radius),
-                  child: ColoredBox(
-                    color: Colors.grey.shade100,
-                    child: ConstrainedBox(
-                      //constraints: BoxConstraints.tightFor(width: 70), if need bubble be small
-                      constraints: BoxConstraints.tightFor(width: sw),
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(10, 26, 10, 14),
-                        child: Text(widget.injector.ticketReply.description,
-                          textDirection: LocaleHelper.autoDirection(widget.injector.ticketReply.description),
+
+                  ClipRRect(
+                    borderRadius: BorderRadius.only(topLeft: radius, bottomLeft: radius, bottomRight: radius),
+                    child: ColoredBox(
+                      color: Colors.grey.shade100,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints.tightFor(width: 180),  //if need bubble be small
+                        //constraints: BoxConstraints.tightFor(width: sw),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(10, 26, 10, 14),
+                          child: Text(widget.injector.ticketReply.description,
+                            textDirection: LocaleHelper.autoDirection(widget.injector.ticketReply.description)
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
 
             /// avatar
