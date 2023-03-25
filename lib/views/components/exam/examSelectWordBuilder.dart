@@ -64,7 +64,6 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
   }
 
   Widget buildBody() {
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: CustomScrollView(
@@ -90,6 +89,11 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
 
     final item = examList[idx ~/ 2];
     final List<InlineSpan> spans = generateSpans(item);
+    print('-----------spans---- ${spans.length}');
+
+    for(var x in spans){
+      //print('-----------x---- $x.');
+    }
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -168,7 +172,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
 
         if (model.showAnswer) {
           final correctAnswer = model.getChoiceByOrder(i+1)!.text;
-          final userAnswer = model.getUserChoiceByOrder(i+1)!.text;
+          final userAnswer = model.getUserChoiceByOrder(i+1)?.text;
 
           if (correctAnswer == userAnswer) {
             /// correct span
@@ -179,7 +183,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
                   children: [
                     Image.asset(AppImages.trueCheckIco),
                     SizedBox(width: 5),
-                    Text(userAnswer, style: questionNormalStyle.copyWith(color: Colors.green))
+                    Text(userAnswer?? '', style: questionNormalStyle.copyWith(color: Colors.green))
                   ],
                 )
             );
@@ -193,7 +197,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
                   children: [
                     Image.asset(AppImages.falseCheckIco),
                     SizedBox(width: 5),
-                    Text(userAnswer, style: questionNormalStyle.copyWith(color: AppColors.red)),
+                    Text(userAnswer?? '', style: questionNormalStyle.copyWith(color: AppColors.red)),
                     SizedBox(width: 5),
                     Text('[$correctAnswer]', style: questionNormalStyle.copyWith(color: Colors.green))
                   ],
@@ -202,7 +206,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
           }
         }
         else {
-          final userAnswer = model.getUserChoiceByOrder(i+1)!.text;
+          final userAnswer = model.getUserChoiceByOrder(i+1)?.text ?? '';
 
           if (userAnswer.isNotEmpty) {
             choiceText = userAnswer;
@@ -237,6 +241,8 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
   }
 
   void onWordClick(ExamModel model, ExamOptionModel ec) {
+    print('-----------currentSelectIndex $currentSelectIndex');
+
     if (currentSelectIndex < 0) {
       for (final k in model.userAnswers){
         if(k.id == ec.id){
@@ -254,12 +260,14 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
     List<String> selectedWordIds = [];
 
     for (final k in model.userAnswers) {
-      if (k.id.isNotEmpty) {
+      if (k.text.isNotEmpty) {
+        print('----------- userAnswers : k.id:${k.id}   ${k.text}');
         selectedWordIds.add(k.id);
       }
     }
 
     if (selectedWordIds.length + 1 == model.options.length) {
+      print('----------- ohhhh ');
       for (final k in model.userAnswers) {
         if (k.id.isEmpty) {
           ExamOptionModel? examChoiceModel;
