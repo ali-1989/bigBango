@@ -330,16 +330,11 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                         items: provinceDropDownList,
                                         value: province,
                                         barrierColor: Colors.black26,
-                                        buttonStyleData: ButtonStyleData(
-                                          height: 40,
-                                          width: double.infinity,
-                                          overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                                        ),
+                                        underline: const SizedBox(),
                                         dropdownStyleData: DropdownStyleData(
-                                          width: 200,
+                                          //width: 200,
                                           elevation: 8,
-                                          maxHeight: 500,
+                                          maxHeight: 400,
                                           isOverButton: false,
                                           padding: const EdgeInsets.symmetric(horizontal: 5),
                                           scrollbarTheme: ScrollbarThemeData(
@@ -350,17 +345,23 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                             borderRadius: BorderRadius.circular(10),
                                           ),
                                         ),
-                                        menuItemStyleData: MenuItemStyleData(
-                                          height: 40,
-                                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                                        ),
                                         hint: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
                                           child: const SizedBox(
                                             width: 12,
                                             height: 12,
                                             child: CircularProgressIndicator(strokeWidth: 2),
                                           ),
+                                        ),
+                                        menuItemStyleData: MenuItemStyleData(
+                                          height: 40,
+                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                        ),
+                                        buttonStyleData: ButtonStyleData(
+                                          height: 40,
+                                          width: double.infinity,
+                                          overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                          padding: const EdgeInsets.symmetric(horizontal: 5),
                                         ),
                                         onChanged: (value) {
                                           province = value;
@@ -371,7 +372,6 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
                                           assistCtr.updateAssist(assistId$city);
                                         },
-                                        underline: const SizedBox(),
                                       ),
                                     ),
                                   )
@@ -388,16 +388,11 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                         items: cityDropDownList,
                                         value: city,
                                         barrierColor: Colors.black26,
-                                        buttonStyleData: ButtonStyleData(
-                                          height: 40,
-                                          width: double.infinity,
-                                          overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                                        ),
+                                        underline: const SizedBox(),
                                         dropdownStyleData: DropdownStyleData(
-                                          width: 200,
+                                          //width: 200,
                                           elevation: 8,
-                                          maxHeight: 500,
+                                          maxHeight: 400,
                                           isOverButton: false,
                                           padding: const EdgeInsets.symmetric(horizontal: 5),
                                           scrollbarTheme: ScrollbarThemeData(
@@ -408,13 +403,19 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                             borderRadius: BorderRadius.circular(10),
                                           ),
                                         ),
+                                        hint: const Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Text('شهر', style: TextStyle(color: Colors.grey)),
+                                        ),
                                         menuItemStyleData: MenuItemStyleData(
                                           height: 40,
                                           padding: const EdgeInsets.symmetric(horizontal: 5),
                                         ),
-                                        hint: const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 5),
-                                          child: Text('شهر', style: TextStyle(color: Colors.grey)),
+                                        buttonStyleData: ButtonStyleData(
+                                          height: 40,
+                                          width: double.infinity,
+                                          overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                          padding: const EdgeInsets.symmetric(horizontal: 5),
                                         ),
                                         onChanged: (value) {
                                           city = value;
@@ -423,7 +424,6 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
                                           assistCtr.updateAssist(assistId$city);
                                         },
-                                        underline: const SizedBox(),
                                       ),
                                     ),
                                   )

@@ -164,7 +164,7 @@ class _ExamPageState extends StateBase<ExamPage> {
 
           /// progress bar
           Visibility(
-            visible: itemList.length >1,
+            visible: itemList.length > 1,
               child: Directionality(
                   textDirection: TextDirection.ltr,
                   child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
@@ -184,43 +184,48 @@ class _ExamPageState extends StateBase<ExamPage> {
           /// exam view
           Expanded(child: buildExamView(currentExam)),
 
-          Visibility(
-            visible: itemList.length > 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton.icon(
-                      onPressed: onNextClick,
-                      icon: RotatedBox(
-                          quarterTurns: 2,
-                          child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
-                      ),
-                      label: Text('next').englishFont().color(nextColor)
-                  ),
-
-                  Visibility(
-                    visible: widget.content.showSendButton,
-                    child: ElevatedButton(
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          visualDensity: VisualDensity(horizontal: 0, vertical: -2),
-                          shape: StadiumBorder()
-                        ),
-                        onPressed: sendAnswer,
-                        child: Text(widget.content.sendButtonText).englishFont().color(Colors.white),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Visibility(
+                visible: itemList.length > 1,
+                child: TextButton.icon(
+                    onPressed: onNextClick,
+                    icon: RotatedBox(
+                        quarterTurns: 2,
+                        child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
                     ),
-                  ),
-
-                  TextButton.icon(
-                      style: TextButton.styleFrom(),
-                      onPressed: onPreClick,
-                      icon: Text('pre').englishFont().color(preColor),
-                      label: Image.asset(AppImages.arrowLeftIco, color: preColor)
-                  ),
-                ],
+                    label: Text('next').englishFont().color(nextColor)
+                ),
               ),
+
+              Visibility(
+                visible: widget.content.showSendButton,
+                child: ElevatedButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                      shape: StadiumBorder()
+                    ),
+                    onPressed: sendAnswer,
+                    child: Text(widget.content.sendButtonText).englishFont().color(Colors.white),
+                ),
+              ),
+
+              Visibility(
+                visible: itemList.length > 1,
+                child: TextButton.icon(
+                    style: TextButton.styleFrom(),
+                    onPressed: onPreClick,
+                    icon: Text('pre').englishFont().color(preColor),
+                    label: Image.asset(AppImages.arrowLeftIco, color: preColor)
+                ),
+              ),
+            ],
           ),
+
+          SizedBox(height: 10),
         ],
       ),
     );

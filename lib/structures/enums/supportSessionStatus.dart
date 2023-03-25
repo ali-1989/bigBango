@@ -4,6 +4,7 @@ enum SupportSessionStatus {
   unKnow(-1),
   inProgress(1),
   done(2),
+  expired(3),
   canceled(4),
   adminCanceled(5);
 
@@ -17,6 +18,8 @@ enum SupportSessionStatus {
         return 'در انتظار';
       case 2:
         return 'انجام شده';
+      case 3:
+        return 'منقضی شده';
       case 4:
         return 'لغو شده';
       case 5:
@@ -32,6 +35,8 @@ enum SupportSessionStatus {
         return Colors.blue;
       case 2:
         return Colors.green;
+      case 3:
+        return Colors.red;
       case 4:
         return Colors.orange;
       case 5:

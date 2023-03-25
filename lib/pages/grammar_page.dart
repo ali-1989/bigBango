@@ -50,6 +50,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   ChewieController? chewieVideoController;
   Duration lastPos = Duration();
   bool isVideoInit = false;
+  bool isVideoError = false;
   int currentItemIdx = 0;
   Timer? reviewSendTimer;
 
@@ -158,6 +159,15 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                              if(currentItem?.media?.fileLocation != null){
                                if(isVideoInit){
                                  return Chewie(controller: chewieVideoController!);
+                               }
+                               else if(isVideoError){
+                                 return Column(
+                                   children: [
+                                     Image.asset(AppImages.falseCheckIco, width: 100, height: 100,),
+                                     SizedBox(height: 20),
+                                     Text('متاسفانه فایل قابل پخش نیست'),
+                                   ],
+                                 );
                                }
                                else {
                                  return const Center(child: CircularProgressIndicator());
@@ -335,6 +345,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
   void initVideo() async {
     isVideoInit = false;
+    isVideoError = false;
     lastPos = Duration();
 
     if(currentItem?.media?.fileLocation == null){
@@ -343,7 +354,10 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
     playerController = VideoPlayerController.network(currentItem!.media!.fileLocation!);
 
-    await playerController!.initialize();
+    await playerController!.initialize().catchError((e){
+      isVideoError = true;
+    });
+
     isVideoInit = playerController!.value.isInitialized;
 
     if(mounted) {
@@ -379,6 +393,13 @@ class _GrammarPageState extends StateBase<GrammarPage> {
         playedColor: AppThemes.instance.currentTheme.differentColor,
         backgroundColor: Colors.green, bufferedColor: AppThemes.instance.currentTheme.primaryColor,
       ),
+      errorBuilder: (_, s){
+        return SizedBox(
+          child: Center(
+              child: Text('Can not load media.')
+          ),
+        );
+      }
     );
 
     assistCtr.updateHead();
@@ -388,6 +409,8 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     final examPageInjector = ExamBuilderContent();
     examPageInjector.prepareExamList(examList);
     examPageInjector.answerUrl = '/grammars/exercises/solving';
+    examPageInjector.showSendButton = true;
+    examPageInjector.sendButtonText = 'ارسال';
 
     final examPage = ExamPage(content: examPageInjector);
     await AppRoute.pushPage(context, examPage);

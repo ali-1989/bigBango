@@ -1,3 +1,5 @@
+import 'package:app/tools/app/appThemes.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -80,7 +82,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
       disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
       filled: true,
-      fillColor: Colors.grey.shade100,
+      fillColor: Colors.grey.shade200,
       hintStyle: const TextStyle(color: Colors.grey),
     );
 
@@ -197,14 +199,15 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                                       child: ClipRRect(
                                                         borderRadius: BorderRadius.circular(8),
                                                         child: ColoredBox(
-                                                          color: Colors.grey.shade100,
+                                                          color: Colors.grey.shade200,
                                                           child: DropdownButton2<ProvinceModel>(
                                                             items: provinceDropDownList,
                                                             value: province,
+                                                            underline: const SizedBox(),
                                                             dropdownStyleData: DropdownStyleData(
-                                                              width: 200,
+                                                              //width: 200,
                                                               elevation: 8,
-                                                              maxHeight: 500,
+                                                              maxHeight: 400,
                                                               isOverButton: false,
                                                               padding: const EdgeInsets.symmetric(horizontal: 5),
                                                               scrollbarTheme: ScrollbarThemeData(
@@ -215,13 +218,17 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                                                 borderRadius: BorderRadius.circular(10),
                                                               ),
                                                             ),
+                                                            hint: const Padding(
+                                                              padding: EdgeInsets.symmetric(horizontal: 10),
+                                                              child: Text('استان', style: TextStyle(color: Colors.grey)),
+                                                            ),
                                                             menuItemStyleData: MenuItemStyleData(
                                                               height: 40,
                                                               padding: const EdgeInsets.symmetric(horizontal: 5),
                                                             ),
-                                                            hint: const Padding(
-                                                              padding: EdgeInsets.symmetric(horizontal: 10),
-                                                              child: Text('استان', style: TextStyle(color: Colors.grey)),
+                                                            buttonStyleData: ButtonStyleData(
+                                                              padding: EdgeInsets.symmetric(horizontal: 5),
+                                                              width: double.infinity,
                                                             ),
                                                             onChanged: (value) {
                                                               province = value;
@@ -230,7 +237,6 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
 
                                                               assistCtr.updateAssist(assistId$city);
                                                             },
-                                                            underline: const SizedBox(),
                                                           ),
                                                         ),
                                                       )
@@ -242,14 +248,15 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                                       child: ClipRRect(
                                                         borderRadius: BorderRadius.circular(8),
                                                         child: ColoredBox(
-                                                          color: Colors.grey.shade100,
+                                                          color: Colors.grey.shade200,
                                                           child: DropdownButton2<CityModel>(
                                                             items: cityDropDownList,
                                                             value: city,
+                                                            underline: const SizedBox(),
                                                             dropdownStyleData: DropdownStyleData(
-                                                              width: 200,
+                                                              //width: 200,
                                                               elevation: 8,
-                                                              maxHeight: 500,
+                                                              maxHeight: 400,
                                                               isOverButton: false,
                                                               padding: const EdgeInsets.symmetric(horizontal: 5),
                                                               scrollbarTheme: ScrollbarThemeData(
@@ -260,19 +267,22 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                                                 borderRadius: BorderRadius.circular(10),
                                                               ),
                                                             ),
+                                                            hint: const Padding(
+                                                              padding: EdgeInsets.symmetric(horizontal: 10),
+                                                              child: Text('شهر', style: TextStyle(color: Colors.grey)),
+                                                            ),
                                                             menuItemStyleData: MenuItemStyleData(
                                                               height: 40,
                                                               padding: const EdgeInsets.symmetric(horizontal: 5),
                                                             ),
-                                                            hint: const Padding(
-                                                              padding: EdgeInsets.symmetric(horizontal: 5),
-                                                              child: Text('شهر', style: TextStyle(color: Colors.grey)),
+                                                            buttonStyleData: ButtonStyleData(
+                                                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                                                width: double.infinity,
                                                             ),
                                                             onChanged: (value) {
                                                               city = value;
                                                               assistCtr.updateAssist(assistId$city);
                                                             },
-                                                            underline: const SizedBox(),
                                                           ),
                                                         ),
                                                       )
@@ -291,14 +301,15 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                                 child: ClipRRect(
                                                   borderRadius: BorderRadius.circular(8),
                                                   child: ColoredBox(
-                                                    color: Colors.grey.shade100,
+                                                    color: Colors.grey.shade200,
                                                     child: DropdownButton2<int>(
                                                       items: genderList,
                                                       value: gender,
+                                                      underline: const SizedBox(),
                                                       dropdownStyleData: DropdownStyleData(
-                                                        width: 200,
+                                                        //width: 200,
                                                         elevation: 8,
-                                                        maxHeight: 500,
+                                                        maxHeight: 400,
                                                         isOverButton: false,
                                                         padding: const EdgeInsets.symmetric(horizontal: 5),
                                                         scrollbarTheme: ScrollbarThemeData(
@@ -309,19 +320,22 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                                           borderRadius: BorderRadius.circular(10),
                                                         ),
                                                       ),
+                                                      hint: const Padding(
+                                                        padding: EdgeInsets.symmetric(horizontal: 10),
+                                                        child: Text('جنسیت', style: TextStyle(color: Colors.grey)),
+                                                      ),
                                                       menuItemStyleData: MenuItemStyleData(
                                                         height: 40,
                                                         padding: const EdgeInsets.symmetric(horizontal: 5),
                                                       ),
-                                                      hint: const Padding(
-                                                        padding: EdgeInsets.symmetric(horizontal: 10),
-                                                        child: Text('جنسیت', style: TextStyle(color: Colors.grey)),
+                                                      buttonStyleData: ButtonStyleData(
+                                                        padding: EdgeInsets.symmetric(horizontal: 5),
+                                                        width: double.infinity,
                                                       ),
                                                       onChanged: (value) {
                                                         gender = value;
                                                         assistCtr.updateHead();
                                                       },
-                                                      underline: const SizedBox(),
                                                     ),
                                                   ),
                                                 )
@@ -335,7 +349,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                                   child: ClipRRect(
                                                       borderRadius: BorderRadius.circular(8),
                                                       child: ColoredBox(
-                                                          color: Colors.grey.shade100,
+                                                          color: Colors.grey.shade200,
                                                           child: SizedBox(
                                                             height: 40,
                                                             child: Row(
@@ -370,6 +384,30 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
 
                               const SizedBox(height: 30),
 
+                              RichText(
+                                  text: TextSpan(
+                                      style: AppThemes.bodyTextStyle()?.copyWith(fontSize: 14),
+                                      children: [
+                                        TextSpan(
+                                            text: 'شما با ثبت نام در بیگ بنگو  '
+                                        ),
+
+                                        TextSpan(
+                                            style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                                            text: 'قوانین',
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = gotoTermPage
+                                        ),
+
+                                        TextSpan(
+                                            text: '  ما را می پذیرید'
+                                        ),
+                                      ]
+                                  )
+                              ),
+
+                              const SizedBox(height: 30),
+
                               Column(
                                 children: [
                                   Padding(
@@ -386,9 +424,15 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                   ),
 
                                   const SizedBox(height: 10),
+                                  TextButton(
+                                    onPressed: backToPhoneNumber,
+                                    child: Text('برگشت'),
+                                  ),
+
+                                  const SizedBox(height: 10),
                                   SizedBox(
-                                      height: MathHelper.minDouble(70, sh*0.14),
-                                      child: Image.asset(AppImages.keyboardOpacity, width: sw*0.75)
+                                      height: MathHelper.minDouble(70, sh * 0.14),
+                                      child: Image.asset(AppImages.keyboardOpacity, width: sw * 0.75)
                                   ),
                                 ],
                               ),
@@ -520,6 +564,14 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
     }
 
     requestRegister();
+  }
+
+  void gotoTermPage() {
+  }
+
+  void backToPhoneNumber() {
+    AppDB.deleteKv(Keys.setting$registerPhoneNumber);
+    AppBroadcast.reBuildMaterial();
   }
 
   void requestProvinces(){

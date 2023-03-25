@@ -31,7 +31,7 @@ class LeitnerBoxModel {
       case 3:
         return 'سوم';
       case 4:
-        return 'جهارم';
+        return 'چهارم';
       case 5:
         return 'پنجم';
       case 6:
