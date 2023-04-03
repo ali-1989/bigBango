@@ -1,4 +1,6 @@
+import 'package:app/structures/enums/appEventDispatcher.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 
 import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -215,6 +217,7 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
 
       Future.delayed(Duration(seconds: 1), (){
         AppRoute.popTopView(context: context);
+        EventNotifierService.notify(EventDispatcher.languageLevelChanged);
       });
     };
 

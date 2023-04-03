@@ -35,7 +35,7 @@ class ExamSelectWordBuilder extends StatefulWidget {
 ///===============================================================================================================
 class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
   late TextStyle questionNormalStyle;
-  int currentSelectIndex = -1;
+  int currentSelectIndex = 0;
   List<ExamModel> examList = [];
 
   @override
@@ -65,7 +65,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
 
   Widget buildBody() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 14),
       child: CustomScrollView(
         shrinkWrap: true,
         physics: ScrollPhysics(),
@@ -89,11 +89,6 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
 
     final item = examList[idx ~/ 2];
     final List<InlineSpan> spans = generateSpans(item);
-    print('-----------spans---- ${spans.length}');
-
-    for(var x in spans){
-      //print('-----------x---- $x.');
-    }
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -125,7 +120,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
             textDirection: TextDirection.ltr,
           ),
 
-          SizedBox(height: 10),
+          SizedBox(height: 20),
 
           ///=== words
           buildWords(item),
@@ -155,16 +150,16 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
 
             setUserAnswer(model, i+1, null);
 
-            if (currentSelectIndex > -1) {
-              if (currentSelectIndex == i) {
-                currentSelectIndex = -1;
+            if (currentSelectIndex > 0) {
+              if (currentSelectIndex == i+1) {
+                currentSelectIndex = 0;
               }
               else {
-                currentSelectIndex = i;
+                currentSelectIndex = i+1;
               }
             }
             else {
-              currentSelectIndex = i;
+              currentSelectIndex = i+1;
             }
 
             assistCtr.updateHead();
@@ -221,7 +216,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
               alignment: PlaceholderAlignment.middle,
               child: CustomCard(
                 radius: 4,
-                color: currentSelectIndex == i ? Colors.blue.withAlpha(40) : Colors.transparent,
+                color: currentSelectIndex == i+1 ? Colors.blue.withAlpha(40) : Colors.transparent,
                 child: RichText(
                   text: TextSpan(
                     text: choiceText,
@@ -240,66 +235,6 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
     return spans;
   }
 
-  void onWordClick(ExamModel model, ExamOptionModel ec) {
-    print('-----------currentSelectIndex $currentSelectIndex');
-
-    if (currentSelectIndex < 0) {
-      for (final k in model.userAnswers){
-        if(k.id == ec.id){
-          return;
-        }
-      }
-
-      AppToast.showToast(context, 'ابتدا جای خالی را انتخاب کنید');
-      return;
-    }
-
-    setUserAnswer(model, currentSelectIndex, ec);
-    currentSelectIndex = -1;
-
-    List<String> selectedWordIds = [];
-
-    for (final k in model.userAnswers) {
-      if (k.text.isNotEmpty) {
-        print('----------- userAnswers : k.id:${k.id}   ${k.text}');
-        selectedWordIds.add(k.id);
-      }
-    }
-
-    if (selectedWordIds.length + 1 == model.options.length) {
-      print('----------- ohhhh ');
-      for (final k in model.userAnswers) {
-        if (k.id.isEmpty) {
-          ExamOptionModel? examChoiceModel;
-
-          for (final kk in model.options) {
-            if (!selectedWordIds.contains(kk.id)) {
-              examChoiceModel = kk;
-              break;
-            }
-          }
-
-          k.id = examChoiceModel!.id;
-          k.text = examChoiceModel.text;
-          break;
-        }
-      }
-    }
-
-    assistCtr.updateHead();
-  }
-
-  void setUserAnswer(ExamModel model, int order, ExamOptionModel? ec) {
-    if (ec != null) {
-      model.getUserChoiceByOrder(order)!.text = ec.text;
-      model.getUserChoiceByOrder(order)!.id = ec.id;
-    }
-    else {
-      model.getUserChoiceByOrder(order)!.text = '';
-      model.getUserChoiceByOrder(order)!.id = '';
-    }
-  }
-
   Widget buildWords(ExamModel model) {
     return Row(
       children: [
@@ -315,7 +250,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
 
           Color bColor = Colors.grey.shade200;
 
-          if (currentSelectIndex > -1 && !isSelected) {
+          if (currentSelectIndex > 0 && !isSelected) {
             bColor = Colors.lightBlueAccent;
           }
 
@@ -337,13 +272,71 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
                       decorationColor: Colors.red,
                     )
                         : AppThemes.baseTextStyle(),
-                  )
+                  ).fsR(2)
               ),
             ),
           );
         }),
       ],
     );
+  }
+
+  void onWordClick(ExamModel model, ExamOptionModel ec) {
+    if (currentSelectIndex < 1) {
+      for (final k in model.userAnswers){
+        if(k.id == ec.id){
+          return;
+        }
+      }
+
+      AppToast.showToast(context, 'ابتدا جای خالی را انتخاب کنید');
+      return;
+    }
+
+    setUserAnswer(model, currentSelectIndex, ec);
+    currentSelectIndex = 0;
+
+    List<String> selectedWordIds = [];
+
+    for (final k in model.userAnswers) {
+      if (k.text.isNotEmpty) {
+        selectedWordIds.add(k.id);
+      }
+    }
+
+    if (selectedWordIds.length + 1 == model.options.length) {
+      for (final k in model.userAnswers) {
+        if (k.text.isEmpty) {
+          ExamOptionModel? examChoiceModel;
+
+          for (final kk in model.options) {
+            if (!selectedWordIds.contains(kk.id)) {
+              examChoiceModel = kk;
+              break;
+            }
+          }
+
+          k.id = examChoiceModel!.id;
+          k.text = examChoiceModel.text;
+          break;
+        }
+      }
+    }
+
+    assistCtr.updateHead();
+  }
+
+  void setUserAnswer(ExamModel model, int order, ExamOptionModel? ec) {
+    final u = model.getUserChoiceByOrder(order);
+
+    if (ec != null) {
+      u!.text = ec.text;
+      u.id = ec.id;
+    }
+    else {
+      u!.text = '';
+      u.id = '';
+    }
   }
 
   bool isAllQuestionAnswered(){

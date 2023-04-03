@@ -13,7 +13,8 @@ enum EventDispatcher implements EventImplement {
   appResume(115),
   appPause(116),
   appDeatach(117),
-  firebaseTokenReceived(120);
+  firebaseTokenReceived(120),
+  languageLevelChanged(130);
 
   final int _number;
 

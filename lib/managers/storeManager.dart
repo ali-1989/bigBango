@@ -2,9 +2,11 @@
 
 import 'dart:async';
 
+import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:flutter/material.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/lessonModels/storeModel.dart';
 import 'package:app/tools/app/appSnack.dart';
@@ -14,6 +16,14 @@ class StoreManager {
 
 	static DateTime? _lastUpdateTime;
 	static final List<StoreModel> _storeList = [];
+
+	static void init(){
+		EventNotifierService.addListener(EventDispatcher.languageLevelChanged, languageLevelChanged);
+	}
+
+	static void languageLevelChanged({data}){
+		_lastUpdateTime = null;
+	}
 
 	static bool isUpdated({Duration duration = const Duration(minutes: 30)}) {
 		var now = DateTime.now();
@@ -91,12 +101,12 @@ class StoreManager {
 	}*/
 
 	///-----------------------------------------------------------------------------------------
-	static Future<bool> requestLessonStores({StateBase? state}) async {
+	static Future<bool> requestLessonStores({BuildContext? context}) async {
 		final requester = Requester();
 		final res = Completer<bool>();
 
 		requester.httpRequestEvents.onFailState = (req, response) async {
-			if(state == null || !state.mounted){
+			if(context == null || !(context as Element).mounted){
 				res.complete(false);
 				return;
 			}
@@ -108,7 +118,7 @@ class StoreManager {
 				msg = js['message']?? msg;
 			}
 
-			AppSnack.showInfo(state.context, msg);
+			AppSnack.showInfo(context, msg);
 		};
 
 		requester.httpRequestEvents.onStatusOk = (req, jsData) async {
@@ -124,7 +134,7 @@ class StoreManager {
 
 		requester.methodType = MethodType.get;
 		requester.prepareUrl(pathUrl: '/shop/lessons');
-		requester.request(state?.context);
+		requester.request(context);
 
 		return res.future;
 	}

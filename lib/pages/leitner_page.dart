@@ -1,7 +1,9 @@
 import 'package:app/managers/leitnerManager.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/leitner/leitnerBoxModel.dart';
+import 'package:app/tools/app/appIcons.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/helpers/urlHelper.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
@@ -16,6 +18,7 @@ import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:iris_tools/widgets/customCard.dart';
+import 'package:iris_tools/widgets/icon/circularIcon.dart';
 
 class LightnerPage extends StatefulWidget {
   const LightnerPage({Key? key}) : super(key: key);
@@ -78,7 +81,18 @@ class _LightnerPageState extends StateBase<LightnerPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('جعبه لایتنر', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+                  Row(
+                    children: [
+                      Text('جعبه لایتنر ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+                      GestureDetector(
+                        onTap: (){
+                          UrlHelper.launchWeb('https://fa.wikipedia.org/wiki/%D8%AC%D8%B9%D8%A8%D9%87_%D9%84%D8%A7%DB%8C%D8%AA%D9%86%D8%B1');
+                        },
+                          child: CircularIcon(icon: AppIcons.questionMark, size: 17)
+                      ),
+                    ],
+                  ),
+
                   Text('${boxItems.fold<int>(0, (sum, element) => sum + element.count)}',
                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)
                   ),

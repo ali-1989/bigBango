@@ -42,6 +42,15 @@ class _VocabClickableComponentState extends StateBase<VocabClickableComponent> {
   }
 
   @override
+  void dispose(){
+    if(assistCtr.getValueOr('play', false)){
+      AudioPlayerService.stopPlayer();
+    }
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -188,14 +197,18 @@ class _VocabClickableComponentState extends StateBase<VocabClickableComponent> {
     assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
     assistCtr.updateAssist(sectionId, stateData: 'prepare');
 
-    AudioPlayerService.networkVoicePlayer(voiceUrl!).then((twoState) async {
+    AudioPlayerService.getPlayerWithUrl(voiceUrl!).then((twoState) async {
       if(sectionId != selectedPlayerId){
         return;
       }
 
       if(twoState.hasResult1()){
+        assistCtr.setKeyValue('play', true);
         assistCtr.updateAssist(sectionId, stateData: 'play');
+
         await twoState.result1!.play();
+
+        assistCtr.setKeyValue('play', false);
         assistCtr.updateAssist(sectionId, stateData: null);
         twoState.result1!.stop();
       }

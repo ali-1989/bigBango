@@ -98,7 +98,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     reviewTaskQue.dispose();
     requester.dispose();
 
-    AudioPlayerService.getAudioPlayer().stop();
+    AudioPlayerService.getPlayer().stop();
 
     if(reviewIds.isNotEmpty){
       ReviewService.addReviews(ReviewSection.vocab, reviewIds);
@@ -143,7 +143,7 @@ class _VocabPageState extends StateBase<VocabPage> {
       preBtnColor = Colors.grey;
     }
 
-    if(currentVocabIdx == vocabList.length){
+    if(currentVocabIdx >= vocabList.length || showGreeting){
       nextBtnColor = Colors.grey;
     }
 
@@ -670,7 +670,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
     assistCtr.updateAssist(sectionId, stateData: 'prepare');
 
-    AudioPlayerService.networkVoicePlayer(voiceUrl!).then((twoState) async {
+    AudioPlayerService.getPlayerWithUrl(voiceUrl!).then((twoState) async {
       if(sectionId != selectedPlayerId){
         return;
       }
@@ -703,7 +703,7 @@ class _VocabPageState extends StateBase<VocabPage> {
   }
 
   void onNextClick(){
-    AudioPlayerService.getAudioPlayer().stop();
+    AudioPlayerService.getPlayer().stop();
     assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
 
     if(currentVocabIdx < vocabList.length-1) {
@@ -728,7 +728,7 @@ class _VocabPageState extends StateBase<VocabPage> {
       showGreeting = false;
     }
     else {
-      AudioPlayerService.getAudioPlayer().stop();
+      AudioPlayerService.getPlayer().stop();
       assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
       currentVocabIdx--;
 
@@ -795,6 +795,10 @@ class _VocabPageState extends StateBase<VocabPage> {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
+      if(state){
+        AppToast.showToast(context, 'به لایتنر اضافه شد');
+      }
+
       leitnerTaskQue.callNext(null);
       //assistCtr.updateHead();
     };

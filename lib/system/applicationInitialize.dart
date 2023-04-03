@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:app/managers/leitnerManager.dart';
+import 'package:app/managers/storeManager.dart';
 import 'package:app/structures/enums/appEventDispatcher.dart';
 import 'package:app/tools/app/appLocale.dart';
 import 'package:flutter/foundation.dart';
@@ -152,6 +153,7 @@ class ApplicationInitial {
 
       MessageManager.requestUnReadCount();
       LeitnerManager.requestLeitnerCount();
+      StoreManager.init();
 
       EventNotifierService.addListener(EventDispatcher.firebaseTokenReceived, ({data}) {
         MessageManager.requestSetFirebaseToken();

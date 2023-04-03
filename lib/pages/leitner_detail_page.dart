@@ -51,7 +51,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
   @override
   void dispose(){
     requester.dispose();
-    AudioPlayerService.getAudioPlayer().stop();
+    AudioPlayerService.getPlayer().stop();
 
     super.dispose();
   }
@@ -324,7 +324,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
   void playSound(LeitnerModel model){
     assistCtr.updateAssist(assistId$player, stateData: 'prepare');
 
-    AudioPlayerService.networkVoicePlayer(model.vocabulary?.americanVoice?.fileLocation?? '').then((twoState) async {
+    AudioPlayerService.getPlayerWithUrl(model.vocabulary?.americanVoice?.fileLocation?? '').then((twoState) async {
       if(twoState.hasResult1()){
         assistCtr.updateAssist(assistId$player, stateData: 'play');
         await twoState.result1!.play();

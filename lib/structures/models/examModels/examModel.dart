@@ -91,7 +91,7 @@ class ExamModel extends ExamSuperModel {
 
     userAnswers.clear();
 
-    for(int i = 0; i < questionSplit.length-1; i++) {
+    for(int i = 1; i <= questionSplit.length; i++) {
       final ex = ExamOptionModel()..order = i;
 
       if(quizType == QuizType.multipleChoice){
@@ -123,9 +123,9 @@ class ExamModel extends ExamSuperModel {
   }
 
   ExamOptionModel? getChoiceByOrder(int order){
-    for(int i = 0; i< options.length; i++){
-      if(options[i].order == order){
-        return options[i];
+    for(int i = 1; i <= options.length; i++){
+      if(options[i-1].order == order){
+        return options[i-1];
       }
     }
 
@@ -133,9 +133,9 @@ class ExamModel extends ExamSuperModel {
   }
 
   ExamOptionModel? getUserChoiceByOrder(int order){
-    for(int i = 0; i < userAnswers.length; i++){
-      if(userAnswers[i].order == order){
-        return userAnswers[i];
+    for(int i = 1; i <= userAnswers.length; i++){
+      if(userAnswers[i-1].order == order){
+        return userAnswers[i-1];
       }
     }
 
@@ -170,7 +170,7 @@ class ExamModel extends ExamSuperModel {
     }
     else if (quizType == QuizType.recorder){
       var txt = question;
-      var order = 0;
+      var order = 1;
 
       while(txt.contains('**')){
         final ans = getUserChoiceByOrder(order)!.text;
@@ -183,7 +183,7 @@ class ExamModel extends ExamSuperModel {
     }
     else if (quizType == QuizType.fillInBlank){
       var txt = question;
-      var order = 0;
+      var order = 1;
 
       while(txt.contains('**')){
         final ans = getUserChoiceByOrder(order)!.text;
@@ -213,9 +213,9 @@ class ExamModel extends ExamSuperModel {
         }
       }
 
-      for(int i=0; i< options.length; i++){
-        final correctAnswer = getChoiceByOrder(i+1)!.text;
-        final userAnswer = getUserChoiceByOrder(i+1)!.text;
+      for(int i=1; i <= options.length; i++){
+        final correctAnswer = getChoiceByOrder(i)!.text;
+        final userAnswer = getUserChoiceByOrder(i)!.text;
 
         if(correctAnswer != userAnswer){
           return false;
@@ -225,9 +225,9 @@ class ExamModel extends ExamSuperModel {
       return true;
     }
     else if (quizType == QuizType.fillInBlank){
-      for(int i = 0; i < options.length; i++){
-        final correctAnswer = getChoiceByOrder(i+1)?.text;
-        final userAnswer = getUserChoiceByOrder(i+1)?.text;
+      for(int i = 1; i <= options.length; i++){
+        final correctAnswer = getChoiceByOrder(i)?.text;
+        final userAnswer = getUserChoiceByOrder(i)?.text;
 
         if(correctAnswer != userAnswer){
           return false;
@@ -245,7 +245,7 @@ class ExamOptionModel {
   String id = '';
   String text = '';
   bool isCorrect = false;
-  int order = 0;
+  int order = 1;
 
   ExamOptionModel(): id = Generator.generateKey(5);
 
@@ -253,7 +253,7 @@ class ExamOptionModel {
     id = js['id']?? Generator.generateKey(5);
     text = js['text'];
     isCorrect = js['isCorrect']?? false;
-    order = js['order']?? 0;
+    order = js['order']?? 1;
   }
 
   Map<String, dynamic> toMap(){

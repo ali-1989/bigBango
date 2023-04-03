@@ -46,6 +46,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
     super.initState();
 
     EventNotifierService.addListener(EventDispatcher.appResume, onBackOfBankGetWay);
+    EventNotifierService.addListener(EventDispatcher.languageLevelChanged, languageLevelChanged);
 
     tabCtr = TabController(length: 1, vsync: this);
     assistCtr.addState(AssistController.state$loading);
@@ -55,6 +56,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
   @override
   void dispose(){
     EventNotifierService.removeListener(EventDispatcher.appResume, onBackOfBankGetWay);
+    EventNotifierService.removeListener(EventDispatcher.languageLevelChanged, languageLevelChanged);
 
     super.dispose();
   }
@@ -234,6 +236,10 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
     );
   }
 
+  void languageLevelChanged({data}){
+    requestStores();
+  }
+
   void tryAgain(){
     assistCtr.addStateWithClear(AssistController.state$loading);
     assistCtr.updateHead();
@@ -255,6 +261,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
     if(itm.isSelected){
       itm.isSelected = false;
       selectedLessons.remove(itm);
+      selectAllState = false;
     }
     else {
       itm.isSelected = true;
@@ -276,6 +283,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
     }
     else {
       selectAllState = true;
+      selectedLessons.clear();
 
       for (final element in currentStore.lessons) {
         element.isSelected = true;
@@ -390,7 +398,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
     var res = true;
 
     if(!StoreManager.isUpdated()) {
-      res = await StoreManager.requestLessonStores(state: this);
+      res = await StoreManager.requestLessonStores(context: context);
     }
 
     if(!mounted){

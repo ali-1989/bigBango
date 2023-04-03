@@ -43,6 +43,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
   Requester requester = Requester();
   bool showTranslate = false;
   bool isVideoInit = false;
+  bool isVideoError = false;
   bool showGreeting = false;
   bool regulatorIsCall = false;
   List<IdiomModel> idiomsList = [];
@@ -133,7 +134,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
       preColor = Colors.grey;
     }
 
-    if(currentIdiomIdx == idiomsList.length){
+    if(currentIdiomIdx >= idiomsList.length || showGreeting){
       nextColor = Colors.grey;
     }
 
@@ -260,6 +261,15 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                                        if(currentIdiom.video?.fileLocation != null){
                                          if(isVideoInit){
                                            return Chewie(controller: chewieVideoController!);
+                                         }
+                                         else if(isVideoError){
+                                           return Column(
+                                             children: [
+                                               Image.asset(AppImages.falseCheckIco, width: 100, height: 100,),
+                                               SizedBox(height: 20),
+                                               Text('متاسفانه فایل قابل پخش نیست'),
+                                             ],
+                                           );
                                          }
                                          else {
                                            return const Center(child: CircularProgressIndicator());
@@ -431,8 +441,12 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
     isVideoInit = false;
     playerController = VideoPlayerController.network(currentIdiom.video!.fileLocation!);
 
-    await playerController!.initialize();
+    await playerController!.initialize().catchError((e){
+      isVideoError = true;
+    });
+
     isVideoInit = playerController!.value.isInitialized;
+
     if(mounted) {
       if(isVideoInit) {
         onVideoInit();
