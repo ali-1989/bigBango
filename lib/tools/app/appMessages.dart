@@ -8,7 +8,7 @@ class AppMessages {
   static const _noText = 'NaT';
 
   static BuildContext _getContext(){
-    return AppRoute.getLastContext()!;
+    return AppRoute.getTopContext()!;
   }
   static String get ok {
     return 'بله';

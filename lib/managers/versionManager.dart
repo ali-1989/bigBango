@@ -82,7 +82,7 @@ class VersionManager {
     v = v.replaceAll('.', '');
 
     if(MathHelper.toInt(v) > Constants.appVersionCode){
-      showUpdateDialog(AppRoute.getLastContext()!, serverVersion);
+      showUpdateDialog(AppRoute.getTopContext()!, serverVersion);
     }
   }
 

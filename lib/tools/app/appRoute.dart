@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 import 'package:app/pages/about_page.dart';
@@ -50,21 +48,20 @@ class AppRoute {
     _isInit = true;
   }
 
-  static BuildContext? getLastContext() {
+  static BuildContext? getTopContext() {
     var res = WidgetsBinding.instance.focusManager.rootScope.focusedChild?.context;//deep: 50,66
 
     Navigator? nav1 = res?.findAncestorWidgetOfExactType();
 
     if(res == null || nav1 == null) {
-      //res = WidgetsBinding.instance.focusManager.primaryFocus?.context; //deep: 71
-      res = WidgetsBinding.instance.focusManager.rootScope.context;
+      res = AppNavigator.getTopBuildContext();//WidgetsBinding.instance.focusManager.rootScope.context;
     }
 
     return res?? getBaseContext();
   }
 
   static BuildContext? getBaseContext() {
-    return materialContext;
+    return materialContext?? AppNavigator.getDeepBuildContext();
   }
 
   /*static Future<bool> saveRouteName(String routeName) async {
@@ -78,13 +75,11 @@ class AppRoute {
   }*/
   ///------------------------------------------------------------
   static void backRoute() {
-    final lastCtx = AppNavigator.getLastRouteContext(getLastContext()!);
+    final lastCtx = getTopContext()!;
     AppNavigator.backRoute(lastCtx);
   }
 
   static void backToRoot(BuildContext context) {
-    //AppNavigator.popRoutesUntilRoot(AppRoute.getContext());
-
     while(canPop(context)){
       popTopView(context: context);
     }
@@ -94,15 +89,10 @@ class AppRoute {
     return AppNavigator.canPop(context);
   }
 
+  /// popPage
   static void popTopView({BuildContext? context, dynamic data}) {
-    if(canPop(context?? getLastContext()!)) {
-      AppNavigator.pop(context?? getLastContext()!, result: data);
-    }
-  }
-
-  static void popPage(BuildContext context, {dynamic data}) {
-    if(canPop(context)) {
-      AppNavigator.pop(context, result: data);
+    if(canPop(context?? getTopContext()!)) {
+      AppNavigator.pop(context?? getTopContext()!, result: data);
     }
   }
 

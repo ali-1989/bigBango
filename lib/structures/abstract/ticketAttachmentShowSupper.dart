@@ -151,6 +151,6 @@ abstract class TicketAttachmentShowSupper {
       appBarColor: Colors.black,
     );
 
-    AppNavigator.pushNextPageExtra(AppRoute.getLastContext()!, view, name: FullScreenImage.screenName);
+    AppNavigator.pushNextPageExtra(AppRoute.getTopContext()!, view, name: FullScreenImage.screenName);
   }
 }

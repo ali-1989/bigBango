@@ -75,7 +75,7 @@ class SystemParameterManager {
       */
 
       final versionModel = VersionModel.fromMap(systemParameters.version);
-      VersionManager.checkAppHasNewVersion(AppRoute.getLastContext()!, versionModel);
+      VersionManager.checkAppHasNewVersion(AppRoute.getTopContext()!, versionModel);
 
       result.complete(request);
       return null;

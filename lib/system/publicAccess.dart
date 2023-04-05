@@ -46,7 +46,7 @@ class PublicAccess {
   );
 
   static Map addLanguageIso(Map src, [BuildContext? ctx]) {
-    src[Keys.languageIso] = System.getLocalizationsLanguageCode(ctx ?? AppRoute.getLastContext()!);
+    src[Keys.languageIso] = System.getLocalizationsLanguageCode(ctx ?? AppRoute.getTopContext()!);
 
     return src;
   }

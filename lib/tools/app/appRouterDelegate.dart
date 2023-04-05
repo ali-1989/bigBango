@@ -31,7 +31,7 @@ class AppRouterDelegate<T> extends RouterDelegate<T> with ChangeNotifier, PopNav
   @override
   Widget build(BuildContext context) {
     return MediaQuery(
-        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
         child: Navigator(
           key: AppBroadcast.rootNavigatorKey,
           //initialRoute: '/',
@@ -49,7 +49,7 @@ class AppRouterDelegate<T> extends RouterDelegate<T> with ChangeNotifier, PopNav
   @override
   Future<bool> popRoute() async {
     /// back button press
-    if(AppRoute.canPop(AppRoute.getLastContext()!)) {
+    if(AppRoute.canPop(AppRoute.getTopContext()!)) {
       AppRoute.popTopView();
       return true;
     }

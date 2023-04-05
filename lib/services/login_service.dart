@@ -55,7 +55,7 @@ class LoginService {
     //AppBroadcast.layoutPageKey.currentState?.scaffoldState.currentState?.closeDrawer();
 
     if (isCurrent) {
-      AppRoute.backToRoot(AppRoute.getLastContext()!);
+      AppRoute.backToRoot(AppRoute.getTopContext()!);
       AppBroadcast.reBuildMaterial();
     }
   }
@@ -66,7 +66,7 @@ class LoginService {
     AppBroadcast.drawerMenuRefresher.update();
     //AppBroadcast.layoutPageKey.currentState?.scaffoldState.currentState?.closeDrawer();
 
-    AppRoute.backToRoot(AppRoute.getLastContext()!);
+    AppRoute.backToRoot(AppRoute.getTopContext()!);
     AppBroadcast.reBuildMaterial();
   }
   

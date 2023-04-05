@@ -105,7 +105,7 @@ class JwtService {
       await Session.logoff(um.userId);
       AppBroadcast.reBuildMaterial();
 
-      AppRoute.backToRoot(AppRoute.getLastContext()!);
+      AppRoute.backToRoot(AppRoute.getTopContext()!);
     }
 
     else if(a.responseData?.statusCode == 307){
@@ -117,7 +117,7 @@ class JwtService {
       await Session.logoff(um.userId);
       AppBroadcast.reBuildMaterial();
 
-      AppRoute.backToRoot(AppRoute.getLastContext()!);
+      AppRoute.backToRoot(AppRoute.getTopContext()!);
     }
     else if(a.responseData?.statusCode == 405){
       AppToast.showToast(AppRoute.getBaseContext()!, 'need to config');

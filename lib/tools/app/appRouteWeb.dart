@@ -12,14 +12,15 @@ void changeAddressBar(String url, {dynamic data, bool reload = false}) {
 
   data ??= html.window.history.state;
 
-  if(!url.toLowerCase().startsWith(html.document.baseUri?? '')){
-    var old = html.window.location.href;
+  if(!url.toLowerCase().startsWith(getBaseWebAddress())){
+    var old = getCurrentWebAddress();
 
     if(old.endsWith('/')){
-      old = old.substring(0, old.length -1);
+      url = '$old$url';
     }
-
-    url = '$old/$url';
+    else {
+      url = '$old/$url';
+    }
   }
 
   if(reload) {
@@ -33,6 +34,10 @@ void changeAddressBar(String url, {dynamic data, bool reload = false}) {
 }
 
 void clearAddressBar(String? part) {
+  if(!kIsWeb) {
+    return;
+  }
+
   if(part == null) {
     final location = '${html.window.location.protocol}//${html.window.location.host}/';
     html.window.history.replaceState(html.window.history.state, '', location);
@@ -56,13 +61,21 @@ void clearAddressBar(String? part) {
 }
 
 String getBaseWebAddress() {
+  if(!kIsWeb) {
+    return '';
+  }
+
   return html.document.baseUri?? '';
+}
+
+String getCurrentWebAddress() {
+  if(!kIsWeb) {
+    return '';
+  }
+
+  return html.window.location.href;
 }
 
 void backAddressBar() {
   html.window.history.back();
-}
-
-String getCurrentWebAddress() {
-  return html.window.location.href;
 }
