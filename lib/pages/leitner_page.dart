@@ -12,7 +12,7 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
@@ -195,7 +195,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
       return;
     }
 
-    await AppRoute.pushPage(context, LightnerDetailPage(lightnerBox: itm));
+    await RouteTools.pushPage(context, LightnerDetailPage(lightnerBox: itm));
 
     requestLeitner();
     LeitnerManager.requestLeitnerCount();

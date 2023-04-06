@@ -7,7 +7,7 @@ import 'package:app/structures/models/ticketModels/ticketReplyModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appNavigator.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSizes.dart';
 import 'package:app/views/components/fullScreenImage.dart';
@@ -51,7 +51,7 @@ abstract class TicketAttachmentShowSupper {
                     left: 10,
                     child: GestureDetector(
                       onTap: (){
-                        AppRoute.popTopView(context: context);
+                        RouteTools.popTopView(context: context);
                       },
                       child: CustomCard(
                           color: Colors.grey.shade200,
@@ -151,6 +151,6 @@ abstract class TicketAttachmentShowSupper {
       appBarColor: Colors.black,
     );
 
-    AppNavigator.pushNextPageExtra(AppRoute.getTopContext()!, view, name: FullScreenImage.screenName);
+    AppNavigator.pushNextPageExtra(RouteTools.getTopContext()!, view, name: FullScreenImage.screenName);
   }
 }

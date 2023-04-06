@@ -16,7 +16,7 @@ import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/dateTools.dart';
 import 'package:app/views/components/fullScreenImage.dart';
 import 'package:app/views/states/emptyData.dart';
@@ -243,7 +243,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
                                   imageType: ImageType.network,
                                 );
 
-                                AppRoute.pushPage(context, view);
+                                RouteTools.pushPage(context, view);
                               }
                             },
                           )
@@ -262,7 +262,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
   void onItemClick(MessageModel notify) async {
     if(notify.type == NotificationType.ticket){
       if(notify.data is Map) {
-        await AppRoute.pushPage(context, TicketDetailPage(ticketId: notify.data!['id']));
+        await RouteTools.pushPage(context, TicketDetailPage(ticketId: notify.data!['id']));
       }
     }
   }

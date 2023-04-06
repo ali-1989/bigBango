@@ -24,7 +24,7 @@ import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSizes.dart';
 import 'package:app/views/homeComponents/layoutComponent.dart';
 
@@ -241,37 +241,37 @@ class DrawerMenuBuilder {
 
   static void gotoProfilePage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.pushPage(AppRoute.getTopContext()!, ProfilePage(userModel: Session.getLastLoginUser()!));
+    RouteTools.pushPage(RouteTools.getTopContext()!, ProfilePage(userModel: Session.getLastLoginUser()!));
   }
 
   static void gotoAboutPage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.pushPage(AppRoute.getTopContext()!, AboutPage());
+    RouteTools.pushPage(RouteTools.getTopContext()!, AboutPage());
   }
 
   static void gotoWalletPage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.pushPage(AppRoute.getTopContext()!, WalletPage());
+    RouteTools.pushPage(RouteTools.getTopContext()!, WalletPage());
   }
 
   static void gotoTransactionPage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.pushPage(AppRoute.getTopContext()!, TransactionsPage());
+    RouteTools.pushPage(RouteTools.getTopContext()!, TransactionsPage());
   }
 
   static void gotoSupportPage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.pushPage(AppRoute.getTopContext()!, SupportPage());
+    RouteTools.pushPage(RouteTools.getTopContext()!, SupportPage());
   }
 
   static void gotoLogsPage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.pushPage(AppRoute.getTopContext()!, LogsPage());
+    RouteTools.pushPage(RouteTools.getTopContext()!, LogsPage());
   }
 
   static void gotoInvitePage() async {
     await LayoutComponentState.toggleDrawer();
-    AppRoute.pushPage(AppRoute.getTopContext()!, InvitePage());
+    RouteTools.pushPage(RouteTools.getTopContext()!, InvitePage());
   }
 
   static void onLogoffCall() async {
@@ -283,7 +283,7 @@ class DrawerMenuBuilder {
     }
 
     AppDialogIris.instance.showYesNoDialog(
-      AppRoute.getBaseContext()!,
+      RouteTools.getBaseContext()!,
       desc: AppMessages.doYouWantLogoutYourAccount,
       dismissOnButtons: true,
       yesText: AppMessages.yes,

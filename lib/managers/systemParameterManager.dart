@@ -11,7 +11,7 @@ import 'package:app/structures/models/systemParameterModel.dart';
 import 'package:app/structures/models/versionModel.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appHttpDio.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 
 class SystemParameterManager {
   static SystemParameterModel systemParameters = SystemParameterModel();
@@ -75,7 +75,7 @@ class SystemParameterManager {
       */
 
       final versionModel = VersionModel.fromMap(systemParameters.version);
-      VersionManager.checkAppHasNewVersion(AppRoute.getTopContext()!, versionModel);
+      VersionManager.checkAppHasNewVersion(RouteTools.getTopContext()!, versionModel);
 
       result.complete(request);
       return null;

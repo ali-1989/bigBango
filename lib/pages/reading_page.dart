@@ -25,7 +25,7 @@ import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -647,7 +647,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     content.answerUrl = '/reading/exercises/solving';
 
     final examPage = ExamPage(content: content);
-    await AppRoute.pushPage(context, examPage);
+    await RouteTools.pushPage(context, examPage);
   }
 
   void requestReading(){

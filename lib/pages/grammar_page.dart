@@ -19,7 +19,7 @@ import 'package:app/structures/models/grammarModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/appbarLesson.dart';
@@ -413,7 +413,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     examPageInjector.sendButtonText = 'ارسال';
 
     final examPage = ExamPage(content: examPageInjector);
-    await AppRoute.pushPage(context, examPage);
+    await RouteTools.pushPage(context, examPage);
   }
 
   void onRefresh(){

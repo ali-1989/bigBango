@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:android_sms_retriever/android_sms_retriever.dart';
@@ -19,7 +20,7 @@ import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/components/videoPlayer.dart';
 
@@ -236,7 +237,12 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
   void requestSendOtp(String phoneNumber) async {
     showLoading();
 
-    final sign = (await AndroidSmsRetriever.getAppSignature())?? '';
+    var sign = '';
+
+    if(!kIsWeb) {
+      sign = (await AndroidSmsRetriever.getAppSignature()) ?? '';
+    }
+
     final httpRequester = await LoginService.requestSendOtp(phoneNumber: phoneNumber, sign: sign);
     await hideLoading();
 
@@ -264,6 +270,6 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
       return;
     }
 
-    AppRoute.pushPage(context, OtpPage(phoneNumber: phoneNumber, sign: sign));
+    RouteTools.pushPage(context, OtpPage(phoneNumber: phoneNumber, sign: sign));
   }
 }

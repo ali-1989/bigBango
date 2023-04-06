@@ -1,5 +1,5 @@
 import 'package:app/structures/enums/appEventDispatcher.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -138,7 +138,7 @@ class FireBaseService {
   static void _handler(RemoteMessage message) {
     //if (message.data['type'] == 'chat') {
     AppBroadcast.layoutPageKey.currentState?.gotoPage(3);
-    AppRoute.backToRoot(AppRoute.getBaseContext()!);
+    RouteTools.backToRoot(RouteTools.getBaseContext()!);
   }
 
   static Future<String?> getTokenForce() async {

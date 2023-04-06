@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app/services/firebase_service.dart';
+import 'package:app/tools/app/appNavigatorObserver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +16,7 @@ import 'package:app/system/applicationInitialize.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appLocale.dart';
-import 'package:app/tools/app/appRoute.dart';
-import 'package:app/tools/app/appRouterDelegate.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -73,8 +73,6 @@ Future<void> main() async {
 }
 
 Future<void> mainInitialize() async {
-  //SchedulerBinding.instance.ensureVisualUpdate();
-  //SchedulerBinding.instance.window.scheduleFrame();
   PlatformDispatcher.instance.onError = maiIsolateError;
   FlutterError.onError = onErrorCatch;
   await FireBaseService.initializeApp();
@@ -88,7 +86,7 @@ class MyApp extends StatelessWidget {
   ///============ call on any hot reload
   @override
   Widget build(BuildContext context) {
-    AppRoute.materialContext = context;
+    RouteTools.materialContext = context;
 
     if(kIsWeb && !ApplicationInitial.isInit()){
       return WidgetsApp(
@@ -102,7 +100,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       key: AppBroadcast.materialAppKey,
-      //navigatorKey: AppBroadcast.rootNavigatorKey,
+      navigatorKey: AppBroadcast.rootNavigatorKey,
       scaffoldMessengerKey: AppBroadcast.rootScaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
       useInheritedMediaQuery: true,
@@ -110,6 +108,7 @@ class MyApp extends StatelessWidget {
       theme: AppThemes.instance.themeData,
       //darkTheme: ThemeData.dark(),
       themeMode: AppThemes.instance.currentThemeMode,
+      navigatorObservers: [AppNavigatorObserver.instance()],
       scrollBehavior: ScrollConfiguration.of(context).copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,
@@ -122,11 +121,27 @@ class MyApp extends StatelessWidget {
       /*localeResolutionCallback: (deviceLocale, supportedLocales) {
             return SettingsManager.settingsModel.appLocale;
           },*/
-      home: Router(
-        routerDelegate: AppRouterDelegate.instance(),
-        backButtonDispatcher: RootBackButtonDispatcher(),
-      ),
+
+      home: materialHomeBuilder(),
     );
+  }
+
+  Widget materialHomeBuilder(){
+    return Builder(
+      builder: (localContext){
+        RouteTools.materialContext = localContext;
+        testCodes(localContext);
+
+        return MediaQuery(
+            data: MediaQuery.of(localContext).copyWith(textScaleFactor: 1),
+            child: SplashPage()
+        );
+      },
+    );
+  }
+
+  Future<void> testCodes(BuildContext context) async {
+    //await AppDB.db.clearTable(AppDB.tbKv);
   }
 }
 ///==============================================================================================

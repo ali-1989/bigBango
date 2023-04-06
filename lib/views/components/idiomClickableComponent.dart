@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:app/structures/models/vocabModels/idiomModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 
 class IdiomClickableComponent extends StatefulWidget {
   final IdiomModel idiomModel;
@@ -57,7 +57,7 @@ class _IdiomClickableComponentState extends State<IdiomClickableComponent> {
                         padding: EdgeInsets.zero,
                         visualDensity: VisualDensity(horizontal: -4, vertical: -4)
                     ),
-                    onPressed: (){AppRoute.popTopView(context: context);},
+                    onPressed: (){RouteTools.popTopView(context: context);},
                     icon: Icon(AppIcons.close, color: Colors.red, size: 14,),
                   ),
                 )

@@ -20,7 +20,7 @@ import 'package:app/system/extensions.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/components/greetingView.dart';
@@ -698,7 +698,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     final page = PublicAccess.getNextPartOfLesson(widget.injector.lessonModel);
 
     if(page != null) {
-      AppRoute.pushReplacePage(context, page);
+      RouteTools.pushReplacePage(context, page);
     }
   }
 

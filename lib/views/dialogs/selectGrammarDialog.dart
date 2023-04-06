@@ -6,7 +6,7 @@ import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 class SelectGrammarDialog extends StatefulWidget {
@@ -84,7 +84,7 @@ class _SelectVocabIdiomsDialog extends State<SelectGrammarDialog> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: (){
-        AppRoute.pushPage(context, GrammarPage(injector: GrammarPageInjector(widget.lessonModel, id: itm.id)));
+        RouteTools.pushPage(context, GrammarPage(injector: GrammarPageInjector(widget.lessonModel, id: itm.id)));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),

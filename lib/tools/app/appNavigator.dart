@@ -4,6 +4,8 @@ import 'package:flutter/scheduler.dart';
 class AppNavigator {
   AppNavigator._();
 
+  static final String _modalScopeRunType = '_ModalScopeStatus';
+
   static bool canTouchContext(BuildContext context){
     try {
       /// for avoid: ErrorSummary("Looking up a deactivated widget's ancestor is unsafe.") in framework.dart
@@ -30,7 +32,7 @@ class AppNavigator {
   static BuildContext? getBuildContextFromFocusManager(){
     //var ctx = WidgetsBinding.instance.focusManager.rootScope.context;
     var ctx = FocusManager.instance.rootScope.context;
-    ctx = ctx ?? FocusManager.instance.rootScope.focusedChild?.context;
+    ctx ??= FocusManager.instance.rootScope.focusedChild?.context;
     return ctx ?? FocusManager.instance.primaryFocus?.context;
   }
 
@@ -166,7 +168,7 @@ class AppNavigator {
     final element = context as Element;
     final runType = element.widget.runtimeType.toString();
 
-    if(runType == '_ModalScopeStatus'){
+    if(runType == _modalScopeRunType){
       final dynamic d = element.widget;
 
       return d.route as ModalRoute;
@@ -177,7 +179,7 @@ class AppNavigator {
     touchAncestorsToRoot(context, (elem){
       final runType = elem.widget.runtimeType.toString();
 
-      if(runType == '_ModalScopeStatus'){
+      if(runType == _modalScopeRunType){
         final dynamic d = elem.widget;
 
         result = d.route as ModalRoute;
@@ -210,9 +212,9 @@ class AppNavigator {
   }
 
   /// *** it is work else in initState, is best
-  static List<ModalRoute> getAllModalRoutesByFocusScope({BuildContext? context, bool onlyActives = true}) {
+  static List<MapEntry<ModalRoute, BuildContext>> getAllModalRoutesByFocusScope({BuildContext? context, bool onlyActives = true}) {
     final nav = getRootNavigator$();
-    final res = <ModalRoute>[];
+    final res = <MapEntry<ModalRoute, BuildContext>>[];
 
     if(nav == null) {
       return res;
@@ -222,27 +224,27 @@ class AppNavigator {
     //dep final List children = nav.focusScopeNode.children.toList();
     final List children = nav.focusNode.children.toList();
 
-    for(FocusNode f in children) {
-      final m = getModalRouteOf(f.context!);
+    for(FocusNode fNode in children) {
+      final mRoute = getModalRouteOf(fNode.context!);
 
-      if(m == null) {
+      if(mRoute == null) {
         continue;
       }
 
       if (onlyActives){
-        if (m.isActive) {
-          res.add(m);
+        if(mRoute.isActive) {
+          res.add(MapEntry(mRoute, fNode.context!));
         }
       }
       else {
-        res.add(m);
+        res.add(MapEntry(mRoute, fNode.context!));
       }
     }
 
     return res;
   }
 
-  static List<ModalRoute> getAllModalRoutesByAncestor({BuildContext? context, bool onlyActives = true}) {
+  static List<ModalRoute> getAllModalRoutes$({BuildContext? context, bool onlyActives = true}) {
     final nav = getRootNavigator$();
     final elements = <Element>[];
     final res = <ModalRoute>[];
@@ -260,10 +262,10 @@ class AppNavigator {
         try {
           final runType = element.widget.runtimeType.toString();
 
-          if(runType == '_ModalScopeStatus') {// if add this: take error [Duplicate GlobalKeys]
+          if(runType == _modalScopeRunType) {// if add this: take error [Duplicate GlobalKeys]
             beforeModalScopeStatus = true;
           }
-          else if(beforeModalScopeStatus && runType == 'Offstage') {
+          else if(runType == 'Offstage' && beforeModalScopeStatus) {
             elements.add(element);
           }
           else {
@@ -283,20 +285,20 @@ class AppNavigator {
       rethrow;
     }
 
-    for(var w in elements) {
-      final m = getModalRouteOf(w);
+    for(final elm in elements) {
+      final mRoute = getModalRouteOf(elm);
 
-      if(m == null) {
+      if(mRoute == null) {
         continue;
       }
 
       if (onlyActives){
-        if (m.isActive) {
-          res.add(m);
+        if(mRoute.isActive) {
+          res.add(mRoute);
         }
       }
       else {
-        res.add(m);
+        res.add(mRoute);
       }
     }
 
@@ -318,24 +320,24 @@ class AppNavigator {
         try {
           final runType = element.widget.runtimeType.toString();
 
-          if(runType == '_ModalScopeStatus') {// if add this: take error [Duplicate GlobalKeys]
-            final dynamic d = element.widget;
+          if(runType == _modalScopeRunType) {// if add this: take error [Duplicate GlobalKeys]
+            final dynamic maybeModalWidget = element.widget;
 
-            final m = d.route as ModalRoute?;
+            final mRoute = maybeModalWidget.route as ModalRoute?;
 
-            if(m != null) {
+            if(mRoute != null) {
               if (onlyActives){
-                if (m.isActive) {
-                  res.add(m);
+                if(mRoute.isActive) {
+                  res.add(mRoute);
                 }
               }
               else {
-                res.add(m);
+                res.add(mRoute);
               }
             }
           }
         }
-        catch (e){}
+        catch (e){/**/}
 
         func(element);
       });

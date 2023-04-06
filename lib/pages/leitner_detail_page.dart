@@ -2,7 +2,7 @@ import 'package:animator/animator.dart';
 import 'package:app/services/audio_player_service.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/leitner/leitnerBoxModel.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/states/errorOccur.dart';
@@ -351,7 +351,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
           context,
           'تبریک شما محتوای این جعبه را تمام کردید',
           (){
-            AppRoute.popTopView(context: context);
+            RouteTools.popTopView(context: context);
           }
       );
     }

@@ -23,7 +23,7 @@ import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -119,7 +119,7 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
 
                           GestureDetector(
                             onTap: (){
-                              AppRoute.popTopView(context: context);
+                              RouteTools.popTopView(context: context);
                             },
                             child: CustomCard(
                                 color: Colors.grey.shade200,
@@ -354,7 +354,7 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
 
       final message = res['message']?? 'تیکت ثبت شد';
 
-      AppSheet.showSheetOneAction(context, message, (){AppRoute.popTopView(context: context);},
+      AppSheet.showSheetOneAction(context, message, (){RouteTools.popTopView(context: context);},
         buttonText:  'بله',
         dismissOnAction: true,
       );

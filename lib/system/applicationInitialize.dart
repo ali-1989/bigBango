@@ -25,7 +25,6 @@ import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appNotification.dart';
-import 'package:app/tools/app/appRoute.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/deviceInfoTools.dart';
 import 'package:app/tools/netListenerTools.dart';
@@ -99,7 +98,7 @@ class ApplicationInitial {
   }
 
   static Future<void> inSplashInitWithContext(BuildContext context) async {
-    AppRoute.init();
+    //RouteTools.init();
   }
 
   static Future<void> appLazyInit() {

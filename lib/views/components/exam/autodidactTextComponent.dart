@@ -27,7 +27,7 @@ import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -425,7 +425,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: (){
-                      AppRoute.popTopView(context: context);
+                      RouteTools.popTopView(context: context);
                     },
                     child: Text('بستن')
                 ),

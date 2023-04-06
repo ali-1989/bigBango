@@ -17,7 +17,7 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSnack.dart';
 
 class OtpPage extends StatefulWidget {
@@ -257,7 +257,7 @@ class _OtpPageState extends StateBase<OtpPage> {
   }
 
   void changeNumberClick(){
-    AppRoute.popTopView(context: context);
+    RouteTools.popTopView(context: context);
   }
 
   void resendOtpCode() async {
@@ -317,7 +317,7 @@ class _OtpPageState extends StateBase<OtpPage> {
       AppDB.setReplaceKv(Keys.setting$registerPhoneNumber, widget.phoneNumber);
       AppDB.setReplaceKv(Keys.setting$registerPhoneNumberTs, DateHelper.getNowTimestamp());
       AppBroadcast.reBuildMaterial();
-      AppRoute.backToRoot(context);
+      RouteTools.backToRoot(context);
     }
     else {
       if(dataJs[Keys.mobileNumber] == null){
@@ -327,7 +327,7 @@ class _OtpPageState extends StateBase<OtpPage> {
       await Session.login$newProfileData(dataJs);
       await hideLoading();
       AppBroadcast.reBuildMaterial();
-      AppRoute.backToRoot(context);
+      RouteTools.backToRoot(context);
     }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 
 class TimetableConfirmRequestSupport extends StatelessWidget {
   final String? lesson;
@@ -88,7 +88,7 @@ class TimetableConfirmRequestSupport extends StatelessWidget {
               children: [
                 ElevatedButton(
                     onPressed: (){
-                      AppRoute.popTopView(context: context, data: true);
+                      RouteTools.popTopView(context: context, data: true);
                     },
                     child: Text('تایید')
                 ),
@@ -101,7 +101,7 @@ class TimetableConfirmRequestSupport extends StatelessWidget {
                       side: BorderSide(color: Colors.red)
                   ),
                     onPressed: (){
-                      AppRoute.popTopView(context: context);
+                      RouteTools.popTopView(context: context);
                     },
                     child: Text('برگشت')
                 )

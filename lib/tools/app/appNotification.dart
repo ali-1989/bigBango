@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:iris_tools/api/generator.dart';
 
@@ -42,7 +42,7 @@ void notificationTapListener(ReceivedNotification receivedNotification){
 
 		if(key == 'message'){ // send from firebase-service
 			AppBroadcast.layoutPageKey.currentState?.gotoPage(3);
-			AppRoute.backToRoot(AppRoute.getBaseContext()!);
+			RouteTools.backToRoot(RouteTools.getBaseContext()!);
 		}
 	}
 }

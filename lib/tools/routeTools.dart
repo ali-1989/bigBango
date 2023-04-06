@@ -1,52 +1,10 @@
 import 'package:flutter/material.dart';
-
-import 'package:app/pages/about_page.dart';
-import 'package:app/pages/exam_page.dart';
-import 'package:app/pages/grammar_page.dart';
-import 'package:app/pages/layout_page.dart';
-import 'package:app/pages/otp_page.dart';
-import 'package:app/pages/phone_number_page.dart';
-import 'package:app/pages/profile_page.dart';
-import 'package:app/pages/reading_page.dart';
-import 'package:app/pages/register_form_page.dart';
-import 'package:app/pages/support_page.dart';
-import 'package:app/pages/transaction_page.dart';
-import 'package:app/pages/vocab_page.dart';
-import 'package:app/pages/wallet_page.dart';
 import 'package:app/tools/app/appNavigator.dart';
 
-import 'package:app/tools/app/appRouteNoneWeb.dart'
- if (dart.library.html) 'package:app/tools/app/appRouteWeb.dart' as web;
-
-class AppRoute {
+class RouteTools {
   static BuildContext? materialContext;
-  static bool _isInit = false;
 
-  static final Map<Type, String?> webRoutes = {};
-
-  AppRoute._();
-
-  static void init() {
-    if(_isInit){
-      return;
-    }
-
-    webRoutes[LayoutPage] = null;
-    webRoutes[AboutPage] = null;
-    webRoutes[ExamPage] = null;
-    webRoutes[GrammarPage] = null;
-    webRoutes[PhoneNumberPage] = null;
-    webRoutes[ProfilePage] = null;
-    webRoutes[RegisterFormPage] = null;
-    webRoutes[WalletPage] = null;
-    webRoutes[VocabPage] = null;
-    webRoutes[TransactionsPage] = null;
-    webRoutes[SupportPage] = null;
-    webRoutes[ReadingPage] = null;
-    webRoutes[OtpPage] = null;
-
-    _isInit = true;
-  }
+  RouteTools._();
 
   static BuildContext? getTopContext() {
     var res = WidgetsBinding.instance.focusManager.rootScope.focusedChild?.context;//deep: 50,66
@@ -116,7 +74,6 @@ class AppRoute {
         settings: RouteSettings(name: n, arguments: args)
     );
 
-    web.changeAddressBar(n);
     return Navigator.of(context).push(r);
   }
 
@@ -128,7 +85,6 @@ class AppRoute {
         settings: RouteSettings(name: n, arguments: args)
     );
 
-    web.changeAddressBar(n);
     return Navigator.of(context).pushReplacement(r);
   }
 }

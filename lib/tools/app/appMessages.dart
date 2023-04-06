@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 
 class AppMessages {
   AppMessages._();
@@ -8,7 +8,7 @@ class AppMessages {
   static const _noText = 'NaT';
 
   static BuildContext _getContext(){
-    return AppRoute.getTopContext()!;
+    return RouteTools.getTopContext()!;
   }
   static String get ok {
     return 'بله';

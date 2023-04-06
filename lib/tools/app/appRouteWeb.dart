@@ -13,23 +13,23 @@ void changeAddressBar(String url, {dynamic data, bool reload = false}) {
   data ??= html.window.history.state;
 
   if(!url.toLowerCase().startsWith(getBaseWebAddress())){
-    var old = getCurrentWebAddress();
+    var base = getBaseWebAddress();
 
-    if(old.endsWith('/')){
-      url = '$old$url';
+    if(base.endsWith('/')){
+      url = '$base$url';
     }
     else {
-      url = '$old/$url';
+      url = '$base/$url';
     }
   }
-
+  print('=====  input url[$url]    url[$url]');
   if(reload) {
     // can press Back button
-    html.window.history.pushState(data, '', url);
+    //html.window.history.pushState(data, '', url);
   }
   else {
     // can not press Back button
-    html.window.history.replaceState(data, '', url);
+    //html.window.history.replaceState(data, '', url);
   }
 }
 

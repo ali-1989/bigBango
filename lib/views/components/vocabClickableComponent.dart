@@ -10,7 +10,7 @@ import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
@@ -176,7 +176,7 @@ class _VocabClickableComponentState extends StateBase<VocabClickableComponent> {
                         padding: EdgeInsets.zero,
                         visualDensity: VisualDensity(horizontal: -4, vertical: -4)
                     ),
-                    onPressed: (){AppRoute.popTopView(context: context);},
+                    onPressed: (){RouteTools.popTopView(context: context);},
                     icon: Icon(AppIcons.close, color: Colors.red, size: 14,),
                   ),
                 )

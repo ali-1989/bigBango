@@ -106,8 +106,7 @@
                 return appRunner.runApp();
             }).then(function (app) {
                 window.setTimeout(function () {
-                    console.log('-----------------hhhhh ' + navigator.serviceWorker);
-                    console.log('-----------------hhhhh ' + loading);
+                    console.log('-----------------serviceWorker ' + navigator.serviceWorker);
                     loading.remove();
                 }, 200);
             });

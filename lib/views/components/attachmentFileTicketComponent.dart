@@ -20,7 +20,7 @@ import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appNavigator.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/permissionTools.dart';
 import 'package:app/views/components/fullScreenImage.dart';
@@ -76,7 +76,7 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
                               left: 10,
                                 child: GestureDetector(
                                   onTap: (){
-                                    AppRoute.popTopView(context: context);
+                                    RouteTools.popTopView(context: context);
                                   },
                                   child: CustomCard(
                                       color: Colors.grey.shade200,

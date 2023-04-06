@@ -8,7 +8,7 @@ import 'package:app/constants.dart';
 import 'package:app/pages/new_version_page.dart';
 import 'package:app/structures/models/versionModel.dart';
 import 'package:app/tools/app/appDb.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appThemes.dart';
 import '/managers/settingsManager.dart';
 
@@ -82,12 +82,12 @@ class VersionManager {
     v = v.replaceAll('.', '');
 
     if(MathHelper.toInt(v) > Constants.appVersionCode){
-      showUpdateDialog(AppRoute.getTopContext()!, serverVersion);
+      showUpdateDialog(RouteTools.getTopContext()!, serverVersion);
     }
   }
 
   static void showUpdateDialog(BuildContext context, VersionModel vm) {
-    AppRoute.pushPage(context, NewVersionPage(versionModel: vm));
+    RouteTools.pushPage(context, NewVersionPage(versionModel: vm));
     /*void closeApp(){
       System.exitApp();
     }

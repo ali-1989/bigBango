@@ -16,7 +16,7 @@ import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/views/sheets/timetable@confirmRequestSupport.dart';
@@ -543,7 +543,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
       String msg = data['message']?? 'رزرو شد';
 
       AppSheet.showSheetOneAction(context, msg, () {
-        AppRoute.popTopView(context: context, data: true);
+        RouteTools.popTopView(context: context, data: true);
       });
     };
 

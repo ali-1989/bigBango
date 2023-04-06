@@ -13,7 +13,7 @@ import 'package:app/system/publicAccess.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appHttpDio.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/deviceInfoTools.dart';
 
 class LoginService {
@@ -55,7 +55,7 @@ class LoginService {
     //AppBroadcast.layoutPageKey.currentState?.scaffoldState.currentState?.closeDrawer();
 
     if (isCurrent) {
-      AppRoute.backToRoot(AppRoute.getTopContext()!);
+      RouteTools.backToRoot(RouteTools.getTopContext()!);
       AppBroadcast.reBuildMaterial();
     }
   }
@@ -66,7 +66,7 @@ class LoginService {
     AppBroadcast.drawerMenuRefresher.update();
     //AppBroadcast.layoutPageKey.currentState?.scaffoldState.currentState?.closeDrawer();
 
-    AppRoute.backToRoot(AppRoute.getTopContext()!);
+    RouteTools.backToRoot(RouteTools.getTopContext()!);
     AppBroadcast.reBuildMaterial();
   }
   

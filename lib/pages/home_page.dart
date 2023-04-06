@@ -34,7 +34,7 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appOverlay.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -675,7 +675,7 @@ class HomePageState extends StateBase<HomePage> {
     }
 
     if(page != null) {
-      AppRoute.pushPage(context, page);
+      RouteTools.pushPage(context, page);
     }
   }
 
@@ -784,7 +784,7 @@ class HomePageState extends StateBase<HomePage> {
 
           final examPage = ExamPage(content: examPageInjector);
 
-          AppRoute.pushPage(context, examPage);
+          RouteTools.pushPage(context, examPage);
         }
         else {
           AppSheet.showSheetNotice(context, 'آزمونی ثبت نشده است');
@@ -814,7 +814,7 @@ class HomePageState extends StateBase<HomePage> {
 
     final page = TimetablePage(lesson: lesson, maxUserTime: 0);
 
-    AppRoute.pushPage(context, page);
+    RouteTools.pushPage(context, page);
   }
 }
 

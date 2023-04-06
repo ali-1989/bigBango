@@ -27,7 +27,7 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -503,7 +503,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () async {
-        await AppRoute.pushPage(context, TicketDetailPage(ticketModel: tik, ticketId: tik.id));
+        await RouteTools.pushPage(context, TicketDetailPage(ticketModel: tik, ticketId: tik.id));
         assistCtr.updateHead();
       },
       child: Padding(
@@ -566,7 +566,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     final page = TimetablePage(maxUserTime: userTime!);
 
-    final mustUpdate = await AppRoute.pushPage(context, page);
+    final mustUpdate = await RouteTools.pushPage(context, page);
 
     if(mustUpdate){
       assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$Timetable);

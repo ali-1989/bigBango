@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:iris_tools/widgets/customCard.dart';
@@ -175,14 +175,14 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
         final message = res['message']?? 'با موفقیت پرداخت شد';
 
         AppSheet.showSheetOneAction(context, message, () {
-          AppRoute.popTopView(context: context, data: true);
+          RouteTools.popTopView(context: context, data: true);
         });
       }
       else {
         final url = bankPortal['url']?? '';
         await UrlHelper.launchLink(url, mode: LaunchMode.externalApplication);
 
-        AppRoute.popTopView(context: context, data: false);
+        RouteTools.popTopView(context: context, data: false);
       }
     };
 

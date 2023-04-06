@@ -1,8 +1,15 @@
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appNavigatorObserver.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/views/homeComponents/splashPage.dart';
 import 'package:flutter/material.dart';
+
+
+/* usage: in MaterialApp()
+home: Router(
+        routerDelegate: AppRouterDelegate.instance(),
+        backButtonDispatcher: RootBackButtonDispatcher(),
+      ),*/
 
 class AppRouterDelegate<T> extends RouterDelegate<T> with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   static AppRouterDelegate? _instance;
@@ -34,7 +41,6 @@ class AppRouterDelegate<T> extends RouterDelegate<T> with ChangeNotifier, PopNav
         data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
         child: Navigator(
           key: AppBroadcast.rootNavigatorKey,
-          //initialRoute: '/',
           observers: [AppNavigatorObserver.instance()],
           onUnknownRoute: AppNavigatorObserver.onUnknownRoute,
           onGenerateRoute: AppNavigatorObserver.onGenerateRoute,
@@ -48,9 +54,9 @@ class AppRouterDelegate<T> extends RouterDelegate<T> with ChangeNotifier, PopNav
 
   @override
   Future<bool> popRoute() async {
-    /// back button press
-    if(AppRoute.canPop(AppRoute.getTopContext()!)) {
-      AppRoute.popTopView();
+    /// on back button press
+    if(RouteTools.canPop(RouteTools.getTopContext()!)) {
+      RouteTools.popTopView();
       return true;
     }
 
@@ -65,7 +71,7 @@ class AppRouterDelegate<T> extends RouterDelegate<T> with ChangeNotifier, PopNav
   Widget materialHomeBuilder(){
     return Builder(
       builder: (localContext){
-        AppRoute.materialContext = localContext;
+        RouteTools.materialContext = localContext;
         testCodes(localContext);
 
         return SplashPage();

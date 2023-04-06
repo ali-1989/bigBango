@@ -6,7 +6,7 @@ import 'package:app/system/publicAccess.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appHttpDio.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appToast.dart';
 
 class JwtService {
@@ -100,27 +100,27 @@ class JwtService {
       final dataJs = a.getBodyAsJson()!;
       final message = dataJs['message'];
 
-      AppToast.showToast(AppRoute.getBaseContext()!, message);
+      AppToast.showToast(RouteTools.getBaseContext()!, message);
 
       await Session.logoff(um.userId);
       AppBroadcast.reBuildMaterial();
 
-      AppRoute.backToRoot(AppRoute.getTopContext()!);
+      RouteTools.backToRoot(RouteTools.getTopContext()!);
     }
 
     else if(a.responseData?.statusCode == 307){
       final dataJs = a.getBodyAsJson()!;
       final message = dataJs['message'];
 
-      AppToast.showToast(AppRoute.getBaseContext()!, message);
+      AppToast.showToast(RouteTools.getBaseContext()!, message);
 
       await Session.logoff(um.userId);
       AppBroadcast.reBuildMaterial();
 
-      AppRoute.backToRoot(AppRoute.getTopContext()!);
+      RouteTools.backToRoot(RouteTools.getTopContext()!);
     }
     else if(a.responseData?.statusCode == 405){
-      AppToast.showToast(AppRoute.getBaseContext()!, 'need to config');
+      AppToast.showToast(RouteTools.getBaseContext()!, 'need to config');
     }
 
     return false;

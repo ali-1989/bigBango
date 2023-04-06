@@ -4,7 +4,7 @@ import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 class WalletWithdrawalSheet extends StatefulWidget {
@@ -89,7 +89,7 @@ class _WalletWithdrawalSheetState extends State<WalletWithdrawalSheet> {
                   width: 100,
                   child: ElevatedButton(
                     onPressed: (){
-                      AppRoute.popTopView(context: context, data: MathHelper.clearToInt(txtCtr.text.trim()));
+                      RouteTools.popTopView(context: context, data: MathHelper.clearToInt(txtCtr.text.trim()));
                     },
                     child: Text('تایید'),
                   ),
@@ -105,7 +105,7 @@ class _WalletWithdrawalSheetState extends State<WalletWithdrawalSheet> {
                       foregroundColor: Colors.red,
                     ),
                     onPressed: (){
-                      AppRoute.popTopView(context: context);
+                      RouteTools.popTopView(context: context);
                     },
                     child: Text('لغو'),
                   ),

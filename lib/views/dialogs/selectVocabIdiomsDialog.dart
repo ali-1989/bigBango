@@ -5,7 +5,7 @@ import 'package:app/pages/vocab_page.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 class SelectVocabIdiomsDialog extends StatefulWidget {
@@ -62,7 +62,7 @@ class _SelectVocabIdiomsDialog extends State<SelectVocabIdiomsDialog> {
                           child: GestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onTap: (){
-                              AppRoute.pushPage(context, VocabPage(injector: widget.injector));
+                              RouteTools.pushPage(context, VocabPage(injector: widget.injector));
                             },
                             child: CustomCard(
                               color: Colors.grey.shade300,
@@ -90,7 +90,7 @@ class _SelectVocabIdiomsDialog extends State<SelectVocabIdiomsDialog> {
                       Expanded(
                           child: GestureDetector(
                             onTap: (){
-                              AppRoute.pushPage(context, IdiomsPage(injector: widget.injector));
+                              RouteTools.pushPage(context, IdiomsPage(injector: widget.injector));
                             },
                             child: CustomCard(
                               color: Colors.grey.shade300,

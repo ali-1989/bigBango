@@ -8,7 +8,7 @@ import 'package:app/structures/models/withdrawalModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/currencyTools.dart';
 import 'package:app/tools/dateTools.dart';
@@ -59,7 +59,7 @@ class _WalletWithdrawalListSheetState extends StateBase<WalletWithdrawalListShee
                     splashRadius: 14,
                     constraints: BoxConstraints.tightFor(),
                     onPressed: (){
-                      AppRoute.popTopView(context: context);
+                      RouteTools.popTopView(context: context);
                     },
                     icon: Icon(AppIcons.close, size: 17)
                 ),

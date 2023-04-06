@@ -20,7 +20,7 @@ import 'package:app/system/extensions.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appRoute.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/currencyTools.dart';
@@ -374,7 +374,7 @@ class _WalletPageState extends StateBase<WalletPage> {
   void showWithdrawalSheet() async {
     if(Session.getLastLoginUser()!.iban == null){
       void fn(){
-        AppRoute.pushPage(context, ProfilePage(userModel: Session.getLastLoginUser()!));
+        RouteTools.pushPage(context, ProfilePage(userModel: Session.getLastLoginUser()!));
       }
 
       AppSheet.showSheetOneAction(context, 'ابتدا باید شماره شبای متعلق به خود را در بخش پروفایل وارد کنید', fn, buttonText: 'پروفایل');
