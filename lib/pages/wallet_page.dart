@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_notifier/iris_notifier.dart';
 
@@ -56,7 +56,7 @@ class _WalletPageState extends StateBase<WalletPage> {
     super.initState();
 
     assistCtr.addState(AssistController.state$loading);
-    EventNotifierService.addListener(EventDispatcher.appResume, onBackOfBankGetWay);
+    EventNotifierService.addListener(AppEvents.appResume, onBackOfBankGetWay);
 
     requestTransaction();
   }
@@ -64,7 +64,7 @@ class _WalletPageState extends StateBase<WalletPage> {
   @override
   void dispose(){
     requester.dispose();
-    EventNotifierService.removeListener(EventDispatcher.appResume, onBackOfBankGetWay);
+    EventNotifierService.removeListener(AppEvents.appResume, onBackOfBankGetWay);
 
     super.dispose();
   }

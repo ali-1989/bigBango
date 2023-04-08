@@ -1,6 +1,6 @@
 import 'package:iris_notifier/iris_notifier.dart';
 
-enum EventDispatcher implements EventImplement {
+enum AppEvents implements EventImplement {
   networkConnected(100),
   networkDisConnected(101),
   networkStateChange(102),
@@ -18,7 +18,7 @@ enum EventDispatcher implements EventImplement {
 
   final int _number;
 
-  const EventDispatcher(this._number);
+  const AppEvents(this._number);
 
   int getNumber(){
     return _number;

@@ -1,6 +1,4 @@
-import 'package:app/structures/enums/appEventDispatcher.dart';
-import 'package:app/tools/routeTools.dart';
-import 'package:app/tools/app/appToast.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:iris_db/iris_db.dart';
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/checker.dart';
@@ -116,7 +114,7 @@ class Session {
 				wasLoginUser.matchBy(newUser);
 				_setLastLoginUser(wasLoginUser);
 
-				EventNotifierService.notify(EventDispatcher.userProfileChange, data: wasLoginUser);
+				EventNotifierService.notify(AppEvents.userProfileChange, data: wasLoginUser);
 
 				return wasLoginUser;
 			}
@@ -124,7 +122,7 @@ class Session {
 				currentLoginList.add(newUser);
 				_setLastLoginUser(newUser);
 
-				EventNotifierService.notify(EventDispatcher.userLogin, data: newUser);
+				EventNotifierService.notify(AppEvents.userLogin, data: newUser);
 
 				return newUser;
 			}
@@ -165,7 +163,7 @@ class Session {
 				//final oldMap = wasLoginUser.toMap();
 				wasLoginUser.matchBy(newUser);
 
-				EventNotifierService.notify(EventDispatcher.userProfileChange, data: wasLoginUser);
+				EventNotifierService.notify(AppEvents.userProfileChange, data: wasLoginUser);
 			}
 		}
 	}
@@ -210,15 +208,11 @@ class Session {
 	static Future<bool> sinkUserInfo(UserModel user) async {
 		//final old = (await fetchUserById(user.userId))?.toMap();
 
-		if(user.courseLevel == null){
-			AppToast.showToast(RouteTools.getBaseContext()!, 'courseLevel = null');
-		}
-
 		final res = await AppDB.db.update(AppDB.tbUsers, user.toMap(),
 				Conditions().add(Condition()..key = Keys.userId..value = user.userId));
 
 		if(res > 0) {
-			EventNotifierService.notify(EventDispatcher.userProfileChange, data: user);
+			EventNotifierService.notify(AppEvents.userProfileChange, data: user);
 			return true;
 		}
 
@@ -246,7 +240,7 @@ class Session {
 		  _setLastLoginUser(null);
 		}
 
-		EventNotifierService.notify(EventDispatcher.userLogoff, data: user);
+		EventNotifierService.notify(AppEvents.userLogoff, data: user);
 
 		return true;
 	}
@@ -269,7 +263,7 @@ class Session {
 		await AppDB.db.update(AppDB.tbUsers, val, con);
 
 		for(var u in currentLoginList){
-			EventNotifierService.notify(EventDispatcher.userLogoff, data: u);
+			EventNotifierService.notify(AppEvents.userLogoff, data: u);
 		}
 
 		currentLoginList.clear();
@@ -287,7 +281,7 @@ class Session {
 
 	static String getSexEquivalent(int? sex){
 		if(sex == null) {
-		  return '-';
+		  return '-'; //AppLocale.appLocalize.translate('unknown')!;
 		}
 
 		switch(sex){

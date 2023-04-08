@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
@@ -831,7 +831,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
           user.avatarModel = media;
           Session.sinkUserInfo(user);
 
-          EventNotifierService.notify(EventDispatcher.userProfileChange);
+          EventNotifierService.notify(AppEvents.userProfileChange);
         }
       }
     }
@@ -876,7 +876,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     requester.httpRequestEvents.onStatusOk = (req, data) async {
       user.avatarModel = null;
 
-      EventNotifierService.notify(EventDispatcher.userProfileChange);
+      EventNotifierService.notify(AppEvents.userProfileChange);
       Session.sinkUserInfo(user);
 
       assistCtr.updateHead();
@@ -1063,7 +1063,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       Session.sinkUserInfo(user);
       prepare();
       compareChanges();
-      EventNotifierService.notify(EventDispatcher.userProfileChange);
+      EventNotifierService.notify(AppEvents.userProfileChange);
     };
 
 

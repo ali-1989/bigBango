@@ -13,4 +13,4 @@ String getBaseWebAddress() {
   return '';
 }
 
-void clearAddressBar(String? part){}
+void clearAddressBar(){}

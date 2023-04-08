@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
@@ -18,7 +18,7 @@ class StoreManager {
 	static final List<StoreModel> _storeList = [];
 
 	static void init(){
-		EventNotifierService.addListener(EventDispatcher.languageLevelChanged, languageLevelChanged);
+		EventNotifierService.addListener(AppEvents.languageLevelChanged, languageLevelChanged);
 	}
 
 	static void languageLevelChanged({data}){

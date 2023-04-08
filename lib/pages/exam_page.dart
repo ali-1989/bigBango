@@ -1,4 +1,4 @@
-import 'package:app/structures/contents/examBuilderContent.dart';
+import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +7,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/examDescription.dart';
 import 'package:app/structures/enums/quizType.dart';
-import 'package:app/structures/contents/autodidactBuilderContent.dart';
+import 'package:app/structures/builders/autodidactBuilderContent.dart';
 
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';

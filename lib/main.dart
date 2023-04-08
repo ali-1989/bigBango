@@ -40,7 +40,7 @@ Future<void> main() async {
   zone() {
     runApp(
         StreamBuilder<bool>(
-            initialData: false,
+            initialData: true,
             stream: AppBroadcast.viewUpdaterStream.stream,
             builder: (context, snapshot) {
               return MaxWidth(
@@ -107,6 +107,7 @@ class MyApp extends StatelessWidget {
       title: Constants.appTitle,
       theme: AppThemes.instance.themeData,
       //darkTheme: ThemeData.dark(),
+      onGenerateRoute: AppNavigatorObserver.onGenerateRoute,
       themeMode: AppThemes.instance.currentThemeMode,
       navigatorObservers: [AppNavigatorObserver.instance()],
       scrollBehavior: ScrollConfiguration.of(context).copyWith(

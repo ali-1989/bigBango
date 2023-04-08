@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:app/managers/leitnerManager.dart';
 import 'package:app/managers/storeManager.dart';
-import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/tools/app/appLocale.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -139,8 +139,8 @@ class ApplicationInitial {
       //DownloadUploadService.init();
 
       /// login & logoff
-      EventNotifierService.addListener(EventDispatcher.userLogin, LoginService.onLoginObservable);
-      EventNotifierService.addListener(EventDispatcher.userLogoff, LoginService.onLogoffObservable);
+      EventNotifierService.addListener(AppEvents.userLogin, LoginService.onLoginObservable);
+      EventNotifierService.addListener(AppEvents.userLogoff, LoginService.onLogoffObservable);
 
       /*if (System.isWeb()) {
         void onSizeCheng(oldW, oldH, newW, newH) {
@@ -154,7 +154,7 @@ class ApplicationInitial {
       LeitnerManager.requestLeitnerCount();
       StoreManager.init();
 
-      EventNotifierService.addListener(EventDispatcher.firebaseTokenReceived, ({data}) {
+      EventNotifierService.addListener(AppEvents.firebaseTokenReceived, ({data}) {
         MessageManager.requestSetFirebaseToken();
       });
 

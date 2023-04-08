@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app/structures/contents/examBuilderContent.dart';
+import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/callAction/taskQueueCaller.dart';

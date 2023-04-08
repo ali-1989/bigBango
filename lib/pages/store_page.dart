@@ -1,4 +1,4 @@
-import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_notifier/iris_notifier.dart';
 
@@ -45,8 +45,8 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
   void initState(){
     super.initState();
 
-    EventNotifierService.addListener(EventDispatcher.appResume, onBackOfBankGetWay);
-    EventNotifierService.addListener(EventDispatcher.languageLevelChanged, languageLevelChanged);
+    EventNotifierService.addListener(AppEvents.appResume, onBackOfBankGetWay);
+    EventNotifierService.addListener(AppEvents.languageLevelChanged, languageLevelChanged);
 
     tabCtr = TabController(length: 1, vsync: this);
     assistCtr.addState(AssistController.state$loading);
@@ -55,8 +55,8 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
 
   @override
   void dispose(){
-    EventNotifierService.removeListener(EventDispatcher.appResume, onBackOfBankGetWay);
-    EventNotifierService.removeListener(EventDispatcher.languageLevelChanged, languageLevelChanged);
+    EventNotifierService.removeListener(AppEvents.appResume, onBackOfBankGetWay);
+    EventNotifierService.removeListener(AppEvents.languageLevelChanged, languageLevelChanged);
 
     super.dispose();
   }

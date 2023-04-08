@@ -1,4 +1,4 @@
-import 'package:app/structures/contents/examBuilderContent.dart';
+import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';

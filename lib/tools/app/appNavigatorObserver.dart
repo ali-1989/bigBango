@@ -1,52 +1,25 @@
-import 'package:app/stack.dart';
-import 'package:flutter/material.dart';
+import 'dart:developer';
+
 import 'package:app/pages/about_page.dart';
-import 'package:app/pages/exam_page.dart';
-import 'package:app/pages/grammar_page.dart';
-import 'package:app/pages/layout_page.dart';
-import 'package:app/pages/otp_page.dart';
-import 'package:app/pages/phone_number_page.dart';
-import 'package:app/pages/profile_page.dart';
-import 'package:app/pages/reading_page.dart';
-import 'package:app/pages/register_form_page.dart';
-import 'package:app/pages/support_page.dart';
-import 'package:app/pages/transaction_page.dart';
-import 'package:app/pages/vocab_page.dart';
-import 'package:app/pages/wallet_page.dart';
+import 'package:app/tools/routeTools.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:iris_tools/api/generator.dart';
+import 'package:iris_tools/api/helpers/mathHelper.dart';
+import 'package:iris_tools/api/stackList.dart';
 
 import 'package:app/tools/app/appRouteNoneWeb.dart'
 if (dart.library.html) 'package:app/tools/app/appRouteWeb.dart' as web;
-import 'package:iris_tools/api/generator.dart';
 
-class AppNavigatorObserver with NavigatorObserver  /* NavigatorObserver or RouteObserver*/ {
+
+class AppNavigatorObserver with NavigatorObserver  /*NavigatorObserver or RouteObserver*/ {
   static final AppNavigatorObserver _instance = AppNavigatorObserver._();
   static final StackList<String> _routeList = StackList();
   static final List<MapEntry<int, String>> _routeToLabel = [];
-  static final Map<Type, String?> webRoutes = {};
+  static final List<WebRoute> webRoutes = [];
+  static final String homeName = 'homePage';
 
   AppNavigatorObserver._();
-
-  static void init() {
-    /*if(_isInit){
-      return;
-    }*/
-
-    webRoutes[LayoutPage] = null;
-    webRoutes[AboutPage] = null;
-    webRoutes[ExamPage] = null;
-    webRoutes[GrammarPage] = null;
-    webRoutes[PhoneNumberPage] = null;
-    webRoutes[ProfilePage] = null;
-    webRoutes[RegisterFormPage] = null;
-    webRoutes[WalletPage] = null;
-    webRoutes[VocabPage] = null;
-    webRoutes[TransactionsPage] = null;
-    webRoutes[SupportPage] = null;
-    webRoutes[ReadingPage] = null;
-    webRoutes[OtpPage] = null;
-
-    //_isInit = true;
-  }
 
   static AppNavigatorObserver instance(){
     return _instance;
@@ -54,21 +27,15 @@ class AppNavigatorObserver with NavigatorObserver  /* NavigatorObserver or Route
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    super.didPush(route, previousRoute);
-
     if(route is! PageRoute){
+      super.didPush(route, previousRoute);
       return;
     }
 
     /// AppBroadcast.rootNavigatorKey.currentState    <==>    route.navigator
     String? name = route.settings.name;
 
-    if(route.isFirst){
-      _routeList.clear();
-      name = '/';
-    }
-    else {
-      /*Future.delayed(Duration(milliseconds: 1500), (){
+    /*Future.delayed(Duration(milliseconds: 1500), (){
         //final routes2 = AppNavigator.getAllModalRoutes$();
         final routes = AppNavigator.getAllModalRoutesByFocusScope();
 
@@ -77,11 +44,18 @@ class AppNavigatorObserver with NavigatorObserver  /* NavigatorObserver or Route
           if(last.key is PageRoute) {}
         }
       });*/
-      if(name == null){
-        name = Generator.generateKey(10);
-        _routeToLabel.add(MapEntry(route.hashCode, name));
-      }
+
+    if(homeName == name){
+      _routeList.clear();
+      name = '/';
     }
+
+    if(name == null){
+      name = Generator.generateKey(10);
+      _routeToLabel.add(MapEntry(route.hashCode, name));
+    }
+
+    super.didPush(route, previousRoute);
 
     _routeList.push(name);
     _changeAddressBar();
@@ -96,7 +70,6 @@ class AppNavigatorObserver with NavigatorObserver  /* NavigatorObserver or Route
     }
 
     _routeList.pop();
-
     _changeAddressBar();
   }
 
@@ -157,6 +130,31 @@ class AppNavigatorObserver with NavigatorObserver  /* NavigatorObserver or Route
   }
 
   static Route? onGenerateRoute(RouteSettings settings) {
+    final w = WebRoute();
+    w.routeName = 'aaa';
+    w.builder = (){return AboutPage();};
+
+    webRoutes.add(w);
+
+
+    if(kIsWeb){
+      if(_routeList.isEmpty && web.getCurrentWebAddress() != web.getBaseWebAddress()) {
+        final address = web.getCurrentWebAddress();
+        final lastPath = getLastPart(address);
+
+        for(final i in webRoutes){
+          if(i.routeName.toLowerCase() == lastPath.toLowerCase()){
+            print('------------------- name: ${settings.name},  ${settings.arguments}');
+            return MaterialPageRoute(
+                builder: (ctx){
+                  return i.builder();
+                },
+            settings: settings);
+          }
+        }
+      }
+    }
+
     return null;
   }
 
@@ -173,4 +171,39 @@ class AppNavigatorObserver with NavigatorObserver  /* NavigatorObserver or Route
 
     web.changeAddressBar(url);
   }
+
+  static String getLastPart(String address){
+    final split = address.split('/');
+
+    if(split.length > 1){
+      final last = split.last;
+
+      int idxQuestionMark = last.indexOf('?');
+      int idxSharpMark = last.indexOf('#');
+
+      //int idx = MathHelper.minInt(idxQuestionMark, idxSharpMark);
+      int idx = idxQuestionMark;
+
+      if(idx < 0){
+        idx = idxSharpMark;
+      }
+
+      if(idx > 0){
+        return last.substring(0, idx);
+      }
+
+      return last;
+    }
+
+    return address;
+  }
+}
+
+
+
+class WebRoute {
+  late String routeName;
+  late Widget Function() builder;
+  String? routeAddress;
+  bool show404OnInvalidAddress = false;
 }

@@ -1,4 +1,4 @@
-import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:app/services/review_service.dart';
@@ -11,17 +11,17 @@ class NetListenerTools {
 
   /// this fn call on app launch: if (wifi/cell data) is on.
   static void onNetListener(ConnectivityResult connectivityResult) async {
-    EventNotifierService.notify(EventDispatcher.networkStateChange);
+    EventNotifierService.notify(AppEvents.networkStateChange);
 
     if(connectivityResult != ConnectivityResult.none) {
       AppBroadcast.isNetConnected = true;
-      EventNotifierService.notify(EventDispatcher.networkConnected);
+      EventNotifierService.notify(AppEvents.networkConnected);
 
       ReviewService.sendReviews();
     }
     else {
       AppBroadcast.isNetConnected = false;
-      EventNotifierService.notify(EventDispatcher.networkDisConnected);
+      EventNotifierService.notify(AppEvents.networkDisConnected);
 
       AppCache.clearDownloading();
     }

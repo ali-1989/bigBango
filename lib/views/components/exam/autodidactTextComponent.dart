@@ -18,7 +18,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/autodidactReplyType.dart';
-import 'package:app/structures/contents/autodidactBuilderContent.dart';
+import 'package:app/structures/builders/autodidactBuilderContent.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/system/extensions.dart';

@@ -22,42 +22,24 @@ void changeAddressBar(String url, {dynamic data, bool reload = false}) {
       url = '$base/$url';
     }
   }
-  print('=====  input url[$url]    url[$url]');
+
   if(reload) {
     // can press Back button
-    //html.window.history.pushState(data, '', url);
+    html.window.history.pushState(data, '', url);
   }
   else {
     // can not press Back button
-    //html.window.history.replaceState(data, '', url);
+    html.window.history.replaceState(data, '', url);
   }
 }
 
-void clearAddressBar(String? part) {
+void clearAddressBar() {
   if(!kIsWeb) {
     return;
   }
 
-  if(part == null) {
-    final location = '${html.window.location.protocol}//${html.window.location.host}/';
-    html.window.history.replaceState(html.window.history.state, '', location);
-  }
-  else {
-    String url = html.window.location.href;
-    int lIdx = url.lastIndexOf(part);
-
-    if(lIdx < 0){
-      return;
-    }
-
-    url = url.replaceFirst(part, '', lIdx);
-
-    if(url.endsWith('//')){
-      url = url.substring(0, url.length -1);
-    }
-
-    html.window.history.replaceState(html.window.history.state, '', url);
-  }
+  final location = '${html.window.location.protocol}//${html.window.location.host}/';
+  html.window.history.replaceState(html.window.history.state, '', location);
 }
 
 String getBaseWebAddress() {

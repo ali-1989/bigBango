@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:iris_notifier/iris_notifier.dart';
-import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:flutter/material.dart';
 
@@ -68,7 +68,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   void initState(){
     super.initState();
 
-    EventNotifierService.addListener(EventDispatcher.appResume, onBackOfBankGetWay);
+    EventNotifierService.addListener(AppEvents.appResume, onBackOfBankGetWay);
 
     assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$Timetable);
     assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$Ticketing);
@@ -88,7 +88,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
   @override
   void dispose(){
-    EventNotifierService.removeListener(EventDispatcher.appResume, onBackOfBankGetWay);
+    EventNotifierService.removeListener(AppEvents.appResume, onBackOfBankGetWay);
     DataNotifierService.removeListener(AppBroadcast.addTicketNotifier, onAddTicketEventCall);
     requester.dispose();
 

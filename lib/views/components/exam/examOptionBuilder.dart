@@ -1,4 +1,4 @@
-import 'package:app/structures/contents/examBuilderContent.dart';
+import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:flutter/material.dart';
 

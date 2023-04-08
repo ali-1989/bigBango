@@ -1,4 +1,4 @@
-import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/tools/app/appCache.dart';
@@ -21,7 +21,7 @@ class ApplicationLifeCycle {
       return;
     }
 
-    EventNotifierService.notify(EventDispatcher.appPause);
+    EventNotifierService.notify(AppEvents.appPause);
   }
 
   static void onDetach() async {
@@ -29,10 +29,10 @@ class ApplicationLifeCycle {
       return;
     }
 
-    EventNotifierService.notify(EventDispatcher.appDeatach);
+    EventNotifierService.notify(AppEvents.appDeatach);
   }
 
   static void onResume() {
-    EventNotifierService.notify(EventDispatcher.appResume);
+    EventNotifierService.notify(AppEvents.appResume);
   }
 }

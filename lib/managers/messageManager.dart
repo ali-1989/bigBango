@@ -2,7 +2,7 @@
 
 import 'dart:core';
 
-import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
@@ -200,7 +200,7 @@ class MessageManager {
     };
 
     requester.httpRequestEvents.onNetworkError = (req) async {
-      EventNotifierService.addListener(EventDispatcher.networkConnected, _onNetConnected);
+      EventNotifierService.addListener(AppEvents.networkConnected, _onNetConnected);
     };
 
     requester.httpRequestEvents.onFailState = (req, dataJs) async {
@@ -235,7 +235,7 @@ class MessageManager {
     };
 
     requester.httpRequestEvents.onNetworkError = (req) async {
-      EventNotifierService.addListener(EventDispatcher.networkConnected, _onNetConnected);
+      EventNotifierService.addListener(AppEvents.networkConnected, _onNetConnected);
     };
 
     requester.httpRequestEvents.onFailState = (req, dataJs) async {
@@ -258,7 +258,7 @@ class MessageManager {
   }
 
   static void _onNetConnected({data}) {
-    EventNotifierService.removeListener(EventDispatcher.networkConnected, _onNetConnected);
+    EventNotifierService.removeListener(AppEvents.networkConnected, _onNetConnected);
     requestUnReadCount();
     requestSetFirebaseToken();
   }

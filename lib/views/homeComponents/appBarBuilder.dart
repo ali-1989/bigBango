@@ -1,4 +1,4 @@
-import 'package:app/structures/enums/appEventDispatcher.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_notifier/iris_notifier.dart';
 
@@ -145,7 +145,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 StreamBuilder(
-                  stream: EventNotifierService.getStream(EventDispatcher.userProfileChange),
+                  stream: EventNotifierService.getStream(AppEvents.userProfileChange),
                   builder: (_, data) {
                       final user = Session.getLastLoginUser();
 
