@@ -695,6 +695,13 @@ packages:
       url: "https://github.com/ali-1989/IrisPicEditor.git"
     source: git
     version: "0.0.6+17"
+  iris_route:
+    dependency: "direct main"
+    description:
+      path: "../iris_route"
+      relative: true
+    source: path
+    version: "0.0.1"
   iris_tools:
     dependency: "direct main"
     description:
@@ -1518,5 +1525,5 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=2.19.0 <3.0.0"
+  dart: ">=2.19.2 <3.0.0"
   flutter: ">=3.7.0"

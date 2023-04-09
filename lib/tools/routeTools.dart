@@ -1,10 +1,31 @@
+import 'package:app/pages/about_page.dart';
+import 'package:app/pages/home_page.dart';
+import 'package:app/pages/support_page.dart';
+import 'package:app/pages/wallet_page.dart';
 import 'package:flutter/material.dart';
 import 'package:app/tools/app/appNavigator.dart';
+import 'package:iris_route/iris_route.dart';
 
 class RouteTools {
   static BuildContext? materialContext;
 
   RouteTools._();
+
+  static prepareWebRoute(){
+    final aboutPage = WebRoute.by((AboutPage).toString(), AboutPage());
+    final homePage = WebRoute.by((HomePage).toString(), HomePage());
+    final supportPage = WebRoute.by((SupportPage).toString(), SupportPage());
+    final walletPage = WebRoute.by((WalletPage).toString(), WalletPage());
+
+    //final registerFormPage = WebRoute.by((RegisterFormPage).toString(), RegisterFormPage());
+    //final profilePage = WebRoute.by((ProfilePage).toString(), ProfilePage());
+
+    IrisNavigatorObserver.webRoutes.add(aboutPage);
+    IrisNavigatorObserver.webRoutes.add(homePage);
+    IrisNavigatorObserver.webRoutes.add(supportPage);
+    IrisNavigatorObserver.webRoutes.add(walletPage);
+    IrisNavigatorObserver.homeName = homePage.routeName;
+  }
 
   static BuildContext? getTopContext() {
     var res = WidgetsBinding.instance.focusManager.rootScope.focusedChild?.context;//deep: 50,66

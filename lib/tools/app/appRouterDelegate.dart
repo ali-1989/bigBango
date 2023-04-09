@@ -1,8 +1,8 @@
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appNavigatorObserver.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/homeComponents/splashPage.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_route/iris_route.dart';
 
 
 /* usage: in MaterialApp()
@@ -41,10 +41,10 @@ class AppRouterDelegate<T> extends RouterDelegate<T> with ChangeNotifier, PopNav
         data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
         child: Navigator(
           key: AppBroadcast.rootNavigatorKey,
-          observers: [AppNavigatorObserver.instance()],
-          onUnknownRoute: AppNavigatorObserver.onUnknownRoute,
-          onGenerateRoute: AppNavigatorObserver.onGenerateRoute,
-          onPopPage: AppNavigatorObserver.onPopPage,
+          observers: [IrisNavigatorObserver.instance()],
+          onUnknownRoute: IrisNavigatorObserver.onUnknownRoute,
+          onGenerateRoute: IrisNavigatorObserver.onGenerateRoute,
+          onPopPage: IrisNavigatorObserver.onPopPage,
           pages: [
             MaterialPage(child: materialHomeBuilder())
           ],

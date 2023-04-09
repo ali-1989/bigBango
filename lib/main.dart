@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:app/services/firebase_service.dart';
-import 'package:app/tools/app/appNavigatorObserver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:iris_route/iris_route.dart';
 import 'package:iris_tools/widgets/maxWidth.dart';
 
 import 'package:app/constants.dart';
@@ -107,9 +107,9 @@ class MyApp extends StatelessWidget {
       title: Constants.appTitle,
       theme: AppThemes.instance.themeData,
       //darkTheme: ThemeData.dark(),
-      onGenerateRoute: AppNavigatorObserver.onGenerateRoute,
+      onGenerateRoute: IrisNavigatorObserver.onGenerateRoute,
       themeMode: AppThemes.instance.currentThemeMode,
-      navigatorObservers: [AppNavigatorObserver.instance()],
+      navigatorObservers: [IrisNavigatorObserver.instance()],
       scrollBehavior: ScrollConfiguration.of(context).copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,

@@ -77,6 +77,8 @@ dependencies:
     git: https://github.com/ali-1989/IrisPicEditor.git
   #iris_audio_visualizer:
     #path: ../thParty/audio_visualizer-master
+  iris_route:
+    path: ../iris_route
 
 
   # ** packages that for iOS needs additional code:
