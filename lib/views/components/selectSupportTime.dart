@@ -448,6 +448,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
 
         if(res){
           AppBroadcast.reBuildMaterial();
+          RouteTools.backToRoot(context);
         }
       });
     };

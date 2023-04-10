@@ -1,4 +1,12 @@
+import 'dart:async';
+
+import 'package:app/structures/enums/appEvents.dart';
+import 'package:app/structures/models/supportModels/supportPlanModel.dart';
+import 'package:app/system/publicAccess.dart';
+import 'package:app/views/sheets/support@selectBuyMethodSheet.dart';
+import 'package:app/views/sheets/supportPlanSheet.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 
 import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
@@ -43,11 +51,22 @@ class _TimetablePageState extends StateBase<TimetablePage> {
   List<HoursOfSupportModel> dayHourList = [];
   List<DayWeekModel> days = [];
   int currentDay = 0;
+  int maxUserTime = 0;
   String timeSelectId = '';
+  bool isInGetWay = false;
+
+  @override
+  void initState(){
+    super.initState();
+
+    EventNotifierService.addListener(AppEvents.appResume, onBackOfBankGetWay);
+    maxUserTime = widget.maxUserTime;
+  }
 
   @override
   void dispose(){
     requester.dispose();
+    EventNotifierService.removeListener(AppEvents.appResume, onBackOfBankGetWay);
 
     super.dispose();
   }
@@ -91,7 +110,23 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                 const SizedBox(height: 20),
 
                 Divider(color: Colors.black54, indent: 0, endIndent: 0),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
+
+                UnconstrainedBox(
+                  alignment: Alignment.topLeft,
+                  child: SizedBox(
+                    height: 20,
+                    width: 70,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            visualDensity: VisualDensity(vertical: -2)
+                        ),
+                        onPressed: onChargeTime,
+                        child: Text('شارژ زمان')
+                    ),
+                  ),
+                ),
 
                 Visibility(
                   visible: widget.lesson != null,
@@ -164,6 +199,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                             disabledBorder: InputBorder.none,
                             focusedBorder: InputBorder.none,
                             isDense: true,
+                            hintText: 'حداکثر $maxUserTime دقیقه',
                           ),
                         ).wrapBoxBorder(color: Colors.black)
                     ),
@@ -176,7 +212,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                       ),
                         onPressed: requestFreeTimes,
                         child: Text('بررسی')
-                    )
+                    ),
                   ],
                 ),
 
@@ -394,6 +430,109 @@ class _TimetablePageState extends StateBase<TimetablePage> {
     return days.firstWhere((element) => element.dayOfMonth == currentDay);
   }
 
+  void onChargeTime() async {
+    final js = await requestSupportTimePlans();
+
+    if(js == null){
+      return;
+    }
+
+    List<SupportPlanModel> pList = [];
+
+    for(final t in js){
+      final p = SupportPlanModel.fromMap(t);
+      pList.add(p);
+    }
+
+    final res = await AppSheet.showSheetCustom(
+      context,
+      builder: (_) => SupportPlanSheet(planList: pList),
+      routeName: 'buySessionTimeSheet',
+      isDismissible: true,
+      isScrollControlled: true,
+      contentColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+    );
+
+    if(res is Map){
+      showSelectPaymentMethodSheet(res['amount'], res['minutes'], res['planId']);
+    }
+  }
+
+  void showSelectPaymentMethodSheet(int amount, int minutes, String? planId) async {
+    showLoading();
+    final balance = await PublicAccess.requestUserBalance();
+    await hideLoading();
+
+    if(balance == null){
+      AppSnack.showError(context, 'متاسفانه خطایی رخ داده است');
+      return;
+    }
+
+    final mustUpdate = await AppSheet.showSheetCustom(
+      context,
+      builder: (_) => SelectBuyMethodSheet(userBalance: balance, amount: amount, minutes: minutes, planId: planId),
+      routeName: 'showSelectBuyMethodSheet',
+      isScrollControlled: true,
+      contentColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+    );
+
+    if(mustUpdate is bool && mustUpdate){
+      requestUserLeftTime();
+    }
+    else {
+      isInGetWay = true;
+    }
+  }
+
+  void onBackOfBankGetWay({data}) {
+    if(isInGetWay){
+      isInGetWay = false;
+      requestUserLeftTime();
+    }
+  }
+
+  void requestUserLeftTime() async {
+    maxUserTime = await PublicAccess.requestUserRemainingMinutes()?? widget.maxUserTime;
+  }
+
+  Future<List?> requestSupportTimePlans() async {
+    final co = Completer<List?>();
+    final requester = Requester();
+
+    requester.httpRequestEvents.onAnyState = (req) async {
+      await hideLoading();
+      requester.dispose();
+    };
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      String msg = 'خطایی رخ داده است';
+
+      if(res != null && res.data != null){
+        final js = JsonHelper.jsonToMap(res.data)?? {};
+
+        msg = js['message']?? msg;
+      }
+
+      AppSnack.showInfo(context, msg);
+      co.complete(null);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
+      final data = res['data'];
+
+      co.complete(data);
+    };
+
+    showLoading();
+    requester.methodType = MethodType.get;
+    requester.prepareUrl(pathUrl: '/shop/supportPackages');
+    requester.request(context);
+
+    return co.future;
+  }
+
   void showConfirmSheet() async {
     final hour = getHourById(timeSelectId);
 
@@ -452,8 +591,8 @@ class _TimetablePageState extends StateBase<TimetablePage> {
 
     final minNumber = MathHelper.clearToInt(min);
 
-    if(minNumber > widget.maxUserTime){
-      AppSheet.showSheetOk(context, 'شما حداکثر ${widget.maxUserTime} دقیقه امکان درخواست دارید. اگر زمان بیشتری نیاز دارید ابتدا زمان خود را شارژ کنید.');
+    if(minNumber > maxUserTime){
+      AppSheet.showSheetOk(context, 'شما حداکثر $maxUserTime دقیقه امکان درخواست دارید. اگر زمان بیشتری نیاز دارید ابتدا زمان خود را شارژ کنید.');
       return;
     }
 
