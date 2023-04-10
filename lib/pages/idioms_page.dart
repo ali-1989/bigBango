@@ -130,7 +130,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
     Color preColor = Colors.black;
     Color nextColor = Colors.black;
 
-    if(currentIdiomIdx == 0){
+    if(currentIdiomIdx == 0 && !showGreeting){
       preColor = Colors.grey;
     }
 
@@ -339,28 +339,25 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
           ),
         ),
 
-        Visibility(
-          visible: idiomsList.length > 1,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton.icon(
-                  onPressed: onNextClick,
-                  icon: RotatedBox(
-                      quarterTurns: 2,
-                      child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
-                  ),
-                  label: Text('next').englishFont().color(nextColor)
-              ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton.icon(
+                onPressed: onNextClick,
+                icon: RotatedBox(
+                    quarterTurns: 2,
+                    child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
+                ),
+                label: Text('next').englishFont().color(nextColor)
+            ),
 
-              TextButton.icon(
-                  style: TextButton.styleFrom(),
-                  onPressed: onPreClick,
-                  icon: Text('pre').englishFont().color(preColor),
-                  label: Image.asset(AppImages.arrowLeftIco, color: preColor)
-              ),
-            ],
-          ),
+            TextButton.icon(
+                style: TextButton.styleFrom(),
+                onPressed: onPreClick,
+                icon: Text('pre').englishFont().color(preColor),
+                label: Image.asset(AppImages.arrowLeftIco, color: preColor)
+            ),
+          ],
         ),
       ],
     );

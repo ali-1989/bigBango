@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:app/managers/leitnerManager.dart';
 import 'package:app/managers/storeManager.dart';
+import 'package:app/services/jwt_service.dart';
 import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/tools/app/appLocale.dart';
 import 'package:flutter/foundation.dart';
@@ -153,6 +154,7 @@ class ApplicationInitial {
       MessageManager.requestUnReadCount();
       LeitnerManager.requestLeitnerCount();
       StoreManager.init();
+      JwtService.runRefreshService();
 
       EventNotifierService.addListener(AppEvents.firebaseTokenReceived, ({data}) {
         MessageManager.requestSetFirebaseToken();

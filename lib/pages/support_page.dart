@@ -624,7 +624,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
       backgroundColor: Colors.transparent,
     );
 
-    if(mustUpdate){
+    if(mustUpdate is bool && mustUpdate){
       requestUserLeftTime();
     }
     else {

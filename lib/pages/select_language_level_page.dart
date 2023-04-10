@@ -1,3 +1,8 @@
+import 'package:app/system/publicAccess.dart';
+import 'package:app/tools/app/appSheet.dart';
+import 'package:app/tools/routeTools.dart';
+import 'package:app/views/components/selectLevelOnline.dart';
+import 'package:app/views/components/selectSupportTime.dart';
 import 'package:flutter/material.dart';
 
 import 'package:im_animations/im_animations.dart';
@@ -9,7 +14,6 @@ import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/middleWares/requester.dart';
-import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -178,8 +182,8 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
 
                           GestureDetector(
                             onTap: (){
-                              /*selectValue = 1;
-                              assistCtr.updateHead();*/
+                              selectValue = 1;
+                              assistCtr.updateHead();
                             },
                             child: Card(
                               color: Colors.grey.shade100,
@@ -223,8 +227,8 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
 
                           GestureDetector(
                             onTap: (){
-                              /*selectValue = 2;
-                              assistCtr.updateHead();*/
+                              selectValue = 2;
+                              assistCtr.updateHead();
                             },
                             child: Card(
                               color: Colors.grey.shade100,
@@ -328,46 +332,41 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
     );
   }
 
-  void sendClick(){
+  void sendClick() async {
     if(selectValue == 0) {
-      requestSetLevel();
-    }
-    /*showMaterialModalBottomSheet(
-      context: context,
-      isDismissible: true,
-      bounce: true,
-      expand: false,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft:Radius.circular(20), topRight: Radius.circular(20))),
-      builder: (context) {
-        return SizedBox(
-          height: MathHelper.percent(sh, 85),
-          //child: const SelectSupportTime(),
-          child: const SelectLevelOnline(),
-        );
-      },
-    );*/
-  }
-
-  void requestSetLevel(){
-    requester.httpRequestEvents.onAnyState = (req) async {
+      showLoading();
+      final res = await PublicAccess.requestSetLevel(SystemParameterManager.getCourseLevelById(1));
       await hideLoading();
-    };
 
-    requester.httpRequestEvents.onStatusOk = (req, data) async {
-      final user = Session.getLastLoginUser()!;
+      if(res){
+        AppBroadcast.reBuildMaterial();
+      }
 
-      user.courseLevel = SystemParameterManager.getCourseLevelById(1);
+      return;
+    }
 
-      Session.sinkUserInfo(user);
+    if(selectValue == 1){
+      AppSheet.showSheetCustom(
+        context,
+        routeName: 'SelectLevelOnline',
+        isDismissible: true,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft:Radius.circular(20), topRight: Radius.circular(20))),
+        builder: (context) {
+          return SizedBox(
+            height: MathHelper.percent(sh, 85),
+            //child: const SelectSupportTime(),
+            child: const SelectLevelOnline(),
+          );
+        },
+      );
 
-      AppBroadcast.reBuildMaterial();
-    };
+      return;
+    }
 
-    requester.bodyJson = {'courseLevelId' : SystemParameterManager.getCourseLevelById(1)?.id};
-    requester.prepareUrl(pathUrl: '/profile/update');
-    requester.methodType = MethodType.put;
 
-    showLoading();
-    requester.request(context, false);
+    final page = SelectSupportTime();
+    RouteTools.pushPage(context, page);
   }
+
+
 }

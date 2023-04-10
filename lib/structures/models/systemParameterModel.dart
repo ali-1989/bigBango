@@ -1,6 +1,9 @@
 import 'package:app/structures/models/courseLevelModel.dart';
 
 class SystemParameterModel {
+
+  int expiryMinutes = 1;
+  int tempClientSecretExpirySeconds = 1;
   /*
   {id: 1, name: پایه, order: 1},
   {id: 2, name: مبتدی, order: 2},
@@ -23,7 +26,7 @@ class SystemParameterModel {
   /*
     minSupportMinutes
     maxSupportMinutes
-    lessonSupportMinutes
+    determineCourseLevelMinutes
     minuteAmount
    */
   Map timeTable = {};
@@ -47,6 +50,8 @@ class SystemParameterModel {
       return;
     }
 
+    expiryMinutes = map['expiryMinutes']?? 1;
+    tempClientSecretExpirySeconds = map['tempClientSecretExpirySeconds']?? 600;
     contact = map['contact']?? {};
     advertisingVideos = map['advertisingVideos']?? {};
     timeTable = map['timeTable']?? {};
@@ -60,6 +65,8 @@ class SystemParameterModel {
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{};
 
+    map['expiryMinutes'] = expiryMinutes;
+    map['tempClientSecretExpirySeconds'] = tempClientSecretExpirySeconds;
     map['advertisingVideos'] = advertisingVideos;
     map['contact'] = contact;
     map['timeTable'] = timeTable;

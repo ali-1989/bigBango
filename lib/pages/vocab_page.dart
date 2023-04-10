@@ -139,7 +139,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     Color preBtnColor = Colors.black;
     Color nextBtnColor = Colors.black;
 
-    if(currentVocabIdx == 0){
+    if(currentVocabIdx == 0 && !showGreeting){
       preBtnColor = Colors.grey;
     }
 
@@ -477,28 +477,25 @@ class _VocabPageState extends StateBase<VocabPage> {
           ),
         ),
 
-        Visibility(
-          visible: vocabList.length > 1,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton.icon(
-                  onPressed: onNextClick,
-                  icon: RotatedBox(
-                      quarterTurns: 2,
-                      child: Image.asset(AppImages.arrowLeftIco, color: nextBtnColor)
-                  ),
-                  label: Text('next').englishFont().color(nextBtnColor)
-              ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton.icon(
+                onPressed: onNextClick,
+                icon: RotatedBox(
+                    quarterTurns: 2,
+                    child: Image.asset(AppImages.arrowLeftIco, color: nextBtnColor)
+                ),
+                label: Text('next').englishFont().color(nextBtnColor)
+            ),
 
-              TextButton.icon(
-                  style: TextButton.styleFrom(),
-                  onPressed: onPreClick,
-                  icon: Text('pre').englishFont().color(preBtnColor),
-                  label: Image.asset(AppImages.arrowLeftIco, color: preBtnColor)
-              ),
-            ],
-          ),
+            TextButton.icon(
+                style: TextButton.styleFrom(),
+                onPressed: onPreClick,
+                icon: Text('pre').englishFont().color(preBtnColor),
+                label: Image.asset(AppImages.arrowLeftIco, color: preBtnColor)
+            ),
+          ],
         ),
       ],
     );

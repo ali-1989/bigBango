@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:app/managers/systemParameterManager.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -11,6 +14,29 @@ import 'package:app/tools/app/appToast.dart';
 
 class JwtService {
   JwtService._();
+  static Timer? _refreshTimer;
+  static Duration _refreshDuration = Duration(minutes: 1);
+
+  static void runRefreshService(){
+    if(!iaRefreshServiceRun()) {
+      _refreshTimer = Timer.periodic(_refreshDuration, (t){
+        _refreshDuration = Duration(minutes: SystemParameterManager.systemParameters.expiryMinutes);
+        final user = Session.getLastLoginUser();
+
+        if(user != null) {
+          requestNewToken(user);
+        }
+      });
+    }
+  }
+
+  static void stopRefreshService(){
+    _refreshTimer?.cancel();
+  }
+
+  static bool iaRefreshServiceRun(){
+    return _refreshTimer != null && _refreshTimer!.isActive;
+  }
 
   static Map decodeToken(String token){
     return JwtDecoder.decode(token);
@@ -92,6 +118,10 @@ class JwtService {
       final dataJs = a.getBodyAsJson()!;
       um.token?.token = dataJs['data'];
       Session.sinkUserInfo(um);
+
+      if(!iaRefreshServiceRun()){
+        runRefreshService();
+      }
 
       return true;
     }

@@ -1,5 +1,12 @@
-import 'dart:math';
-
+import 'package:app/managers/systemParameterManager.dart';
+import 'package:app/structures/middleWares/requester.dart';
+import 'package:app/system/keys.dart';
+import 'package:app/system/publicAccess.dart';
+import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/tools/app/appSheet.dart';
+import 'package:app/tools/app/appSnack.dart';
+import 'package:app/tools/routeTools.dart';
+import 'package:app/views/states/waitToLoad.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
@@ -8,6 +15,11 @@ import 'package:app/structures/models/supportModels/dayWeekModel.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
+import 'package:iris_tools/api/helpers/focusHelper.dart';
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
+import 'package:iris_tools/api/helpers/mathHelper.dart';
+import 'package:iris_tools/dateSection/ADateStructure.dart';
+import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 class SelectSupportTime extends StatefulWidget {
   const SelectSupportTime({Key? key}) : super(key: key);
@@ -17,44 +29,43 @@ class SelectSupportTime extends StatefulWidget {
 }
 ///=========================================================================================================
 class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
-  int currentDay = 12;
-  String timeSelectId = '';
+  int currentDay = 0;
+  String? timeSelectId;
+  List<HoursOfSupportModel> dayHourList = [];
   List<DayWeekModel> days = [];
-  List<HoursModel> times = [];
+  Requester requester = Requester();
 
 
   @override
   void initState(){
     super.initState();
 
-    days.add(DayWeekModel()..dayText = 'ش'..dayOfWeek = 10..isBlock = true);
-    days.add(DayWeekModel()..dayText = 'ی'..dayOfWeek = 11);
-    days.add(DayWeekModel()..dayText = 'د'..dayOfWeek = 12);
-    days.add(DayWeekModel()..dayText = 'س'..dayOfWeek = 13);
-    days.add(DayWeekModel()..dayText = 'چ'..dayOfWeek = 14);
-    days.add(DayWeekModel()..dayText = 'پ'..dayOfWeek = 15);
-    days.add(DayWeekModel()..dayText = 'ج'..dayOfWeek = 16);
-
-    final randomNumberGenerator = Random();
-
-    List.generate(30, (index) {
-      final s = HoursModel();
-      s.id = '$index';
-      s.isBlock = randomNumberGenerator.nextBool();
-      s.isReserveByMe = randomNumberGenerator.nextBool();
-
-      times.add(s);
-    });
+    requestFreeTimes();
   }
 
   @override
   Widget build(BuildContext context) {
+    return Assist(
+      controller: assistCtr,
+      builder: (_, __, sendData) {
+        return Scaffold(
+          body: buildBody(),
+        );
+      },
+    );
+  }
+
+  Widget buildBody() {
+    if(dayHourList.isEmpty){
+      return WaitToLoad();
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 20),
+          const SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -68,9 +79,10 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
 
               SizedBox(
                 width: 110,
+                height: 30,
                 child: ElevatedButton(
-                    onPressed: null,
-                    child: Text(AppMessages.register),
+                  onPressed: timeSelectId == null? null : onRegister,
+                  child: Text(AppMessages.register),
                 ),
               ),
             ],
@@ -79,53 +91,21 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
           const SizedBox(height: 30),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Text(AppMessages.selectLevelDescription, textAlign: TextAlign.center, style: const TextStyle(height: 1.4)),
+            child: Text(AppMessages.supportDescription, textAlign: TextAlign.center, style: const TextStyle(height: 1.4)),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
 
-          SizedBox(
-            height: 80,
-            child: Flex(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(flex: 10, child: buildDayItem(days[0])),
-                const Flexible(flex: 2, child: SizedBox()),
-
-                Flexible(flex: 10, child: buildDayItem(days[1])),
-                const Flexible(flex: 2, child: SizedBox()),
-
-                Flexible(flex: 10, child: buildDayItem(days[2])),
-                const Flexible(flex: 2, child: SizedBox()),
-
-                Flexible(flex: 10, child: buildDayItem(days[3])),
-                const Flexible(flex: 2, child: SizedBox()),
-
-                Flexible(flex: 10, child: buildDayItem(days[4])),
-                const Flexible(flex: 2, child: SizedBox()),
-
-                Flexible(flex: 10, child: buildDayItem(days[5])),
-                const Flexible(flex: 2, child: SizedBox()),
-
-                Flexible(flex: 10, child: buildDayItem(days[6])),
-                const Flexible(flex: 2, child: SizedBox()),
-              ],
-            ),
-          ),
-          const SizedBox(height: 30),
+          buildDays(),
+          SizedBox(height: 10),
 
           Expanded(
-            child: ListView.separated(
-                itemCount: times.length,
-                itemBuilder: (ctx, idx){
-                  final t = times[idx];
-                  return buildListItem(t);
-                },
-              separatorBuilder: (BuildContext context, int index) {
-                  return const SizedBox(height: 10);
-              },
-            ),
+              child: ListView(
+                children: [
+                  ...buildTimes(),
+                ],
+              ),
           ),
+          const SizedBox(height: 12),
         ],
       ),
     );
@@ -203,6 +183,38 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
     );
   }
 
+  Widget buildDays(){
+    return SizedBox(
+      height: 80,
+      child: Flex(
+        direction: Axis.horizontal,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(flex: 10, child: buildDayItem(days[0])),
+          const Flexible(flex: 2, child: SizedBox()),
+
+          Flexible(flex: 10, child: buildDayItem(days[1])),
+          const Flexible(flex: 2, child: SizedBox()),
+
+          Flexible(flex: 10, child: buildDayItem(days[2])),
+          const Flexible(flex: 2, child: SizedBox()),
+
+          Flexible(flex: 10, child: buildDayItem(days[3])),
+          const Flexible(flex: 2, child: SizedBox()),
+
+          Flexible(flex: 10, child: buildDayItem(days[4])),
+          const Flexible(flex: 2, child: SizedBox()),
+
+          Flexible(flex: 10, child: buildDayItem(days[5])),
+          const Flexible(flex: 2, child: SizedBox()),
+
+          Flexible(flex: 10, child: buildDayItem(days[6])),
+          const Flexible(flex: 2, child: SizedBox()),
+        ],
+      ),
+    );
+  }
+
   Widget buildDayItem(DayWeekModel dModel){
     return GestureDetector(
       onTap: (){
@@ -210,18 +222,18 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
           return;
         }
 
-        currentDay = dModel.dayOfWeek;
-        callState();
+        currentDay = dModel.dayOfMonth;
+        assistCtr.updateHead();
       },
       child: DecoratedBox(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.black.withAlpha(70))
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.black.withAlpha(70))
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: ColoredBox(
-            color: dModel.isBlock ? Colors.grey[200]! : (dModel.dayOfWeek == currentDay? AppColors.red: Colors.transparent),
+            color: dModel.isBlock ? Colors.grey[200]! : (dModel.dayOfMonth == currentDay? AppColors.red: Colors.transparent),
             child: SizedBox.expand(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -233,7 +245,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
 
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15),
-                    child: Text('${dModel.dayOfWeek}'),
+                    child: Text('${dModel.dayOfMonth}'),
                   ),
                 ],
               ),
@@ -242,5 +254,217 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
         ),
       ),
     );
+  }
+
+  List<Widget> buildTimes(){
+    List<Widget> result = [];
+
+    final day = getDay();
+    final hours = dayHourList.firstWhere((element) => element.dayOfWeek == day.dayOfWeek);
+
+    if(hours.hours.isEmpty){
+      result.add(Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Text('موردی وجود ندارد'),
+      ));
+
+      return result;
+    }
+
+    for(final row in hours.hours){
+      result.add(itemBuilder(row));
+    }
+
+    return result;
+  }
+
+  Widget itemBuilder(HoursModel hour){
+    return GestureDetector(
+      onTap: (){
+        if(hour.isBlock || hour.isReserveByMe){
+          return;
+        }
+
+        timeSelectId = hour.id;
+
+        assistCtr.updateHead();
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2.0),
+        child: SizedBox(
+          height: 45,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.black.withAlpha(50))
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: ColoredBox(
+                color: hour.isBlock ? Colors.grey[200]! : (hour.id == timeSelectId? AppColors.red: Colors.transparent),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 14),
+                      child: Row(
+                        children: [
+                          //getTimeSeparator(hour),
+                          const SizedBox(width: 5),
+                          Text(hour.getStateText(),
+                              style: TextStyle(color: hour.getStateTextColor(hour.id == timeSelectId))
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.only(left: 14),
+                      child: Row(
+                        children: [
+                          Text(hour.toHuman, style: TextStyle(color: hour.getTimeColor(hour.id == timeSelectId))),
+
+                          const SizedBox(width: 10),
+                          Image.asset(hour.id != timeSelectId? AppImages.arrowIco: AppImages.arrowWhiteIco),
+                          const SizedBox(width: 10),
+
+                          Text(hour.fromHuman, style: TextStyle(color: hour.getTimeColor(hour.id == timeSelectId))),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<HoursModel> getHoursList(){
+    final day = getDay();
+    final hours = dayHourList.firstWhere((element) => element.dayOfWeek == day.dayOfWeek);
+
+    return hours.hours;
+  }
+
+  HoursModel? getHourById(String id){
+    final hours = getHoursList();
+
+    return hours.firstWhere((element) => element.id == id);
+  }
+
+  DayWeekModel getDay(){
+    return days.firstWhere((element) => element.dayOfMonth == currentDay);
+  }
+
+  void requestFreeTimes() async {
+    FocusHelper.hideKeyboardByUnFocusRoot();
+    await Future.delayed(Duration(milliseconds: 200));
+
+    final min = SystemParameterManager.systemParameters.timeTable['determineCourseLevelMinutes'];
+    final minNumber = MathHelper.clearToInt(min);
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      String msg = 'خطایی رخ داده است';
+
+      if(res != null && res.data != null){
+        final js = JsonHelper.jsonToMap(res.data)?? {};
+
+        msg = js['message']?? msg;
+      }
+
+      AppSnack.showInfo(context, msg);
+      assistCtr.updateHead();
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, jsData) async {
+      final data = jsData[Keys.data];
+
+      if(data is List){
+        for(final k in data){
+          final g = HoursOfSupportModel.fromMap(k);
+          dayHourList.add(g);
+        }
+      }
+
+      final today = SolarHijriDate();
+
+      for(int i = 0; i < dayHourList.length; i++) {
+        final day = today.moveDayClone(i);
+        final x = DayWeekModel();
+        x.dayText = day.getWeekDayName().substring(0, 1);
+        x.dayOfMonth = day.getDay();
+        x.dayOfWeek = dayHourList[i].dayOfWeek;
+        x.day = day;
+
+        days.add(x);
+      }
+
+      currentDay = today.getDay();
+      assistCtr.updateHead();
+    };
+
+    days.clear();
+    dayHourList.clear();
+
+    requester.methodType = MethodType.get;
+    requester.prepareUrl(pathUrl: '/supportTimes?RequiredMinutes=$minNumber');
+    requester.request(context);
+  }
+
+  void onRegister(){
+    requestSupport();
+  }
+
+  void requestSupport(){
+    requester.httpRequestEvents.clear();
+
+    requester.httpRequestEvents.onFailState = (requester, res) async {
+      hideLoading();
+
+      String msg = 'خطایی رخ داده است';
+
+      if(res != null && res.data != null){
+        final js = JsonHelper.jsonToMap(res.data)?? {};
+
+        msg = js['message']?? msg;
+      }
+
+      AppSnack.showInfo(context, msg);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (requester, jsData) async {
+      hideLoading();
+
+      final data = jsData['data'];
+      String msg = data['message']?? 'رزرو شد';
+
+      AppSheet.showSheetOneAction(context, msg, () async {
+        showLoading();
+        final res = await PublicAccess.requestSetLevel(SystemParameterManager.getCourseLevelById(1));
+        await hideLoading();
+
+        if(res){
+          AppBroadcast.reBuildMaterial();
+        }
+      });
+    };
+
+    final day = getDay();
+    final hour = getHourById(timeSelectId!)!;
+
+    final js = <String, dynamic>{};
+    js['subject'] = 'درخواست تعیین سطح';
+    js['dayOfWeek'] = day.dayOfWeek;
+    js['from'] = hour.from;
+    js['to'] = hour.to;
+
+    showLoading();
+    requester.prepareUrl(pathUrl: '/appointments/booking');
+    requester.methodType = MethodType.post;
+    requester.bodyJson = js;
+    requester.request(context);
   }
 }

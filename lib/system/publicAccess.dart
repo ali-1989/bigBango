@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/mixins/dateFieldMixin.dart';
+import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dio/dio.dart';
+import 'package:iris_route/iris_route.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
@@ -87,7 +90,7 @@ class PublicAccess {
   static Widget? getNextPartOfLesson(LessonModel lessonModel){
     Widget? page;
 
-    if(lessonModel.vocabSegmentModel != null && lessonModel.vocabSegmentModel!.hasIdioms){
+    if((lessonModel.vocabSegmentModel?.hasIdioms?? false) && IrisNavigatorObserver.lastRoute() != (IdiomsPage).toString()){
       page = IdiomsPage(injector: VocabIdiomsPageInjector(lessonModel));
     }
     else if (lessonModel.grammarModel != null){
@@ -155,6 +158,31 @@ class PublicAccess {
     else {
       return null;
     }
+  }
+
+  static Future<bool> requestSetLevel(CourseLevelModel? level){
+    Requester requester = Requester();
+    Completer<bool> res = Completer();
+
+    requester.httpRequestEvents.onFailState = (req, data) async {
+      res.complete(false);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, data) async {
+      final user = Session.getLastLoginUser()!;
+
+      user.courseLevel = level;
+      Session.sinkUserInfo(user);
+
+      res.complete(true);
+    };
+
+    requester.bodyJson = {'courseLevelId' : SystemParameterManager.getCourseLevelById(1)?.id};
+    requester.prepareUrl(pathUrl: '/profile/update');
+    requester.methodType = MethodType.put;
+
+    requester.request(null, false);
+    return res.future;
   }
 }
 

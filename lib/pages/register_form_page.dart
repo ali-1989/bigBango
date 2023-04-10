@@ -408,30 +408,6 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
 
                               const SizedBox(height: 30),
 
-                              RichText(
-                                  text: TextSpan(
-                                      style: AppThemes.bodyTextStyle()?.copyWith(fontSize: 14),
-                                      children: [
-                                        TextSpan(
-                                            text: 'شما با ثبت نام در بیگ بنگو  '
-                                        ),
-
-                                        TextSpan(
-                                            style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
-                                            text: 'قوانین',
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = gotoTermPage
-                                        ),
-
-                                        TextSpan(
-                                            text: '  ما را می پذیرید'
-                                        ),
-                                      ]
-                                  )
-                              ),
-
-                              const SizedBox(height: 30),
-
                               Column(
                                 children: [
                                   Padding(
