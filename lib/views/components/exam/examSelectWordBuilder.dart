@@ -21,10 +21,12 @@ class ExamSelectWordBuilder extends StatefulWidget {
   final ExamBuilderContent content;
   final ExamController controller;
   final int? index;
+  final bool showTitle;
 
   const ExamSelectWordBuilder({
     required this.content,
     required this.controller,
+    this.showTitle = true,
     this.index,
     Key? key
   }) : super(key: key);
@@ -70,6 +72,17 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
         shrinkWrap: true,
         physics: ScrollPhysics(),
         slivers: [
+          SliverVisibility(
+              visible: widget.showTitle,
+              sliver: SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text('کلمات را در جای مناسب قرار دهید'),
+                ),
+              )
+          ),
+
+
           SliverList(
             delegate: SliverChildBuilderDelegate(
               listItemBuilder,
@@ -95,10 +108,10 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20),
+          SizedBox(height: 10),
 
           ///=== number box
-          Visibility(
+          /*Visibility(
             visible: examList.length > 1,
             child: CustomCard(
               color: Colors.white,
@@ -112,7 +125,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
             ),
           ),
 
-          SizedBox(height: 15),
+          SizedBox(height: 15),*/
 
           ///=== question
           RichText(
@@ -124,7 +137,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> {
 
           ///=== words
           buildWords(item),
-          SizedBox(height: 20),
+          SizedBox(height: 14),
         ],
       ),
     );

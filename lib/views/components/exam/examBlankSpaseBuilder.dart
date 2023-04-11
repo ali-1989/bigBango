@@ -19,10 +19,12 @@ class ExamBlankSpaceBuilder extends StatefulWidget {
   final ExamBuilderContent content;
   final ExamController controller;
   final int? index;
+  final bool showTitle;
 
   const ExamBlankSpaceBuilder({
     required this.content,
     required this.controller,
+    this.showTitle = true,
     this.index,
     Key? key
   }) : super(key: key);
@@ -67,35 +69,22 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
         shrinkWrap: true,
         physics: const ScrollPhysics(),
         slivers: [
+          SliverVisibility(
+            visible: widget.showTitle,
+              sliver: SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text('جای خالی را با کلمه مناسب پر کنید'),
+                ),
+              )
+          ),
+
           SliverList(
             delegate: SliverChildBuilderDelegate(
               listItemBuilder,
               childCount: examList.length *2 -1,
             ),
           ),
-
-          /*SliverToBoxAdapter(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(height: 20),
-
-                SizedBox(
-                  width: double.infinity,
-                  height: 46,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
-                    ),
-                    onPressed: onCheckClick,
-                    child: Text('ثبت و بررسی'),
-                  ),
-                ),
-
-                SizedBox(height: 20),
-              ],
-            ),
-          )*/
         ],
       ),
     );
@@ -104,7 +93,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
   Widget listItemBuilder(ctx, idx){
     ///=== Divider
     if(idx % 2 != 0){
-      return Divider(color: Colors.black, height: 2);
+      return Divider(color: Colors.black38, height: 1);
     }
 
     final item = examList[idx~/2];
@@ -115,10 +104,10 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20),
+          SizedBox(height: 10),
 
           ///=== number box
-          Visibility(
+          /*Visibility(
             visible: examList.length > 1,
             child: CustomCard(
               color: Colors.white,
@@ -130,15 +119,15 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
               stroke: 1.0,
               color: Colors.black
             ),
-          ),
+          ),*/
 
-          SizedBox(height: 15),
+          //SizedBox(height: 15),
           RichText(
             text: TextSpan(children: spans),
             //textDirection: TextDirection.rtl,
           ),
 
-          SizedBox(height: 20),
+          SizedBox(height: 14),
         ],
       ),
     );

@@ -11,13 +11,15 @@ import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/system/extensions.dart';
 
 class ExamOptionBuilder extends StatefulWidget {
-  final ExamBuilderContent content;
+  final ExamBuilderContent builder;
   final ExamController controller;
   final int? index;
+  final bool showTitle;
 
   const ExamOptionBuilder({
-    required this.content,
+    required this.builder,
     required this.controller,
+    this.showTitle = true,
     this.index,
     Key? key
   }) : super(key: key);
@@ -26,7 +28,7 @@ class ExamOptionBuilder extends StatefulWidget {
   State<ExamOptionBuilder> createState() => _ExamOptionBuilderState();
 }
 ///==============================================================================================================
-class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
+class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStateMethods {
   List<ExamModel> examList = [];
   late TextStyle questionNormalStyle;
 
@@ -35,14 +37,14 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
     super.initState();
 
     if(widget.index == null) {
-      examList.addAll(widget.content.examList.where((element) => element.quizType == QuizType.multipleChoice));
+      examList.addAll(widget.builder.examList.where((element) => element.quizType == QuizType.multipleChoice));
     }
     else {
-      examList.add(widget.content.examList[widget.index!]);
+      examList.add(widget.builder.examList[widget.index!]);
     }
 
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
-    widget.controller.init(showAnswer, showAnswers, isAnswerToAll, null);
+    widget.controller.init(showAnswer, showAnswers, isAnswerToAll);
   }
 
   @override
@@ -58,36 +60,38 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
   Widget buildBody(){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-
-          /// exam
-          Expanded(
-            child: Directionality(
-              textDirection: TextDirection.ltr,
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const ScrollPhysics(),
-                itemCount: examList.length *2 -1,
-                itemBuilder: buildQuestionAndOptions,
-              ),
-            ),
-          ),
-
-
-          SizedBox(height: 10),
-        ],
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: const ScrollPhysics(),
+          itemCount: widget.showTitle ? examList.length *2 : (examList.length *2 -1),
+          itemBuilder: buildQuestionAndOptions,
+        ),
       ),
     );
   }
 
   Widget buildQuestionAndOptions(_, int idx){
-    ///=== Divider
-    if(idx % 2 != 0){
-      return Divider(color: Colors.black, height: 2);
+    if(widget.showTitle && idx == 0){
+      return Align(
+        alignment: Alignment.topRight,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Text('با توجه به سوال گزینه ی مناسب را انتخاب کنید'),
+        ),
+      );
     }
 
-    final curExam = examList[idx~/2];
+    bool showDivider = widget.showTitle? (idx % 2 == 0) : (idx % 2 != 0);
+
+    ///=== Divider
+    if(showDivider){
+      return Divider(color: Colors.black38, height: 1);
+    }
+
+    int itmIdx = widget.showTitle? ((idx-1) ~/2) : (idx~/2);
+    final curExam = examList[itmIdx];
 
     return Column(
       key: ValueKey(curExam.id),
@@ -114,7 +118,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
 
         SizedBox(height: 10),
         ...buildOptions(curExam),
-        SizedBox(height: 20)
+        SizedBox(height: 10)
       ],
     );
   }
@@ -200,6 +204,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
     return res;
   }
 
+  @override
   bool isAnswerToAll(){
     for(final k in examList){
       if (k.userAnswers.isEmpty) {
@@ -210,6 +215,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
     return true;
   }
 
+  @override
   void showAnswers(bool state) {
     for (final element in examList) {
       element.showAnswer = state;
@@ -218,6 +224,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder>{
     assistCtr.updateHead();
   }
 
+  @override
   void showAnswer(String examId, bool state) {
     for (final element in examList) {
       if(element.id == examId){

@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:app/irisRuntimeStore.dart';
 import 'package:app/managers/systemParameterManager.dart';
+import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/structures/mixins/dateFieldMixin.dart';
 import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:flutter/material.dart';
@@ -148,12 +150,15 @@ class PublicAccess {
     }
   }
 
-  static Future<int?> requestUserRemainingMinutes() async {
+  static Future<int?> requestUserRemainingMinutes(String userId) async {
     final r = await publicApiCaller('/appointments/remainingMinutes', MethodType.get, null);
 
     if(r.hasResult1()){
       final data = r.result1!['data'];
-      return max(data['minutes'], 0);
+      final int min = max(data['minutes'], 0);
+
+      IrisRuntimeStore.storeOrUpdate(AppStoreScope.user$supportTime, userId, min, updateDuration: Duration(minutes: 10));
+      return min;
     }
     else {
       return null;

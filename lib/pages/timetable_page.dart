@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:app/irisRuntimeStore.dart';
 import 'package:app/structures/enums/appEvents.dart';
+import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/structures/models/supportModels/supportPlanModel.dart';
 import 'package:app/system/publicAccess.dart';
+import 'package:app/system/session.dart';
 import 'package:app/views/sheets/support@selectBuyMethodSheet.dart';
 import 'package:app/views/sheets/supportPlanSheet.dart';
 import 'package:flutter/material.dart';
@@ -479,6 +482,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
     );
 
     if(mustUpdate is bool && mustUpdate){
+      IrisRuntimeStore.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
       requestUserLeftTime();
     }
     else {
@@ -489,12 +493,22 @@ class _TimetablePageState extends StateBase<TimetablePage> {
   void onBackOfBankGetWay({data}) {
     if(isInGetWay){
       isInGetWay = false;
+      IrisRuntimeStore.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
       requestUserLeftTime();
     }
   }
 
   void requestUserLeftTime() async {
-    maxUserTime = await PublicAccess.requestUserRemainingMinutes()?? widget.maxUserTime;
+    final rt = IrisRuntimeStore.find(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+
+    if(rt != null && rt.isUpdate()){
+      maxUserTime = rt.value;
+    }
+    else {
+      maxUserTime = await PublicAccess.requestUserRemainingMinutes(Session.getLastLoginUser()!.userId)?? widget.maxUserTime;
+    }
+
+   assistCtr.updateHead();
   }
 
   Future<List?> requestSupportTimePlans() async {

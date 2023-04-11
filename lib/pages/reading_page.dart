@@ -646,7 +646,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     content.prepareExamList(examList);
     content.answerUrl = '/reading/exercises/solving';
 
-    final examPage = ExamPage(content: content);
+    final examPage = ExamPage(builder: content);
     await RouteTools.pushPage(context, examPage);
   }
 

@@ -412,7 +412,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     examPageInjector.showSendButton = true;
     examPageInjector.sendButtonText = 'ارسال';
 
-    final examPage = ExamPage(content: examPageInjector);
+    final examPage = ExamPage(builder: examPageInjector);
     await RouteTools.pushPage(context, examPage);
   }
 

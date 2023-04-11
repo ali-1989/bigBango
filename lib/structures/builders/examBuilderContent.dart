@@ -4,9 +4,10 @@ import 'package:app/structures/models/examModels/examModel.dart';
 class ExamBuilderContent {
   final List<ExamModel> examList = [];
   final List<AutodidactModel> autodidactList = [];
+  String answerUrl = '';
   bool showSendButton = true;
   String sendButtonText = 'ارسال جواب';
-  String answerUrl = '';
+
 
   ExamBuilderContent();
 

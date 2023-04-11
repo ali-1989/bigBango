@@ -1,37 +1,25 @@
+import 'package:app/pages/exam_builder.dart';
 import 'package:app/structures/builders/examBuilderContent.dart';
-import 'package:app/structures/controllers/examController.dart';
-import 'package:flutter/material.dart';
-
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/examDescription.dart';
-import 'package:app/structures/enums/quizType.dart';
-import 'package:app/structures/builders/autodidactBuilderContent.dart';
-
-import 'package:app/structures/middleWares/requester.dart';
-import 'package:app/structures/models/examModels/autodidactModel.dart';
-import 'package:app/structures/models/examModels/examModel.dart';
-import 'package:app/structures/models/examModels/examSuperModel.dart';
-import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/views/components/exam/autodidactTextComponent.dart';
-import 'package:app/views/components/exam/autodidactVoiceComponent.dart';
-import 'package:app/views/components/exam/examBlankSpaseBuilder.dart';
-import 'package:app/views/components/exam/examOptionBuilder.dart';
-import 'package:app/views/components/exam/examSelectWordBuilder.dart';
+import 'package:flutter/material.dart';
+
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+
+import 'package:app/structures/abstract/stateBase.dart';
+
+import 'package:app/structures/middleWares/requester.dart';
+import 'package:app/system/extensions.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 class ExamPage extends StatefulWidget {
-  final ExamBuilderContent content;
+  final ExamBuilderContent builder;
 
   const ExamPage({
-    required this.content,
+    required this.builder,
     Key? key
   }) : super(key: key);
 
@@ -41,32 +29,17 @@ class ExamPage extends StatefulWidget {
 ///======================================================================================================================
 class _ExamPageState extends StateBase<ExamPage> {
   Requester requester = Requester();
-  ExamController examController = ExamController();
-  int currentItemIdx = 0;
-  List<ExamSuperModel> itemList = [];
-  late ExamSuperModel currentExam;
+  //ExamController examController = ExamController();
 
   @override
   void initState(){
     super.initState();
-
-    for (final element in widget.content.examList) {
-      if(!element.isPrepare) {
-        element.prepare();
-      }
-
-      itemList.add(element);
-    }
-
-    for (final element in widget.content.autodidactList) {
-      itemList.add(element);
-    }
   }
 
   @override
   void dispose(){
     super.dispose();
-    examController.dispose();
+    //examController.dispose();
 
     requester.dispose();
   }
@@ -74,7 +47,7 @@ class _ExamPageState extends StateBase<ExamPage> {
   @override
   Widget build(BuildContext context) {
     return Assist(
-      controller: assistCtr,
+        controller: assistCtr,
         builder: (ctx, ctr, data){
           return Scaffold(
             body: SafeArea(
@@ -86,41 +59,17 @@ class _ExamPageState extends StateBase<ExamPage> {
   }
 
   Widget buildBody(){
-    currentExam = itemList[currentItemIdx];
-
-    if(currentExam is AutodidactModel){
-      widget.content.showSendButton = false;
-    }
-    else {
-      widget.content.showSendButton = true;
-    }
-
-    Color preColor = Colors.black;
-    Color nextColor = Colors.black;
-    String title = '';
-
-    if(currentExam is ExamModel){
-      title = ExamDescription.fromType((currentExam as ExamModel).quizType.number).getTypeHuman();
-    }
-
-    if(currentItemIdx == 0){
-      preColor = Colors.grey;
-    }
-
-    if(currentItemIdx == itemList.length-1){
-      nextColor = Colors.grey;
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
           SizedBox(height: 20),
 
+          /// page header
           DecoratedBox(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-              ),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+            ),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
               child: Row(
@@ -162,67 +111,23 @@ class _ExamPageState extends StateBase<ExamPage> {
 
           SizedBox(height: 10),
 
-          /// progress bar
+          /// exams
+          Expanded(child: ExamBuilder(builder: widget.builder)),
+
+          /// send button
           Visibility(
-            visible: itemList.length > 1,
-              child: Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
-              ),
-          ),
-
-          SizedBox(height: 10),
-
-          /// title
-          Row(
-            children: [
-              Text(title)
-            ],
-          ),
-          SizedBox(height: 14),
-
-          /// exam view
-          Expanded(child: buildExamView(currentExam)),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Visibility(
-                visible: itemList.length > 1,
-                child: TextButton.icon(
-                    onPressed: onNextClick,
-                    icon: RotatedBox(
-                        quarterTurns: 2,
-                        child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
-                    ),
-                    label: Text('next').englishFont().color(nextColor)
+            visible: widget.builder.showSendButton,
+              child: ElevatedButton(
+                style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: Size(200, 40),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                    //shape: StadiumBorder()
                 ),
-              ),
-
-              Visibility(
-                visible: widget.content.showSendButton,
-                child: ElevatedButton(
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      visualDensity: VisualDensity(horizontal: 0, vertical: -2),
-                      shape: StadiumBorder()
-                    ),
-                    onPressed: sendAnswer,
-                    child: Text(widget.content.sendButtonText).englishFont().color(Colors.white),
-                ),
-              ),
-
-              Visibility(
-                visible: itemList.length > 1,
-                child: TextButton.icon(
-                    style: TextButton.styleFrom(),
-                    onPressed: onPreClick,
-                    icon: Text('pre').englishFont().color(preColor),
-                    label: Image.asset(AppImages.arrowLeftIco, color: preColor)
-                ),
-              ),
-            ],
+                onPressed: sendAnswer,
+                child: Text(widget.builder.sendButtonText).englishFont().color(Colors.white),
+              )
           ),
 
           SizedBox(height: 10),
@@ -231,88 +136,14 @@ class _ExamPageState extends StateBase<ExamPage> {
     );
   }
 
-  Widget buildExamView(ExamSuperModel model){
+ void sendAnswer(){
 
-    if(model is ExamModel){
-      if(model.quizType == QuizType.fillInBlank){
-        return ExamBlankSpaceBuilder(
-            key: ValueKey(model.id),
-            content: widget.content,
-            controller: examController,
-            index: currentItemIdx
-        );
-      }
-      else if(model.quizType == QuizType.recorder){
-        return ExamSelectWordBuilder(
-            key: ValueKey(model.id),
-            content: widget.content,
-            controller: examController,
-            index: currentItemIdx
-        );
-      }
-      else if(model.quizType == QuizType.multipleChoice){
-        return ExamOptionBuilder(
-            key: ValueKey(model.id),
-            content: widget.content,
-            controller: examController,
-            index: currentItemIdx
-        );
-      }
-    }
-
-    else if(model is AutodidactModel){
-      final content = AutodidactBuilderContent();
-      content.autodidactModel = currentExam as AutodidactModel;
-
-      if(model.text != null){
-        return AutodidactTextComponent(content: content);
-      }
-      else if(model.voice != null){
-        return AutodidactVoiceComponent(content: content);
-      }
-    }
-
-    return SizedBox();
-  }
-
-  double calcProgress(){
-    int r = ((currentItemIdx+1) * 100) ~/ itemList.length;
-    return r/100;
-  }
-
-  void onNextClick(){
-    if(currentItemIdx < itemList.length-1) {
-      currentItemIdx++;
-
-      currentExam = itemList[currentItemIdx];
-
-      assistCtr.updateHead();
-    }
-  }
-
-  void onPreClick(){
-    if(currentItemIdx > -1){
-      currentItemIdx--;
-
-      currentExam = itemList[currentItemIdx];
-
-      assistCtr.updateHead();
-    }
-  }
-
-  void sendAnswer(){
-    if(currentExam is! ExamModel){
-      return;
-    }
-
-    ExamModel exam = currentExam as ExamModel;
-
-    if(exam.quizType == QuizType.multipleChoice){
+    /*if(exam.quizType == QuizType.multipleChoice){
       if(!examController.isAnswerToAll()){
         AppToast.showToast(context, 'لطفا به سوالات پاسخ دهید');
         return;
       }
-    }
+    }*/
 
     requester.httpRequestEvents.onAnyState = (req) async {
       await hideLoading();
@@ -326,20 +157,20 @@ class _ExamPageState extends StateBase<ExamPage> {
       final message = res['message']?? 'پاسخ شما ثبت شد';
 
       AppSnack.showInfo(context, message);
-      examController.showAnswers(true);
+      //examController.showAnswers(true);
     };
 
     final js = <String, dynamic>{};
-    js['items'] = [
-      {
-        'exerciseId' : exam.id,
-        'answer' : exam.getUserAnswerText(),
-        'isCorrect' : exam.isUserAnswerCorrect(),
-      }
-    ];
+    js['items'] = [];
+
+    /*js['items'].add({
+      'exerciseId' : exam.id,
+      'answer' : exam.getUserAnswerText(),
+      'isCorrect' : exam.isUserAnswerCorrect(),
+    });*/
 
     requester.methodType = MethodType.post;
-    requester.prepareUrl(pathUrl: widget.content.answerUrl);
+    requester.prepareUrl(pathUrl: widget.builder.answerUrl);
     requester.bodyJson = js;
 
     showLoading();

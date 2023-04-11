@@ -327,7 +327,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     else if(currentItem!.quiz.quizType == QuizType.multipleChoice){
       examComponent = ExamOptionBuilder(
           key: ValueKey(currentItem?.id),
-          content: examContent,
+          builder: examContent,
           controller: examController,
           index: currentItemIdx
       );

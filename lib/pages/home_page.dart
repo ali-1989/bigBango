@@ -1,4 +1,6 @@
+import 'package:app/irisRuntimeStore.dart';
 import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
@@ -29,7 +31,6 @@ import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/system/session.dart';
-import 'package:app/tools/app/appCache.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
@@ -782,7 +783,7 @@ class HomePageState extends StateBase<HomePage> {
           examPageInjector.setAutodidacts(autodidactList);
           examPageInjector.answerUrl = '/quiz/solving';
 
-          final examPage = ExamPage(content: examPageInjector);
+          final examPage = ExamPage(builder: examPageInjector);
 
           RouteTools.pushPage(context, examPage);
         }
@@ -799,20 +800,24 @@ class HomePageState extends StateBase<HomePage> {
   }
 
   void requesterSupport(LessonModel lesson) async {
-    if(!AppCache.timeoutCache.existTimeout('a')){
+    final user = Session.getLastLoginUser();
+    final rt = IrisRuntimeStore.find(AppStoreScope.user$supportTime, user!.userId);
+
+    if(rt == null || !rt.isUpdate()){
       showLoading();
-      final userTime = await PublicAccess.requestUserRemainingMinutes();
+      final userTime = await PublicAccess.requestUserRemainingMinutes(user.userId);
       await hideLoading();
 
       if(userTime == null){
         AppSnack.showSnack$OperationFailed(context);
         return;
       }
-
-      AppCache.timeoutCache.addTimeout('a', Duration(minutes: 2));
     }
 
-    final page = TimetablePage(lesson: lesson, maxUserTime: 0);
+    final page = TimetablePage(
+        lesson: lesson,
+        maxUserTime: IrisRuntimeStore.find(AppStoreScope.user$supportTime, user.userId)!.value
+    );
 
     RouteTools.pushPage(context, page);
   }
