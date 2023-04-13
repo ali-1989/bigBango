@@ -115,60 +115,55 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   Widget buildBody(){
     return Column(
       children: [
-        Expanded(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            children: [
-              Row(
-                children: [
-                  Image.asset(AppImages.doubleArrow),
-                  SizedBox(width: 4),
-                  Text(autodidactModel.question?? ''),
-                ],
-              ),
-              SizedBox(height: 20),
+        Row(
+          children: [
+            Image.asset(AppImages.doubleArrow),
+            SizedBox(width: 4),
+            Text(autodidactModel.question?? ''),
+          ],
+        ),
+        SizedBox(height: 20),
 
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: CustomCard(
-                  padding: EdgeInsets.all(5),
-                  color: Colors.grey.shade300,
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: playPauseQuestionVoice,
-                        child: CustomCard(
-                          radius: 50,
-                          padding: EdgeInsets.all(14),
-                          child: Image.asset(questionPlayer.playing? AppImages.pauseIco : AppImages.playIco, width: 16, height: 16),
-                        ),
-                      ),
-
-                      Expanded(
-                        child: Slider(
-                          value: percentOfPlayer(),
-                          onChanged: (v){
-                            var x = v * 100;
-                            x = x * questionTotalTime.inMilliseconds / 100;
-
-                            questionPlayer.seek(Duration(milliseconds: x.toInt()));
-                          },
-                        ),
-                      ),
-                    ],
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: CustomCard(
+            padding: EdgeInsets.all(5),
+            color: Colors.grey.shade300,
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: playPauseQuestionVoice,
+                  child: CustomCard(
+                    radius: 50,
+                    padding: EdgeInsets.all(14),
+                    child: Image.asset(questionPlayer.playing? AppImages.pauseIco : AppImages.playIco, width: 16, height: 16),
                   ),
                 ),
-              ),
 
-              SizedBox(height: 30),
-              Text('پاسخ:'),
-              SizedBox(height: 10),
+                Expanded(
+                  child: Slider(
+                    value: percentOfPlayer(),
+                    onChanged: (v){
+                      var x = v * 100;
+                      x = x * questionTotalTime.inMilliseconds / 100;
 
-              buildReply()
-            ],
+                      questionPlayer.seek(Duration(milliseconds: x.toInt()));
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
+
+        SizedBox(height: 30),
+        Align(
+            alignment: Alignment.topRight,
+            child: Text('پاسخ:')
+        ),
+        SizedBox(height: 10),
+
+        buildReply(),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -190,7 +185,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
           ],
         ),
 
-        SizedBox(height: 10),
+        SizedBox(height: 30),
       ],
     );
   }

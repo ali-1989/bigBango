@@ -1,3 +1,4 @@
+import 'package:app/structures/abstract/examStateMethods.dart';
 import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:flutter/gestures.dart';
@@ -9,21 +10,18 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/quizType.dart';
 
 import 'package:app/structures/models/examModels/examModel.dart';
-import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/views/widgets/animationPositionScale.dart';
-import 'package:iris_tools/widgets/customCard.dart';
 
 class ExamBlankSpaceBuilder extends StatefulWidget {
   final ExamBuilderContent content;
-  final ExamController controller;
+  final String controllerId;
   final int? index;
   final bool showTitle;
 
   const ExamBlankSpaceBuilder({
     required this.content,
-    required this.controller,
+    required this.controllerId,
     this.showTitle = true,
     this.index,
     Key? key
@@ -33,8 +31,9 @@ class ExamBlankSpaceBuilder extends StatefulWidget {
   State<ExamBlankSpaceBuilder> createState() => ExamBlankSpaceBuilderState();
 }
 ///======================================================================================================================
-class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
+class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with ExamStateMethods {
   late TextStyle questionNormalStyle;
+  late TextStyle falseStyle;
   List<ExamModel> examList = [];
 
   @override
@@ -49,7 +48,20 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
     }
 
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
-    widget.controller.init(showAnswer, showAnswers, isAnswerToAll, null);
+    falseStyle = TextStyle(fontSize: 16,
+        color: Colors.red,
+        decorationStyle: TextDecorationStyle.solid,
+        decoration: TextDecoration.lineThrough,
+      decorationColor: Colors.red
+    );
+
+    ExamController(widget.controllerId, this);
+  }
+
+  @override
+  void dispose(){
+    ExamController.removeControllerFor(widget.controllerId);
+    super.dispose();
   }
 
   @override
@@ -135,6 +147,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
 
   List<InlineSpan> generateSpans(ExamModel exam){
     final List<InlineSpan> spans = [];
+
     for(int i = 0; i < exam.questionSplit.length; i++) {
       spans.add(TextSpan(text: exam.questionSplit[i], style: questionNormalStyle));
 
@@ -232,8 +245,8 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Image.asset(AppImages.trueCheckIco),
-                    SizedBox(width: 2),
+                    //Image.asset(AppImages.trueCheckIco),
+                    //SizedBox(width: 2),
                     Text(exam.userAnswers[i].text, style: questionNormalStyle.copyWith(color: trueColor))
                   ],
                 )
@@ -248,9 +261,9 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Image.asset(AppImages.falseCheckIco),
-                      SizedBox(width: 2),
-                      Text(blankText, style: questionNormalStyle.copyWith(color: falseColor))
+                      //Image.asset(AppImages.falseCheckIco),
+                      //SizedBox(width: 2),
+                      Text(blankText, style: falseStyle.copyWith(color: falseColor, ))
                     ],
                   )
               );
@@ -284,8 +297,8 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Image.asset(AppImages.falseCheckIco),
-                      SizedBox(width: 2),
+                      //Image.asset(AppImages.falseCheckIco),
+                      //SizedBox(width: 2),
                       Text(blankText, style: questionNormalStyle.copyWith(color: falseColor))
                     ],
                   )
@@ -323,6 +336,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
     return spans;
   }
 
+  @override
   bool isAnswerToAll(){
     for(final k in examList){
       for(final x in k.userAnswers) {
@@ -335,6 +349,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
     return true;
   }
 
+  @override
   void showAnswers(bool state) {
     for (final element in examList) {
       element.showAnswer = state;
@@ -343,6 +358,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder>{
     assistCtr.updateHead();
   }
 
+  @override
   void showAnswer(String examId, bool state) {
     for (final element in examList) {
       if(element.id == examId){

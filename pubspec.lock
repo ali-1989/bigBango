@@ -74,7 +74,7 @@ packages:
     source: hosted
     version: "2.10.0"
   audio_session:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: audio_session
       sha256: e4acc4e9eaa32436dfc5d7aed7f0a370f2d7bb27ee27de30d6c4f220c2a05c73
@@ -701,7 +701,7 @@ packages:
       path: "../iris_route"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.2"
   iris_tools:
     dependency: "direct main"
     description:
@@ -776,7 +776,7 @@ packages:
     source: hosted
     version: "2.0.1"
   logger:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: logger
       sha256: db2ff852ed77090ba9f62d3611e4208a3d11dfa35991a81ae724c113fcb3e3f7

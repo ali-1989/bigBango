@@ -1,6 +1,8 @@
 import 'package:app/pages/exam_builder.dart';
 import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/structures/controllers/examController.dart';
 import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
@@ -17,9 +19,11 @@ import 'package:iris_tools/widgets/customCard.dart';
 
 class ExamPage extends StatefulWidget {
   final ExamBuilderContent builder;
+  final bool groupSameTypes;
 
   const ExamPage({
     required this.builder,
+    this.groupSameTypes = true,
     Key? key
   }) : super(key: key);
 
@@ -29,7 +33,6 @@ class ExamPage extends StatefulWidget {
 ///======================================================================================================================
 class _ExamPageState extends StateBase<ExamPage> {
   Requester requester = Requester();
-  //ExamController examController = ExamController();
 
   @override
   void initState(){
@@ -39,7 +42,6 @@ class _ExamPageState extends StateBase<ExamPage> {
   @override
   void dispose(){
     super.dispose();
-    //examController.dispose();
 
     requester.dispose();
   }
@@ -112,7 +114,7 @@ class _ExamPageState extends StateBase<ExamPage> {
           SizedBox(height: 10),
 
           /// exams
-          Expanded(child: ExamBuilder(builder: widget.builder)),
+          Expanded(child: ExamBuilder(builder: widget.builder, groupSameTypes: widget.groupSameTypes)),
 
           /// send button
           Visibility(
@@ -137,13 +139,20 @@ class _ExamPageState extends StateBase<ExamPage> {
   }
 
  void sendAnswer(){
+    AppDialogIris.instance.showYesNoDialog(
+        context,
+      yesFn: () {
+        requestSendAnswer();
+      },
+      desc: 'آیا جواب تمرین ارسال شود؟',
+    );
+ }
 
-    /*if(exam.quizType == QuizType.multipleChoice){
-      if(!examController.isAnswerToAll()){
+ void requestSendAnswer(){
+    /*if(!examController.isAnswerToAll()){
         AppToast.showToast(context, 'لطفا به سوالات پاسخ دهید');
         return;
-      }
-    }*/
+      }*/
 
     requester.httpRequestEvents.onAnyState = (req) async {
       await hideLoading();
@@ -154,20 +163,28 @@ class _ExamPageState extends StateBase<ExamPage> {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
-      final message = res['message']?? 'پاسخ شما ثبت شد';
+      final message = res['message']?? 'پاسخ تمرین ثبت شد';
 
       AppSnack.showInfo(context, message);
-      //examController.showAnswers(true);
+
+      for(final x in widget.builder.examList){
+        ExamController.getControllerFor(x.id)?.showAnswers(true);
+      }
+
     };
 
+    final tempList = [];
     final js = <String, dynamic>{};
-    js['items'] = [];
 
-    /*js['items'].add({
-      'exerciseId' : exam.id,
-      'answer' : exam.getUserAnswerText(),
-      'isCorrect' : exam.isUserAnswerCorrect(),
-    });*/
+    for(final x in widget.builder.examList){
+      tempList.add({
+        'exerciseId' : x.id,
+        'answer' : x.getUserAnswerText(),
+        'isCorrect' : x.isUserAnswerCorrect(),
+      });
+    }
+
+    js['items'] = tempList;
 
     requester.methodType = MethodType.post;
     requester.prepareUrl(pathUrl: widget.builder.answerUrl);

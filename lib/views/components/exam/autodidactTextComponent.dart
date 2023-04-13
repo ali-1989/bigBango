@@ -103,61 +103,37 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
   Widget buildBody(){
     return Column(
       children: [
-        Expanded(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            children: [
-              Row(
-                children: [
-                  Image.asset(AppImages.doubleArrow),
-                  SizedBox(width: 4),
-                  Text(autodidactModel.question?? ''),
-                ],
-              ),
-              SizedBox(height: 20),
-
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 15),
-                  child: Text(autodidactModel.text!).englishFont().fsR(-1),
-                ).wrapDotBorder(
-                    color: Colors.black12,
-                    alpha: 100,
-                    dashPattern: [4,8]),
-              ),
-
-              SizedBox(height: 30),
-              Text('پاسخ:'),
-              SizedBox(height: 10),
-
-              buildReply()
-            ],
-          ),
-        ),
-
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: showAnswer,
-              child: Text('نمایش پاسخ صحیح'),
-            ),
-
-            SizedBox(width: 10),
-
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green
-              ),
-              onPressed: sendAnswer,
-              child: Text('ارسال پاسخ'),
-            ),
+            Image.asset(AppImages.doubleArrow),
+            SizedBox(width: 4),
+            Text(autodidactModel.question?? ''),
           ],
         ),
+        SizedBox(height: 20),
 
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 15),
+            child: Text(autodidactModel.text!).englishFont().fsR(-1),
+          ).wrapDotBorder(
+              color: Colors.black12,
+              alpha: 100,
+              dashPattern: [4,8]),
+        ),
+
+        SizedBox(height: 30),
+        Align(
+          alignment: Alignment.topRight,
+            child: Text('پاسخ:')
+        ),
         SizedBox(height: 10),
+
+        buildReply(),
+
+
+        SizedBox(height: 30),
       ],
     );
   }
@@ -173,23 +149,51 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
   Widget buildTextReply(){
     return Directionality(
       textDirection: TextDirection.ltr,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextField(
-          controller: answerCtr,
-          minLines: 4,
-          maxLines: 6,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: answerCtr,
+              minLines: 4,
+              maxLines: 6,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+            ),
           ),
-        ),
+
+          buildCorrectAnswerView(),
+        ],
       ).wrapDotBorder(
           color: Colors.black,
           alpha: 100,
           dashPattern: [4,8]
       ),
+    );
+  }
+
+  Widget buildCorrectAnswerView(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        OutlinedButton(
+          onPressed: showAnswer,
+          child: Text('نمایش پاسخ صحیح'),
+        ),
+
+        SizedBox(width: 10),
+
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green
+          ),
+          onPressed: sendAnswer,
+          child: Text('ارسال پاسخ'),
+        ),
+      ],
     );
   }
 
@@ -401,7 +405,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: Column(
             children: [
-              Text('پاسخ استاد').bold().fsR(4),
+              Text('پاسخ صحیح').bold().fsR(4),
               SizedBox(height: 25),
               Padding(
                 padding: const EdgeInsets.all(8.0),

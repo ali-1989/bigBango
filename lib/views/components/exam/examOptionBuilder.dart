@@ -1,3 +1,4 @@
+import 'package:app/structures/abstract/examStateMethods.dart';
 import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +13,13 @@ import 'package:app/system/extensions.dart';
 
 class ExamOptionBuilder extends StatefulWidget {
   final ExamBuilderContent builder;
-  final ExamController controller;
+  final String controllerId;
   final int? index;
   final bool showTitle;
 
   const ExamOptionBuilder({
     required this.builder,
-    required this.controller,
+    required this.controllerId,
     this.showTitle = true,
     this.index,
     Key? key
@@ -43,8 +44,14 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
       examList.add(widget.builder.examList[widget.index!]);
     }
 
+    ExamController(widget.controllerId, this);
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
-    widget.controller.init(showAnswer, showAnswers, isAnswerToAll);
+  }
+
+  @override
+  void dispose(){
+    ExamController.removeControllerFor(widget.controllerId);
+    super.dispose();
   }
 
   @override
@@ -87,7 +94,10 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
 
     ///=== Divider
     if(showDivider){
-      return Divider(color: Colors.black38, height: 1);
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 14.0),
+        child: Divider(color: Colors.black12, height: 1),
+      );
     }
 
     int itmIdx = widget.showTitle? ((idx-1) ~/2) : (idx~/2);

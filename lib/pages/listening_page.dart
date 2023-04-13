@@ -48,7 +48,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   Duration currentTime = Duration();
   ExamBuilderContent examContent = ExamBuilderContent();
   Widget examComponent = SizedBox();
-  ExamController examController = ExamController();
+  ExamController? examController;
   int currentItemIdx = 0;
   bool voiceIsOk = false;
   bool isInPlaying = false;
@@ -75,7 +75,6 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   void dispose(){
     requester.dispose();
     player.stop();
-    examController.dispose();
 
     super.dispose();
   }
@@ -306,30 +305,34 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     );
   }
 
-  void buildExamView(){
-    if(currentItem!.quiz.quizType == QuizType.fillInBlank){
+  void buildExamView() {
+    if (currentItem!.quiz.quizType == QuizType.fillInBlank) {
       examComponent = ExamBlankSpaceBuilder(
-          key: ValueKey(currentItem?.id),
-          content: examContent,
-          controller: examController,
-          index: currentItemIdx
+        key: ValueKey(currentItem?.id),
+        content: examContent,
+        controllerId: currentItem!.id,
+        index: currentItemIdx,
+        showTitle: false,
       );
       description = 'با توجه به صوت جای خالی را پر کنید';
     }
-    else if(currentItem!.quiz.quizType == QuizType.recorder){
+    else if (currentItem!.quiz.quizType == QuizType.recorder) {
       examComponent = ExamSelectWordBuilder(
-          key: ValueKey(currentItem?.id),
-          content: examContent,
-          controller: examController,
-          index: currentItemIdx);
+        key: ValueKey(currentItem?.id),
+        content: examContent,
+        controllerId: currentItem!.id,
+        index: currentItemIdx,
+        showTitle: false,
+      );
       description = 'با توجه به صوت کلمه ی مناسب را انتخاب کنید';
     }
-    else if(currentItem!.quiz.quizType == QuizType.multipleChoice){
+    else if (currentItem!.quiz.quizType == QuizType.multipleChoice) {
       examComponent = ExamOptionBuilder(
-          key: ValueKey(currentItem?.id),
-          builder: examContent,
-          controller: examController,
-          index: currentItemIdx
+        key: ValueKey(currentItem?.id),
+        builder: examContent,
+        controllerId: currentItem!.id,
+        index: currentItemIdx,
+        showTitle: false,
       );
       description = 'با توجه به صوت گزینه ی مناسب را انتخاب کنید';
     }
@@ -474,19 +477,22 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   }
 
   void registerExerciseResult() {
-    examController.showAnswers(true);
-    requestSendAnswer();
+    examController = ExamController.getControllerFor('todo');//todo
+
+    if(examController != null){
+      if(currentItem!.quiz.quizType == QuizType.multipleChoice){
+        if(!examController!.isAnswerToAll()){
+          AppToast.showToast(context, 'لطفا یک گزینه را انتخاب کنید');
+          return;
+        }
+      }
+
+      examController?.showAnswers(true);
+      requestSendAnswer();
+    }
   }
 
   void requestSendAnswer(){
-
-    if(currentItem!.quiz.quizType == QuizType.multipleChoice){
-      if(!examController.isAnswerToAll()){
-        AppToast.showToast(context, 'لطفا یک گزینه را انتخاب کنید');
-        return;
-      }
-    }
-
     requester.httpRequestEvents.onAnyState = (req) async {
       await hideLoading();
     };
@@ -499,7 +505,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       final message = res['message']?? 'پاسخ شما ثبت شد';
 
       AppSnack.showInfo(context, message);
-      examController.showAnswers(true);
+      examController?.showAnswers(true);
     };
 
     final js = <String, dynamic>{};

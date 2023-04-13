@@ -1,61 +1,39 @@
 
-typedef ShowAnswerFn = void Function(String id, bool state);
-typedef ShowAnswersFn = void Function(bool state);
-typedef IsAnswerToAll = bool Function();
-
+import 'package:app/structures/abstract/examStateMethods.dart';
 
 class ExamController {
   static final Map<String, ExamController> _list = {};
 
-  ShowAnswerFn? _showAnswerFn;
-  ShowAnswersFn? _showAnswersFn;
-  IsAnswerToAll? _isAnswerToAllFn;
-  bool _isInit = false;
+  late ExamStateMethods _examMethods;
 
-  ExamController(String id){
+  ExamController(String id, ExamStateMethods examStateMethods){
     _list[id] = this;
-  }
-
-  void init(ShowAnswerFn? showAnswerFn, ShowAnswersFn? showAnswersFn, IsAnswerToAll? isAnswerToAll){
-    _showAnswerFn = showAnswerFn;
-    _showAnswersFn = showAnswersFn;
-    _isAnswerToAllFn = isAnswerToAll;
-
-    _isInit = true;
-  }
-
-  bool isInit(){
-    return _isInit;
-  }
-
-  void assertIsInit(){
-    assert(isInit(), 'must initialization ExamController');
+    _examMethods = examStateMethods;
   }
 
   void showAnswer(String id, bool state){
-    _showAnswerFn?.call(id, state);
+    _examMethods.showAnswer(id, state);
   }
 
   void showAnswers(bool state){
-    _showAnswersFn?.call(state);
+    _examMethods.showAnswers(state);
   }
 
   bool isAnswerToAll(){
-    return _isAnswerToAllFn?.call()?? false;
+    return _examMethods.isAnswerToAll();
   }
 
-  void dispose(){
-    _showAnswerFn = null;
-    _showAnswersFn = null;
-    _isAnswerToAllFn = null;
+  static ExamController? getControllerFor(String id){
+    for(final x in _list.entries){
+      if(x.key == id){
+        return x.value;
+      }
+    }
 
-    _isInit = false;
+    return null;
   }
-}
 
-abstract class ExamStateMethods {
-
-  bool isAnswerToAll();
-  void showAnswers(bool state);
-  void showAnswer(String examId, bool state);
+  static void removeControllerFor(String id){
+    _list.removeWhere((key, value) => key == id);
+  }
 }

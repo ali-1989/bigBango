@@ -21,7 +21,8 @@ analyzer:
   errors:
     prefer_single_quotes: error
     mixin_inherits_from_not_object: ignore
-
+  exclude:
+    - \#Dep/**
 
 
 

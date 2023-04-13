@@ -1,5 +1,4 @@
 import 'package:app/structures/builders/examBuilderContent.dart';
-import 'package:app/structures/controllers/examController.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -11,7 +10,6 @@ import 'package:app/structures/builders/autodidactBuilderContent.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/examModels/examSuperModel.dart';
-import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/exam/autodidactTextComponent.dart';
 import 'package:app/views/components/exam/autodidactVoiceComponent.dart';
 import 'package:app/views/components/exam/examBlankSpaseBuilder.dart';
@@ -33,7 +31,6 @@ class ExamBuilder extends StatefulWidget {
 }
 ///======================================================================================================================
 class _ExamBuilderState extends StateBase<ExamBuilder> {
-  ExamController examController = ExamController();
   List<ExamSuperModel> itemList = [];
   List<ExamSuperModel> itemListGroup = [];
 
@@ -66,7 +63,6 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
   @override
   void dispose(){
     super.dispose();
-    examController.dispose();
   }
 
   @override
@@ -83,7 +79,7 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
     return ListView.separated(
       shrinkWrap: true,
       itemCount: itemListGroup.length,
-      itemBuilder: buildExamViewBuGroup,
+      itemBuilder: buildExamViewByGroup,
       separatorBuilder: (BuildContext context, int index) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -93,7 +89,7 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
     );
   }
 
-  Widget buildExamViewBuGroup(_, int idx){
+  Widget buildExamViewByGroup(_, int idx){
     ExamSuperModel model = itemListGroup[idx];
 
     if(model is ExamModel){
@@ -101,27 +97,27 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
         return ExamBlankSpaceBuilder(
             key: ValueKey(model.id),
             content: widget.builder,
-            controller: examController,
+            controllerId: model.id,
         );
       }
       else if(model.quizType == QuizType.recorder){
         return ExamSelectWordBuilder(
             key: ValueKey(model.id),
             content: widget.builder,
-            controller: examController,
+            controllerId: model.id,
         );
       }
       else if(model.quizType == QuizType.multipleChoice){
         return ExamOptionBuilder(
             key: ValueKey(model.id),
             builder: widget.builder,
-            controller: examController,
+            controllerId: model.id,
         );
       }
     }
 
     else if(model is AutodidactModel){
-      /*final content = AutodidactBuilderContent();
+      final content = AutodidactBuilderContent();
       content.autodidactModel = model;
 
       if(model.text != null){
@@ -129,7 +125,7 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
       }
       else if(model.voice != null){
         return AutodidactVoiceComponent(content: content);
-      }*/
+      }
     }
 
     return SizedBox();
@@ -157,7 +153,7 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
         return ExamBlankSpaceBuilder(
             key: ValueKey(model.id),
             content: widget.builder,
-            controller: examController,
+            controllerId: model.id,
             showTitle: true,
             index: idx,
         );
@@ -166,7 +162,7 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
         return ExamSelectWordBuilder(
             key: ValueKey(model.id),
             content: widget.builder,
-            controller: examController,
+            controllerId: model.id,
             index: idx
         );
       }
@@ -174,7 +170,7 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
         return ExamOptionBuilder(
             key: ValueKey(model.id),
             builder: widget.builder,
-            controller: examController,
+            controllerId: model.id,
             showTitle: true,
             index: idx
         );
@@ -194,35 +190,6 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
     }
 
     return SizedBox();
-  }
-
-  void sendAnswer(){
-
-    ExamModel exam = ExamModel();
-
-    if(exam.quizType == QuizType.multipleChoice){
-      if(!examController.isAnswerToAll()){
-        AppToast.showToast(context, 'لطفا به سوالات پاسخ دهید');
-        return;
-      }
-    }
-
-
-    /*final js = <String, dynamic>{};
-    js['items'] = [
-      {
-        'exerciseId' : exam.id,
-        'answer' : exam.getUserAnswerText(),
-        'isCorrect' : exam.isUserAnswerCorrect(),
-      }
-    ];*/
-
-    /*requester.methodType = MethodType.post;
-    requester.prepareUrl(pathUrl: widget.builder.answerUrl);
-   */
-
-    showLoading();
-    //requester.request(context);
   }
 }
 
