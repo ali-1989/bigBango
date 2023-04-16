@@ -311,7 +311,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
         key: ValueKey(currentItem?.id),
         content: examContent,
         controllerId: currentItem!.id,
-        index: currentItemIdx,
+        index: 0,
         showTitle: false,
       );
       description = 'با توجه به صوت جای خالی را پر کنید';
@@ -321,7 +321,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
         key: ValueKey(currentItem?.id),
         content: examContent,
         controllerId: currentItem!.id,
-        index: currentItemIdx,
+        index: 0,
         showTitle: false,
       );
       description = 'با توجه به صوت کلمه ی مناسب را انتخاب کنید';
@@ -331,7 +331,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
         key: ValueKey(currentItem?.id),
         builder: examContent,
         controllerId: currentItem!.id,
-        index: currentItemIdx,
+        index: 0,
         showTitle: false,
       );
       description = 'با توجه به صوت گزینه ی مناسب را انتخاب کنید';

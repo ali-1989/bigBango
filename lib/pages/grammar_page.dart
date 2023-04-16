@@ -448,9 +448,12 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       }
       else {
         if(widget.injector.id != null){
-          for(final x in itemList){
+          for(int i=0; i<itemList.length; i++){
+            final x = itemList[i];
+
             if(x.id == widget.injector.id){
               currentItem = x;
+              currentItemIdx = i;
               break;
             }
           }

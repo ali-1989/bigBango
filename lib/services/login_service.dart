@@ -86,10 +86,15 @@ class LoginService {
 
     var f = request.response.catchError((e){
       result.complete(null);
+      return null;
     });
 
     f = f.then((Response? response){
-      if(response == null || response.statusCode == null) {
+      if(response == null){
+        return;
+      }
+
+      if(response.statusCode == null) {
         result.complete(null);
         return;
       }
@@ -122,7 +127,11 @@ class LoginService {
     });
 
     f = f.then((Response? response){
-      if(response == null) {
+      if(response == null){
+        return;
+      }
+
+      if(response.statusCode != 200) {
         result.complete(TwoStateReturn(r2: request.getBodyAsJson()));
         return;
       }

@@ -1,6 +1,7 @@
-import 'package:app/irisRuntimeStore.dart';
+import 'package:app/irisRuntimeCache.dart';
 import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
+import 'package:app/views/dialogs/selectReadingDialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
@@ -411,6 +412,7 @@ class HomePageState extends StateBase<HomePage> {
                       children: [
                         const SizedBox(height: 8),
 
+                        /// divider
                         SizedBox(
                           height: 2,
                           width: double.infinity,
@@ -418,32 +420,59 @@ class HomePageState extends StateBase<HomePage> {
                               color: Colors.grey.shade200
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 7),
-                          child: Row(
-                            children: [
-                              buildSegment(lesson, lesson.vocabSegmentModel ?? lesson.grammarModel),
 
-                              SizedBox(width: 8),
+                        Builder(
+                            builder: (_){
+                              bool hasVocab = lesson.vocabSegmentModel != null && (lesson.vocabSegmentModel!.count > 0 || lesson.vocabSegmentModel!.idiomCount > 0);
+                              bool hasGrammar = lesson.grammarModel != null && lesson.grammarModel!.grammarList.isNotEmpty;
 
-                              buildSegment(lesson, lesson.vocabSegmentModel != null ? lesson.grammarModel : null),
-                            ],
-                          ),
+                              bool hasAny = hasVocab || hasGrammar;
+
+                              if(!hasAny){
+                                return SizedBox();
+                              }
+
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 7),
+                                child: Row(
+                                  children: [
+                                    buildSegment(lesson, hasVocab? lesson.vocabSegmentModel : lesson.grammarModel),
+
+                                    SizedBox(width: 8),
+
+                                    buildSegment(lesson, !hasVocab ? null : lesson.grammarModel),
+                                  ],
+                                ),
+                              );
+                            }
                         ),
 
                         const SizedBox(width: 7),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 7),
-                          child: Row(
-                            children: [
-                              buildSegment(lesson, lesson.readingModel ?? lesson.listeningModel),
+                        Builder(
+                            builder: (_){
+                              bool hasReading = lesson.readingModel != null && lesson.readingModel!.readingList.isNotEmpty;
+                              bool hasListening = lesson.listeningModel != null && lesson.listeningModel!.listeningList.isNotEmpty;
 
-                              SizedBox(width: 8),
+                              bool hasAny = hasReading || hasListening;
 
-                              buildSegment(lesson, lesson.readingModel != null ? lesson.listeningModel : null),
-                            ],
-                          ),
+                              if(!hasAny){
+                                return SizedBox();
+                              }
+
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 7),
+                                child: Row(
+                                  children: [
+                                    buildSegment(lesson, hasReading? lesson.readingModel : lesson.listeningModel),
+
+                                    SizedBox(width: 8),
+
+                                    buildSegment(lesson, !hasReading ? null : lesson.listeningModel),
+                                  ],
+                                ),
+                              );
+                            }
                         ),
 
                         const SizedBox(width: 7),
@@ -633,6 +662,12 @@ class HomePageState extends StateBase<HomePage> {
       }
     }
 
+    if(segment is ReadingSegmentModel){
+      if(segment.readingList.length > 1){
+        dialog = SelectReadingDialog(lessonModel: lessonModel);
+      }
+    }
+
     if(segment is ListeningSegmentModel){
       if(segment.listeningList.length > 1){
         dialog = SelectListeningDialog(lessonModel: lessonModel);
@@ -686,7 +721,7 @@ class HomePageState extends StateBase<HomePage> {
 
   void onLessonClick(LessonModel model){
     if(model.isLock){
-      AppToast.showToast(context, 'این درس خریداری نشده است');
+      AppToast.showToast(context, 'این درس خریداری نشده است. به فروشگاه مراجعه کنید.');
       return;
     }
 
@@ -801,7 +836,7 @@ class HomePageState extends StateBase<HomePage> {
 
   void requesterSupport(LessonModel lesson) async {
     final user = Session.getLastLoginUser();
-    final rt = IrisRuntimeStore.find(AppStoreScope.user$supportTime, user!.userId);
+    final rt = IrisRuntimeCache.find(AppStoreScope.user$supportTime, user!.userId);
 
     if(rt == null || !rt.isUpdate()){
       showLoading();
@@ -816,116 +851,9 @@ class HomePageState extends StateBase<HomePage> {
 
     final page = TimetablePage(
         lesson: lesson,
-        maxUserTime: IrisRuntimeStore.find(AppStoreScope.user$supportTime, user.userId)!.value
+        maxUserTime: IrisRuntimeCache.find(AppStoreScope.user$supportTime, user.userId)!.value
     );
 
     RouteTools.pushPage(context, page);
   }
 }
-
-
-
-
-
-/*Row(
-                            children: [
-                              const SizedBox(width: 15),
-                              Image.asset(AppImages.clockIco, width: 16, height: 16),
-                              const SizedBox(width: 6),
-                              const Text('اخیرا مطالعه شده', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                            ],
-                          ),*/
-
-/*Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: ColoredBox(
-                                color: Colors.grey.withAlpha(50),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: SizedBox(
-                                      height: 100,
-                                      child: Row(
-                                        children: [
-                                            Expanded(
-                                                child: Card(
-                                                  color: Colors.white,
-                                                  elevation: 0,
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.max,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      children: [
-                                                        const Text('عنوان درس'),
-
-                                                        Directionality(
-                                                          textDirection: TextDirection.ltr,
-                                                          child: Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              const Text('30 %', style: TextStyle(fontSize: 12),),
-
-                                                              const SizedBox(height: 4),
-                                                              LinearProgressIndicator(
-                                                                backgroundColor: Colors.greenAccent.withAlpha(40),
-                                                                color: Colors.greenAccent,
-                                                                value: 0.3,
-                                                                minHeight: 3,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                            ),
-
-                                          Expanded(
-                                              child: Card(
-                                                color: Colors.white,
-                                                elevation: 0,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      const Text('عنوان درس'),
-
-                                                      Directionality(
-                                                        textDirection: TextDirection.ltr,
-                                                       child: Column(
-                                                         crossAxisAlignment: CrossAxisAlignment.start,
-                                                         children: [
-                                                           const Text('30 %', style: TextStyle(fontSize: 12),),
-
-                                                           const SizedBox(height: 4),
-                                                           LinearProgressIndicator(
-                                                             backgroundColor: Colors.greenAccent.withAlpha(40),
-                                                             color: Colors.greenAccent,
-                                                             value: 0.3,
-                                                             minHeight: 3,
-                                                           ),
-                                                         ],
-                                                       ),
-                                                     ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              )
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),*/

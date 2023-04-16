@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:app/irisRuntimeStore.dart';
+import 'package:app/irisRuntimeCache.dart';
 import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/structures/mixins/dateFieldMixin.dart';
@@ -157,7 +157,7 @@ class PublicAccess {
       final data = r.result1!['data'];
       final int min = max(data['minutes'], 0);
 
-      IrisRuntimeStore.storeOrUpdate(AppStoreScope.user$supportTime, userId, min, updateDuration: Duration(minutes: 10));
+      IrisRuntimeCache.storeOrUpdate(AppStoreScope.user$supportTime, userId, min, updateDuration: Duration(minutes: 10));
       return min;
     }
     else {

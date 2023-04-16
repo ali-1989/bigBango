@@ -21,6 +21,7 @@ class SelectVocabIdiomsDialog extends StatefulWidget {
 }
 ///=================================================================================================
 class _SelectVocabIdiomsDialog extends State<SelectVocabIdiomsDialog> {
+
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -78,6 +79,21 @@ class _SelectVocabIdiomsDialog extends State<SelectVocabIdiomsDialog> {
                                   Text('« بخش اول »'),
                                   SizedBox(height: 10),
                                   Text('کلمات').bold(),
+
+                                  SizedBox(height: 8),
+
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                    child: Directionality(
+                                      textDirection: TextDirection.ltr,
+                                      child: LinearProgressIndicator(
+                                        backgroundColor: Colors.greenAccent.withAlpha(40),
+                                        color: Colors.greenAccent,
+                                        value: widget.injector.segment?.progressOfVocab(),
+                                        minHeight: 3,
+                                      ),
+                                    ),
+                                  ),
                                   SizedBox(height: 15),
                                 ],
                               ),
@@ -106,6 +122,21 @@ class _SelectVocabIdiomsDialog extends State<SelectVocabIdiomsDialog> {
                                   Text('« بخش دوم »'),
                                   SizedBox(height: 10),
                                   Text('اصطلاحات').bold(),
+
+                                  SizedBox(height: 8),
+
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                    child: Directionality(
+                                      textDirection: TextDirection.ltr,
+                                      child: LinearProgressIndicator(
+                                        backgroundColor: Colors.greenAccent.withAlpha(40),
+                                        color: Colors.greenAccent,
+                                        value: widget.injector.segment?.progressOfIdioms(),
+                                        minHeight: 3,
+                                      ),
+                                    ),
+                                  ),
                                   SizedBox(height: 15),
                                 ],
                               ),

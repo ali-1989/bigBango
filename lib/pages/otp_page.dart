@@ -291,7 +291,7 @@ class _OtpPageState extends StateBase<OtpPage> {
 
     final twoReturn = await LoginService.requestVerifyOtp(phoneNumber: widget.phoneNumber, code: otpCode);
 
-    if(!twoReturn.hasResult1() && !twoReturn.hasResult2()){
+    if(!twoReturn.hasResult1() && !twoReturn.hasResult2()){//todo :hasEmpty
       await hideLoading();
       AppSnack.showSnack$errorCommunicatingServer(context);
       return;
@@ -308,7 +308,6 @@ class _OtpPageState extends StateBase<OtpPage> {
         AppSnack.showError(context, message);
       }
     }
-
 
     final dataJs = twoReturn.result1![Keys.data];
 

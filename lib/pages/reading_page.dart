@@ -70,9 +70,10 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
   String id$playerViewId = 'playerViewId';
   TextStyle normalStyle = TextStyle(height: 1.7, color: Colors.black);
   TextStyle readStyle = TextStyle(height: 1.7, color: Colors.deepOrange);
-  TextStyle clickableStyle = TextStyle(height: 1.7,
-      color: Colors.blue,
-      decorationStyle: TextDecorationStyle.solid,
+  TextStyle clickableStyle = TextStyle(
+    height: 1.7,
+    color: Colors.blue,
+    decorationStyle: TextDecorationStyle.solid,
     //decoration: TextDecoration.underline
   );
   TaskQueueCaller<Set<String>, dynamic> reviewTaskQue = TaskQueueCaller();
@@ -93,6 +94,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     player.playbackEventStream.listen(eventListener);
     player.positionStream.listen(durationListener);
 
+    currentItemIdx = widget.injector.index?? 0;
     requestReading();
   }
 

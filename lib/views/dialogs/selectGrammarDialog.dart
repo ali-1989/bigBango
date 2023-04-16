@@ -49,7 +49,7 @@ class _SelectVocabIdiomsDialog extends State<SelectGrammarDialog> {
 
                   SizedBox(height: 10),
                   Chip(
-                      label: Text('شنیدن').bold().color(Colors.white),
+                      label: Text('گرامر').bold().color(Colors.white),
                       labelPadding: EdgeInsets.symmetric(horizontal: 10),
                       visualDensity: VisualDensity.compact
                   ),
@@ -92,18 +92,36 @@ class _SelectVocabIdiomsDialog extends State<SelectGrammarDialog> {
           color: Colors.grey.shade300,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Column(
-              children: [
-                SizedBox(height: 10),
-                CustomCard(
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 11),
-                    radius: 14,
-                    child: Image.asset(AppImages.speakerIco, width: 25, color: AppColors.red,)
-                ),
-                SizedBox(height: 15),
-                Text('« ${itm.title} »'),
-                SizedBox(height: 15),
-              ],
+            child: SizedBox(
+              width: 92,
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  CustomCard(
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 11),
+                      radius: 14,
+                      child: Image.asset(AppImages.speakerIco, width: 25, color: AppColors.red,)
+                  ),
+                  SizedBox(height: 15),
+                  Text('« ${itm.title} »'),
+
+                  SizedBox(height: 8),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: LinearProgressIndicator(
+                        backgroundColor: Colors.greenAccent.withAlpha(40),
+                        color: Colors.greenAccent,
+                        value: .5,//itm.progress/100,
+                        minHeight: 3,
+                      ),
+                    )
+                  ),
+                  SizedBox(height: 15),
+                ],
+              ),
             ),
           ),
         ),

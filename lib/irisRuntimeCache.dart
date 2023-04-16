@@ -1,10 +1,10 @@
 
 //return SizedBox(width: 100, height: 100, child: ColoredBox(color: ColorHelper.getRandomRGB()));
 
-class IrisRuntimeStore {
+class IrisRuntimeCache {
   static final List<RuntimeKv> _list = [];
 
-  IrisRuntimeStore._();
+  IrisRuntimeCache._();
 
   static bool store(RuntimeKv kv){
     if(find(kv.scope, kv.key) == null) {
@@ -125,5 +125,9 @@ class RuntimeKv<K,V> {
 
   void changeUpdateTime(DateTime dt){
     lastUpdate = dt;
+  }
+
+  void longTimeKeepUpdate(){
+    lastUpdate = DateTime.now().add(Duration(days: 100));
   }
 }

@@ -76,4 +76,12 @@ class VocabularySegmentModel extends ISegmentModel {
     reviewIds = others.reviewIds;
     idiomsReviewIds = others.idiomsReviewIds;
   }
+
+  double progressOfVocab(){
+    return (reviewCount * 100 / count);
+  }
+
+  double progressOfIdioms(){
+    return idiomReviewCount * 100 / idiomCount;
+  }
 }

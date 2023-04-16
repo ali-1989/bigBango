@@ -184,6 +184,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
     final notify = MessageManager.messageList[idx];
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: (){
         onItemClick(notify);
       },

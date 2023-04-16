@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app/irisRuntimeStore.dart';
+import 'package:app/irisRuntimeCache.dart';
 import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/structures/models/supportModels/supportPlanModel.dart';
@@ -482,7 +482,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
     );
 
     if(mustUpdate is bool && mustUpdate){
-      IrisRuntimeStore.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
       requestUserLeftTime();
     }
     else {
@@ -493,13 +493,13 @@ class _TimetablePageState extends StateBase<TimetablePage> {
   void onBackOfBankGetWay({data}) {
     if(isInGetWay){
       isInGetWay = false;
-      IrisRuntimeStore.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
       requestUserLeftTime();
     }
   }
 
   void requestUserLeftTime() async {
-    final rt = IrisRuntimeStore.find(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+    final rt = IrisRuntimeCache.find(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
 
     if(rt != null && rt.isUpdate()){
       maxUserTime = rt.value;

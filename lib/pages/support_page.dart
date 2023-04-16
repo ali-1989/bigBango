@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app/irisRuntimeStore.dart';
+import 'package:app/irisRuntimeCache.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/system/session.dart';
 import 'package:iris_notifier/iris_notifier.dart';
@@ -559,7 +559,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   ///-------------------------------------------------------------------------
   void gotoSupportTimeRequestPage() async {
     if(userTime == null){
-      IrisRuntimeStore.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
       await requestUserLeftTime();
 
       if(userTime == null){
@@ -629,7 +629,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     );
 
     if(mustUpdate is bool && mustUpdate){
-      IrisRuntimeStore.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
       requestUserLeftTime();
     }
     else {
@@ -640,7 +640,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   void onBackOfBankGetWay({data}) {
     if(isInGetWay){
       isInGetWay = false;
-      IrisRuntimeStore.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
       requestUserLeftTime();
     }
   }
@@ -874,7 +874,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   }
 
   Future<void> requestUserLeftTime() async {
-    final rt = IrisRuntimeStore.find(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+    final rt = IrisRuntimeCache.find(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
 
     if(rt != null && rt.isUpdate()){
       userTime = rt.value;

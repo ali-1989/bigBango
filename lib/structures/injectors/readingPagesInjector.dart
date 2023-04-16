@@ -9,7 +9,9 @@ class ReadingPageInjector implements SegmentInjector {
   @override
   late LessonModel lessonModel;
 
-  ReadingPageInjector(this.lessonModel) : segment = lessonModel.readingModel!;
+  int? index;
+
+  ReadingPageInjector(this.lessonModel, {this.index}) : segment = lessonModel.readingModel!;
 
   ReadingPageInjector.from(SegmentInjector parent){
     lessonModel = parent.lessonModel;

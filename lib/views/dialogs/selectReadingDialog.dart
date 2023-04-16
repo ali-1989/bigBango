@@ -1,7 +1,7 @@
+import 'package:app/pages/reading_page.dart';
+import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:flutter/material.dart';
 
-import 'package:app/pages/listening_page.dart';
-import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
@@ -10,19 +10,19 @@ import 'package:app/tools/routeTools.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 
-class SelectListeningDialog extends StatefulWidget {
+class SelectReadingDialog extends StatefulWidget {
   final LessonModel lessonModel;
 
-  const SelectListeningDialog({
+  const SelectReadingDialog({
     required this.lessonModel,
     Key? key
   }) : super(key: key);
 
   @override
-  State createState() => _SelectVocabIdiomsDialog();
+  State createState() => _SelectReadingDialog();
 }
 ///=================================================================================================
-class _SelectVocabIdiomsDialog extends State<SelectListeningDialog> {
+class _SelectReadingDialog extends State<SelectReadingDialog> {
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class _SelectVocabIdiomsDialog extends State<SelectListeningDialog> {
 
                   SizedBox(height: 10),
                   Chip(
-                      label: Text('شنیدن').bold().color(Colors.white),
+                      label: Text('خواندن').bold().color(Colors.white),
                       labelPadding: EdgeInsets.symmetric(horizontal: 10),
                       visualDensity: VisualDensity.compact
                   ),
@@ -64,7 +64,7 @@ class _SelectVocabIdiomsDialog extends State<SelectListeningDialog> {
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
-                      itemCount: widget.lessonModel.listeningModel!.listeningList.length,
+                      itemCount: widget.lessonModel.readingModel!.readingList.length,
                         itemBuilder: buildList
                     ),
                   ),
@@ -80,12 +80,12 @@ class _SelectVocabIdiomsDialog extends State<SelectListeningDialog> {
   }
 
   Widget buildList(_, int idx){
-    final itm = widget.lessonModel.listeningModel!.listeningList[idx];
+    final itm = widget.lessonModel.readingModel!.readingList[idx];
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: (){
-        RouteTools.pushPage(context, ListeningPage(injector: ListeningPageInjector(widget.lessonModel, itm.id)));
+        RouteTools.pushPage(context, ReadingPage(injector: ReadingPageInjector(widget.lessonModel, index: idx)));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),

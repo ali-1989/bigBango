@@ -7,6 +7,7 @@ import 'package:app/structures/models/mediaModel.dart';
 import 'package:app/structures/models/vocabModels/idiomInReadingModel.dart';
 import 'package:app/structures/models/vocabModels/vocabInReadingModel.dart';
 import 'package:app/system/extensions.dart';
+import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 class ReadingModel {
   String id = '';
@@ -17,6 +18,9 @@ class ReadingModel {
   List<SegmentOfReadingModel> segments = [];
   List<IdiomInReadingModel> clickableIdioms = [];
   List<VocabInReadingModel> clickableVocabsOrg = [];
+  double reviewProgress = 0;
+  double exerciseProgress = 0;
+  double progress = 0;
   ///----------------- local
   List<VocabInReadingModel> clickableVocabsScope = [];
   List<ReadingTextSplitHolder> textSplits = [];
@@ -29,6 +33,15 @@ class ReadingModel {
     title = map['title'];
     titleTranslation = map['translation']?? '';
     order = map['order']?? 0;
+
+    progress = MathHelper.clearToDouble(map['progress']);
+    progress = MathHelper.fixPrecision(progress, 1);
+
+    reviewProgress = MathHelper.clearToDouble(map['reviewProgress']);
+    reviewProgress = MathHelper.fixPrecision(reviewProgress, 1);
+
+    exerciseProgress = MathHelper.clearToDouble(map['exerciseProgress']);
+    exerciseProgress = MathHelper.fixPrecision(exerciseProgress, 1);
 
     if(map['voice'] is Map) {
       media = MediaModel.fromMap(map['voice']);
@@ -70,6 +83,9 @@ class ReadingModel {
     map['segments'] = segments.map((e) => e.toMap()).toList();
     map['vocabularies'] = clickableVocabsOrg.map((e) => e.toMap()).toList();
     map['idioms'] = clickableIdioms.map((e) => e.toMap()).toList();
+    map['progress'] = progress;
+    map['reviewProgress'] = reviewProgress;
+    map['exerciseProgress'] = exerciseProgress;
 
     return map;
   }
