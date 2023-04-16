@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:app/system/keys.dart';
+import 'package:app/tools/app/appThemes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -128,7 +129,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
           textDirection: TextDirection.ltr,
           child: CustomCard(
             padding: EdgeInsets.all(5),
-            color: Colors.grey.shade300,
+            color: Colors.grey.shade200,
             child: Row(
               children: [
                 GestureDetector(
@@ -141,14 +142,22 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
                 ),
 
                 Expanded(
-                  child: Slider(
-                    value: percentOfPlayer(),
-                    onChanged: (v){
-                      var x = v * 100;
-                      x = x * questionTotalTime.inMilliseconds / 100;
+                  child: SliderTheme(
+                    data: SliderThemeData.fromPrimaryColors(
+                        primaryColor: AppThemes.instance.currentTheme.primaryColor,
+                        primaryColorDark: AppThemes.instance.currentTheme.primaryColor,
+                        primaryColorLight: AppThemes.instance.currentTheme.primaryColor,
+                        valueIndicatorTextStyle: TextStyle(),
+                    ).copyWith(),
+                    child: Slider(
+                      value: percentOfPlayer(),
+                      onChanged: (v){
+                        var x = v * 100;
+                        x = x * questionTotalTime.inMilliseconds / 100;
 
-                      questionPlayer.seek(Duration(milliseconds: x.toInt()));
-                    },
+                        questionPlayer.seek(Duration(milliseconds: x.toInt()));
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -161,31 +170,13 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
             alignment: Alignment.topRight,
             child: Text('پاسخ:')
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 8),
 
         buildReply(),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: showAnswer,
-              child: Text('نمایش پاسخ صحیح'),
-            ),
-
-            SizedBox(width: 10),
-
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green
-              ),
-              onPressed: sendAnswer,
-              child: Text('ارسال پاسخ'),
-            ),
-          ],
-        ),
-
-        SizedBox(height: 30),
+        SizedBox(height: 20),
+        buildCorrectAnswerView(),
+        SizedBox(height: 10),
       ],
     );
   }
@@ -227,13 +218,13 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
         textDirection: TextDirection.ltr,
         child: CustomCard(
           padding: EdgeInsets.all(5),
-          color: Colors.grey.shade300,
+          color: Colors.grey.shade200,
           child: Row(
             children: [
               GestureDetector(
                 onTap: playPauseAnswerVoice,
                 child: CustomCard(
-                  radius: 50,
+                  radius: 30,
                   padding: EdgeInsets.all(14),
                   child: Image.asset(answerPlayer.playing? AppImages.pauseIco : AppImages.playIco, width: 16, height: 16),
                 ),
@@ -277,12 +268,12 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
           ),
         ),
 
-        SizedBox(height: 30),
+        SizedBox(height: 25),
 
         GestureDetector(
           onTap: toggleRecord,
           child: ColorSonar(
-              contentAreaRadius: 25.0,
+              contentAreaRadius: 20.0,
               waveFall: 10.0,
               waveMotionEffect: Curves.linear,
               waveMotion: WaveMotion.synced,
@@ -293,9 +284,34 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
               child: CustomCard(
                   color: AppColors.red,
                   radius: 40,
-                  padding: EdgeInsets.all(10),
-                  child: Image.asset(AppImages.mic)
+                  padding: EdgeInsets.all(8),
+                  child: Image.asset(AppImages.mic, width: 22, height: 22)
               )
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildCorrectAnswerView(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        OutlinedButton(
+          onPressed: showAnswer,
+          child: Text('نمایش پاسخ صحیح'),
+        ),
+
+        SizedBox(width: 10),
+
+        SizedBox(
+          width: 120,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green
+            ),
+            onPressed: sendAnswer,
+            child: Text('ارسال پاسخ'),
           ),
         ),
       ],
@@ -580,10 +596,6 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
 
     assistCtr.updateHead();
   }
-
-  /*void answerEventListener(PlaybackEvent event){
-    assistCtr.updateHead();
-  }*/
 
   Future<void> prepareAnswerVoice() async {
     answerVoiceIsPrepare = false;

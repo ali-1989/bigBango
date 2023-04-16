@@ -5,13 +5,9 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/quizType.dart';
-import 'package:app/structures/builders/autodidactBuilderContent.dart';
 
-import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/examModels/examSuperModel.dart';
-import 'package:app/views/components/exam/autodidactTextComponent.dart';
-import 'package:app/views/components/exam/autodidactVoiceComponent.dart';
 import 'package:app/views/components/exam/examBlankSpaseBuilder.dart';
 import 'package:app/views/components/exam/examOptionBuilder.dart';
 import 'package:app/views/components/exam/examSelectWordBuilder.dart';
@@ -52,11 +48,6 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
           itemListGroup.add(element);
         }
       }
-    }
-
-    for (final element in widget.builder.autodidactList) {
-      itemList.add(element);
-      itemListGroup.add(element);
     }
   }
 
@@ -116,18 +107,6 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
       }
     }
 
-    else if(model is AutodidactModel){
-      final content = AutodidactBuilderContent();
-      content.autodidactModel = model;
-
-      if(model.text != null){
-        return AutodidactTextComponent(content: content);
-      }
-      else if(model.voice != null){
-        return AutodidactVoiceComponent(content: content);
-      }
-    }
-
     return SizedBox();
   }
 
@@ -174,18 +153,6 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
             showTitle: true,
             index: idx
         );
-      }
-    }
-
-    else if(model is AutodidactModel){
-      final content = AutodidactBuilderContent();
-      content.autodidactModel = model;
-
-      if(model.text != null){
-        return AutodidactTextComponent(content: content);
-      }
-      else if(model.voice != null){
-        return AutodidactVoiceComponent(content: content);
       }
     }
 

@@ -29,7 +29,7 @@ class ExamModel extends ExamSuperModel {
     }
 
     if(js['solveItems'] is List){
-      options = js['solveItems'].map<ExamOptionModel>((e) => ExamSolvedOptionModel.fromMap(e)).toList();
+      solvedOptions = js['solveItems'].map<ExamSolvedOptionModel>((e) => ExamSolvedOptionModel.fromMap(e)).toList();
     }
 
     //----------- local
@@ -71,14 +71,6 @@ class ExamModel extends ExamSuperModel {
 
   void _generateUserAnswer(){
     userAnswers.clear();
-
-    /*for(int i = 0; i < choices.length; i++) {
-      final ex = ExamChoiceModel()..order = i;
-
-      ex.id = choices[i].id;
-
-      userAnswers.add(ex);
-    }*/
   }
 
   void _doSplitQuestion(){
@@ -88,10 +80,9 @@ class ExamModel extends ExamSuperModel {
     }
 
     questionSplit = question.split('**');
-
     userAnswers.clear();
 
-    for(int i = 1; i <= questionSplit.length; i++) {
+    for(int i = 1; i < questionSplit.length; i++) {
       final ex = ExamOptionModel()..order = i;
 
       if(quizType == QuizType.multipleChoice){

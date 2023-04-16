@@ -477,17 +477,14 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   }
 
   void registerExerciseResult() {
-    examController = ExamController.getControllerFor('todo');//todo
+    examController = ExamController.getControllerFor(currentItem!.id);
 
     if(examController != null){
-      if(currentItem!.quiz.quizType == QuizType.multipleChoice){
-        if(!examController!.isAnswerToAll()){
-          AppToast.showToast(context, 'لطفا یک گزینه را انتخاب کنید');
-          return;
-        }
+      if(!examController!.isAnswerToAll()){
+        AppToast.showToast(context, 'لطفا تمرین را انجام دهید ');
+        return;
       }
 
-      examController?.showAnswers(true);
       requestSendAnswer();
     }
   }
@@ -502,10 +499,10 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
-      final message = res['message']?? 'پاسخ شما ثبت شد';
-
-      AppSnack.showInfo(context, message);
       examController?.showAnswers(true);
+
+      final message = res['message']?? 'پاسخ شما ثبت شد';
+      AppSnack.showInfo(context, message);
     };
 
     final js = <String, dynamic>{};

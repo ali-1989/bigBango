@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/tools/app/appThemes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -114,13 +115,16 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
 
         Directionality(
           textDirection: TextDirection.ltr,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 15),
-            child: Text(autodidactModel.text!).englishFont().fsR(-1),
-          ).wrapDotBorder(
-              color: Colors.black12,
-              alpha: 100,
-              dashPattern: [4,8]),
+          child: ColoredBox(
+            color: Colors.grey.shade200,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 15),
+              child: Text(autodidactModel.text!).englishFont().fsR(-1),
+            ).wrapDotBorder(
+                color: Colors.black12,
+                alpha: 100,
+                dashPattern: [4,8]),
+          ),
         ),
 
         SizedBox(height: 30),
@@ -128,12 +132,13 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
           alignment: Alignment.topRight,
             child: Text('پاسخ:')
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 8),
 
         buildReply(),
 
-
-        SizedBox(height: 30),
+        SizedBox(height: 20),
+        buildCorrectAnswerView(),
+        SizedBox(height: 10),
       ],
     );
   }
@@ -149,24 +154,18 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
   Widget buildTextReply(){
     return Directionality(
       textDirection: TextDirection.ltr,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: answerCtr,
-              minLines: 4,
-              maxLines: 6,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-              ),
-            ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          controller: answerCtr,
+          minLines: 4,
+          maxLines: 6,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
           ),
-
-          buildCorrectAnswerView(),
-        ],
+        ),
       ).wrapDotBorder(
           color: Colors.black,
           alpha: 100,
@@ -186,12 +185,15 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
 
         SizedBox(width: 10),
 
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green
+        SizedBox(
+          width: 120,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green
+            ),
+            onPressed: sendAnswer,
+            child: Text('ارسال پاسخ'),
           ),
-          onPressed: sendAnswer,
-          child: Text('ارسال پاسخ'),
         ),
       ],
     );
@@ -216,14 +218,22 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
               ),
 
               Expanded(
-                child: Slider(
-                  value: percentOfRecordVoice(),
-                  onChanged: (v){
-                    var x = v * 100;
-                    x = x * recordTotalTime.inMilliseconds / 100;
+                child: SliderTheme(
+                  data: SliderThemeData.fromPrimaryColors(
+                    primaryColor: AppThemes.instance.currentTheme.primaryColor,
+                    primaryColorDark: AppThemes.instance.currentTheme.primaryColor,
+                    primaryColorLight: AppThemes.instance.currentTheme.primaryColor,
+                    valueIndicatorTextStyle: TextStyle(),
+                  ).copyWith(),
+                  child: Slider(
+                    value: percentOfRecordVoice(),
+                    onChanged: (v){
+                      var x = v * 100;
+                      x = x * recordTotalTime.inMilliseconds / 100;
 
-                    answerPlayer.seek(Duration(milliseconds: x.toInt()));
-                  },
+                      answerPlayer.seek(Duration(milliseconds: x.toInt()));
+                    },
+                  ),
                 ),
               ),
 
@@ -253,12 +263,12 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
           ),
         ),
 
-        SizedBox(height: 30),
+        SizedBox(height: 25),
 
         GestureDetector(
           onTap: toggleRecord,
           child: ColorSonar(
-              contentAreaRadius: 25.0,
+              contentAreaRadius: 20.0,
               waveFall: 10.0,
               waveMotionEffect: Curves.linear,
               waveMotion: WaveMotion.synced,
@@ -269,8 +279,8 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
               child: CustomCard(
                   color: AppColors.red,
                   radius: 40,
-                  padding: EdgeInsets.all(10),
-                  child: Image.asset(AppImages.mic)
+                  padding: EdgeInsets.all(8),
+                  child: Image.asset(AppImages.mic, width: 22, height: 22)
               )
           ),
         ),

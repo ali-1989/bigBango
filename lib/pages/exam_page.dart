@@ -1,3 +1,4 @@
+import 'package:app/pages/autodidact_builder.dart';
 import 'package:app/pages/exam_builder.dart';
 import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/controllers/examController.dart';
@@ -31,12 +32,15 @@ class ExamPage extends StatefulWidget {
   State<ExamPage> createState() => _ExamPageState();
 }
 ///======================================================================================================================
-class _ExamPageState extends StateBase<ExamPage> {
+class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
   Requester requester = Requester();
+  late TabController tabController;
 
   @override
   void initState(){
     super.initState();
+
+    tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -113,28 +117,78 @@ class _ExamPageState extends StateBase<ExamPage> {
 
           SizedBox(height: 10),
 
-          /// exams
-          Expanded(child: ExamBuilder(builder: widget.builder, groupSameTypes: widget.groupSameTypes)),
-
-          /// send button
-          Visibility(
-            visible: widget.builder.showSendButton,
-              child: ElevatedButton(
-                style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    minimumSize: Size(200, 40),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity(horizontal: 0, vertical: -2),
-                    //shape: StadiumBorder()
+          /// tabBar view
+          TabBar(
+            controller: tabController,
+              tabs: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text('تمرین'),
                 ),
-                onPressed: sendAnswer,
-                child: Text(widget.builder.sendButtonText).englishFont().color(Colors.white),
-              )
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text('خودآموز'),
+                ),
+              ],
           ),
 
-          SizedBox(height: 10),
+          /// body view
+          Expanded(
+            child: TabBarView(
+              controller: tabController,
+                children: [
+                  buildPage1(),
+
+                  buildPage2(),
+                ]
+            ),
+          ),
         ],
       ),
+    );
+  }
+
+
+  Widget buildPage1(){
+    return Column(
+      children: [
+        SizedBox(height: 10),
+
+        /// exams
+        Expanded(child: ExamBuilder(builder: widget.builder, groupSameTypes: widget.groupSameTypes)),
+
+        /// send button
+        Visibility(
+          visible: widget.builder.showSendButton,
+            child: ElevatedButton(
+              style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size(200, 40),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                  //shape: StadiumBorder()
+              ),
+              onPressed: sendAnswer,
+              child: Text(widget.builder.sendButtonText).englishFont().color(Colors.white),
+            )
+        ),
+
+        SizedBox(height: 10),
+      ],
+    );
+  }
+
+ Widget buildPage2(){
+    return Column(
+      children: [
+        SizedBox(height: 20),
+
+        /// exams
+        Expanded(child: AutodidactBuilder(builder: widget.builder)),
+
+        SizedBox(height: 10),
+      ],
     );
   }
 
