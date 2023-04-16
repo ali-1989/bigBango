@@ -14,13 +14,13 @@ import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
-class ExamSelectWordBuilder extends StatefulWidget {
+class ExamMakeSentenceBuilder extends StatefulWidget {
   final ExamBuilderContent content;
   final String controllerId;
   final int? index;
   final bool showTitle;
 
-  const ExamSelectWordBuilder({
+  const ExamMakeSentenceBuilder({
     required this.content,
     required this.controllerId,
     this.showTitle = true,
@@ -29,22 +29,22 @@ class ExamSelectWordBuilder extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ExamSelectWordBuilder> createState() => _ExamSelectWordBuilderState();
+  State<ExamMakeSentenceBuilder> createState() => _ExamMakeSentenceBuilderState();
 }
 ///===============================================================================================================
-class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with ExamStateMethods {
+class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> with ExamStateMethods {
   late TextStyle questionNormalStyle;
   late TextStyle falseStyle;
   late TextStyle pickedStyle;
-  int currentSpaceOrder = 1;
   List<ExamModel> examList = [];
+  int currentSpaceOrder = 0;
 
   @override
   void initState() {
     super.initState();
 
     if(widget.index == null) {
-      examList.addAll(widget.content.examList.where((element) => element.quizType == QuizType.recorder));
+      examList.addAll(widget.content.examList.where((element) => element.quizType == QuizType.makeSentence));
     }
     else {
       examList.add(widget.content.examList[widget.index!]);
@@ -94,7 +94,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
               sliver: SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10),
-                  child: Text('کلمات را در جای مناسب قرار دهید'),
+                  child: Text('با کلمات جمله بسازید'),
                 ),
               )
           ),
@@ -126,23 +126,6 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 10),
-
-          ///=== number box
-          /*Visibility(
-            visible: examList.length > 1,
-            child: CustomCard(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              child: Text('${idx ~/ 2 + 1}').bold(weight: FontWeight.w900).fsR(1),
-            ).wrapBoxBorder(
-                padding: EdgeInsets.all(2),
-                radius: 9,
-                stroke: 1.0,
-                color: Colors.black
-            ),
-          ),
-
-          SizedBox(height: 15),*/
 
           ///=== question
           RichText(
@@ -383,11 +366,6 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
 
   @override
   void showAnswers(bool state) {
-    /*if (!isAllQuestionAnswered()) {
-      AppSnack.showError(context, 'لطفا همه ی سوالات را پاسخ دهید');
-      return;
-    }*/
-
     for (final element in examList) {
       element.showAnswer = state;
     }

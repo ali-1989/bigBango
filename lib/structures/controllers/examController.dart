@@ -1,4 +1,3 @@
-
 import 'package:app/structures/abstract/examStateMethods.dart';
 
 class ExamController {

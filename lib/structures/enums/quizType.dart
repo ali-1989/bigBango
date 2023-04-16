@@ -2,7 +2,8 @@ enum QuizType {
   unKnow(-1),
   multipleChoice(1),
   fillInBlank(2),
-  recorder(3);
+  recorder(3),
+  makeSentence(4);
 
   final int number;
 
