@@ -1,5 +1,6 @@
 import 'package:app/irisRuntimeCache.dart';
 import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/views/dialogs/selectReadingDialog.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ import 'package:app/views/states/waitToLoad.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 class HomePage extends StatefulWidget {
-  static String id$head = '${identityHashCode(HomePage)}_head';
+  static String id$homePageHead = '${identityHashCode(HomePage)}_head';
 
   const HomePage({Key? key}) : super(key: key);
 
@@ -83,7 +84,8 @@ class HomePageState extends StateBase<HomePage> {
 
     return Assist(
       controller: assistCtr,
-      id: HomePage.id$head,
+      id: HomePage.id$homePageHead,
+      groupIds: [AppAssistKeys.updateOnLessonChange],
       builder: (_, ctr, data) {
         if(assistCtr.hasState(state$error)){
           return ErrorOccur(

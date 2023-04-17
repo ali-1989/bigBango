@@ -1,3 +1,4 @@
+import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -28,7 +29,6 @@ class VocabClickableComponent extends StatefulWidget {
 ///====================================================================================
 class _VocabClickableComponentState extends StateBase<VocabClickableComponent> {
   late ClickableVocabModel vocabModel;
-  String id$voicePlayerGroupId = 'voicePlayerGroupId';
   String id$usVoicePlayerSectionId = 'usVoicePlayerSectionId';
   String id$ukVoicePlayerSectionId = 'ukVoicePlayerSectionId';
   String? voiceUrl;
@@ -81,7 +81,7 @@ class _VocabClickableComponentState extends StateBase<VocabClickableComponent> {
                           child: Assist(
                             controller: assistCtr,
                             id: id$usVoicePlayerSectionId,
-                            groupId: id$voicePlayerGroupId,
+                            groupIds: [AppAssistKeys.voicePlayerGroupId$vocabClickable],
                             builder: (_, ctr, data){
                               return AnimateWidget(
                                 resetOnRebuild: true,
@@ -126,7 +126,7 @@ class _VocabClickableComponentState extends StateBase<VocabClickableComponent> {
                           child: Assist(
                             controller: assistCtr,
                             id: id$ukVoicePlayerSectionId,
-                            groupId: id$voicePlayerGroupId,
+                            groupIds: [AppAssistKeys.voicePlayerGroupId$vocabClickable],
                             builder: (_, ctr, data){
                               return AnimateWidget(
                                 resetOnRebuild: true,
@@ -194,7 +194,7 @@ class _VocabClickableComponentState extends StateBase<VocabClickableComponent> {
       return;
     }
 
-    assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
+    assistCtr.updateGroup(AppAssistKeys.voicePlayerGroupId$vocabClickable, stateData: null);
     assistCtr.updateAssist(sectionId, stateData: 'prepare');
 
     AudioPlayerService.getPlayerWithUrl(voiceUrl!).then((twoState) async {

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:app/irisRuntimeCache.dart';
 import 'package:app/managers/systemParameterManager.dart';
+import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/structures/mixins/dateFieldMixin.dart';
 import 'package:app/structures/models/courseLevelModel.dart';
@@ -16,6 +17,7 @@ import 'package:iris_tools/api/logger/reporter.dart';
 import 'package:iris_tools/api/system.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:iris_tools/models/twoStateReturn.dart';
+import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:app/constants.dart';
@@ -188,6 +190,20 @@ class PublicAccess {
 
     requester.request(null, false);
     return res.future;
+  }
+
+  static Future<void> requestGetLessonProgress(LessonModel lessonModel) async {
+    final url = '/lessons/details?LessonId=${lessonModel.id}';
+
+    final twoResponse = await publicApiCaller(url, MethodType.get, null);
+
+    if(twoResponse.hasResult1()){
+      final data = twoResponse.result1!['data'];
+
+      final les = LessonModel.fromMap(data);
+      lessonModel.matchBy(les);
+      AssistController.updateGroupGlobal(AppAssistKeys.updateOnLessonChange);
+    }
   }
 }
 

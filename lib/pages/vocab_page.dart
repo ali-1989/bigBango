@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -46,7 +47,6 @@ class _VocabPageState extends StateBase<VocabPage> {
   bool showTranslate = false;
   Requester requester = Requester();
   List<VocabModel> vocabList = [];
-  String id$voicePlayerGroupId = 'voicePlayerGroupId';
   String id$usVoicePlayerSectionId = 'usVoicePlayerSectionId';
   String id$ukVoicePlayerSectionId = 'ukVoicePlayerSectionId';
   String selectedPlayerId = '';
@@ -103,6 +103,8 @@ class _VocabPageState extends StateBase<VocabPage> {
     if(reviewIds.isNotEmpty){
       ReviewService.addReviews(ReviewSection.vocab, reviewIds);
     }
+
+    PublicAccess.requestGetLessonProgress(widget.injector.lessonModel);
 
     super.dispose();
   }
@@ -220,7 +222,10 @@ class _VocabPageState extends StateBase<VocabPage> {
                         visible: vocabList.length > 1,
                         child: Directionality(
                             textDirection: TextDirection.ltr,
-                            child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
+                            child: LinearProgressIndicator(
+                                value: calcProgress(),
+                                backgroundColor: AppColors.red.withAlpha(50)
+                            )
                         ),
                       ),
 
@@ -330,7 +335,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                     child: Assist(
                                                       controller: assistCtr,
                                                       id: id$usVoicePlayerSectionId,
-                                                      groupId: id$voicePlayerGroupId,
+                                                      groupIds: [AppAssistKeys.voicePlayerGroupId$vocabPage],
                                                       builder: (_, ctr, data){
                                                         return AnimateWidget(
                                                           resetOnRebuild: true,
@@ -375,7 +380,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                     child: Assist(
                                                       controller: assistCtr,
                                                       id: id$ukVoicePlayerSectionId,
-                                                      groupId: id$voicePlayerGroupId,
+                                                      groupIds: [AppAssistKeys.voicePlayerGroupId$vocabPage],
                                                       builder: (_, ctr, data){
                                                         return AnimateWidget(
                                                           resetOnRebuild: true,
@@ -593,7 +598,7 @@ class _VocabPageState extends StateBase<VocabPage> {
             child: Assist(
               controller: assistCtr,
               id: id,
-              groupId: id$voicePlayerGroupId,
+              groupIds: [AppAssistKeys.voicePlayerGroupId$vocabPage],
               builder: (_, ctr, data){
                 return AnimateWidget(
                   resetOnRebuild: true,
@@ -664,7 +669,7 @@ class _VocabPageState extends StateBase<VocabPage> {
       return;
     }
 
-    assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
+    assistCtr.updateGroup(AppAssistKeys.voicePlayerGroupId$vocabPage, stateData: null);
     assistCtr.updateAssist(sectionId, stateData: 'prepare');
 
     AudioPlayerService.getPlayerWithUrl(voiceUrl!).then((twoState) async {
@@ -701,7 +706,7 @@ class _VocabPageState extends StateBase<VocabPage> {
 
   void onNextClick(){
     AudioPlayerService.getPlayer().stop();
-    assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
+    assistCtr.updateGroup(AppAssistKeys.voicePlayerGroupId$vocabPage, stateData: null);
 
     if(currentVocabIdx < vocabList.length-1) {
       currentVocabIdx++;
@@ -726,7 +731,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     }
     else {
       AudioPlayerService.getPlayer().stop();
-      assistCtr.updateGroup(id$voicePlayerGroupId, stateData: null);
+      assistCtr.updateGroup(AppAssistKeys.voicePlayerGroupId$vocabPage, stateData: null);
       currentVocabIdx--;
 
       currentVocab = vocabList[currentVocabIdx];

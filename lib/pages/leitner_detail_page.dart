@@ -177,7 +177,10 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
             /// progressbar
             Directionality(
                 textDirection: TextDirection.ltr,
-                child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
+                child: LinearProgressIndicator(
+                    value: calcProgress(),
+                    backgroundColor: AppColors.red.withAlpha(50)
+                )
             ),
 
             SizedBox(height: 60),

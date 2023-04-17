@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/system/publicAccess.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/callAction/taskQueueCaller.dart';
@@ -110,6 +111,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     }
     catch (e){/**/}
 
+    PublicAccess.requestGetLessonProgress(widget.injector.lessonModel);
     super.dispose();
   }
 
@@ -243,20 +245,18 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                   offset: Offset(0, anim1Ctr.value),
                                   child: Opacity(
                                     opacity: (anim1Ctr.value/30 -1).abs(),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: RichText(
-                                        key: ValueKey(Generator.generateKey(4)),
-                                        textDirection: showTranslate? TextDirection.rtl : TextDirection.ltr,
-                                        text: TextSpan(
-                                            children: currentItem!.genSpans(
-                                                currentItem!.segments[currentSegmentIdx].id,
-                                                normalStyle,
-                                                readStyle,
-                                                clickableStyle,
-                                                onVocabClick
-                                            )
-                                        ),
+                                    child: RichText(
+                                      textAlign: TextAlign.justify,
+                                      key: ValueKey(Generator.generateKey(4)),
+                                      textDirection: showTranslate? TextDirection.rtl : TextDirection.ltr,
+                                      text: TextSpan(
+                                          children: currentItem!.genSpans(
+                                              currentItem!.segments[currentSegmentIdx].id,
+                                              normalStyle,
+                                              readStyle,
+                                              clickableStyle,
+                                              onVocabClick
+                                          )
                                       ),
                                     ),
                                   ),

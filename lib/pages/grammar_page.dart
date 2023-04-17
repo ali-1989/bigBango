@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/system/publicAccess.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
@@ -70,6 +71,8 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     reviewRequester.dispose();
     chewieVideoController?.dispose();
     playerController?.dispose();
+
+    PublicAccess.requestGetLessonProgress(widget.injector.lessonModel);
 
     super.dispose();
   }

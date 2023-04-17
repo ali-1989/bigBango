@@ -96,6 +96,8 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
       ReviewService.addReviews(ReviewSection.idioms, reviewIds);
     }
 
+    PublicAccess.requestGetLessonProgress(widget.injector.lessonModel);
+
     super.dispose();
   }
 
@@ -200,7 +202,10 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                         visible: idiomsList.length > 1,
                         child: Directionality(
                             textDirection: TextDirection.ltr,
-                            child: LinearProgressIndicator(value: calcProgress(), backgroundColor: AppColors.red.withAlpha(50))
+                            child: LinearProgressIndicator(
+                                value: calcProgress(),
+                                backgroundColor: AppColors.red.withAlpha(50)
+                            )
                         ),
                       ),
 

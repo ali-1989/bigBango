@@ -118,7 +118,12 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
     }
 
     final item = examList[idx ~/ 2];
-    final List<InlineSpan> spans = generateSpans(item);
+
+    return buildExam(item);
+  }
+
+  Widget buildExam(ExamModel model) {
+    final List<InlineSpan> spans = generateSpans(model);
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -136,7 +141,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
           SizedBox(height: 20),
 
           ///=== words
-          buildWords(item),
+          buildWords(model),
           SizedBox(height: 14),
         ],
       ),
@@ -295,17 +300,6 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
   }
 
   void onWordClick(ExamModel model, ExamOptionModel ec) {
-    /*if (currentSelectIndex < 1) {
-      for (final k in model.userAnswers){
-        if(k.id == ec.id){
-          return;
-        }
-      }
-
-      AppToast.showToast(context, 'ابتدا جای خالی را انتخاب کنید');
-      return;
-    }*/
-
     setUserAnswer(model, currentSpaceOrder, ec);
 
     List<String> selectedWordIds = [];

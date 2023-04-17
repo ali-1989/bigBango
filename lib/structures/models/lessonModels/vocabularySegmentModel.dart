@@ -55,6 +55,7 @@ class VocabularySegmentModel extends ISegmentModel {
   Map<String, dynamic> toMap() {
     final map = super.toMap();
 
+    map['title'] = title;
     map['hasIdioms'] = hasIdioms;
     map['count'] = count;
     map['reviewedCount'] = reviewCount;

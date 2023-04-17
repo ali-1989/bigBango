@@ -1,5 +1,6 @@
 import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/controllers/examController.dart';
+import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:flutter/material.dart';
 
@@ -76,6 +77,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     requester.dispose();
     player.stop();
 
+    PublicAccess.requestGetLessonProgress(widget.injector.lessonModel);
     super.dispose();
   }
 

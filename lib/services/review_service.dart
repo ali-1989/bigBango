@@ -99,10 +99,9 @@ class ReviewService {
       final lesson = LessonModel.fromMap(data);
       lessonModel.matchBy(lesson);
 
-      AssistController.updateAssistGlobal(HomePage.id$head);
+      AssistController.updateAssistGlobal(HomePage.id$homePageHead);
       completer.complete(true);
     };
-
 
     reviewRequester.methodType = MethodType.get;
     reviewRequester.prepareUrl(pathUrl: '/lessons/details?LessonId=${lessonModel.id}');
