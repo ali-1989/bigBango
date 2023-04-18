@@ -1,11 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:app/managers/systemParameterManager.dart';
-import 'package:app/structures/enums/appAssistKeys.dart';
-import 'package:app/structures/enums/appStoreScope.dart';
-import 'package:app/structures/mixins/dateFieldMixin.dart';
-import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dio/dio.dart';
@@ -22,15 +17,20 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:app/constants.dart';
 import 'package:app/managers/settingsManager.dart';
+import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/pages/grammar_page.dart';
 import 'package:app/pages/idioms_page.dart';
 import 'package:app/pages/listening_page.dart';
 import 'package:app/pages/reading_page.dart';
+import 'package:app/structures/enums/appAssistKeys.dart';
+import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
+import 'package:app/structures/mixins/dateFieldMixin.dart';
+import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/keys.dart';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/urlHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
@@ -11,7 +12,6 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:iris_tools/widgets/customCard.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({Key? key}) : super(key: key);

@@ -1,8 +1,3 @@
-import 'package:app/system/publicAccess.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/routeTools.dart';
-import 'package:app/views/components/selectLevelOnline.dart';
-import 'package:app/views/components/selectSupportTime.dart';
 import 'package:flutter/material.dart';
 
 import 'package:im_animations/im_animations.dart';
@@ -14,10 +9,15 @@ import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/middleWares/requester.dart';
+import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
+import 'package:app/tools/app/appSheet.dart';
+import 'package:app/tools/routeTools.dart';
+import 'package:app/views/components/selectLevelOnline.dart';
+import 'package:app/views/components/selectSupportTime.dart';
 import 'package:app/views/components/videoPlayer.dart';
 
 class SelectLanguageLevelPage extends StatefulWidget {

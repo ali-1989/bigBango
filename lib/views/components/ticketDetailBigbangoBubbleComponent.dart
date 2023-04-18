@@ -12,7 +12,6 @@ import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/dateTools.dart';
 
-
 class TicketDetailBigbangoBubbleComponent extends StatefulWidget {
   final TicketDetailBubbleInjector injector;
 

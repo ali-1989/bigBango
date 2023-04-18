@@ -17,8 +17,8 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSnack.dart';
+import 'package:app/tools/routeTools.dart';
 
 class OtpPage extends StatefulWidget {
   final String phoneNumber;

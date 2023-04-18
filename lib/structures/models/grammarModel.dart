@@ -1,5 +1,6 @@
-import 'package:app/structures/models/mediaModel.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
+
+import 'package:app/structures/models/mediaModel.dart';
 
 class GrammarModel {
   String id = '';

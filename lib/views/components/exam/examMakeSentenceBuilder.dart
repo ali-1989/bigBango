@@ -1,18 +1,17 @@
-import 'package:app/structures/abstract/examStateMethods.dart';
-import 'package:app/structures/builders/examBuilderContent.dart';
-import 'package:app/structures/controllers/examController.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
+import 'package:app/structures/abstract/examStateMethods.dart';
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/enums/quizType.dart';
-
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appThemes.dart';
-import 'package:iris_tools/widgets/customCard.dart';
 
 class ExamMakeSentenceBuilder extends StatefulWidget {
   final ExamBuilderContent content;

@@ -5,8 +5,8 @@ import 'package:material_dialogs/material_dialogs.dart';
 
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appThemes.dart';
+import 'package:app/tools/routeTools.dart';
 
 class AppDialog {
 	static final _instance = AppDialog._();

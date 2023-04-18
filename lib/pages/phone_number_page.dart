@@ -20,8 +20,8 @@ import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSnack.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/videoPlayer.dart';
 
 class PhoneNumberPage extends StatefulWidget {

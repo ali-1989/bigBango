@@ -1,8 +1,7 @@
-import 'package:app/tools/permissionTools.dart';
-import 'package:app/views/states/backBtn.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/injectors/ticketDetailUserBubbleInjector.dart';
@@ -18,12 +17,13 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
+import 'package:app/tools/permissionTools.dart';
 import 'package:app/views/components/ticketDetailBigbangoBubbleComponent.dart';
 import 'package:app/views/components/ticketDetailUserBubbleComponent.dart';
 import 'package:app/views/sheets/replyTicketSheet.dart';
+import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:iris_tools/widgets/customCard.dart';
 
 class TicketDetailPage extends StatefulWidget {
   final TicketModel? ticketModel;

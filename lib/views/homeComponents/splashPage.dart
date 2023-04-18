@@ -13,8 +13,8 @@ import 'package:app/system/applicationInitialize.dart';
 import 'package:app/system/session.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/views/homeComponents/routeDispatcher.dart';
 import 'package:app/views/homeComponents/splashScreen.dart';
 import 'package:app/views/states/waitToLoad.dart';
@@ -103,7 +103,7 @@ class SplashScreenState extends StateBase<SplashPage> {
   }
 
   void connectToServer() async {
-    final serverData = await SystemParameterManager.requestSystemParameters();
+    final serverData = await SystemParameterManager.requestParameters();
 
     if(serverData == null){
       AppSheet.showSheetOneAction(

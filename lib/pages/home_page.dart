@@ -1,13 +1,10 @@
-import 'package:app/structures/builders/examBuilderContent.dart';
-import 'package:app/structures/enums/appAssistKeys.dart';
-import 'package:app/structures/enums/appStoreScope.dart';
-import 'package:app/views/dialogs/selectReadingDialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
 import 'package:iris_runtime_cache/iris_runtime_cache.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 import 'package:iris_tools/widgets/searchBar.dart';
 
 import 'package:app/pages/exam_page.dart';
@@ -17,6 +14,9 @@ import 'package:app/pages/reading_page.dart';
 import 'package:app/pages/timetable_page.dart';
 import 'package:app/pages/vocab_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/structures/enums/appAssistKeys.dart';
+import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
@@ -37,16 +37,16 @@ import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appOverlay.dart';
-import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/views/dialogs/selectGrammarDialog.dart';
 import 'package:app/views/dialogs/selectListeningDialog.dart';
+import 'package:app/views/dialogs/selectReadingDialog.dart';
 import 'package:app/views/dialogs/selectVocabIdiomsDialog.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:iris_tools/widgets/customCard.dart';
 
 class HomePage extends StatefulWidget {
   static String id$homePageHead = '${identityHashCode(HomePage)}_head';

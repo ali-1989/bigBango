@@ -36,7 +36,7 @@ class SystemParameterManager {
     return systemParameters.timeTable['minuteAmount']?? 0;
   }
 
-  static Future<HttpRequester?> requestSystemParameters() async {
+  static Future<HttpRequester?> requestParameters() async {
     final http = HttpItem();
     final result = Completer<HttpRequester?>();
 

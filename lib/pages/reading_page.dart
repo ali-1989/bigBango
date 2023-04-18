@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:app/structures/builders/examBuilderContent.dart';
-import 'package:app/system/publicAccess.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/callAction/taskQueueCaller.dart';
 import 'package:iris_tools/api/duration/durationFormatter.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 import 'package:iris_tools/widgets/maxHeight.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -15,7 +14,7 @@ import 'package:app/pages/exam_page.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/services/vocab_clickable_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-
+import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
@@ -23,13 +22,14 @@ import 'package:app/structures/models/readingModel.dart';
 import 'package:app/structures/models/vocabModels/clickableVocabModel.dart';
 import 'package:app/structures/models/vocabModels/idiomModel.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/components/idiomClickableComponent.dart';
 import 'package:app/views/components/vocabClickableComponent.dart';
@@ -37,7 +37,6 @@ import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:iris_tools/widgets/customCard.dart';
 
 class ReadingPage extends StatefulWidget {
   final ReadingPageInjector injector;

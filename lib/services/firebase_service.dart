@@ -1,14 +1,15 @@
-import 'package:app/structures/enums/appEvents.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:flutter/foundation.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
-import 'package:iris_notifier/iris_notifier.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/tools/app/appBadge.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appNotification.dart';
+import 'package:app/tools/routeTools.dart';
 
 // https://firebase.google.com/docs/cloud-messaging/flutter/receive
 // https://firebase.google.com/docs/cloud-messaging/flutter/client

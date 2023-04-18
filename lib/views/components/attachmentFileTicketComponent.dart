@@ -8,6 +8,7 @@ import 'package:iris_pic_editor/pic_editor.dart';
 import 'package:iris_tools/api/helpers/fileHelper.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 import 'package:iris_tools/widgets/icon/circularIcon.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -20,12 +21,11 @@ import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appNavigator.dart';
-import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/permissionTools.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/fullScreenImage.dart';
 import 'package:app/views/states/emptyData.dart';
-import 'package:iris_tools/widgets/customCard.dart';
 
 class AttachmentFileTicketComponent extends StatefulWidget {
   final List<File> files;

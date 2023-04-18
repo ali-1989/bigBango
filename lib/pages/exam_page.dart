@@ -1,22 +1,21 @@
+import 'package:flutter/material.dart';
+
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/customCard.dart';
+
 import 'package:app/pages/autodidact_builder.dart';
 import 'package:app/pages/exam_builder.dart';
+import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/controllers/examController.dart';
+import 'package:app/structures/middleWares/requester.dart';
+import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appSnack.dart';
-import 'package:flutter/material.dart';
-
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-
-import 'package:app/structures/abstract/stateBase.dart';
-
-import 'package:app/structures/middleWares/requester.dart';
-import 'package:app/system/extensions.dart';
-import 'package:iris_tools/widgets/customCard.dart';
 
 class ExamPage extends StatefulWidget {
   final ExamBuilderContent builder;

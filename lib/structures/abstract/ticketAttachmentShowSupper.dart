@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:iris_tools/widgets/customCard.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
 
 import 'package:app/structures/enums/enums.dart';
@@ -7,11 +8,10 @@ import 'package:app/structures/models/ticketModels/ticketReplyModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appNavigator.dart';
-import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSizes.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/fullScreenImage.dart';
-import 'package:iris_tools/widgets/customCard.dart';
 
 abstract class TicketAttachmentShowSupper {
 

@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:iris_notifier/iris_notifier.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/modules/stateManagers/refresh.dart';
 
 import 'package:app/managers/messageManager.dart';

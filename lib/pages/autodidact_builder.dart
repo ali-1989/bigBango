@@ -1,11 +1,10 @@
-import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/builders/autodidactBuilderContent.dart';
-
+import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/examModels/examSuperModel.dart';
 import 'package:app/views/components/exam/autodidactTextComponent.dart';

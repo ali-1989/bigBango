@@ -1,15 +1,16 @@
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:flutter/material.dart';
+
+import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/pages/idioms_page.dart';
 import 'package:app/pages/vocab_page.dart';
+import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/routeTools.dart';
-import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/customCard.dart';
 
 class SelectVocabIdiomsDialog extends StatefulWidget {
   final VocabIdiomsPageInjector injector;

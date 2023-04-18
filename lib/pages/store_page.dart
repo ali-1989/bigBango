@@ -1,13 +1,12 @@
-import 'package:app/structures/enums/appEvents.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_notifier/iris_notifier.dart';
 
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/optionsRow/checkRow.dart';
 
 import 'package:app/managers/storeManager.dart';
-
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/structures/models/lessonModels/storeModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/publicAccess.dart';

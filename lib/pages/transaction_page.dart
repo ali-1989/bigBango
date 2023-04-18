@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
@@ -27,7 +28,6 @@ import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:iris_tools/widgets/customCard.dart';
 
 class TransactionsPage extends StatefulWidget {
 

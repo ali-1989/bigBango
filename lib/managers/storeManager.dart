@@ -2,11 +2,12 @@
 
 import 'dart:async';
 
-import 'package:app/structures/enums/appEvents.dart';
 import 'package:flutter/material.dart';
+
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/lessonModels/storeModel.dart';
 import 'package:app/tools/app/appSnack.dart';

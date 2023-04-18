@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:app/structures/enums/appEvents.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
@@ -30,6 +29,7 @@ import 'package:shamsi_date/shamsi_date.dart';
 
 import 'package:app/services/file_upload_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/enums/genderType.dart';

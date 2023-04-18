@@ -1,7 +1,8 @@
+import 'package:iris_tools/dateSection/dateHelper.dart';
+
 import 'package:app/structures/enums/messageStatus.dart';
 import 'package:app/structures/enums/notificationType.dart';
 import 'package:app/structures/models/mediaModel.dart';
-import 'package:iris_tools/dateSection/dateHelper.dart';
 
 class MessageModel {
   late String id;

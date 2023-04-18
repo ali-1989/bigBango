@@ -8,8 +8,8 @@ import 'package:app/constants.dart';
 import 'package:app/pages/new_version_page.dart';
 import 'package:app/structures/models/versionModel.dart';
 import 'package:app/tools/app/appDb.dart';
-import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appThemes.dart';
+import 'package:app/tools/routeTools.dart';
 import '/managers/settingsManager.dart';
 
 class VersionManager {

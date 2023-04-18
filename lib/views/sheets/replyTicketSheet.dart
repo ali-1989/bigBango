@@ -6,6 +6,7 @@ import 'package:iris_tools/api/converter.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/services/file_upload_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
@@ -16,11 +17,10 @@ import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/routeTools.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/attachmentFileTicketComponent.dart';
-import 'package:iris_tools/widgets/customCard.dart';
 
 class ReplyTicketSheet extends StatefulWidget {
   final TicketDetailModel ticketDetailModel;

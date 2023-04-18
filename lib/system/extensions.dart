@@ -8,9 +8,9 @@ import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/widgets/border/dottedBorder.dart';
 
+import 'package:app/managers/fontManager.dart';
+import 'package:app/managers/settingsManager.dart';
 import 'package:app/tools/app/appThemes.dart';
-import '/managers/fontManager.dart';
-import '/managers/settingsManager.dart';
 
 // usage: import 'package:common_version/tools/centers/extensions.dart';
 ///==========================================================================================================

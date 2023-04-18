@@ -1,34 +1,35 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:app/managers/leitnerManager.dart';
-import 'package:app/managers/storeManager.dart';
-import 'package:app/services/jwt_service.dart';
-import 'package:app/structures/enums/appEvents.dart';
-import 'package:app/tools/app/appLocale.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_notifier/iris_notifier.dart';
 
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
 import 'package:iris_tools/net/netManager.dart';
 import 'package:iris_tools/net/trustSsl.dart';
 
 import 'package:app/constants.dart';
+import 'package:app/managers/leitnerManager.dart';
 import 'package:app/managers/messageManager.dart';
+import 'package:app/managers/storeManager.dart';
+import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/services/audio_player_service.dart';
-
 import 'package:app/services/firebase_service.dart';
+import 'package:app/services/jwt_service.dart';
 import 'package:app/services/login_service.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/system/applicationLifeCycle.dart';
 import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appDirectories.dart';
+import 'package:app/tools/app/appLocale.dart';
 import 'package:app/tools/app/appNotification.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/deviceInfoTools.dart';
 import 'package:app/tools/netListenerTools.dart';
+import 'package:app/tools/routeTools.dart';
 
 class ApplicationInitial {
   ApplicationInitial._();
@@ -99,7 +100,9 @@ class ApplicationInitial {
   }
 
   static Future<void> inSplashInitWithContext(BuildContext context) async {
-    //RouteTools.init();
+    RouteTools.prepareWebRoute();
+    //AppCache.screenBack = const AssetImage(AppImages.background);
+    //await precacheImage(AppCache.screenBack!, context);
   }
 
   static Future<void> appLazyInit() {
@@ -151,6 +154,7 @@ class ApplicationInitial {
         AppSizes.instance.addMetricListener(onSizeCheng);
       }*/
 
+      SystemParameterManager.requestParameters();
       MessageManager.requestUnReadCount();
       LeitnerManager.requestLeitnerCount();
       StoreManager.init();

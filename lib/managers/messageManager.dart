@@ -2,11 +2,11 @@
 
 import 'dart:core';
 
-import 'package:app/structures/enums/appEvents.dart';
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
 import 'package:app/services/firebase_service.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/structures/enums/messageStatus.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/messageModel.dart';
