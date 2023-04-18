@@ -66,7 +66,7 @@ dependencies:
   flutter_sound: ^9.2.13
   mask_input_formatter: ^0.0.3
   switch_tab: ^0.1.3
-  iris_notifier: ^0.0.2
+  iris_notifier: ^0.0.3
   # last size: v7a-release.apk (9.9MB)
 
 
@@ -77,6 +77,8 @@ dependencies:
     git: https://github.com/ali-1989/IrisDB.git
   iris_pic_editor:
     git: https://github.com/ali-1989/IrisPicEditor.git
+  iris_runtime_cache:
+    git: https://github.com/ali-1989/irisRuntimeCache.git
   #iris_audio_visualizer:
     #path: ../thParty/audio_visualizer-master
   iris_route:

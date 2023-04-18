@@ -1,4 +1,3 @@
-import 'package:app/irisRuntimeCache.dart';
 import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
@@ -6,6 +5,7 @@ import 'package:app/views/dialogs/selectReadingDialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
+import 'package:iris_runtime_cache/iris_runtime_cache.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/searchBar.dart';

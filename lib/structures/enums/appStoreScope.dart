@@ -1,4 +1,4 @@
-import 'package:app/irisRuntimeCache.dart';
+import 'package:iris_runtime_cache/iris_runtime_cache.dart';
 
 enum AppStoreScope implements RuntimeScope {
   user$supportTime(100),
