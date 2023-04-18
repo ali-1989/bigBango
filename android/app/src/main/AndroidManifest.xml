@@ -20,7 +20,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
     <!-- ..........................  shortcut -->
     <uses-permission android:name="android.permission.INSTALL_SHORTCUT"/>
@@ -49,10 +49,12 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <!-- ..........................  FCM/GCM -->
-    <!--<uses-permission android:name="com.google.android.gms.gcm.GcmReceiver"/>
+    <!--
+    <uses-permission android:name="com.google.android.gms.gcm.GcmReceiver"/>
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
     <uses-permission android:name="com.google.android.c2dm.intent.RECEIVE"/>
-    <uses-permission android:name="com.google.android.c2dm.intent.REGISTRATION"/>-->
+    <uses-permission android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+    -->
 
     <!-- ..........................  uses-permission Storage -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -65,18 +67,22 @@
     <uses-permission android:name="com.sec.android.provider.badge.permission.READ"/>
     <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE"/>
     <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE"/>
-    <uses-permission android:name="android.permission.RECEIVE_WAP_PUSH"/>
 
     <!-- ..........................  uses-permission Location -->
-    <!--<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>-->
+    <!--
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    -->
 
     <!-- ..........................  Call SMS -->
-    <!--<uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <!-- Google play sensitive
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
     <uses-permission android:name="android.permission.MANAGE_OWN_CALLS"/>
     <uses-permission android:name="android.permission.NEW_OUTGOING_CALL"/>
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>-->
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.RECEIVE_WAP_PUSH"/>
+    -->
 
     <!-- ..........................  others -->
     
@@ -85,9 +91,12 @@
     
     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.SENSORS"/>
-    <!--<uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    
+    <!--
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
+    -->
     <!-- ============================== uses-feature ============================================== -->
     <uses-feature
             android:name="android.hardware.fingerprint"

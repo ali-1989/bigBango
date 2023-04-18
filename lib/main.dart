@@ -73,7 +73,7 @@ Future<void> main() async {
 }
 
 Future<void> mainInitialize() async {
-  PlatformDispatcher.instance.onError = maiIsolateError;
+  PlatformDispatcher.instance.onError = mainIsolateError;
   FlutterError.onError = onErrorCatch;
   await FireBaseService.initializeApp();
 
@@ -105,10 +105,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       useInheritedMediaQuery: true,
       title: Constants.appTitle,
+      themeMode: AppThemes.instance.currentThemeMode,
       theme: AppThemes.instance.themeData,
       //darkTheme: ThemeData.dark(),
       onGenerateRoute: IrisNavigatorObserver.onGenerateRoute,
-      themeMode: AppThemes.instance.currentThemeMode,
       navigatorObservers: [IrisNavigatorObserver.instance()],
       scrollBehavior: ScrollConfiguration.of(context).copyWith(
         dragDevices: {
@@ -183,7 +183,7 @@ void onErrorCatch(FlutterErrorDetails errorDetails) {
   PublicAccess.logger.logToAll(txt);
 }
 ///==============================================================================================
-bool maiIsolateError(error, sTrace) {
+bool mainIsolateError(error, sTrace) {
   var txt = 'main-isolate CAUGHT AN ERROR:: ${error.toString()}';
 
   if(!kDebugMode/* && !kIsWeb*/) {

@@ -23,6 +23,7 @@ class Keys {
   static const date = 'date';
   static const state = 'state';
   static const mobileNumber = 'phoneNumber';
+  static const phoneCode = 'phone_code';
   static const countryIso = 'country_iso';
   static const path = 'path';
   static const uri = 'uri';

@@ -1,3 +1,5 @@
+import 'package:app/managers/settingsManager.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/mathHelper.dart';
@@ -6,7 +8,6 @@ import 'package:iris_tools/dateSection/calendarTools.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appThemes.dart';
@@ -70,6 +71,7 @@ class SelectDateCalendarViewState extends State<SelectDateCalendarView> {
   late int minOfYear;
   Widget? messageView;
   late TextStyle titleStyle;
+  ScrollController scrollCtr = ScrollController();
 
 
   @override
@@ -141,6 +143,39 @@ class SelectDateCalendarViewState extends State<SelectDateCalendarView> {
                       },
                     ),
                   ),
+
+                  Visibility(
+                    visible: widget.showCalendar,
+                    child: SizedBox(
+                      height: 46,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                            borderRadius: BorderRadius.circular(10.0)
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              //borderRadius: BorderRadius.circular(10),
+                              dropdownColor: Colors.grey[400],
+                              value: SettingsManager.settingsModel.calendarType,
+                              onChanged: (newValue) {
+                                changeCalendar(newValue as CalendarType);
+
+                                setState(() {});
+                              },
+                              items: DateTools.calendarList.map((cal) => DropdownMenuItem(
+                                value: cal,
+                                child: Text('هجری شمسی'),
+                              ))
+                                  .toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -163,8 +198,10 @@ class SelectDateCalendarViewState extends State<SelectDateCalendarView> {
 
           Scrollbar(
             thumbVisibility: true,
+            controller: scrollCtr,
             child: ListView(
               shrinkWrap: true,
+              controller: scrollCtr,
               children: [
                 Visibility(
                   visible: widget.title != null,
@@ -314,13 +351,13 @@ class SelectDateCalendarViewState extends State<SelectDateCalendarView> {
       return;
     }
 
-    final sd = date.convertToSystemDate();
+    final result = date.convertToSystemDate();
 
     if(widget.onSelect != null) {
-      widget.onSelect?.call(sd);
+      widget.onSelect?.call(result);
     }
     else {
-      AppNavigator.pop(context, result: sd);
+      RouteTools.popTopView(context: context, data: result);
     }
   }
 
