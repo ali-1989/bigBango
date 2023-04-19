@@ -117,25 +117,35 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
           SizedBox(height: 10),
 
           /// tabBar view
-          TabBar(
-            controller: tabController,
-              tabs: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text('تمرین'),
-                ),
+          Builder(
+            builder: (ctx){
+              if(widget.builder.autodidactList.isNotEmpty){
+                return TabBar(
+                  controller: tabController,
+                  tabs: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text('تمرین'),
+                    ),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text('خودآموز'),
-                ),
-              ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text('خودآموز'),
+                    ),
+                  ],
+                );
+              }
+
+              return SizedBox();
+            },
           ),
+
 
           /// body view
           Expanded(
             child: TabBarView(
               controller: tabController,
+                physics: NeverScrollableScrollPhysics(),
                 children: [
                   buildPage1(),
 
