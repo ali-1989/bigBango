@@ -23,7 +23,7 @@ dependencies:
     sdk: flutter
 
   import_sorter: ^4.6.0
-  flutter_launcher_icons: ^0.13.0 # image: 3.0.2  xml: ^5.0.0
+  flutter_launcher_icons: ^0.13.1 # image: 3.0.2  xml: ^5.0.0
 
   flutter_localizations:
     sdk: flutter
@@ -47,10 +47,10 @@ dependencies:
   numberpicker: ^2.1.2
   just_audio: ^0.9.32
   pull_to_refresh: ^2.0.0
-  image_picker: ^0.8.7+3
-  toggle_switch: ^2.0.1
-  firebase_messaging: ^14.4.0                   # old: 14.2.2
-  firebase_core: ^2.9.0                         # old: 2.5.0
+  image_picker: ^0.8.7+4
+  toggle_switch: ^2.1.0
+  firebase_messaging: ^14.4.1
+  firebase_core: ^2.10.0
   im_animations: ^0.1.2                          # ColorSonar
   animate_do: ^3.0.2
   animator: ^3.2.0
@@ -99,10 +99,10 @@ dependencies:
   # https://pub.dev/packages/pinput#android
 
 dependency_overrides:
-  path: 1.8.3
-  ffi: 2.0.1
-  shamsi_date: ^1.0.1
-  intl: 0.18.0
+  path: 1.8.3     # flutter_test
+  ffi: 2.0.1      # device_info_plus
+  intl: 0.18.1    # awesome_notifications
+  shamsi_date: 1.0.1
 
 
 

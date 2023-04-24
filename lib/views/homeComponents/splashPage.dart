@@ -92,7 +92,7 @@ class SplashScreenState extends StateBase<SplashPage> {
     final settingsLoad = SettingsManager.loadSettings();
 
     if (settingsLoad) {
-      await VersionManager.checkInstallVersion();
+      await VersionManager.checkVersionOnLaunch();
       connectToServer();
 
       ApplicationInitial.appLazyInit();
