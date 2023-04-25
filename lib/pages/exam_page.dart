@@ -205,7 +205,9 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     AppDialogIris.instance.showYesNoDialog(
         context,
       yesFn: () {
-        requestSendAnswer();
+        Future.delayed(Duration(milliseconds: 500)).then((value) {
+          requestSendAnswer();
+        });
       },
       desc: 'آیا جواب تمرین ارسال شود؟',
     );
@@ -231,7 +233,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
       AppSnack.showInfo(context, message);
 
       for(final x in widget.builder.examList){
-        ExamController.getControllerFor(x.id)?.showAnswers(true);
+        ExamController.getControllerFor(x.items[0].id)?.showAnswers(true);
       }
 
     };
@@ -241,7 +243,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
 
     for(final x in widget.builder.examList){
       tempList.add({
-        'exerciseId' : x.id,
+        'exerciseId' : x.items[0].id,
         'answer' : x.getUserAnswerText(),
         'isCorrect' : x.isUserAnswerCorrect(),
       });

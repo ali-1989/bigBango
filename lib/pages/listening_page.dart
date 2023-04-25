@@ -508,7 +508,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     final js = <String, dynamic>{};
     js['items'] = [
       {
-        'exerciseId' : currentItem!.quiz.id,
+        'exerciseId' : currentItem!.quiz.items[0].id,
         'answer' : currentItem!.quiz.getUserAnswerText(),
         'isCorrect' : currentItem!.quiz.isUserAnswerCorrect(),
       }

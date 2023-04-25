@@ -333,10 +333,10 @@ packages:
     dependency: transitive
     description:
       name: file_picker
-      sha256: b85eb92b175767fdaa0c543bf3b0d1f610fe966412ea72845fe5ba7801e763ff
+      sha256: e6c7ad8e572379df86ea64ef0a5395889fba3954411d47ca021b888d79f8e798
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.10"
+    version: "5.2.11"
   firebase_core:
     dependency: "direct main"
     description:
@@ -692,12 +692,10 @@ packages:
   iris_tools:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "7dc6307f4a1bb7b9cced92991427f68925959ca4"
-      url: "https://github.com/ali-1989/IrisTools.git"
-    source: git
-    version: "0.0.34+1"
+      path: "../IrisTools"
+      relative: true
+    source: path
+    version: "0.0.34+3"
   jiffy:
     dependency: transitive
     description:
@@ -1424,13 +1422,13 @@ packages:
     source: hosted
     version: "0.2.1"
   win32:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: win32
-      sha256: a6f0236dbda0f63aa9a25ad1ff9a9d8a4eaaa5012da0dc59d21afdb1dc361ca4
+      sha256: dd8f9344bc305ae2923e3d11a2a911d9a4e2c7dd6fe0ed10626d63211a69676e
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.4"
+    version: "4.1.3"
   xdg_directories:
     dependency: transitive
     description:

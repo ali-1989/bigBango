@@ -85,23 +85,23 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
     if(model is ExamModel){
       if(model.quizType == QuizType.fillInBlank){
         return ExamBlankSpaceBuilder(
-            key: ValueKey(model.id),
+            key: ValueKey(model.items[0].id),
             content: widget.builder,
-            controllerId: model.id,
+            controllerId: model.items[0].id,
         );
       }
       else if(model.quizType == QuizType.recorder){
         return ExamSelectWordBuilder(
-            key: ValueKey(model.id),
+            key: ValueKey(model.items[0].id),
             content: widget.builder,
-            controllerId: model.id,
+            controllerId: model.items[0].id,
         );
       }
       else if(model.quizType == QuizType.multipleChoice){
         return ExamOptionBuilder(
-            key: ValueKey(model.id),
+            key: ValueKey(model.items[0].id),
             builder: widget.builder,
-            controllerId: model.id,
+            controllerId: model.items[0].id,
         );
       }
     }
@@ -129,26 +129,26 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
     if(model is ExamModel){
       if(model.quizType == QuizType.fillInBlank){
         return ExamBlankSpaceBuilder(
-            key: ValueKey(model.id),
+            key: ValueKey(model.items[0].id),
             content: widget.builder,
-            controllerId: model.id,
+            controllerId: model.items[0].id,
             showTitle: true,
             index: idx,
         );
       }
       else if(model.quizType == QuizType.recorder){
         return ExamSelectWordBuilder(
-            key: ValueKey(model.id),
+            key: ValueKey(model.items[0].id),
             content: widget.builder,
-            controllerId: model.id,
+            controllerId: model.items[0].id,
             index: idx
         );
       }
       else if(model.quizType == QuizType.multipleChoice){
         return ExamOptionBuilder(
-            key: ValueKey(model.id),
+            key: ValueKey(model.items[0].id),
             builder: widget.builder,
-            controllerId: model.id,
+            controllerId: model.items[0].id,
             showTitle: true,
             index: idx
         );

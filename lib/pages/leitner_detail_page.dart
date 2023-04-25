@@ -349,15 +349,16 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
     if(currentIdx < leitnerItems.length-1){
       currentIdx++;
     }
-    /*else {
-      AppSheet.showSheetOneAction(
+    else {
+      /*AppSheet.showSheetOneAction(
           context,
           'تبریک شما محتوای این جعبه را تمام کردید',
           (){
             RouteTools.popTopView(context: context);
           }
-      );
-    }*/
+      );*/
+      RouteTools.popTopView(context: context);
+    }
   }
 
   void tryAgain(){

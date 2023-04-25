@@ -104,7 +104,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
     final curExam = examList[itmIdx];
 
     return Column(
-      key: ValueKey(curExam.id),
+      key: ValueKey(curExam.items[0].id),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 10),
@@ -116,7 +116,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Text(
-                curExam.question,
+                curExam.items[0].question,
                 style: TextStyle(fontSize: 12, height: 1.7),
               textAlign: TextAlign.justify,
             ),
@@ -136,7 +136,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
   List<Widget> buildOptions(ExamModel curExam){
     List<Widget> res = [];
 
-    for(final opt in curExam.options){
+    for(final opt in curExam.items[0].options){
       final w = GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: (){
@@ -165,7 +165,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
           duration: Duration(milliseconds: 400),
           cycles: 1,
           builder: (_, animate){
-            final optionIdx = curExam.options.indexOf(opt);
+            final optionIdx = curExam.items[0].options.indexOf(opt);
             bool isSelected = curExam.getUserChoiceById(opt.id) != null;
             bool isCorrect = optionIdx == curExam.getIndexOfCorrectChoice();
 
@@ -237,7 +237,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
   @override
   void showAnswer(String examId, bool state) {
     for (final element in examList) {
-      if(element.id == examId){
+      if(element.items[0].id == examId){
         element.showAnswer = state;
         break;
       }

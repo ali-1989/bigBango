@@ -238,7 +238,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
           Color falseColor = Colors.red;
 
           ///answer is correct
-          if(exam.userAnswers[i].text == exam.options[i].text){
+          if(exam.userAnswers[i].text == exam.items[0].options[i].text){
             blankSpan = WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: Row(
@@ -275,7 +275,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
                       SizedBox(width: 4),
                       //Image.asset(AppImages.trueCheckIco),
                       SizedBox(width: 2),
-                      Text(exam.options[i].text,
+                      Text(exam.items[0].options[i].text,
                           style: questionNormalStyle.copyWith(
                               color: trueColor,
                               decorationStyle: TextDecorationStyle.solid,
@@ -288,7 +288,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
               );
             }
             else {
-              blankText = exam.options[i].text;// '[\u00A0_\u00A0]';
+              blankText = exam.items[0].options[i].text;// '[\u00A0_\u00A0]';
 
               /// answer is wrong
               blankSpan = WidgetSpan(
@@ -360,7 +360,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
   @override
   void showAnswer(String examId, bool state) {
     for (final element in examList) {
-      if(element.id == examId){
+      if(element.items[0].id == examId){
         element.showAnswer = state;
         break;
       }

@@ -309,12 +309,12 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
       }
     }
 
-    if (selectedWordIds.length + 1 == model.options.length) {
+    if (selectedWordIds.length + 1 == model.getFirst().options.length) {
       for (final k in model.userAnswers) {
         if (k.text.isEmpty) {
           ExamOptionModel? examChoiceModel;
 
-          for (final kk in model.options) {
+          for (final kk in model.getFirst().options) {
             if (!selectedWordIds.contains(kk.id)) {
               examChoiceModel = kk;
               currentSpaceOrder++;
@@ -350,7 +350,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
   @override
   void showAnswer(String id, bool state) {
     for (final model in examList) {
-      if(model.id == id){
+      if(model.getFirst().id == id){
         model.showAnswer = state;
         break;
       }

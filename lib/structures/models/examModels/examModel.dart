@@ -4,11 +4,10 @@ import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/models/examModels/examSuperModel.dart';
 
 class ExamModel extends ExamSuperModel {
-  late String id;
-  late String question;
+  String? title;
   QuizType quizType = QuizType.unKnow;
-  List<ExamOptionModel> options = [];
   List<ExamSolvedOptionModel> solvedOptions = [];
+  List<ExamItem> items = [];
 
   //----------- local
   bool showAnswer = false;
@@ -20,16 +19,15 @@ class ExamModel extends ExamSuperModel {
   ExamModel();
 
   ExamModel.fromMap(Map js){
-    id = js['id']?? '';
-    question = js['question'];
     quizType = QuizType.fromType(js['exerciseType']);
-
-    if(js['choices'] is List){
-      options = js['choices'].map<ExamOptionModel>((e) => ExamOptionModel.fromMap(e)).toList();
-    }
+    title = js['title'];
 
     if(js['solveItems'] is List){
       solvedOptions = js['solveItems'].map<ExamSolvedOptionModel>((e) => ExamSolvedOptionModel.fromMap(e)).toList();
+    }
+
+    if(js['items'] is List){
+      items = js['items'].map<ExamItem>((e) => ExamItem.fromMap(e)).toList();
     }
 
     //----------- local
@@ -41,10 +39,9 @@ class ExamModel extends ExamSuperModel {
   Map<String, dynamic> toMap(){
     final js = <String, dynamic>{};
 
-    js['id'] = id;
-    js['question'] = question;
+    js['title'] = title;
     js['exerciseType'] = quizType.number;
-    js['choices'] = options.map((e) => e.toMap()).toList();
+    js['items'] = items.map((e) => e.toMap()).toList();
     js['solveItems'] = solvedOptions.map((e) => e.toMap()).toList();
 
     //----------- local
@@ -53,17 +50,24 @@ class ExamModel extends ExamSuperModel {
     return js;
   }
 
+  ExamItem getFirst(){
+    return items[0];
+  }
+  
   void prepare(){
     if(quizType == QuizType.multipleChoice){
       _generateUserAnswer();
     }
-    else {
-      _doSplitQuestion();
-    }
 
     if(quizType == QuizType.recorder){
-      shuffleWords = [...options];
+      _doSplitQuestion();
+
+      shuffleWords = [...getFirst().options];
       shuffleWords.shuffle();
+    }
+
+    if(quizType == QuizType.fillInBlank){
+      _doSplitQuestion();
     }
 
     isPrepare = true;
@@ -74,12 +78,12 @@ class ExamModel extends ExamSuperModel {
   }
 
   void _doSplitQuestion(){
-    if(question.startsWith('**')){
+    if(getFirst().question.startsWith('**')){
       /// this trick used if question start with ** for correct splitting
-      question = '\u2060$question';
+      getFirst().question = '\u2060${getFirst()..question}';
     }
 
-    questionSplit = question.split('**');
+    questionSplit = getFirst().question.split('**');
     userAnswers.clear();
 
     for(int i = 1; i < questionSplit.length; i++) {
@@ -94,8 +98,8 @@ class ExamModel extends ExamSuperModel {
   }
 
   int getIndexOfCorrectChoice(){
-    for(int i = 0; i< options.length; i++){
-      if(options[i].isCorrect){
+    for(int i = 0; i< getFirst().options.length; i++){
+      if(getFirst().options[i].isCorrect){
         return i;
       }
     }
@@ -104,9 +108,9 @@ class ExamModel extends ExamSuperModel {
   }
 
   ExamOptionModel? getCorrectChoice(){
-    for(int i = 0; i< options.length; i++){
-      if(options[i].isCorrect){
-        return options[i];
+    for(int i = 0; i< getFirst().options.length; i++){
+      if(getFirst().options[i].isCorrect){
+        return getFirst().options[i];
       }
     }
 
@@ -114,9 +118,9 @@ class ExamModel extends ExamSuperModel {
   }
 
   ExamOptionModel? getChoiceByOrder(int order){
-    for(int i = 1; i <= options.length; i++){
-      if(options[i-1].order == order){
-        return options[i-1];
+    for(int i = 0; i < getFirst().options.length; i++){
+      if(getFirst().options[i].order == order){
+        return getFirst().options[i];
       }
     }
 
@@ -124,9 +128,9 @@ class ExamModel extends ExamSuperModel {
   }
 
   ExamOptionModel? getUserChoiceByOrder(int order){
-    for(int i = 1; i <= userAnswers.length; i++){
-      if(userAnswers[i-1].order == order){
-        return userAnswers[i-1];
+    for(int i = 0; i < userAnswers.length; i++){
+      if(userAnswers[i].order == order){
+        return userAnswers[i];
       }
     }
 
@@ -144,9 +148,9 @@ class ExamModel extends ExamSuperModel {
   }
 
   ExamOptionModel? getChoiceById(String id){
-    for(int i = 0; i< options.length; i++){
-      if(options[i].id == id){
-        return options[i];
+    for(int i = 0; i< getFirst().options.length; i++){
+      if(getFirst().options[i].id == id){
+        return getFirst().options[i];
       }
     }
 
@@ -160,11 +164,11 @@ class ExamModel extends ExamSuperModel {
       }
     }
     else if (quizType == QuizType.recorder){
-      var txt = question;
+      var txt = getFirst().question;
       var order = 1;
 
       while(txt.contains('**')){
-        final ans = getUserChoiceByOrder(order)!.text;
+        final ans = getUserChoiceByOrder(order)?.text?? '';
 
         txt = txt.replaceFirst('**', '[${ans.isEmpty? 'بدون پاسخ': ans}]');
         order++;
@@ -173,11 +177,11 @@ class ExamModel extends ExamSuperModel {
       return txt;
     }
     else if (quizType == QuizType.fillInBlank){
-      var txt = question;
+      var txt = getFirst().question;
       var order = 1;
 
       while(txt.contains('**')){
-        final ans = getUserChoiceByOrder(order)!.text;
+        final ans = getUserChoiceByOrder(order)?.text?? '';
 
         txt = txt.replaceFirst('**', '[${ans.isEmpty? 'بدون پاسخ': ans}]');
         order++;
@@ -204,9 +208,9 @@ class ExamModel extends ExamSuperModel {
         }
       }
 
-      for(int i=1; i <= options.length; i++){
+      for(int i=1; i <= getFirst().options.length; i++){
         final correctAnswer = getChoiceByOrder(i)!.text;
-        final userAnswer = getUserChoiceByOrder(i)!.text;
+        final userAnswer = getUserChoiceByOrder(i)?.text;
 
         if(correctAnswer != userAnswer){
           return false;
@@ -216,7 +220,7 @@ class ExamModel extends ExamSuperModel {
       return true;
     }
     else if (quizType == QuizType.fillInBlank){
-      for(int i = 1; i <= options.length; i++){
+      for(int i = 1; i <= getFirst().options.length; i++){
         final correctAnswer = getChoiceByOrder(i)?.text;
         final userAnswer = getUserChoiceByOrder(i)?.text;
 
@@ -230,6 +234,35 @@ class ExamModel extends ExamSuperModel {
 
     return false;
   }
+}
+///==================================================================================================
+class ExamItem {
+  late String question;
+  late String id;
+  int order = 1;
+  List<ExamOptionModel> options = [];
+
+  ExamItem.fromMap(Map js){
+    id = js['id']?? '';
+    question = js['question'];
+    order = js['order']?? 1;
+
+    if(js['choices'] is List){
+      options = js['choices'].map<ExamOptionModel>((e) => ExamOptionModel.fromMap(e)).toList();
+    }
+  }
+
+  Map<String, dynamic> toMap(){
+    final js = <String, dynamic>{};
+
+    js['id'] = id;
+    js['question'] = question;
+    js['order'] = order;
+    js['choices'] = options.map((e) => e.toMap()).toList();
+
+    return js;
+  }
+
 }
 ///==================================================================================================
 class ExamOptionModel {

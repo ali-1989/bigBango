@@ -1,10 +1,6 @@
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
-import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/enums/walletAmountType.dart';
-import 'package:app/structures/models/examModels/examModel.dart';
-import 'package:app/structures/models/lessonModels/lessonModel.dart';
-import 'package:app/structures/models/listeningModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
 import 'package:app/structures/models/transactionWalletModel.dart';
 import 'package:app/structures/models/withdrawalModel.dart';
@@ -12,28 +8,6 @@ import 'package:app/structures/models/withdrawalModel.dart';
 class Examples {
   Examples._();
 
-  static void addListening(LessonModel lessonModel){
-    final l1 = ListeningModel();
-    l1.id = 'i1';
-    l1.title = 'بخش یک';
-    l1.quiz = ExamModel()..id = 'i1'..quizType = QuizType.fillInBlank;
-
-    l1.quiz.question = 'fill ** the ** here';
-    l1.quiz.options = [ExamOptionModel()..id = 'i1'..text = 't1', ExamOptionModel()..id = 'i2'..text = 't2'];
-
-    lessonModel.listeningModel!.listeningList.add(l1);
-
-
-    final l2 = ListeningModel();
-    l2.id = 'i2';
-    l2.title = 'بخش دو';
-    l2.quiz = ExamModel()..id = 'i2'..quizType = QuizType.recorder;
-
-    l2.quiz.question = 'fill ** the ** here';
-    l2.quiz.options = [ExamOptionModel()..id = 'i1'..text = 't1', ExamOptionModel()..id = 'i2'..text = 't2'];
-
-    lessonModel.listeningModel!.listeningList.add(l2);
-  }
 
   static List<MediaModel> genAttachment(){
     final res = <MediaModel>[];
