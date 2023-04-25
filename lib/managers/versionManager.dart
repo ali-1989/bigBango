@@ -44,7 +44,6 @@ class VersionManager {
 
   /*static Future<VersionModel?> requestGetLastVersion(BuildContext context, Map<String, dynamic> data) async {
     final res = Completer<VersionModel?>();
-
     final requester = Requester();
 
     requester.httpRequestEvents.onAnyState = (req) async {
@@ -61,9 +60,12 @@ class VersionManager {
       res.complete(newVersionModel);
     };
 
+    data[Keys.requestZone] = 'last_version';
+
     requester.bodyJson = data;
     requester.prepareUrl(pathUrl: '');
     requester.request(context, false);
+
     return res.future;
   }
 
@@ -74,7 +76,14 @@ class VersionManager {
 
     if(vm != null){
       if(vm.newVersionCode > Constants.appVersionCode){
+        if(!vm.restricted && AppDB.fetchKv('promptVersion_${vm.newVersionCode}') != null){
+          return;
+        }
+
         existNewVersion = true;
+        AppDB.setReplaceKv('promptVersion_${vm.newVersionCode}', true);
+
+        await Future.delayed(Duration(seconds: 4));
         showUpdateDialog(context, vm);
       }
     }
@@ -97,21 +106,102 @@ class VersionManager {
       System.exitApp();
     }
 
-    //final msg = vm.description?? AppMessages.newAppVersionIsOk;
-
     final decoration = AppDialogIris.instance.dialogDecoration.copy();
-    decoration.positiveButtonBackColor = Colors.blue;
 
-    AppDialogIris.instance.showYesNoDialog(
+    if(vm.restricted) {
+      decoration.positiveButtonBackColor = Colors.orange;
+    }
+    else {
+      decoration.positiveButtonBackColor = Colors.grey;
+    }
+
+    AppDialogIris.instance.showIrisDialog(
       context,
-      desc: msg,
+      descView: _buildView(vm),
       decoration: decoration,
-      yesText: AppMessages.update,
-      noText: vm.restricted ? AppMessages.exit : AppMessages.later,
-      yesFn: (){
-        UrlHelper.launchLink(vm.directLink?? '');
-      },
-      noFn: vm.restricted ? closeApp: null,
+      yesText: vm.restricted ? AppMessages.exit : AppMessages.later,
+      yesFn: vm.restricted ? closeApp: null,
     );*/
   }
+
+  /*static Widget _buildView(VersionModel vm){
+    final msg = vm.description?? AppMessages.newAppVersionIsOk;
+
+    void onDirectClick(){
+      UrlHelper.launchLink(vm.directLink?? '');
+
+      if(!vm.restricted){
+        Navigator.of(RouteTools.getBaseContext()!).pop();
+      }
+    }
+
+    final views = <Widget>[];
+
+    views.add(
+        Align(
+          alignment: Alignment.topLeft,
+          child: CustomCard(
+            padding: EdgeInsets.symmetric(horizontal: 4),
+            color: Colors.green,
+            radius: 12,
+            child: Text('version: ${vm.newVersionName}', style: TextStyle(color: Colors.white),),
+          ),
+        )
+    );
+
+    views.add(Text(msg));
+
+    if (vm.directLink != null) {
+      views.add(SizedBox(height: 20));
+
+      views.add(
+          RichText(
+            text: TextSpan(
+              children: [
+                WidgetSpan(
+                    child: Icon(AppIcons.downloadFile, size: 20, color: Colors.red,)
+                ),
+
+                TextSpan(
+                  text: AppMessages.directDownload,
+                  style: TextStyle(color: Colors.blue),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = onDirectClick,
+                ),
+              ],
+              style: TextStyle(color: Colors.blue),
+              recognizer: TapGestureRecognizer()
+                ..onTap = onDirectClick,
+            ),
+          ),
+      );
+    }
+
+    if (vm.directLink != null) {
+      views.add(SizedBox(height: 5));
+
+      for(final market in vm.markets.entries){
+        views.add(
+            RichText(
+                text: TextSpan(
+                  text: market.key,
+                  style: TextStyle(color: Colors.blue),
+                  recognizer: TapGestureRecognizer()..onTap = (){
+                    UrlHelper.launchLink(market.value);
+
+                    if(!vm.restricted){
+                      Navigator.of(RouteTools.getBaseContext()!).pop();
+                    }
+                    },
+                )
+            )
+        );
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: views,
+    );
+  }*/
 }

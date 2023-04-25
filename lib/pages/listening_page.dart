@@ -506,13 +506,26 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     };
 
     final js = <String, dynamic>{};
-    js['items'] = [
-      {
-        'exerciseId' : currentItem!.quiz.items[0].id,
-        'answer' : currentItem!.quiz.getUserAnswerText(),
-        'isCorrect' : currentItem!.quiz.isUserAnswerCorrect(),
+    final tempList = [];
+
+    if(currentItem!.quiz.items.length < 2) {
+      tempList.add({
+        'exerciseId': currentItem!.quiz.getFirst().id,
+        'answer': currentItem!.quiz.getFirst().getUserAnswerText(),
+        'isCorrect': currentItem!.quiz.getFirst().isUserAnswerCorrect(),
+      });
+    }
+    else {
+      for (final itm in currentItem!.quiz.items){
+        tempList.add({
+          'exerciseId': itm.id,
+          'answer': itm.getUserAnswerText(),
+          'isCorrect': itm.isUserAnswerCorrect(),
+        });
       }
-    ];
+    }
+
+    js['items'] = tempList;
 
     requester.methodType = MethodType.post;
     requester.prepareUrl(pathUrl: '/listening/exercises/solving');

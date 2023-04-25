@@ -235,18 +235,28 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
       for(final x in widget.builder.examList){
         ExamController.getControllerFor(x.items[0].id)?.showAnswers(true);
       }
-
     };
 
     final tempList = [];
     final js = <String, dynamic>{};
 
     for(final x in widget.builder.examList){
-      tempList.add({
-        'exerciseId' : x.items[0].id,
-        'answer' : x.getUserAnswerText(),
-        'isCorrect' : x.isUserAnswerCorrect(),
-      });
+      if(x.items.length < 2) {
+        tempList.add({
+          'exerciseId': x.getFirst().id,
+          'answer': x.getFirst().getUserAnswerText(),
+          'isCorrect': x.getFirst().isUserAnswerCorrect(),
+        });
+      }
+      else {
+        for (final itm in x.items){
+          tempList.add({
+            'exerciseId': itm.id,
+            'answer': itm.getUserAnswerText(),
+            'isCorrect': itm.isUserAnswerCorrect(),
+          });
+        }
+      }
     }
 
     js['items'] = tempList;

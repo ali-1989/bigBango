@@ -147,14 +147,14 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
   List<InlineSpan> generateSpans(ExamModel exam){
     final List<InlineSpan> spans = [];
 
-    for(int i = 0; i < exam.questionSplit.length; i++) {
-      spans.add(TextSpan(text: exam.questionSplit[i], style: questionNormalStyle));
+    for(int i = 0; i < exam.getFirst().questionSplit.length; i++) {
+      spans.add(TextSpan(text: exam.getFirst().questionSplit[i], style: questionNormalStyle));
 
-      if(i < exam.questionSplit.length-1) {
+      if(i < exam.getFirst().questionSplit.length-1) {
         InlineSpan blankSpan;
         InlineSpan? correctSpan;
         String blankText = '';
-        bool hasUserAnswer = exam.userAnswers[i].text.isNotEmpty;
+        bool hasUserAnswer = exam.getFirst().userAnswers[i].text.isNotEmpty;
 
         final tapRecognizer = TapGestureRecognizer()..onTapUp = (gesDetail){
           if(exam.showAnswer){
@@ -163,7 +163,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
 
           TextEditingController tControl = TextEditingController();
           FocusNode focusNode = FocusNode();
-          tControl.text = exam.userAnswers[i].text;
+          tControl.text = exam.getFirst().userAnswers[i].text;
           late final OverlayEntry txtFieldOver;
 
           txtFieldOver = OverlayEntry(
@@ -202,7 +202,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
                                     focusNode: focusNode,
                                     style: TextStyle(fontSize: 16),
                                     onChanged: (t){
-                                      exam.userAnswers[i].text = t.trim();
+                                      exam.getFirst().userAnswers[i].text = t.trim();
                                       assistCtr.updateHead();
                                     },
                                     onSubmitted: (t){
@@ -228,7 +228,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
 
           /// request focus
           Future.delayed(Duration(milliseconds: 400), (){
-            tControl.selection = TextSelection.collapsed(offset: exam.userAnswers[i].text.length);
+            tControl.selection = TextSelection.collapsed(offset: exam.getFirst().userAnswers[i].text.length);
             focusNode.requestFocus();
           });
         };
@@ -238,7 +238,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
           Color falseColor = Colors.red;
 
           ///answer is correct
-          if(exam.userAnswers[i].text == exam.items[0].options[i].text){
+          if(exam.getFirst().userAnswers[i].text == exam.items[0].options[i].text){
             blankSpan = WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: Row(
@@ -246,7 +246,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
                   children: [
                     //Image.asset(AppImages.trueCheckIco),
                     //SizedBox(width: 2),
-                    Text(exam.userAnswers[i].text, style: questionNormalStyle.copyWith(color: trueColor))
+                    Text(exam.getFirst().userAnswers[i].text, style: questionNormalStyle.copyWith(color: trueColor))
                   ],
                 )
             );
@@ -254,7 +254,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
           /// answer is wrong
           else {
             if(hasUserAnswer) {
-              blankText = exam.userAnswers[i].text;
+              blankText = exam.getFirst().userAnswers[i].text;
               blankSpan = WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
                   child: Row(
@@ -309,7 +309,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
           Color blankColor = Colors.blue;
 
           if(hasUserAnswer){
-            blankText = ' ${exam.userAnswers[i].text} ';
+            blankText = ' ${exam.getFirst().userAnswers[i].text} ';
           }
           else {
             blankText = ' [\u00A0____\u00A0] '; // \u202F , \u2007
@@ -338,7 +338,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
   @override
   bool isAnswerToAll(){
     for(final k in examList){
-      for(final x in k.userAnswers) {
+      for(final x in k.getFirst().userAnswers) {
         if (x.text.isEmpty) {
           return false;
         }

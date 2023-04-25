@@ -1,3 +1,4 @@
+import 'package:app/views/components/exam/examMakeSentenceBuilder.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -85,23 +86,30 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
     if(model is ExamModel){
       if(model.quizType == QuizType.fillInBlank){
         return ExamBlankSpaceBuilder(
-            key: ValueKey(model.items[0].id),
+            key: ValueKey(model.getFirst().id),
             content: widget.builder,
-            controllerId: model.items[0].id,
+            controllerId: model.getFirst().id,
         );
       }
       else if(model.quizType == QuizType.recorder){
         return ExamSelectWordBuilder(
-            key: ValueKey(model.items[0].id),
+            key: ValueKey(model.getFirst().id),
             content: widget.builder,
-            controllerId: model.items[0].id,
+            controllerId: model.getFirst().id,
         );
       }
       else if(model.quizType == QuizType.multipleChoice){
         return ExamOptionBuilder(
-            key: ValueKey(model.items[0].id),
+            key: ValueKey(model.getFirst().id),
             builder: widget.builder,
-            controllerId: model.items[0].id,
+            controllerId: model.getFirst().id,
+        );
+      }
+      else if(model.quizType == QuizType.makeSentence){
+        return ExamMakeSentenceBuilder(
+          key: ValueKey(model.items[0].id),
+          content: widget.builder,
+          controllerId: model.items[0].id,
         );
       }
     }
@@ -129,26 +137,35 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
     if(model is ExamModel){
       if(model.quizType == QuizType.fillInBlank){
         return ExamBlankSpaceBuilder(
-            key: ValueKey(model.items[0].id),
+            key: ValueKey(model.getFirst().id),
             content: widget.builder,
-            controllerId: model.items[0].id,
+            controllerId: model.getFirst().id,
             showTitle: true,
             index: idx,
         );
       }
       else if(model.quizType == QuizType.recorder){
         return ExamSelectWordBuilder(
-            key: ValueKey(model.items[0].id),
+            key: ValueKey(model.getFirst().id),
             content: widget.builder,
-            controllerId: model.items[0].id,
+            controllerId: model.getFirst().id,
             index: idx
         );
       }
       else if(model.quizType == QuizType.multipleChoice){
         return ExamOptionBuilder(
-            key: ValueKey(model.items[0].id),
+            key: ValueKey(model.getFirst().id),
             builder: widget.builder,
-            controllerId: model.items[0].id,
+            controllerId: model.getFirst().id,
+            showTitle: true,
+            index: idx
+        );
+      }
+      else if(model.quizType == QuizType.makeSentence){
+        return ExamMakeSentenceBuilder(
+            key: ValueKey('${model.hashCode}'),
+            content: widget.builder,
+            controllerId: '${model.hashCode}',
             showTitle: true,
             index: idx
         );

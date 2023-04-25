@@ -144,17 +144,17 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
             return;
           }
 
-          bool isSelected = curExam.getUserChoiceById(opt.id) != null;
+          bool isSelected = curExam.getFirst().getUserChoiceById(opt.id) != null;
 
           if(isSelected){
-            curExam.userAnswers.removeWhere((element) => element.id == opt.id);
+            curExam.getFirst().userAnswers.removeWhere((element) => element.id == opt.id);
           }
           else {
             final ex = ExamOptionModel()..order = opt.order;
             ex.id = opt.id;
 
-            curExam.userAnswers.clear();
-            curExam.userAnswers.add(ex);
+            curExam.getFirst().userAnswers.clear();
+            curExam.getFirst().userAnswers.add(ex);
           }
 
           assistCtr.updateHead();
@@ -166,8 +166,8 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
           cycles: 1,
           builder: (_, animate){
             final optionIdx = curExam.items[0].options.indexOf(opt);
-            bool isSelected = curExam.getUserChoiceById(opt.id) != null;
-            bool isCorrect = optionIdx == curExam.getIndexOfCorrectChoice();
+            bool isSelected = curExam.getFirst().getUserChoiceById(opt.id) != null;
+            bool isCorrect = optionIdx == curExam.getFirst().getIndexOfCorrectChoice();
 
             Color backColor;
 
@@ -217,7 +217,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
   @override
   bool isAnswerToAll(){
     for(final k in examList){
-      if (k.userAnswers.isEmpty) {
+      if (k.getFirst().userAnswers.isEmpty) {
         return false;
       }
     }

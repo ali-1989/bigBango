@@ -162,8 +162,8 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
   List<InlineSpan> generateSpans(ExamModel model) {
     final List<InlineSpan> spans = [];
 
-    for (int i = 0; i < model.questionSplit.length; i++) {
-      final q = TextSpan(text: model.questionSplit[i], style: questionNormalStyle);
+    for (int i = 0; i < model.getFirst().questionSplit.length; i++) {
+      final q = TextSpan(text: model.getFirst().questionSplit[i], style: questionNormalStyle);
       spans.add(q);
 
       void onSpanClick(gesDetail) {
@@ -188,7 +188,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
         assistCtr.updateHead();
       }
 
-      if (i < model.questionSplit.length - 1) {
+      if (i < model.getFirst().questionSplit.length - 1) {
         InlineSpan choiceSpan;
         String choiceText = '';
         Color choiceColor;
@@ -196,8 +196,8 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
         final tapRecognizer = TapGestureRecognizer()..onTapUp = onSpanClick;
 
         if (model.showAnswer) {
-          final correctAnswer = model.getChoiceByOrder(i+1)!.text;
-          final userAnswer = model.getUserChoiceByOrder(i+1)?.text;
+          final correctAnswer = model.getFirst().getChoiceByOrder(i+1)!.text;
+          final userAnswer = model.getFirst().getUserChoiceByOrder(i+1)?.text;
           Color trueColor = Colors.green;
           Color falseColor = Colors.red;
 
@@ -233,7 +233,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
           }
         }
         else {
-          final userAnswer = model.getUserChoiceByOrder(i+1)?.text ?? '';
+          final userAnswer = model.getFirst().getUserChoiceByOrder(i+1)?.text ?? '';
 
           if (userAnswer.isNotEmpty) {
             choiceText = userAnswer;
@@ -268,10 +268,10 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
   }
 
   Widget buildWords(ExamModel model) {
-    final list = model.shuffleWords.map((w) {
+    final list = model.getFirst().shuffleWords.map((w) {
       var isPicked = false;
 
-      for (final k in model.userAnswers) {
+      for (final k in model.getFirst().userAnswers) {
         if (k.id == w.id) {
           isPicked = true;
           break;
@@ -326,14 +326,14 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
 
     List<String> selectedWordIds = [];
 
-    for (final k in model.userAnswers) {
+    for (final k in model.getFirst().userAnswers) {
       if (k.text.isNotEmpty) {
         selectedWordIds.add(k.id);
       }
     }
 
     if (selectedWordIds.length + 1 == model.getFirst().options.length) {
-      for (final k in model.userAnswers) {
+      for (final k in model.getFirst().userAnswers) {
         if (k.text.isEmpty) {
           ExamOptionModel? examChoiceModel;
 
@@ -356,7 +356,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
   }
 
   void setUserAnswer(ExamModel model, int order, ExamOptionModel? ec) {
-    final u = model.getUserChoiceByOrder(order);
+    final u = model.getFirst().getUserChoiceByOrder(order);
 
     if (ec != null) {
       u!.text = ec.text;
@@ -397,7 +397,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
   @override
   bool isAnswerToAll(){
     for(final k in examList){
-      for(final x in k.userAnswers) {
+      for(final x in k.getFirst().userAnswers) {
         if (x.text.isEmpty || x.id.isEmpty) {
           return false;
         }
