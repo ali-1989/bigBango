@@ -692,10 +692,12 @@ packages:
   iris_tools:
     dependency: "direct main"
     description:
-      path: "../IrisTools"
-      relative: true
-    source: path
-    version: "0.0.34+3"
+      path: "."
+      ref: HEAD
+      resolved-ref: "3b23d074bb1b116adab66fc42a09386c26eba326"
+      url: "https://github.com/ali-1989/IrisTools.git"
+    source: git
+    version: "0.0.34+4"
   jiffy:
     dependency: transitive
     description:
