@@ -33,8 +33,6 @@ class ExamMakeSentenceBuilder extends StatefulWidget {
 }
 ///===============================================================================================================
 class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> with ExamStateMethods {
-  late TextStyle questionNormalStyle;
-  late TextStyle falseStyle;
   late TextStyle pickedStyle;
   List<ExamHolder> examList = [];
   int currentSentence = 0;
@@ -53,13 +51,6 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
       examList.add(eh);
     }
 
-    questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
-    falseStyle = TextStyle(fontSize: 16,
-        color: Colors.red,
-        decorationStyle: TextDecorationStyle.solid,
-        decoration: TextDecoration.lineThrough,
-        decorationColor: Colors.red
-    );
     pickedStyle = TextStyle(
       //decorationStyle: TextDecorationStyle.solid,
       //decoration: TextDecoration.lineThrough,
@@ -157,7 +148,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
           Builder(
               builder: (_){
                 if(holder.hasAnswer()){
-                  final answer = holder.generateAnswer();
+                  final answer = holder.generateUserAnswer();
 
                   return AutoDirection(
                     builder: (_, AutoDirectionController direction) {
@@ -170,7 +161,36 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
                       );
                     },
                   ).wrapBackground(
-                      backColor: holder.examModel.showAnswer? (holder.isCorrect()? Colors.green: Colors.red): Colors.grey.shade100
+                      backColor: holder.examModel.showAnswer? (holder.isCorrect()? Colors.green.shade400: Colors.red.shade400): Colors.grey.shade100
+                  );
+                }
+
+                return SizedBox();
+              }
+          ),
+
+          ///=== selected words
+          Builder(
+              builder: (_){
+                if(holder.examModel.showAnswer && !holder.isCorrect()){
+                  final answer = holder.generateCorrectAnswer();
+
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: AutoDirection(
+                      builder: (_, AutoDirectionController direction) {
+                        return Align(
+                          alignment: direction.getAlignment(answer),
+                          child: Text(
+                            answer,
+                            textDirection: direction.getTextDirection(answer),
+                          ),
+                        );
+                      },
+                    ).wrapBackground(
+                        backColor: Colors.grey.shade100,
+                      borderColor: Colors.green,
+                    ),
                   );
                 }
 
@@ -183,7 +203,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
           Row(
             children: [
               Visibility(
-                visible: holder.hasAnswer(),
+                visible: holder.hasAnswer() && !holder.examModel.showAnswer,
                   child: GestureDetector(
                     onTap: (){
                       holder.back();
@@ -231,6 +251,10 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
             padding: const EdgeInsets.only(right: 8),
             child: GestureDetector(
               onTap: () {
+                if(holder.examModel.showAnswer){
+                  return;
+                }
+
                 onWordClick(holder, w);
               },
               child: CustomCard(
@@ -375,7 +399,7 @@ class ExamHolder {
     }
   }
 
-  String generateAnswer() {
+  String generateUserAnswer() {
     String txt = '';
 
     for(int i =0; i < selectedWords.length; i++){
@@ -393,17 +417,33 @@ class ExamHolder {
     return txt.trim();
   }
 
+  String generateCorrectAnswer() {
+    String txt = '';
+
+    for(int i =0; i < examModel.items.length; i++){
+      final x = examModel.items[i];
+
+      for(final x2 in x.options){
+        txt += ' ${x2.text}';
+      }
+
+      txt += '.';
+    }
+
+    return txt.trim();
+  }
+
   bool isCorrect(){
     for(int i =0; i < shuffleWords.length; i++){
-      final sh = shuffleWords[i];
+      final itm = examModel.items[i];
       final se = selectedWords[i];
 
-      if(sh.length != se.length){
+      if(itm.options.length != se.length){
         return false;
       }
 
-      for(int j=0; j < sh.length; j++){
-        if(sh[j].text != se[j].text){
+      for(int j=0; j < itm.options.length; j++){
+        if(itm.options[j].text != se[j].text){
           return false;
         }
       }
