@@ -1,3 +1,4 @@
+import 'package:app/views/components/selectLevelOnline.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/system.dart';
@@ -26,7 +27,8 @@ class RouteDispatcher {
         return SelectLanguageLevelPage();
       }
 
-      return LayoutPage(key: AppBroadcast.layoutPageKey);
+      return SelectLevelOnline();
+      //return LayoutPage(key: AppBroadcast.layoutPageKey);
     }
 
     final pNumber = AppDB.fetchKv(Keys.setting$registerPhoneNumber);

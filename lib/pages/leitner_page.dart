@@ -9,7 +9,7 @@ import 'package:app/managers/leitnerManager.dart';
 import 'package:app/pages/leitner_detail_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWares/requester.dart';
-import 'package:app/structures/models/leitner/leitnerBoxModel.dart';
+import 'package:app/structures/models/leitnerModels/leitnerBoxModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appIcons.dart';

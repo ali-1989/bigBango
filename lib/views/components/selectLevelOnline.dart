@@ -1,12 +1,19 @@
+import 'package:app/structures/middleWares/requester.dart';
+import 'package:app/structures/models/onlineExamModels/onlineExamModel.dart';
+import 'package:app/tools/app/appIcons.dart';
+import 'package:app/views/states/backBtn.dart';
+import 'package:app/views/states/errorOccur.dart';
+import 'package:app/views/states/waitToLoad.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/system/session.dart';
+import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
+import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 class SelectLevelOnline extends StatefulWidget {
   const SelectLevelOnline({Key? key}) : super(key: key);
@@ -17,20 +24,61 @@ class SelectLevelOnline extends StatefulWidget {
 ///=========================================================================================================
 class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
   int currentQuestion = 0;
-
+  Requester requester = Requester();
+  List<OnlineExamModel> questions = [];
 
   @override
   void initState(){
     super.initState();
+
+    requestQuestions();
+  }
+
+  @override
+  void dispose(){
+    requester.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    return Assist(
+      controller: assistCtr,
+      builder: (_, __, data) {
+        return Scaffold(
+          body: buildBody(),
+        );
+      }
+    );
+  }
+
+  Widget buildBody() {
+    if(assistCtr.hasState(AssistController.state$loading)){
+      return WaitToLoad();
+    }
+
+    /*if(assistCtr.hasState(AssistController.state$error)){
+      return ErrorOccur(backButton: BackBtn());
+    }*/
+
+    Color preColor = Colors.black;
+    Color nextColor = Colors.black;
+
+    if(currentQuestion == 0){
+      preColor = Colors.grey;
+    }
+
+    if(currentQuestion == questions.length -1){
+      nextColor = Colors.grey;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          /// close button
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,13 +90,16 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
                   Text(AppMessages.selectLevelOnline, style: const TextStyle(fontSize: 17)),
                 ],
               ),
+
+              BackBtn(button: Icon(AppIcons.close)),
             ],
           ),
 
+          /// description
           const SizedBox(height: 15),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Text(AppMessages.selectLevelDescription, textAlign: TextAlign.start, style: const TextStyle(height: 1.4)),
+            child: Text(AppMessages.onlineDetectLevelDescription, textAlign: TextAlign.start, style: const TextStyle(height: 1.4)),
           ),
 
           const SizedBox(height: 25),
@@ -58,13 +109,14 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
             child: ColoredBox(color: Colors.black.withAlpha(120)),
           ),
 
+          /// progressbar
           const SizedBox(height: 17),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
-                  Text(' 20   /',
+                  Text(' ${questions.length}   /',
                       style: TextStyle(fontSize: 15)
                   ),
 
@@ -73,11 +125,11 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
                     borderRadius: BorderRadius.circular(5),
                     child: ColoredBox(
                       color: Colors.grey[200]!,
-                      child: const SizedBox(
+                      child: SizedBox(
                         width: 25,
                         height: 25,
                         child: Center(
-                          child: Text('1',
+                          child: Text('${currentQuestion+1}',
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)
                           ),
                         ),
@@ -87,9 +139,9 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
                 ],
               ),
 
-              Text(AppMessages.chooseTheCorrectAnswer,
+              /*Text(AppMessages.chooseTheCorrectAnswer,
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)
-              ),
+              ),*/
             ],
           ),
 
@@ -101,7 +153,7 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
               child: LinearProgressIndicator(
                 backgroundColor: Colors.red.withAlpha(30),
                 color: AppColors.red,
-                value: 0.5,
+                value: calcQuestionProgress(),
                 minHeight: 5,
               ),
             ),
@@ -114,30 +166,20 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal:10.0, vertical: 14),
-                child: Row(
-                  children: [
-                    TextButton.icon(
-                        onPressed: (){
-                          Session.getLastLoginUser()?.courseLevel = SystemParameterManager.getCourseLevelById(1);
-                          AppBroadcast.reBuildMaterial();
-                        },
-                        icon: Image.asset(AppImages.arrowRightIco),
-                        label: Text('Next', style: TextStyle(fontSize: 14))
-                    ),
-                  ],
-                ),
+              TextButton.icon(
+                  onPressed: (){
+                    goNextQuestion();
+                  },
+                  icon: Image.asset(AppImages.arrowRightIco, color: nextColor),
+                  label: Text('Next').englishFont().color(nextColor)
               ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal:10.0, vertical: 14),
-                child: Row(
-                  children: [
-                    Text('Prev', style: TextStyle(fontSize: 14),),
-                    Image.asset(AppImages.arrowLeftIco),
-                  ],
-                ),
+              TextButton.icon(
+                  onPressed: (){
+                    goPrevQuestion();
+                  },
+                  icon: Text('pre').englishFont().color(preColor),
+                  label: Image.asset(AppImages.arrowLeftIco, color: preColor)
               ),
             ],
           )
@@ -146,13 +188,49 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
     );
   }
 
-}
+  void goNextQuestion() {
 
-/*
-* SizedBox(
-                width: 110,
-                child: ElevatedButton(
-                    onPressed: null,
-                    child: Text(AppMessages.register),
-                ),
-              ),*/
+  }
+
+  void goPrevQuestion() {
+
+  }
+
+  void parseQuestions(List list) {
+    for(final ex in list){
+      final q = OnlineExamModel.fromMap(ex);
+      questions.add(q);
+    }
+  }
+
+  double calcQuestionProgress() {
+    return ((currentQuestion+1) *100 / questions.length)/100;
+  }
+
+  void requestQuestions(){
+    requester.httpRequestEvents.onFailState = (req, response) async {
+      final q = OnlineExamModel();
+      questions.add(q);
+
+      assistCtr.clearStates();
+      assistCtr.addStateAndUpdateHead(AssistController.state$error);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, response) async {
+      final data = response['data'];
+
+      if(data is List){
+        parseQuestions(data);
+      }
+
+      assistCtr.clearStates();
+      assistCtr.updateHead();
+    };
+
+
+    assistCtr.addStateAndUpdateHead(AssistController.state$loading);
+    requester.methodType = MethodType.get;
+    requester.prepareUrl(pathUrl: '/placementTest/questions');
+    requester.request();
+  }
+}

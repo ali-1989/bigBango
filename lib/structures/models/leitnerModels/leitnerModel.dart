@@ -1,5 +1,5 @@
-import 'package:app/structures/models/leitner/leitnerIdiomModel.dart';
-import 'package:app/structures/models/leitner/leitnerVocabModel.dart';
+import 'package:app/structures/models/leitnerModels/leitnerIdiomModel.dart';
+import 'package:app/structures/models/leitnerModels/leitnerVocabModel.dart';
 
 class LeitnerModel {
   String id = '';
