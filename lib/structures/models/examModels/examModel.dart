@@ -1,3 +1,4 @@
+import 'package:app/structures/models/mediaModel.dart';
 import 'package:iris_tools/api/generator.dart';
 
 import 'package:app/structures/enums/quizType.dart';
@@ -8,6 +9,7 @@ class ExamModel extends ExamSuperModel {
   QuizType quizType = QuizType.unKnow;
   List<ExamSolvedOptionModel> solvedOptions = [];
   List<ExamItem> items = [];
+  MediaModel? voice;
 
   //----------- local
   bool showAnswer = false;
@@ -26,6 +28,10 @@ class ExamModel extends ExamSuperModel {
     if(js['items'] is List){
       items = js['items'].map<ExamItem>((e) => ExamItem.fromMap(e, quizType)).toList();
     }
+
+    if(js['voice'] is Map) {
+      voice = MediaModel.fromMap(js['voice']);
+    }
   }
 
   Map<String, dynamic> toMap(){
@@ -35,6 +41,7 @@ class ExamModel extends ExamSuperModel {
     js['exerciseType'] = quizType.number;
     js['items'] = items.map((e) => e.toMap()).toList();
     js['solveItems'] = solvedOptions.map((e) => e.toMap()).toList();
+    js['voice'] = voice?.toMap();
 
     return js;
   }
@@ -60,7 +67,6 @@ class ExamModel extends ExamSuperModel {
     }
 
     if(quizType == QuizType.makeSentence){
-      //todo
     }
 
     isPrepare = true;
@@ -227,7 +233,6 @@ class ExamItem {
     }
     else if (quizType == QuizType.makeSentence){
       var txt = question;
-      //todo
       return txt;
     }
 
@@ -273,8 +278,6 @@ class ExamItem {
       return true;
     }
     else if (quizType == QuizType.makeSentence){
-      // todo
-
       return true;
     }
 

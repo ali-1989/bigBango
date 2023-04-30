@@ -1,6 +1,10 @@
+import 'package:app/tools/app/appIcons.dart';
+import 'package:app/tools/app/appToast.dart';
+import 'package:app/views/widgets/sliders.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
+import 'package:iris_tools/api/duration/durationFormatter.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/examStateMethods.dart';
@@ -10,6 +14,8 @@ import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/system/extensions.dart';
+import 'package:iris_tools/widgets/customCard.dart';
+import 'package:just_audio/just_audio.dart';
 
 class ExamOptionBuilder extends StatefulWidget {
   final ExamBuilderContent builder;
@@ -32,6 +38,13 @@ class ExamOptionBuilder extends StatefulWidget {
 class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStateMethods {
   List<ExamModel> examList = [];
   late TextStyle questionNormalStyle;
+  AudioPlayer player = AudioPlayer();
+  Duration totalTime = Duration();
+  Duration currentTime = Duration();
+  bool voiceIsOk = false;
+  bool isInPlaying = false;
+  double playerSliderValue = 0;
+  String id$playViewId = 'playViewId';
 
   @override
   void initState(){
@@ -50,7 +63,9 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
 
   @override
   void dispose(){
+    player.stop();
     ExamController.removeControllerFor(widget.controllerId);
+
     super.dispose();
   }
 
@@ -104,26 +119,129 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
     final curExam = examList[itmIdx];
 
     return Column(
-      key: ValueKey(curExam.items[0].id),
+      key: ValueKey(curExam.getFirst().id),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 10),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(5)
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Text(
-                curExam.items[0].question,
-                style: TextStyle(fontSize: 12, height: 1.7),
-              textAlign: TextAlign.justify,
-            ),
-          ).wrapDotBorder(
-            color: Colors.grey.shade600,
-            radius: 5,
-          ),
+
+        /// question
+        Builder(
+            builder: (_){
+              if(curExam.voice != null){
+                return Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: DecoratedBox(
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Assist(
+                            controller: assistCtr,
+                            id: id$playViewId,
+                            builder: (_, ctr, data) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: IntrinsicHeight(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          CustomCard(
+                                              color: Colors.pinkAccent,
+                                              radius: 4,
+                                              padding: EdgeInsets.symmetric(horizontal: 14, vertical:4),
+                                              child: Column(
+                                                children: [
+                                                  Text(DurationFormatter.duration(currentTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
+                                                  Text(DurationFormatter.duration(totalTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
+                                                ],
+                                              )
+                                          ),
+                                        ],
+                                      ),
+
+                                      Expanded(
+                                          child: Directionality(
+                                            textDirection: TextDirection.ltr,
+                                            child: SliderTheme(
+                                              data: SliderTheme.of(context).copyWith(
+                                                thumbShape: CustomThumb(),
+                                                valueIndicatorShape: CustomThumb(),
+                                                valueIndicatorColor: Colors.transparent,
+                                                overlayColor: Colors.transparent,
+                                              ),
+                                              child: Slider(
+                                                value: playerSliderValue,
+                                                max: 100,
+                                                min: 0,
+                                                onChanged: (double value) {
+                                                  if(totalTime.inMilliseconds < 2){
+                                                    return;
+                                                  }
+
+                                                  int sec = totalTime.inSeconds * value ~/100;
+                                                  player.seek(Duration(seconds: sec));
+                                                  playerSliderValue = value;
+                                                  assistCtr.updateAssist(id$playViewId);
+                                                },
+                                              ),
+                                            ),
+                                          )
+                                      ),
+
+                                      Row(
+                                        textDirection: TextDirection.ltr,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(width: 14),
+
+                                          GestureDetector(
+                                            onTap: (){
+                                              playSound(curExam);
+                                            },
+                                            child: CustomCard(
+                                                color: Colors.white,
+                                                radius: 20,
+                                                padding: EdgeInsets.all(5),
+                                                child: isPlaying() ?
+                                                Icon(AppIcons.pause, size: 20)
+                                                    : Icon(AppIcons.playArrow, size: 20)
+                                            ),
+                                          ),
+
+                                          SizedBox(width: 10),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                        )
+                    ),
+                );
+              }
+
+              return DecoratedBox(
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(5)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: Text(
+                    curExam.getFirst().question,
+                    style: TextStyle(fontSize: 12, height: 1.7),
+                    textAlign: TextAlign.justify,
+                  ),
+                ).wrapDotBorder(
+                  color: Colors.grey.shade600,
+                  radius: 5,
+                ),
+              );
+            }
         ),
 
         SizedBox(height: 10),
@@ -223,6 +341,56 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
     }
 
     return true;
+  }
+
+  bool isPlaying() {
+    return player.playing && player.position.inMilliseconds < totalTime.inMilliseconds;
+  }
+
+  void playSound(ExamModel exam) async {
+    if(!voiceIsOk){
+      AppToast.showToast(context, 'در حال آماده سازی صوت');
+      await prepareVoice(exam);
+    }
+
+    if(isPlaying()){
+      await player.pause();
+    }
+    else {
+      if(player.position.inMilliseconds < totalTime.inMilliseconds) {
+        await player.play();
+      }
+      else {
+        await player.pause();
+        await player.seek(Duration());
+        await player.play();
+      }
+    }
+  }
+
+  Future<void> prepareVoice(ExamModel curExam) async {
+    voiceIsOk = false;
+
+    if(curExam.voice?.fileLocation == null){
+      return;
+    }
+
+    return player.setUrl(curExam.voice?.fileLocation?? '').then((dur) {
+      voiceIsOk = true;
+
+      if(dur != null){
+        totalTime = dur;
+        //assistCtr.update(timerViewId);
+      }
+
+    }).onError((error, stackTrace) {
+      if(error is PlayerException){
+        if(error.toString().contains('Source error')){
+          AppToast.showToast(context, 'آماده سازی صوت انجام نشد');
+          return;
+        }
+      }
+    });
   }
 
   @override

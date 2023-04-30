@@ -266,7 +266,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
     if(hours.hours.isEmpty){
       result.add(Padding(
         padding: const EdgeInsets.all(30.0),
-        child: Text('موردی وجود ندارد'),
+        child: Text('زمان قابل رزرو در این روز وجود ندارد'),
       ));
 
       return result;

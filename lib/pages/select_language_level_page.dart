@@ -180,7 +180,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                             ),
                           ),
 
-                          GestureDetector(
+                         /* GestureDetector(
                             onTap: (){
                               selectValue = 1;
                               assistCtr.updateHead();
@@ -223,7 +223,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                                 ),
                               ),
                             ),
-                          ),
+                          ),*/
 
                           GestureDetector(
                             onTap: (){
@@ -366,7 +366,21 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
     }
 
 
-    final page = SelectSupportTime();
-    RouteTools.pushPage(context, page);
+    AppSheet.showSheetCustom(
+      context,
+      routeName: 'SelectSupportTime',
+      isDismissible: true,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft:Radius.circular(20), topRight: Radius.circular(20))),
+      builder: (context) {
+        return SizedBox(
+          height: MathHelper.percent(sh, 85),
+          child: const SelectSupportTime(),
+        );
+      },
+    );
+
+    /*final page = SelectSupportTime();
+    RouteTools.pushPage(context, page);*/
   }
 }

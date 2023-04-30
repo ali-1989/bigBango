@@ -1,15 +1,21 @@
+import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/middleWares/requester.dart';
-import 'package:app/structures/models/onlineExamModels/onlineExamModel.dart';
+import 'package:app/structures/models/examModels/examModel.dart';
+import 'package:app/structures/models/onlineExamModels/onlineExamCategoryModel.dart';
 import 'package:app/tools/app/appIcons.dart';
+import 'package:app/views/components/exam/examBlankSpaseBuilder.dart';
+import 'package:app/views/components/exam/examMakeSentenceBuilder.dart';
+import 'package:app/views/components/exam/examOptionBuilder.dart';
+import 'package:app/views/components/exam/examSelectWordBuilder.dart';
 import 'package:app/views/states/backBtn.dart';
+import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 import 'package:flutter/material.dart';
 
-import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appColors.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
@@ -23,9 +29,13 @@ class SelectLevelOnline extends StatefulWidget {
 }
 ///=========================================================================================================
 class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
-  int currentQuestion = 0;
+  int currentCategoryIdx = 0;
+  int currentQuestionIdx = 0;
   Requester requester = Requester();
-  List<OnlineExamModel> questions = [];
+  List<OnlineExamCategoryModel> categories = [];
+  List<ExamModel> questions = [];
+  ExamModel? currentQuestion;
+
 
   @override
   void initState(){
@@ -58,18 +68,22 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
       return WaitToLoad();
     }
 
-    /*if(assistCtr.hasState(AssistController.state$error)){
+    if(assistCtr.hasState(AssistController.state$error)){
       return ErrorOccur(backButton: BackBtn());
-    }*/
+    }
+
+    if(questions.isEmpty){
+      return EmptyData(backButton: BackBtn());
+    }
 
     Color preColor = Colors.black;
     Color nextColor = Colors.black;
 
-    if(currentQuestion == 0){
+    if(currentQuestionIdx == 0){
       preColor = Colors.grey;
     }
 
-    if(currentQuestion == questions.length -1){
+    if(currentQuestionIdx >= questions.length-1){
       nextColor = Colors.grey;
     }
 
@@ -116,7 +130,7 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
             children: [
               Row(
                 children: [
-                  Text(' ${questions.length}   /',
+                  Text(' ${questions.length}  /',
                       style: TextStyle(fontSize: 15)
                   ),
 
@@ -129,7 +143,7 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
                         width: 25,
                         height: 25,
                         child: Center(
-                          child: Text('${currentQuestion+1}',
+                          child: Text('${currentQuestionIdx+1}',
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)
                           ),
                         ),
@@ -160,7 +174,7 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
           ),
 
           Expanded(
-              child: SizedBox(),
+              child: buildQuestion(),
           ),
 
           Row(
@@ -188,30 +202,86 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
     );
   }
 
+  Widget buildQuestion(){
+    final builder = ExamBuilderContent();
+    builder.showSendButton = false;
+    builder.examList.add(currentQuestion!);
+    
+    if(currentQuestion!.quizType == QuizType.fillInBlank){
+      return ExamBlankSpaceBuilder(
+        key: ValueKey('id_${currentQuestion!.hashCode}'),
+        content: builder,
+        controllerId: 'id_${currentQuestion!.hashCode}',
+        showTitle: true,
+      );
+    }
+    else if(currentQuestion!.quizType == QuizType.recorder){
+      return ExamSelectWordBuilder(
+          key: ValueKey('id_${currentQuestion!.hashCode}'),
+          content: builder,
+          controllerId: 'id_${currentQuestion!.hashCode}',
+      );
+    }
+    else if(currentQuestion!.quizType == QuizType.multipleChoice){
+      return ExamOptionBuilder(
+          key: ValueKey('id_${currentQuestion!.hashCode}'),
+          builder: builder,
+          controllerId: 'id_${currentQuestion!.hashCode}',
+          showTitle: true,
+        index: 0,
+      );
+    }
+    else if(currentQuestion!.quizType == QuizType.makeSentence){
+      return ExamMakeSentenceBuilder(
+          key: ValueKey('id_${currentQuestion!.hashCode}'),
+          content: builder,
+          controllerId: 'id_${currentQuestion!.hashCode}',
+          showTitle: true,
+      );
+    }
+    
+    return SizedBox();
+  }
+  
   void goNextQuestion() {
+    if(currentQuestionIdx < questions.length){
+      currentQuestionIdx++;
+      currentQuestion = questions[currentQuestionIdx];
 
+      assistCtr.updateHead();
+    }
   }
 
   void goPrevQuestion() {
+    if(currentQuestionIdx > 0){
+      currentQuestionIdx--;
+      currentQuestion = questions[currentQuestionIdx];
 
+      assistCtr.updateHead();
+    }
   }
 
   void parseQuestions(List list) {
     for(final ex in list){
-      final q = OnlineExamModel.fromMap(ex);
-      questions.add(q);
+      final q = OnlineExamCategoryModel.fromMap(ex);
+
+      if(q.questions.isNotEmpty) {
+        categories.add(q);
+        questions.addAll(q.questions);
+      }
+    }
+
+    if(questions.isNotEmpty){
+      currentQuestion = questions[0];
     }
   }
 
   double calcQuestionProgress() {
-    return ((currentQuestion+1) *100 / questions.length)/100;
+    return ((currentQuestionIdx+1) *100 / questions.length)/100;
   }
 
   void requestQuestions(){
     requester.httpRequestEvents.onFailState = (req, response) async {
-      final q = OnlineExamModel();
-      questions.add(q);
-
       assistCtr.clearStates();
       assistCtr.addStateAndUpdateHead(AssistController.state$error);
     };
@@ -230,7 +300,7 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
 
     assistCtr.addStateAndUpdateHead(AssistController.state$loading);
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/placementTest/questions');
+    requester.prepareUrl(pathUrl: '/placementExam/questions');
     requester.request();
   }
 }

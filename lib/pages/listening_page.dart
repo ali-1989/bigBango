@@ -49,12 +49,12 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   Widget examComponent = SizedBox();
   ExamController? examController;
   int currentItemIdx = 0;
-  bool voiceIsOk = false;
-  bool isInPlaying = false;
   List<ListeningModel> itemList = [];
   ListeningModel? currentItem;
-  String id$playViewId = 'playViewId';
   String? description;
+  String id$playViewId = 'playViewId';
+  bool voiceIsOk = false;
+  bool isInPlaying = false;
   double playerSliderValue = 0;
 
   @override
@@ -164,6 +164,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
               SizedBox(height: 20),
 
+              /// player
               DecoratedBox(
                   decoration: BoxDecoration(
                       color: Colors.grey.shade300,

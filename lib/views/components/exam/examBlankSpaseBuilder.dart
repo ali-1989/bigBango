@@ -135,7 +135,6 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
           //SizedBox(height: 15),
           RichText(
             text: TextSpan(children: spans),
-            //textDirection: TextDirection.rtl,
           ),
 
           SizedBox(height: 14),
