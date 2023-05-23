@@ -1,4 +1,4 @@
-import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,14 +23,14 @@ class AppSizes {
   double textMultiplier = 6; // Tecno: ~6.4
   double imageMultiplier = 1;
   double heightMultiplier = 1;
-  ui.WindowPadding? rootPadding;
+  ViewPadding? rootPadding;
   List<Function> onMetricListeners = [];
   Function? _systemMetricFunc;
 
   static AppSizes get instance {
     if(!_initialState){
       _initialState = true;
-      _instance._systemMetricFunc = ui.window.onMetricsChanged;
+      _instance._systemMetricFunc = PlatformDispatcher.instance.onMetricsChanged;
 
       _instance._initial();
     }
@@ -38,13 +38,11 @@ class AppSizes {
     return _instance;
   }
 
-
-
   void _prepareSizes() {
-    realPixelWidth = ui.window.physicalSize.width;
-    realPixelHeight = ui.window.physicalSize.height;
-    pixelRatio = ui.window.devicePixelRatio;
-    rootPadding = ui.window.padding;
+    realPixelWidth = PlatformDispatcher.instance.implicitView!.physicalSize.width;
+    realPixelHeight = PlatformDispatcher.instance.implicitView!.physicalSize.height;
+    pixelRatio = PlatformDispatcher.instance.implicitView!.devicePixelRatio;
+    rootPadding = PlatformDispatcher.instance.implicitView!.padding;
     final isLandscape = realPixelWidth! > realPixelHeight!;
 
     if(kIsWeb) {
@@ -89,9 +87,9 @@ class AppSizes {
     void onLocalChanged(){
     }
 
-    ui.window.onLocaleChanged = onLocalChanged;
+    PlatformDispatcher.instance.onLocaleChanged = onLocalChanged;
     /// Note: if below listener be set, auto orientation reBuild not work {OrientationBuilder()}
-    ui.window.onMetricsChanged = onMetricsChanged;
+    PlatformDispatcher.instance.onMetricsChanged = onMetricsChanged;
   }
 
   void addMetricListener(Function(double oldW, double oldH, double newW, double newH) lis){
@@ -104,12 +102,12 @@ class AppSizes {
 
   double get appWidthRelateWeb => webMaxWidthSize;
   ///●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●
-  static ui.FlutterWindow getWindow(){
-    return ui.window;
+  static FlutterView? getWindow(){
+    return PlatformDispatcher.instance.implicitView;
   }
 
   static Size getWindowSize(){
-    return ui.window.physicalSize;
+    return getWindow()!.physicalSize;
   }
 
   static bool isBigWidth(){

@@ -36,15 +36,17 @@ Future <void> onActionReceivedMethod(ReceivedAction receivedAction) async {
 }*/
 
 @pragma('vm:entry-point')
-void notificationTapListener(ReceivedNotification receivedNotification){
-	if(receivedNotification.payload is Map){
-		final key = receivedNotification.payload!['key'];
+Future<void> awesomeTapListener(ReceivedAction action){
+	if(action.payload is Map){
+		final key = action.payload!['key'];
 
 		if(key == 'message'){ // send from firebase-service
 			AppBroadcast.layoutPageKey.currentState?.gotoPage(3);
 			RouteTools.backToRoot(RouteTools.getBaseContext()!);
 		}
 	}
+
+	return Future.value();
 }
 
 ///=======================================================================================
@@ -148,7 +150,14 @@ class AppNotification {
 	}
 
 	static void startListenTap() {
-		AwesomeNotifications().actionStream.listen(notificationTapListener);
+		//AwesomeNotifications().actionStream.listen(awesomeTapListener);
+
+		AwesomeNotifications().setListeners(
+				onActionReceivedMethod: awesomeTapListener,
+				//onNotificationCreatedMethod: ,
+				//onNotificationDisplayedMethod: ,
+				//onDismissActionReceivedMethod:
+		);
 	}
 
 	static void removeChannel(String channelKey) {

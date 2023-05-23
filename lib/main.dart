@@ -22,6 +22,7 @@ import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/homeComponents/splashPage.dart';
 
+
 ///================ call on any hot restart
 Future<void> main() async {
   if (defaultTargetPlatform != TargetPlatform.linux && defaultTargetPlatform != TargetPlatform.windows) {
@@ -103,7 +104,6 @@ class MyApp extends StatelessWidget {
       navigatorKey: AppBroadcast.rootNavigatorKey,
       scaffoldMessengerKey: AppBroadcast.rootScaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
-      useInheritedMediaQuery: true,
       title: Constants.appTitle,
       themeMode: AppThemes.instance.currentThemeMode,
       theme: AppThemes.instance.themeData,

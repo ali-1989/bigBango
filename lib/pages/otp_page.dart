@@ -74,6 +74,8 @@ class _OtpPageState extends StateBase<OtpPage> {
   void dispose(){
     stopWatchTimer.dispose();
     pinTextCtr.dispose();
+    AndroidSmsRetriever.stopSmsListener();
+
     super.dispose();
   }
 
