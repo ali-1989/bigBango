@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:iris_tools/widgets/searchBar.dart';
+import 'package:iris_tools/widgets/irisSearchBar.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/models/countryModel.dart';
@@ -93,7 +93,7 @@ class CountrySelectScreenState extends StateBase<CountrySelectScreen> {
           const SizedBox(height: 4,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-            child: SearchBar(
+            child: IrisSearchBar(
               iconColor: AppThemes.checkPrimaryByWB(AppThemes.instance.currentTheme.primaryColor, AppThemes.instance.currentTheme.textColor),
               hint: 'انتخاب کشور',
               onChangeEvent: (t){

@@ -5,7 +5,7 @@ import 'package:iris_runtime_cache/iris_runtime_cache.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
-import 'package:iris_tools/widgets/searchBar.dart';
+import 'package:iris_tools/widgets/irisSearchBar.dart';
 
 import 'package:app/pages/exam_page.dart';
 import 'package:app/pages/grammar_page.dart';
@@ -165,7 +165,7 @@ class HomePageState extends StateBase<HomePage> {
                               right: 0,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: SearchBar(
+                                child: IrisSearchBar(
                                   hint: 'جستجو در دروس',
                                   onChangeEvent: onSearch,
                                   insertDefaultClearIcon: false,

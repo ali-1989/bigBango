@@ -13,7 +13,7 @@ import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/fullScreenImage.dart';
 
-abstract class TicketAttachmentShowSupper {
+mixin  TicketAttachmentShowSupper {
 
   void showAttachment(BuildContext context, TicketReplyModel ticketReply) {
     AppSheet.showSheetCustom(

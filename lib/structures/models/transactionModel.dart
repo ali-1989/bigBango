@@ -57,9 +57,9 @@ class TransactionModel {
         return AppColors.green;
       case TransactionStatusFilter.rejected:
         return AppColors.red;
+      default:
+        return Colors.black;
     }
-
-    return Colors.black;
   }
 
   Color getSectionColor(){
@@ -74,9 +74,10 @@ class TransactionModel {
         return AppColors.purple;
       case TransactionSectionFilter.forceChargeWallet:
         return AppColors.green;
+      default:
+        return Colors.black;
     }
 
-    return Colors.black;
   }
 
   Color getSectionTintColor(){
@@ -91,9 +92,9 @@ class TransactionModel {
         return AppColors.purpleTint;
       case TransactionSectionFilter.forceChargeWallet:
         return AppColors.greenTint;
+      default:
+        return Colors.black;
     }
-
-    return Colors.black;
   }
 
   String getIcon(){
@@ -108,8 +109,8 @@ class TransactionModel {
         return AppImages.supportPurchaseIco;
       case TransactionSectionFilter.forceChargeWallet:
         return AppImages.withdrawWalletIc;
+      default:
+        return '';
     }
-
-    return '';
   }
 }
