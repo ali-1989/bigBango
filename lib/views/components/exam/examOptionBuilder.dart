@@ -72,7 +72,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
   @override
   Widget build(BuildContext context) {
     return Assist(
-      controller: assistCtr,
+        controller: assistCtr,
         builder: (ctx, ctr, data){
           return buildBody();
         }
@@ -131,96 +131,96 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
                 return Directionality(
                   textDirection: TextDirection.rtl,
                   child: DecoratedBox(
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: Assist(
-                            controller: assistCtr,
-                            id: id$playViewId,
-                            builder: (_, ctr, data) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: IntrinsicHeight(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          CustomCard(
-                                              color: Colors.pinkAccent,
-                                              radius: 4,
-                                              padding: EdgeInsets.symmetric(horizontal: 14, vertical:4),
-                                              child: Column(
-                                                children: [
-                                                  Text(DurationFormatter.duration(currentTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
-                                                  Text(DurationFormatter.duration(totalTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
-                                                ],
-                                              )
-                                          ),
-                                        ],
-                                      ),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Assist(
+                          controller: assistCtr,
+                          id: id$playViewId,
+                          builder: (_, ctr, data) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: IntrinsicHeight(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        CustomCard(
+                                            color: Colors.pinkAccent,
+                                            radius: 4,
+                                            padding: EdgeInsets.symmetric(horizontal: 14, vertical:4),
+                                            child: Column(
+                                              children: [
+                                                Text(DurationFormatter.duration(currentTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
+                                                Text(DurationFormatter.duration(totalTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
+                                              ],
+                                            )
+                                        ),
+                                      ],
+                                    ),
 
-                                      Expanded(
-                                          child: Directionality(
-                                            textDirection: TextDirection.ltr,
-                                            child: SliderTheme(
-                                              data: SliderTheme.of(context).copyWith(
-                                                thumbShape: CustomThumb(),
-                                                valueIndicatorShape: CustomThumb(),
-                                                valueIndicatorColor: Colors.transparent,
-                                                overlayColor: Colors.transparent,
-                                              ),
-                                              child: Slider(
-                                                value: playerSliderValue,
-                                                max: 100,
-                                                min: 0,
-                                                onChanged: (double value) {
-                                                  if(totalTime.inMilliseconds < 2){
-                                                    return;
-                                                  }
-
-                                                  int sec = totalTime.inSeconds * value ~/100;
-                                                  player.seek(Duration(seconds: sec));
-                                                  playerSliderValue = value;
-                                                  assistCtr.updateAssist(id$playViewId);
-                                                },
-                                              ),
+                                    Expanded(
+                                        child: Directionality(
+                                          textDirection: TextDirection.ltr,
+                                          child: SliderTheme(
+                                            data: SliderTheme.of(context).copyWith(
+                                              thumbShape: CustomThumb(),
+                                              valueIndicatorShape: CustomThumb(),
+                                              valueIndicatorColor: Colors.transparent,
+                                              overlayColor: Colors.transparent,
                                             ),
-                                          )
-                                      ),
+                                            child: Slider(
+                                              value: playerSliderValue,
+                                              max: 100,
+                                              min: 0,
+                                              onChanged: (double value) {
+                                                if(totalTime.inMilliseconds < 2){
+                                                  return;
+                                                }
 
-                                      Row(
-                                        textDirection: TextDirection.ltr,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          SizedBox(width: 14),
-
-                                          GestureDetector(
-                                            onTap: (){
-                                              playSound(curExam);
-                                            },
-                                            child: CustomCard(
-                                                color: Colors.white,
-                                                radius: 20,
-                                                padding: EdgeInsets.all(5),
-                                                child: isPlaying() ?
-                                                Icon(AppIcons.pause, size: 20)
-                                                    : Icon(AppIcons.playArrow, size: 20)
+                                                int sec = totalTime.inSeconds * value ~/100;
+                                                player.seek(Duration(seconds: sec));
+                                                playerSliderValue = value;
+                                                assistCtr.updateAssist(id$playViewId);
+                                              },
                                             ),
                                           ),
+                                        )
+                                    ),
 
-                                          SizedBox(width: 10),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                    Row(
+                                      textDirection: TextDirection.ltr,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(width: 14),
+
+                                        GestureDetector(
+                                          onTap: (){
+                                            playSound(curExam);
+                                          },
+                                          child: CustomCard(
+                                              color: Colors.white,
+                                              radius: 20,
+                                              padding: EdgeInsets.all(5),
+                                              child: isPlaying() ?
+                                              Icon(AppIcons.pause, size: 20)
+                                                  : Icon(AppIcons.playArrow, size: 20)
+                                          ),
+                                        ),
+
+                                        SizedBox(width: 10),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              );
-                            }
-                        )
-                    ),
+                              ),
+                            );
+                          }
+                      )
+                  ),
                 );
               }
 
@@ -414,5 +414,3 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
     assistCtr.updateHead();
   }
 }
-
-

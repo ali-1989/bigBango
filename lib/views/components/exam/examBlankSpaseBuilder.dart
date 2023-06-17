@@ -46,12 +46,23 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
       examList.add(widget.content.examList[widget.index!]);
     }
 
+    examList.removeWhere((element) {
+      for(var x in element.items){
+        final starLen = x.question.split('**').length;
+        if(x.options.length != starLen-1){
+          return true;
+        }
+      }
+
+      return false;
+    });
+
     questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
     falseStyle = TextStyle(fontSize: 16,
         color: Colors.red,
         decorationStyle: TextDecorationStyle.solid,
         decoration: TextDecoration.lineThrough,
-      decorationColor: Colors.red
+        decorationColor: Colors.red
     );
 
     ExamController(widget.controllerId, this);
@@ -66,7 +77,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
   @override
   Widget build(BuildContext context) {
     return Assist(
-      controller: assistCtr,
+        controller: assistCtr,
         builder: (ctx, ctr, data){
           return buildBody();
         }
@@ -81,7 +92,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
         physics: const ScrollPhysics(),
         slivers: [
           SliverVisibility(
-            visible: widget.showTitle,
+              visible: widget.showTitle,
               sliver: SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10),
@@ -237,7 +248,8 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
           Color falseColor = Colors.red;
 
           ///answer is correct
-          if(exam.getFirst().userAnswers[i].text == exam.items[0].options[i].text){
+
+          if(exam.getFirst().userAnswers[i].text == exam.getFirst().options[i].text){
             blankSpan = WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: Row(
@@ -276,8 +288,8 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
                       SizedBox(width: 2),
                       Text(exam.items[0].options[i].text,
                           style: questionNormalStyle.copyWith(
-                              color: trueColor,
-                              decorationStyle: TextDecorationStyle.solid,
+                            color: trueColor,
+                            decorationStyle: TextDecorationStyle.solid,
                             decoration: TextDecoration.underline,
                             decorationColor: trueColor,
                           )
@@ -368,5 +380,3 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
     assistCtr.updateHead();
   }
 }
-
-

@@ -49,7 +49,7 @@ class ExamModel extends ExamSuperModel {
   ExamItem getFirst(){
     return items[0];
   }
-  
+
   void prepare(){
     if(quizType == QuizType.multipleChoice){
       getFirst()._generateUserAnswer();
@@ -70,6 +70,11 @@ class ExamModel extends ExamSuperModel {
     }
 
     isPrepare = true;
+  }
+
+  @override
+  String toString(){
+    return '::ExamModel::[title:$title | quizType: ${quizType.name} | items:$items    |  solvedOptions: $solvedOptions]';
   }
 }
 ///==================================================================================================
@@ -283,6 +288,11 @@ class ExamItem {
 
     return false;
   }
+
+  @override
+  String toString(){
+    return '::ExamItem::[id:$id | question: $question | order:$order    | \n options: $options]';
+  }
 }
 ///==================================================================================================
 class ExamOptionModel {
@@ -310,6 +320,11 @@ class ExamOptionModel {
 
     return js;
   }
+
+  @override
+  String toString(){
+    return '::ExamOption::[id: $id,  text: $text,  isCorrect: $isCorrect,  order:$order]';
+  }
 }
 ///==================================================================================================
 class ExamSolvedOptionModel {
@@ -333,5 +348,10 @@ class ExamSolvedOptionModel {
     js['isCorrect'] = isCorrect;
 
     return js;
+  }
+
+  @override
+  String toString(){
+    return '::SolvedOption::[quizId: $quizId, answer: $answer, isCorrect: $isCorrect]';
   }
 }

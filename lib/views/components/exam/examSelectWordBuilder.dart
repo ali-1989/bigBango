@@ -152,7 +152,16 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
           SizedBox(height: 20),
 
           ///=== words
-          buildWords(item),
+          Builder(
+              builder: (context) {
+                if(item.showAnswer){
+                  return SizedBox();
+                }
+
+                return buildWords(item);
+              }
+          ),
+
           SizedBox(height: 14),
         ],
       ),
@@ -197,9 +206,13 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
 
         if (model.showAnswer) {
           final correctAnswer = model.getFirst().getChoiceByOrder(i+1)!.text;
-          final userAnswer = model.getFirst().getUserChoiceByOrder(i+1)?.text;
+          var userAnswer = model.getFirst().getUserChoiceByOrder(i+1)?.text;
           Color trueColor = Colors.green;
           Color falseColor = Colors.red;
+
+          if(userAnswer?.isEmpty?? false){
+            userAnswer = null;
+          }
 
           if (correctAnswer == userAnswer) {
             /// correct span
@@ -224,7 +237,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
                   children: [
                     //Image.asset(AppImages.falseCheckIco),
                     //SizedBox(width: 5),
-                    Text(userAnswer?? '-', style: falseStyle.copyWith(color: falseColor)),
+                    Text(userAnswer?? '--', style: falseStyle.copyWith(color: falseColor)),
                     SizedBox(width: 5),
                     Text('[$correctAnswer]', style: questionNormalStyle.copyWith(color: trueColor))
                   ],
@@ -311,6 +324,9 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
   }
 
   void onWordClick(ExamModel model, ExamOptionModel ec) {
+    if(model.showAnswer){
+      return;
+    }
     /*if (currentSelectIndex < 1) {
       for (final k in model.userAnswers){
         if(k.id == ec.id){

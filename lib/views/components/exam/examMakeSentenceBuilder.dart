@@ -128,13 +128,13 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
 
           ///=== question
           Visibility(
-            visible: question.isNotEmpty,
+              visible: question.isNotEmpty,
               child: AutoDirection(
                 builder: (_, AutoDirectionController direction) {
                   return Align(
                     alignment: direction.getAlignment(question),
                     child: Text(
-                        question,
+                      question,
                       textDirection: direction.getTextDirection(question),
                     ),
                   );
@@ -188,7 +188,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
                         );
                       },
                     ).wrapBackground(
-                        backColor: Colors.grey.shade100,
+                      backColor: Colors.grey.shade100,
                       borderColor: Colors.green,
                     ),
                   );
@@ -203,7 +203,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
           Row(
             children: [
               Visibility(
-                visible: holder.hasAnswer() && !holder.examModel.showAnswer,
+                  visible: holder.hasAnswer() && !holder.examModel.showAnswer,
                   child: GestureDetector(
                     onTap: (){
                       holder.back();
@@ -217,7 +217,15 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
               ),
 
               ///=== words
-              buildWords(holder),
+              Builder(
+                  builder: (context) {
+                    if(holder.examModel.showAnswer){
+                      return SizedBox();
+                    }
+
+                    return buildWords(holder);
+                  }
+              ),
             ],
           ),
 
@@ -280,6 +288,9 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
 
   void onWordClick(ExamHolder holder, ExamOptionModel ec) {
     //setUserAnswer(model, currentSpaceOrder, ec);
+    if(holder.examModel.showAnswer){
+      return;
+    }
 
     holder.getSelectedWordsFor().add(ec);
 

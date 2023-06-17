@@ -1,3 +1,4 @@
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -10,7 +11,6 @@ import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
@@ -34,6 +34,7 @@ class ExamPage extends StatefulWidget {
 class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
   Requester requester = Requester();
   late TabController tabController;
+
 
   @override
   void initState(){
@@ -144,7 +145,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
           /// body view
           Expanded(
             child: TabBarView(
-              controller: tabController,
+                controller: tabController,
                 physics: NeverScrollableScrollPhysics(),
                 children: [
                   buildPage1(),
@@ -169,14 +170,14 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
 
         /// send button
         Visibility(
-          visible: widget.builder.showSendButton,
+            visible: widget.builder.showSendButton && !widget.builder.examList.any((element) => element.showAnswer),
             child: ElevatedButton(
               style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size(200, 40),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  visualDensity: VisualDensity(horizontal: 0, vertical: -2),
-                  //shape: StadiumBorder()
+                padding: EdgeInsets.zero,
+                minimumSize: Size(200, 40),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                //shape: StadiumBorder()
               ),
               onPressed: sendAnswer,
               child: Text(widget.builder.sendButtonText).englishFont().color(Colors.white),
@@ -188,7 +189,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     );
   }
 
- Widget buildPage2(){
+  Widget buildPage2(){
     return Column(
       children: [
         SizedBox(height: 20),
@@ -201,9 +202,9 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     );
   }
 
- void sendAnswer(){
+  void sendAnswer(){
     AppDialogIris.instance.showYesNoDialog(
-        context,
+      context,
       yesFn: (ctx) {
         Future.delayed(Duration(milliseconds: 500)).then((value) {
           requestSendAnswer();
@@ -211,9 +212,9 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
       },
       desc: 'آیا جواب تمرین ارسال شود؟',
     );
- }
+  }
 
- void requestSendAnswer(){
+  void requestSendAnswer(){
     /*if(!examController.isAnswerToAll()){
         AppToast.showToast(context, 'لطفا به سوالات پاسخ دهید');
         return;
@@ -228,13 +229,17 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
+      //bool sentResult = false; sentResult = true;
+
       final message = res['message']?? 'پاسخ تمرین ثبت شد';
 
       AppSnack.showInfo(context, message);
 
       for(final x in widget.builder.examList){
-        ExamController.getControllerFor(x.items[0].id)?.showAnswers(true);
+        ExamController.getControllerFor(x.getFirst().id)?.showAnswers(true);
       }
+
+      assistCtr.updateHead();
     };
 
     final tempList = [];

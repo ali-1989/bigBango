@@ -59,7 +59,7 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
   @override
   Widget build(BuildContext context) {
     return Assist(
-      controller: assistCtr,
+        controller: assistCtr,
         builder: (ctx, ctr, data){
           return widget.groupSameTypes? buildBodyByGroup(): buildBodyWithoutGroup();
         }
@@ -86,30 +86,30 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
     if(model is ExamModel){
       if(model.quizType == QuizType.fillInBlank){
         return ExamBlankSpaceBuilder(
-            key: ValueKey(model.getFirst().id),
-            content: widget.builder,
-            controllerId: model.getFirst().id,
+          key: ValueKey(model.getFirst().id),
+          content: widget.builder,
+          controllerId: model.getFirst().id,
         );
       }
       else if(model.quizType == QuizType.recorder){
         return ExamSelectWordBuilder(
-            key: ValueKey(model.getFirst().id),
-            content: widget.builder,
-            controllerId: model.getFirst().id,
+          key: ValueKey(model.getFirst().id),
+          content: widget.builder,
+          controllerId: model.getFirst().id,
         );
       }
       else if(model.quizType == QuizType.multipleChoice){
         return ExamOptionBuilder(
-            key: ValueKey(model.getFirst().id),
-            builder: widget.builder,
-            controllerId: model.getFirst().id,
+          key: ValueKey(model.getFirst().id),
+          builder: widget.builder,
+          controllerId: model.getFirst().id,
         );
       }
       else if(model.quizType == QuizType.makeSentence){
         return ExamMakeSentenceBuilder(
-          key: ValueKey(model.items[0].id),
+          key: ValueKey(model.getFirst().id),
           content: widget.builder,
-          controllerId: model.items[0].id,
+          controllerId: model.getFirst().id,
         );
       }
     }
@@ -137,11 +137,11 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
     if(model is ExamModel){
       if(model.quizType == QuizType.fillInBlank){
         return ExamBlankSpaceBuilder(
-            key: ValueKey(model.getFirst().id),
-            content: widget.builder,
-            controllerId: model.getFirst().id,
-            showTitle: true,
-            index: idx,
+          key: ValueKey(model.getFirst().id),
+          content: widget.builder,
+          controllerId: model.getFirst().id,
+          showTitle: true,
+          index: idx,
         );
       }
       else if(model.quizType == QuizType.recorder){
@@ -175,5 +175,3 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
     return SizedBox();
   }
 }
-
-

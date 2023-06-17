@@ -1,7 +1,7 @@
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/tools/app/appBadge.dart';
-import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -40,7 +40,7 @@ class BottomNavBarState extends State<BottomNavBar> {
           children: [
             Flexible(
                 child: buildItem('دروس',
-                  _isSelected(0)? Image.asset(AppImages.lessonIcoRed, width: 40) : Image.asset(AppImages.lessonIcoBlack, width: 40),
+                    _isSelected(0)? Image.asset(AppImages.lessonIcoRed, width: 40) : Image.asset(AppImages.lessonIcoBlack, width: 40),
                     0
                 )
             ),
@@ -94,6 +94,8 @@ class BottomNavBarState extends State<BottomNavBar> {
         widget.onSelectItem.call(idx);
       },
       child: Badge(
+        alignment: Alignment.topRight,
+        offset: Offset(-4, 2),
         label: AppBadge.getBadge(idx) > 0 ? Text('${AppBadge.getBadge(idx)}') : null,
         backgroundColor: AppBadge.getBadge(idx) > 0 ? null : Colors.transparent,
         child: Column(
