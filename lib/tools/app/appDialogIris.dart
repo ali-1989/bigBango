@@ -11,7 +11,7 @@ import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSizes.dart';
 import '/tools/app/appThemes.dart';
 
-typedef OnButtonCallback = FutureOr Function();
+typedef OnButtonCallback = FutureOr Function(BuildContext context);
 
 class AppDialogIris {
 	static final _instance = AppDialogIris._();
@@ -93,7 +93,7 @@ class AppDialogIris {
       positiveButtonText: yesText,
 			title: title,
 			icon: icon,
-			positivePress: (ctx) => yesFn?.call(),
+			positivePress: (ctx) => yesFn?.call(ctx),
 			dismissOnButtons: dismissOnButtons,
 			decoration: decoration ?? AppDialogIris.instance.dialogDecoration,
 		);
@@ -123,16 +123,16 @@ class AppDialogIris {
 			decoration: decoration?? AppDialogIris.instance.dialogDecoration,
 			icon: icon,
 			dismissOnButtons: dismissOnButtons,
-			positivePress: (ctx) => yesFn?.call(),
-			negativePress: (ctx) => noFn?.call(),
+			positivePress: (ctx) => yesFn?.call(ctx),
+			negativePress: (ctx) => noFn?.call(ctx),
 		);
 	}
 
 	Future showTextInputDialog(
 			BuildContext context, {
 				required Widget descView,
-				String? yesText,
-				required bool? Function(String txt) yesFn,
+				String? mainButtonText,
+				required dynamic Function(BuildContext context, String txt) mainButton,
 				Function(String txt)? onChange,
 				String? noText,
 				String? initValue,
@@ -140,44 +140,23 @@ class AppDialogIris {
 				String? title,
 				Widget? icon,
 				bool canDismiss = true,
-				TextInputType textInputType = TextInputType.text,
+				Widget? textField,
+				TextInputType? textInputType,
+				InputDecoration? inputDecoration,
+				TextEditingController? textEditingController,
 				IrisDialogDecoration?	decoration,
 		}){
 
-		final ctr = TextEditingController();
+		var txt = '';
 
-		if(initValue != null){
-			ctr.text = initValue;
+		dynamic onPosClick(BuildContext ctx){
+			return mainButton.call(ctx, txt);
 		}
 
-		bool onPosClick(){
-			final txt = ctr.text;
-			return yesFn.call(txt)?? false;
+		void myOnChange(String input){
+			txt = input;
+			onChange?.call(input);
 		}
-
-		final rejectView = Column(
-			mainAxisSize: MainAxisSize.min,
-			children: [
-				descView,
-				const SizedBox(height: 15),
-				AutoDirection(
-						builder: (context, dCtr){
-							return TextField(
-								controller: ctr,
-								textDirection: dCtr.getTextDirection(ctr.text),
-								textInputAction: TextInputAction.done,
-								keyboardType: textInputType,
-								maxLines: 1,
-								expands: false,
-								onChanged: (t){
-									dCtr.onChangeText(t);
-									onChange?.call(t);
-								},
-							);
-						}
-				),
-			],
-		);
 
 		final dec = AppDialogIris.instance.dialogDecoration.copy();
 		dec.negativeButtonBackColor = Colors.transparent;
@@ -185,16 +164,24 @@ class AppDialogIris {
 
 		return IrisDialog.show(
 			context,
-			descriptionWidget: rejectView,
-			positiveButtonText: yesText?? AppMessages.yes,
+			descriptionWidget: _TextInputView(
+				topView: descView,
+				inputDecoration: inputDecoration,
+				textInputType: textInputType,
+				controller: textEditingController,
+				onChange: myOnChange,
+				initValue: initValue,
+				textField: textField,
+			),
+			positiveButtonText: mainButtonText?? AppMessages.yes,
 			negativeButtonText: noText,
 			title: title,
 			decoration: decoration?? AppDialogIris.instance.dialogDecoration,
 			icon: icon,
 			canDismissible: canDismiss,
 			dismissOnButtons: false,
-			positivePress: (ctx)=> onPosClick.call(),
-			negativePress: noFn != null? (ctx)=> noFn.call() : null,
+			positivePress: (ctx) => onPosClick.call(ctx),
+			negativePress: noFn != null? (ctx) => noFn.call(ctx) : null,
 		);
 	}
 
@@ -259,4 +246,87 @@ class AppDialogIris {
 			});
 		});
 	}
+}
+///=============================================================================
+class _TextInputView extends StatefulWidget {
+	final Widget topView;
+	final Widget? textField;
+	final TextEditingController? controller;
+	final String? initValue;
+	final TextInputType? textInputType;
+	final	InputDecoration? inputDecoration;
+	final Function(String txt)? onChange;
+
+	const _TextInputView({
+		required this.topView,
+		this.onChange,
+		this.textField,
+		this.controller,
+		this.initValue,
+		this.textInputType,
+		this.inputDecoration,
+		super.key,
+	});
+
+  @override
+  State<_TextInputView> createState() => _TextInputViewState();
+}
+///-------------------------------
+class _TextInputViewState extends State<_TextInputView> {
+  late TextEditingController controller;
+
+
+	@override
+	void initState() {
+		super.initState();
+
+		controller = widget.controller?? TextEditingController();
+
+		if(widget.initValue != null){
+			controller.text = widget.initValue!;
+		}
+	}
+
+	@override
+  void dispose() {
+		controller.dispose();
+		super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+			mainAxisSize: MainAxisSize.min,
+			children: [
+				widget.topView,
+				const SizedBox(height: 10),
+
+				Builder(
+				  builder: (context) {
+						if(widget.textField != null){
+							return widget.textField!;
+						}
+
+				    return AutoDirection(
+				    		builder: (context, dCtr){
+				    			return TextField(
+				    				controller: controller,
+				    				textDirection: dCtr.getTextDirection(controller.text),
+				    				textInputAction: TextInputAction.done,
+				    				keyboardType: widget.textInputType,
+				    				maxLines: 1,
+				    				expands: false,
+				    				decoration: widget.inputDecoration,
+				    				onChanged: (t){
+				    					dCtr.onChangeText(t);
+				    					widget.onChange?.call(t);
+				    				},
+				    			);
+				    		}
+				    );
+				  }
+				),
+			],
+		);
+  }
 }

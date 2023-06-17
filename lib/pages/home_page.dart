@@ -1,3 +1,4 @@
+import 'package:app/managers/api_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
@@ -31,9 +32,8 @@ import 'package:app/structures/models/lessonModels/listeningSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/system/session.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/services/session_service.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appOverlay.dart';
@@ -269,7 +269,7 @@ class HomePageState extends StateBase<HomePage> {
                     width: 1.5,
                     height: 20,
                     child: ColoredBox(
-                      color: AppColors.red,
+                      color: AppDecoration.red,
                     ),
                   ),
 
@@ -339,7 +339,7 @@ class HomePageState extends StateBase<HomePage> {
 
   Widget buildSecondStateOfLesson(LessonModel lesson){
     return ColoredBox(
-      color: AppColors.red,
+      color: AppDecoration.red,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
         child: ClipRRect(
@@ -357,14 +357,14 @@ class HomePageState extends StateBase<HomePage> {
                         width: 1.5,
                         height: 20,
                         child: ColoredBox(
-                          color: AppColors.red,
+                          color: AppDecoration.red,
                         ),
                       ),
 
                       const SizedBox(width: 12),
                       Card(
                           elevation: 0,
-                          color: AppColors.red,
+                          color: AppDecoration.red,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
@@ -781,7 +781,7 @@ class HomePageState extends StateBase<HomePage> {
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/lessons?CourseLevelId=${Session.getLastLoginUser()?.courseLevel?.id}');
+    requester.prepareUrl(pathUrl: '/lessons?CourseLevelId=${SessionService.getLastLoginUser()?.courseLevel?.id}');
     requester.request(context);
   }
 
@@ -837,12 +837,12 @@ class HomePageState extends StateBase<HomePage> {
   }
 
   void requesterSupport(LessonModel lesson) async {
-    final user = Session.getLastLoginUser();
+    final user = SessionService.getLastLoginUser();
     final rt = IrisRuntimeCache.find(AppStoreScope.user$supportTime, user!.userId);
 
     if(rt == null || !rt.isUpdate()){
       showLoading();
-      final userTime = await PublicAccess.requestUserRemainingMinutes(user.userId);
+      final userTime = await ApiManager.requestUserRemainingMinutes(user.userId);
       await hideLoading();
 
       if(userTime == null){

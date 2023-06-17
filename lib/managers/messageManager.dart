@@ -26,6 +26,10 @@ class MessageManager {
   ///-----------------------------------------------------------------------------------------
   static DateTime? _lastUpdateTime;
 
+  static void _listener({data}){
+    requestSetFirebaseToken();
+  }
+
   static bool isUpdated({Duration duration = const Duration(minutes: 30)}) {
     var now = DateTime.now();
     now = now.subtract(duration);
@@ -42,7 +46,9 @@ class MessageManager {
   }
   ///-----------------------------------------------------------------------------------------
   static void init() async {
-    check();
+    EventNotifierService.addListener(AppEvents.networkConnected, _listener);
+
+    //check();
   }
 
   static void check() async {

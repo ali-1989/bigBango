@@ -1,3 +1,4 @@
+import 'package:app/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -5,11 +6,10 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:iris_tools/widgets/keepAliveWrap.dart';
 import 'package:switch_tab/switch_tab.dart';
 
-import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/models/supportModels/supportPlanModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/currencyTools.dart';
@@ -80,7 +80,7 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
                         height: 60,
                         child: SwitchTab(
                           shape: SwitchTabShape.rectangle,
-                          backgroundColour: AppColors.red,
+                          backgroundColour: AppDecoration.red,
                           thumbColor: Colors.white,
                           onValueChanged: (idx){
                             pageCtr.animateToPage(idx, duration: Duration(milliseconds: 500), curve: Curves.linear);
@@ -188,7 +188,7 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
                           Center(
                             child: DecoratedBox(
                               decoration: BoxDecoration(
-                                  color: AppColors.red.withAlpha(50),
+                                  color: AppDecoration.red.withAlpha(50),
                                   borderRadius: BorderRadius.circular(4)
                               ),
                               child: SizedBox(
@@ -215,7 +215,7 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
                                   child: Text('${(index+1)*5}',
                                     style: TextStyle(
                                         fontSize: 10,
-                                        color: timeScrollSelectedIdx == index? AppColors.red : Colors.black
+                                        color: timeScrollSelectedIdx == index? AppDecoration.red : Colors.black
                                     ),
                                   ),
                                 );
@@ -241,7 +241,7 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
               textDirection: TextDirection.ltr,
               children: [
                 CustomCard(
-                color: AppColors.greenTint,
+                color: AppDecoration.greenTint,
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                     child: Text('${calcAmount()} تومان')
                 )
@@ -314,7 +314,7 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
       return 0;
     }
 
-    return (SystemParameterManager.getAmountOf1Minutes() * minutes).toInt();
+    return (SettingsManager.getAmountOf1Minutes() * minutes).toInt();
   }
 
   void scrollListener() {

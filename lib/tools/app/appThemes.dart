@@ -6,7 +6,8 @@ import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/api/system.dart';
 
 import 'package:app/structures/models/colorTheme.dart';
-import '/managers/fontManager.dart';
+import 'package:app/tools/app/appDecoration.dart';
+import '/managers/font_manager.dart';
 
 /// hlp:
 /// https://htmlcolorcodes.com/
@@ -32,7 +33,7 @@ class AppThemes {
 	StrutStyle strutStyle = const StrutStyle(forceStrutHeight: true, height: 1.08, leading: 0.36);
 
 	static AppThemes get instance {
-		initial();
+		init();
 
 		return _instance;
 	}
@@ -51,7 +52,7 @@ class AppThemes {
 		return Theme.of(context);
 	}
 
-	static void initial() {
+	static void init() {
 		if(!_isInit) {
 			_isInit = true;
 
@@ -78,7 +79,8 @@ class AppThemes {
 		_instance.themeList.clear();
 
 		{
-			final mainTheme = ColorTheme(const Color(0xFFF95959), const Color(0xFFF0A17D), const Color(0xFFF7C8B3), Colors.black);
+			final mainTheme = ColorTheme(AppDecoration.mainColor, AppDecoration.secondColor,
+					AppDecoration.differentColor, Colors.black);
 
 			mainTheme.themeName = 'main_light';
 			mainTheme.appBarItemColor = Colors.black;
@@ -323,10 +325,10 @@ class AppThemes {
 
 		/// https://flutter.dev/docs/release/breaking-changes/buttons
 
-		final buttonTheme = ButtonThemeData(
+		const buttonTheme = ButtonThemeData(
 		);
 
-		final iconButtonTheme = IconButtonThemeData(
+		const iconButtonTheme = IconButtonThemeData(
 			style: ButtonStyle(
 				//minimumSize: kIsWeb? MaterialStateProperty.all(Size(20, 45)): null,
 			),

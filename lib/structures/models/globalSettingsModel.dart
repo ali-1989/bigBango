@@ -1,6 +1,6 @@
 import 'package:app/structures/models/courseLevelModel.dart';
 
-class SystemParameterModel {
+class GlobalSettingsModel {
 
   int expiryMinutes = 1;
   int tempClientSecretExpirySeconds = 1;
@@ -43,9 +43,9 @@ class SystemParameterModel {
   Map version = {};
 
 
-  SystemParameterModel();
+  GlobalSettingsModel();
 
-  SystemParameterModel.fromMap(Map? map) {
+  GlobalSettingsModel.fromMap(Map? map) {
     if(map == null){
       return;
     }
@@ -74,5 +74,15 @@ class SystemParameterModel {
     map['courseLevels'] = courseLevels.map((e) => e.toMap()).toList();
 
     return map;
+  }
+
+  void matchBy(GlobalSettingsModel others){
+    expiryMinutes = others.expiryMinutes;
+    tempClientSecretExpirySeconds = others.tempClientSecretExpirySeconds;
+    advertisingVideos = others.advertisingVideos;
+    contact = others.contact;
+    timeTable = others.timeTable;
+    version = others.version;
+    courseLevels = others.courseLevels;
   }
 }

@@ -1,3 +1,5 @@
+import 'package:app/managers/api_manager.dart';
+import 'package:app/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/focusHelper.dart';
@@ -6,15 +8,13 @@ import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/dateSection/ADateStructure.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/hoursOfSupportModel.dart';
 import 'package:app/structures/models/supportModels/dayWeekModel.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSheet.dart';
@@ -140,7 +140,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: ColoredBox(
-              color: model.isBlock ? Colors.grey[200]! : (model.id == timeSelectId? AppColors.red: Colors.transparent),
+              color: model.isBlock ? Colors.grey[200]! : (model.id == timeSelectId? AppDecoration.red: Colors.transparent),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -234,7 +234,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: ColoredBox(
-            color: dModel.isBlock ? Colors.grey[200]! : (dModel.dayOfMonth == currentDay? AppColors.red: Colors.transparent),
+            color: dModel.isBlock ? Colors.grey[200]! : (dModel.dayOfMonth == currentDay? AppDecoration.red: Colors.transparent),
             child: SizedBox.expand(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -302,7 +302,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: ColoredBox(
-                color: hour.isBlock ? Colors.grey[200]! : (hour.id == timeSelectId? AppColors.red: Colors.transparent),
+                color: hour.isBlock ? Colors.grey[200]! : (hour.id == timeSelectId? AppDecoration.red: Colors.transparent),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -364,7 +364,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
     FocusHelper.hideKeyboardByUnFocusRoot();
     await Future.delayed(Duration(milliseconds: 200));
 
-    final min = SystemParameterManager.systemParameters.timeTable['determineCourseLevelMinutes'];
+    final min = SettingsManager.globalSettings.timeTable['determineCourseLevelMinutes'];
     final minNumber = MathHelper.clearToInt(min);
 
     requester.httpRequestEvents.onFailState = (req, res) async {
@@ -444,7 +444,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
 
       AppSheet.showSheetOneAction(context, msg, () async {
         showLoading();
-        final res = await PublicAccess.requestSetLevel(SystemParameterManager.getCourseLevelById(1));
+        final res = await ApiManager.requestSetLevel(SettingsManager.getCourseLevelById(1));
         await hideLoading();
 
         if(res){

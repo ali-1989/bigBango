@@ -1,3 +1,4 @@
+import 'package:app/managers/settings_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -10,14 +11,13 @@ import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/attribute.dart';
 
-import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/pages/otp_page.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSnack.dart';
@@ -92,8 +92,8 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
                                       waveFall: 10.0,
                                       waveMotionEffect: Curves.linear,
                                       waveMotion: WaveMotion.synced,
-                                      innerWaveColor: AppColors.red.withAlpha(100),
-                                      middleWaveColor: AppColors.red.withAlpha(50),
+                                      innerWaveColor: AppDecoration.red.withAlpha(100),
+                                      middleWaveColor: AppDecoration.red.withAlpha(50),
                                       outerWaveColor: Colors.transparent,
                                       duration: const Duration(seconds: 2),
                                       child: Image.asset(AppImages.playIcon, width: 40)
@@ -211,7 +211,7 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
             body: VideoPlayerView(
               videoSourceType: VideoSourceType.network,
               autoPlay: true,
-              srcAddress: SystemParameterManager.systemParameters.advertisingVideos['login']?? '',
+              srcAddress: SettingsManager.globalSettings.advertisingVideos['login']?? '',
             ),
           );
         }

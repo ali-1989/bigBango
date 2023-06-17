@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:iris_tools/dateSection/calendarTools.dart';
 
-import 'package:app/managers/fontManager.dart';
+import 'package:app/managers/font_manager.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/dateTools.dart';

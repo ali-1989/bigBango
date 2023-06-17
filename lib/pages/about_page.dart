@@ -1,13 +1,13 @@
+import 'package:app/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/urlHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
-import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/views/states/backBtn.dart';
 import 'package:app/views/states/errorOccur.dart';
@@ -56,7 +56,7 @@ class _AboutPageState extends StateBase<AboutPage> {
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.orange, AppColors.orange.withAlpha(100)],
+          colors: [AppDecoration.orange, AppDecoration.orange.withAlpha(100)],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter
         )
@@ -113,7 +113,7 @@ class _AboutPageState extends StateBase<AboutPage> {
               radius: 0,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Text('${SystemParameterManager.systemParameters.contact['description']}'),
+                child: Text('${SettingsManager.globalSettings.contact['description']}'),
               ),
             ),
           ),
@@ -146,9 +146,9 @@ class _AboutPageState extends StateBase<AboutPage> {
                             padding: EdgeInsets.zero,
                           ),
                             onPressed: (){
-                             UrlHelper.launchLink('tel://${SystemParameterManager.systemParameters.contact['supportPhoneNumber']}');
+                             UrlHelper.launchLink('tel://${SettingsManager.globalSettings.contact['supportPhoneNumber']}');
                             },
-                            child: Text('${SystemParameterManager.systemParameters.contact['supportPhoneNumber']}').bold(),
+                            child: Text('${SettingsManager.globalSettings.contact['supportPhoneNumber']}').bold(),
                         )
                       ],
                     ),
@@ -166,7 +166,7 @@ class _AboutPageState extends StateBase<AboutPage> {
                     SizedBox(width: 2),
                     TextButton(
                         onPressed: (){
-                          UrlHelper.launchLink('${SystemParameterManager.systemParameters.contact['conditionTermsLink']}');//http://
+                          UrlHelper.launchLink('${SettingsManager.globalSettings.contact['conditionTermsLink']}');//http://
                         },
                         child: Text('مشاهده قوانین')
                     ),

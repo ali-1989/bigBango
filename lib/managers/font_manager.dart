@@ -1,5 +1,3 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -311,7 +309,7 @@ class Font {
     fileName = map['file_name'];
     size = map['size']?? 10;
     height = map['height'];
-    textHeightBehavior = TextHeightBehavior().fromMap(map['textHeightBehavior']);
+    textHeightBehavior = const TextHeightBehavior().fromMap(map['textHeightBehavior']);
     defaultUsage = FontUsage.fromName(map['default_usage']);
     defaultLanguage = map['default_language'];
   }
@@ -335,9 +333,9 @@ class Font {
   }
 
   static double getRelativeFontSize() {
-    final realPixelWidth = ui.window.physicalSize.width;
-    final realPixelHeight = ui.window.physicalSize.height;
-    final pixelRatio = ui.window.devicePixelRatio;
+    final realPixelWidth = PlatformDispatcher.instance.implicitView!.physicalSize.width;
+    final realPixelHeight = PlatformDispatcher.instance.implicitView!.physicalSize.height;
+    final pixelRatio = PlatformDispatcher.instance.implicitView!.devicePixelRatio;
     final isLandscape = realPixelWidth > realPixelHeight;
 
     if(kIsWeb) {

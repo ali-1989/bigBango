@@ -40,8 +40,8 @@ import 'package:app/structures/models/provinceModel.dart';
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/system/session.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/services/session_service.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -158,7 +158,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const SizedBox(width: 10),
-                            Image.asset(AppImages.changeImage, color: AppColors.red),
+                            Image.asset(AppImages.changeImage, color: AppDecoration.red),
                             const SizedBox(width: 8),
                             Text('پروفایل و اطلاعات', style: const TextStyle(fontSize: 17)),
                           ],
@@ -784,10 +784,10 @@ class _ProfilePageState extends StateBase<ProfilePage> {
   Future<String?> editImage(String imgPath) async {
     final comp = Completer<String?>();
 
-    final editOptions = EditOptions.byPath(imgPath);
+    final editOptions = EditOptions.byFile(imgPath);
     editOptions.cropBoxInitSize = const Size(200, 170);
     editOptions.primaryColor = ColorHelper.buildMaterialColor(Colors.black87);
-    editOptions.secondaryColor = AppColors.red;
+    editOptions.secondaryColor = AppDecoration.red;
     editOptions.iconsColor = Colors.white;
 
 
@@ -829,7 +829,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
         if(isOk){
           media.path = filePath;
           user.avatarModel = media;
-          Session.sinkUserInfo(user);
+          SessionService.sinkUserInfo(user);
 
           EventNotifierService.notify(AppEvents.userProfileChange);
         }
@@ -877,7 +877,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       user.avatarModel = null;
 
       EventNotifierService.notify(AppEvents.userProfileChange);
-      Session.sinkUserInfo(user);
+      SessionService.sinkUserInfo(user);
 
       assistCtr.updateHead();
     };
@@ -985,7 +985,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       if(dataText != null) {
         final temp = UserModel.fromMap(dataText);
 
-        final user = Session.getLastLoginUser()!;
+        final user = SessionService.getLastLoginUser()!;
         temp.loginDate = user.loginDate;
 
         temp.avatarModel?.bytes = user.avatarModel?.bytes;
@@ -994,7 +994,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
         user.mobile ??= userFixInfo[Keys.mobileNumber];
 
-        Session.sinkUserInfo(user);
+        SessionService.sinkUserInfo(user);
 
         prepare();
         assistCtr.updateHead();
@@ -1045,7 +1045,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
         AppSnack.showInfo(context, 'ثبت شد');
       }
 
-      final user = Session.getLastLoginUser()!;
+      final user = SessionService.getLastLoginUser()!;
       user.name = name;
       user.lastName = family;
       user.gender = currentGender;
@@ -1060,7 +1060,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
         user.email = email;
       }
 
-      Session.sinkUserInfo(user);
+      SessionService.sinkUserInfo(user);
       prepare();
       compareChanges();
       EventNotifierService.notify(AppEvents.userProfileChange);

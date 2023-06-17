@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:app/constants.dart';
-import 'package:app/managers/fontManager.dart';
+import 'package:app/managers/font_manager.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appSizes.dart';
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+class SplashView extends StatelessWidget {
+  const SplashView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

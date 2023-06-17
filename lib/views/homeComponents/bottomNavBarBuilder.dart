@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:app/tools/app/appBadge.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -19,7 +19,7 @@ class BottomNavBar extends StatefulWidget {
 }
 ///================================================================================================
 class BottomNavBarState extends State<BottomNavBar> {
-  Color selectedColor = AppColors.red;
+  Color selectedColor = AppDecoration.red;
   Color unSelectedColor = Colors.transparent;
 
   @override
@@ -56,7 +56,7 @@ class BottomNavBarState extends State<BottomNavBar> {
             buildSeparator(),
             Flexible(
                 child: buildItem('فروشگاه',
-                    _isSelected(2)? Image.asset(AppImages.marketIco, width: 40, color: AppColors.red) : Image.asset(AppImages.marketIco, width: 40),
+                    _isSelected(2)? Image.asset(AppImages.marketIco, width: 40, color: AppDecoration.red) : Image.asset(AppImages.marketIco, width: 40),
                     2
                 )
             ),
@@ -64,7 +64,7 @@ class BottomNavBarState extends State<BottomNavBar> {
             buildSeparator(),
             Flexible(
                 child: buildItem('اعلانات',
-                    _isSelected(3)? Image.asset(AppImages.notificationIcoBlack, width: 40, color: AppColors.red) : Image.asset(AppImages.notificationIcoBlack, width: 40),
+                    _isSelected(3)? Image.asset(AppImages.notificationIcoBlack, width: 40, color: AppDecoration.red) : Image.asset(AppImages.notificationIcoBlack, width: 40),
                     3
                 )
             ),

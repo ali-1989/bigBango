@@ -570,7 +570,7 @@ final items = <Map>[];
       'icon': IconList.delete,
       'fn': (){
         yesFn(){
-        AppRoute.pop();
+        RouteTools.pop();
           deleteFood();
         }
 

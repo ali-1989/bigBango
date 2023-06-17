@@ -10,8 +10,8 @@ import 'package:app/structures/models/ticketModels/ticketDetailModel.dart';
 import 'package:app/structures/models/ticketModels/ticketModel.dart';
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/session.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/services/session_service.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appNavigator.dart';
@@ -51,7 +51,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
 
     srcCtr = ScrollController();
     assistCtr.addState(AssistController.state$loading);
-    userModel = Session.getLastLoginUser()!;
+    userModel = SessionService.getLastLoginUser()!;
 
     requestTicketDetail();
   }
@@ -105,7 +105,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
                   SizedBox(
                     width: 4,
                     height: 36,
-                    child: ColoredBox(color: AppColors.red),
+                    child: ColoredBox(color: AppDecoration.red),
                   ),
 
                   SizedBox(width: 7),
@@ -115,13 +115,13 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
                       Text(ticketDetailModel.title).bold().fsR(1),
                       DecoratedBox(
                         decoration: BoxDecoration(
-                            color: ticketDetailModel.status == 1 ? AppColors.greenTint : AppColors.redTint,
+                            color: ticketDetailModel.status == 1 ? AppDecoration.greenTint : AppDecoration.redTint,
                             borderRadius: BorderRadius.circular(4)
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
                           child: Text(ticketDetailModel.status == 1 ? 'باز' : 'بسته',
-                              style: TextStyle(color: ticketDetailModel.status == 1 ? AppColors.green : Colors.red, fontSize: 10)
+                              style: TextStyle(color: ticketDetailModel.status == 1 ? AppDecoration.green : Colors.red, fontSize: 10)
                           ),
                         ),
                       )
@@ -211,7 +211,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
   }
 
   void closeTicket() {
-    bool yesFn(){
+    bool yesFn(ctx){
       requestCloseTicket();
       return false;
     }

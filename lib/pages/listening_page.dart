@@ -1,3 +1,4 @@
+import 'package:app/managers/api_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormatter.dart';
@@ -13,8 +14,7 @@ import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/listeningModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appSnack.dart';
@@ -75,7 +75,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     requester.dispose();
     player.stop();
 
-    PublicAccess.requestGetLessonProgress(widget.injector.lessonModel);
+    ApiManager.requestGetLessonProgress(widget.injector.lessonModel);
     super.dispose();
   }
 
@@ -125,7 +125,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
               DecoratedBox(
                   decoration: BoxDecoration(
-                    color: AppColors.red,
+                    color: AppDecoration.red,
                     borderRadius: BorderRadius.circular(15)
                   ),
                 child: Center(

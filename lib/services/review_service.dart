@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:iris_db/iris_db.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/pages/home_page.dart';
@@ -10,6 +12,14 @@ import 'package:app/tools/app/appDb.dart';
 
 class ReviewService {
   ReviewService._();
+
+  static void init(){
+    EventNotifierService.addListener(AppEvents.networkConnected, _listener);
+  }
+
+  static void _listener({data}){
+    sendReviews();
+  }
 
   static void sendReviews() async {
     final con = Conditions();

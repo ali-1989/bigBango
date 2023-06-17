@@ -86,7 +86,7 @@ class FireBaseService {
     catch (e){/**/}
   }
 
-  static Future prepare() async {
+  static Future start() async {
     //FirebaseMessaging.instance.isSupported()
 
     try {
@@ -107,6 +107,10 @@ class FireBaseService {
       //FirebaseMessaging.instance.setAutoInitEnabled(false);
 
       setListening();
+
+      Future.delayed(Duration(seconds: 3), (){
+        getToken();
+      });
     }
     catch (e){/**/}
   }

@@ -8,8 +8,8 @@ import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/widgets/border/dottedBorder.dart';
 
-import 'package:app/managers/fontManager.dart';
-import 'package:app/managers/settingsManager.dart';
+import 'package:app/managers/font_manager.dart';
+import 'package:app/managers/settings_manager.dart';
 import 'package:app/tools/app/appThemes.dart';
 
 // usage: import 'package:common_version/tools/centers/extensions.dart';
@@ -34,7 +34,7 @@ extension StringExtension on String {
   }
 
   String localeNum({Locale? locale}) {
-    locale ??= SettingsManager.settingsModel.appLocale;
+    locale ??= SettingsManager.localSettings.appLocale;
 
     if (LocaleHelper.isRtlLocal(locale)) {
       return LocaleHelper.numberToFarsi(this);
@@ -683,9 +683,9 @@ extension TextExtension on Text {
     );
   }
 
-  Text bold({FontWeight? weight = FontWeight.bold}) {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(fontWeight: weight); // FontWeight.w900 is bigger then FontWeight.bold
+  Text bold({FontWeight? weight = FontWeight.bold, bool baseStyle = false}) {
+    var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
+    ts = ts.copyWith(fontWeight: weight);
 
     return Text(
       data!,
@@ -838,8 +838,8 @@ extension TextExtension on Text {
         .color(AppThemes.instance.currentTheme.underLineDecorationColor);
   }
 
-  Text fs(double size) {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
+  Text fs(double size, {bool baseStyle = false}) {
+    var ts = style ??  (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
     ts = ts.copyWith(fontSize: size);
 
     return Text(

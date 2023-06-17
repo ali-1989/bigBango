@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/managers/api_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_notifier/iris_notifier.dart';
@@ -21,9 +22,8 @@ import 'package:app/structures/models/supportModels/dayWeekModel.dart';
 import 'package:app/structures/models/supportModels/supportPlanModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/system/session.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/services/session_service.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
@@ -307,7 +307,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: ColoredBox(
-            color: dModel.isBlock ? Colors.grey[200]! : (dModel.dayOfMonth == currentDay? AppColors.red: Colors.transparent),
+            color: dModel.isBlock ? Colors.grey[200]! : (dModel.dayOfMonth == currentDay? AppDecoration.red: Colors.transparent),
             child: SizedBox.expand(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -375,7 +375,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: ColoredBox(
-                color: hour.isBlock ? Colors.grey[200]! : (hour.id == timeSelectId? AppColors.red: Colors.transparent),
+                color: hour.isBlock ? Colors.grey[200]! : (hour.id == timeSelectId? AppDecoration.red: Colors.transparent),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -464,7 +464,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
 
   void showSelectPaymentMethodSheet(int amount, int minutes, String? planId) async {
     showLoading();
-    final balance = await PublicAccess.requestUserBalance();
+    final balance = await ApiManager.requestUserBalance();
     await hideLoading();
 
     if(balance == null){
@@ -482,7 +482,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
     );
 
     if(mustUpdate is bool && mustUpdate){
-      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, SessionService.getLastLoginUser()!.userId);
       requestUserLeftTime();
     }
     else {
@@ -493,19 +493,19 @@ class _TimetablePageState extends StateBase<TimetablePage> {
   void onBackOfBankGetWay({data}) {
     if(isInGetWay){
       isInGetWay = false;
-      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, SessionService.getLastLoginUser()!.userId);
       requestUserLeftTime();
     }
   }
 
   void requestUserLeftTime() async {
-    final rt = IrisRuntimeCache.find(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+    final rt = IrisRuntimeCache.find(AppStoreScope.user$supportTime, SessionService.getLastLoginUser()!.userId);
 
     if(rt != null && rt.isUpdate()){
       maxUserTime = rt.value;
     }
     else {
-      maxUserTime = await PublicAccess.requestUserRemainingMinutes(Session.getLastLoginUser()!.userId)?? widget.maxUserTime;
+      maxUserTime = await ApiManager.requestUserRemainingMinutes(SessionService.getLastLoginUser()!.userId)?? widget.maxUserTime;
     }
 
    assistCtr.updateHead();

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:app/managers/api_manager.dart';
+import 'package:app/tools/app_tools.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
@@ -15,8 +17,7 @@ import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/vocabModels/idiomModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/routeTools.dart';
@@ -96,7 +97,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
       ReviewService.addReviews(ReviewSection.idioms, reviewIds);
     }
 
-    PublicAccess.requestGetLessonProgress(widget.injector.lessonModel);
+    ApiManager.requestGetLessonProgress(widget.injector.lessonModel);
 
     super.dispose();
   }
@@ -204,7 +205,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                             textDirection: TextDirection.ltr,
                             child: LinearProgressIndicator(
                                 value: calcProgress(),
-                                backgroundColor: AppColors.red.withAlpha(50)
+                                backgroundColor: AppDecoration.red.withAlpha(50)
                             )
                         ),
                       ),
@@ -243,7 +244,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                                              SizedBox(width: 30),
                                              OutlinedButton.icon(
                                                  style: OutlinedButton.styleFrom(
-                                                     side: BorderSide(color: AppColors.red)
+                                                     side: BorderSide(color: AppDecoration.red)
                                                  ),
                                                  onPressed: resetVocab,
                                                  label: Image.asset(AppImages.returnArrow),
@@ -373,7 +374,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
   }
 
   void gotoNextPart(){
-    final page = PublicAccess.getNextPartOfLesson(widget.injector.lessonModel);
+    final page = AppTools.getNextPartOfLesson(widget.injector.lessonModel);
 
     if(page != null) {
       RouteTools.pushReplacePage(context, page);

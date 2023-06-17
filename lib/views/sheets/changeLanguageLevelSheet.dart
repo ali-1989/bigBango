@@ -1,18 +1,18 @@
+import 'package:app/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:app/structures/models/userModel.dart';
-import 'package:app/system/session.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSnack.dart';
@@ -34,7 +34,7 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
   void initState(){
     super.initState();
 
-    user = Session.getLastLoginUser();
+    user = SessionService.getLastLoginUser();
 
     if(user != null && user!.courseLevel != null){
       selectedLevel = user!.courseLevel;
@@ -95,7 +95,7 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
                                   children: [
                                     Image.asset(AppImages.atentionIco),
                                     const SizedBox(width: 12),
-                                    Text(AppMessages.selectLevelTerm1, style: TextStyle(color: AppColors.red)),
+                                    Text(AppMessages.selectLevelTerm1, style: TextStyle(color: AppDecoration.red)),
                                   ],
                                 ),
                               ),
@@ -136,7 +136,7 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
   List<Widget> buildChoice(){
     List<Widget> res = [];
 
-    for(final k in SystemParameterManager.systemParameters.courseLevels){
+    for(final k in SettingsManager.globalSettings.courseLevels){
       final itm = GestureDetector(
         onTap: (){
           selectedLevel = k;
@@ -206,9 +206,9 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
     };
 
     requester.httpRequestEvents.onStatusOk = (req, data) async {
-      final user = Session.getLastLoginUser()!;
+      final user = SessionService.getLastLoginUser()!;
       user.courseLevel = selectedLevel;
-      await Session.sinkUserInfo(user);
+      await SessionService.sinkUserInfo(user);
       AppSnack.showSnack$operationSuccess(context);
 
       AppBroadcast.reBuildMaterial();

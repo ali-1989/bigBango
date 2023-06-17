@@ -10,7 +10,7 @@ import 'package:app/structures/models/versionModel.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/routeTools.dart';
-import '/managers/settingsManager.dart';
+import '/managers/settings_manager.dart';
 
 class VersionManager {
   VersionManager._();
@@ -19,20 +19,20 @@ class VersionManager {
   static VersionModel? newVersionModel;
 
   static Future<void> onFirstInstall() async {
-    SettingsManager.settingsModel.currentVersion = Constants.appVersionCode;
+    SettingsManager.localSettings.currentVersion = Constants.appVersionCode;
 
     await AppDB.firstLaunch();
-    AppThemes.prepareFonts(SettingsManager.settingsModel.appLocale.languageCode);
+    AppThemes.prepareFonts(SettingsManager.localSettings.appLocale.languageCode);
     SettingsManager.saveSettings();
   }
 
   static Future<void> onReInstall() async {
-    SettingsManager.settingsModel.currentVersion = Constants.appVersionCode;
+    SettingsManager.localSettings.currentVersion = Constants.appVersionCode;
     SettingsManager.saveSettings();
   }
 
   static Future<void> checkVersionOnLaunch() async {
-    final oldVersion = SettingsManager.settingsModel.currentVersion;
+    final oldVersion = SettingsManager.localSettings.currentVersion;
 
     if (oldVersion == null) {
       onFirstInstall();
@@ -67,10 +67,10 @@ class VersionManager {
     requester.request(context, false);
 
     return res.future;
-  }
+  }*/
 
-  static void checkAppHasNewVersion(BuildContext context) async {
-    final deviceInfo = DeviceInfoTools.getDeviceInfo();
+  /*static void checkAppHasNewVersion(BuildContext context) async {
+    final deviceInfo = DeviceInfoTools.mapDeviceInfo();
 
     final vm = await requestGetLastVersion(context, deviceInfo);
 
@@ -83,12 +83,14 @@ class VersionManager {
         existNewVersion = true;
         AppDB.setReplaceKv('promptVersion_${vm.newVersionCode}', true);
 
-        await Future.delayed(Duration(seconds: 4));
-        showUpdateDialog(context, vm);
+        await Future.delayed(const Duration(seconds: 4));
+
+        if(context.mounted) {
+          showUpdateDialog(context, vm);
+        }
       }
     }
-  }
-*/
+  }*/
 
   static void checkAppHasNewVersion(BuildContext context, VersionModel serverVersion) async {
     var v = serverVersion.newVersionName;
@@ -102,7 +104,7 @@ class VersionManager {
 
   static void showUpdateDialog(BuildContext context, VersionModel vm) {
     RouteTools.pushPage(context, NewVersionPage(versionModel: vm));
-    /*void closeApp(){
+    /*void closeApp(ctx){
       System.exitApp();
     }
 
@@ -141,10 +143,10 @@ class VersionManager {
         Align(
           alignment: Alignment.topLeft,
           child: CustomCard(
-            padding: EdgeInsets.symmetric(horizontal: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             color: Colors.green,
             radius: 12,
-            child: Text('version: ${vm.newVersionName}', style: TextStyle(color: Colors.white),),
+            child: Text('version: ${vm.newVersionName}', style: const TextStyle(color: Colors.white),),
           ),
         )
     );
@@ -152,24 +154,24 @@ class VersionManager {
     views.add(Text(msg));
 
     if (vm.directLink != null) {
-      views.add(SizedBox(height: 20));
+      views.add(const SizedBox(height: 20));
 
       views.add(
           RichText(
             text: TextSpan(
               children: [
-                WidgetSpan(
+                const WidgetSpan(
                     child: Icon(AppIcons.downloadFile, size: 20, color: Colors.red,)
                 ),
 
                 TextSpan(
                   text: AppMessages.directDownload,
-                  style: TextStyle(color: Colors.blue),
+                  style: const TextStyle(color: Colors.blue),
                   recognizer: TapGestureRecognizer()
                     ..onTap = onDirectClick,
                 ),
               ],
-              style: TextStyle(color: Colors.blue),
+              style: const TextStyle(color: Colors.blue),
               recognizer: TapGestureRecognizer()
                 ..onTap = onDirectClick,
             ),
@@ -178,14 +180,14 @@ class VersionManager {
     }
 
     if (vm.directLink != null) {
-      views.add(SizedBox(height: 5));
+      views.add(const SizedBox(height: 5));
 
       for(final market in vm.markets.entries){
         views.add(
             RichText(
                 text: TextSpan(
                   text: market.key,
-                  style: TextStyle(color: Colors.blue),
+                  style: const TextStyle(color: Colors.blue),
                   recognizer: TapGestureRecognizer()..onTap = (){
                     UrlHelper.launchLink(market.value);
 

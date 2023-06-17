@@ -1,3 +1,4 @@
+import 'package:app/managers/api_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_notifier/iris_notifier.dart';
@@ -9,10 +10,9 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/structures/models/lessonModels/storeModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/system/session.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
@@ -184,7 +184,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
                           width: 1.5,
                           height: 20,
                           child: ColoredBox(
-                            color: AppColors.red,
+                            color: AppDecoration.red,
                           ),
                         ),
 
@@ -334,7 +334,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
 
     if(ok is bool && ok){
       showLoading();
-      final balance = await PublicAccess.requestUserBalance();
+      final balance = await ApiManager.requestUserBalance();
       await hideLoading();
 
       if(balance == null){
@@ -408,7 +408,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
     assistCtr.clearStates();
 
     if(StoreManager.getStoreLessonList().isNotEmpty){
-      final level = Session.getLastLoginUser()!.courseLevel;
+      final level = SessionService.getLastLoginUser()!.courseLevel;
 
       for(int i = 0; i < StoreManager.getStoreLessonList().length; i++){
         final x = StoreManager.getStoreLessonList()[i];

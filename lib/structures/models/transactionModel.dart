@@ -5,7 +5,7 @@ import 'package:iris_tools/dateSection/dateHelper.dart';
 
 import 'package:app/structures/enums/transactionSectionFilter.dart';
 import 'package:app/structures/enums/transactionStatusFilter.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 
 class TransactionModel {
@@ -50,13 +50,13 @@ class TransactionModel {
   Color getStatusColor(){
     switch(status){
       case TransactionStatusFilter.inProgress:
-        return AppColors.blue;
+        return AppDecoration.blue;
       case TransactionStatusFilter.cancelled:
         return Colors.deepOrangeAccent;
       case TransactionStatusFilter.paid:
-        return AppColors.green;
+        return AppDecoration.green;
       case TransactionStatusFilter.rejected:
-        return AppColors.red;
+        return AppDecoration.red;
       default:
         return Colors.black;
     }
@@ -65,15 +65,15 @@ class TransactionModel {
   Color getSectionColor(){
     switch(section){
       case TransactionSectionFilter.chargeWallet:
-        return AppColors.blue;
+        return AppDecoration.blue;
       case TransactionSectionFilter.withdrawWallet:
-        return AppColors.green;
+        return AppDecoration.green;
       case TransactionSectionFilter.lessonPurchase:
-        return AppColors.purple;
+        return AppDecoration.purple;
       case TransactionSectionFilter.supportPurchase:
-        return AppColors.purple;
+        return AppDecoration.purple;
       case TransactionSectionFilter.forceChargeWallet:
-        return AppColors.green;
+        return AppDecoration.green;
       default:
         return Colors.black;
     }
@@ -83,15 +83,15 @@ class TransactionModel {
   Color getSectionTintColor(){
     switch(section){
       case TransactionSectionFilter.chargeWallet:
-        return AppColors.blueTint;
+        return AppDecoration.blueTint;
       case TransactionSectionFilter.withdrawWallet:
-        return AppColors.greenTint;
+        return AppDecoration.greenTint;
       case TransactionSectionFilter.lessonPurchase:
-        return AppColors.purpleTint;
+        return AppDecoration.purpleTint;
       case TransactionSectionFilter.supportPurchase:
-        return AppColors.purpleTint;
+        return AppDecoration.purpleTint;
       case TransactionSectionFilter.forceChargeWallet:
-        return AppColors.greenTint;
+        return AppDecoration.greenTint;
       default:
         return Colors.black;
     }

@@ -17,7 +17,7 @@ import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/cityModel.dart';
 import 'package:app/structures/models/provinceModel.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/system/session.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -689,7 +689,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
       final data = js[Keys.data];
       final message = js[Keys.message];
 
-      await Session.login$newProfileData(data);
+      await SessionService.login$newProfileData(data);
       await AppDB.deleteKv(Keys.setting$registerPhoneNumber);
 
       AppToast.showToast(context, message);

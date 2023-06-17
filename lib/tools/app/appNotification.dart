@@ -7,7 +7,7 @@ import 'package:app/constants.dart';
 import 'package:app/structures/models/statusBarNotificationModel.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/routeTools.dart';
 
@@ -150,14 +150,14 @@ class AppNotification {
 	}
 
 	static void startListenTap() {
-		//AwesomeNotifications().actionStream.listen(awesomeTapListener);
+		AwesomeNotifications().actionStream.listen(awesomeTapListener);
 
-		AwesomeNotifications().setListeners(
+		/*AwesomeNotifications().setListeners(
 				onActionReceivedMethod: awesomeTapListener,
 				//onNotificationCreatedMethod: ,
 				//onNotificationDisplayedMethod: ,
 				//onDismissActionReceivedMethod:
-		);
+		);*/
 	}
 
 	static void removeChannel(String channelKey) {
@@ -191,7 +191,7 @@ class AppNotification {
 			title: title,
 			body: text,
 			autoDismissible: true,
-			color: AppColors.red,
+			color: AppDecoration.red,
 			category: NotificationCategory.Message,
 			notificationLayout: NotificationLayout.Default,
 			payload: payload,

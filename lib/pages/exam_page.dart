@@ -10,7 +10,7 @@ import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
@@ -85,7 +85,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
                       SizedBox(
                         width: 4,
                         height: 26,
-                        child: ColoredBox(color: AppColors.red),
+                        child: ColoredBox(color: AppDecoration.red),
                       ),
 
                       SizedBox(width: 7),
@@ -204,7 +204,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
  void sendAnswer(){
     AppDialogIris.instance.showYesNoDialog(
         context,
-      yesFn: () {
+      yesFn: (ctx) {
         Future.delayed(Duration(milliseconds: 500)).then((value) {
           requestSendAnswer();
         });

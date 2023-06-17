@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:app/managers/api_manager.dart';
+import 'package:app/managers/settings_manager.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/models/userModel.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/system/session.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -20,8 +20,8 @@ class JwtService {
   static void runRefreshService(){
     if(!iaRefreshServiceRun()) {
       _refreshTimer = Timer.periodic(_refreshDuration, (t){
-        _refreshDuration = Duration(minutes: SystemParameterManager.systemParameters.expiryMinutes);
-        final user = Session.getLastLoginUser();
+        _refreshDuration = Duration(minutes: SettingsManager.globalSettings.expiryMinutes);
+        final user = SessionService.getLastLoginUser();
 
         if(user != null) {
           requestNewToken(user);
@@ -105,7 +105,7 @@ class JwtService {
     js['refreshToken'] = um.token?.refreshToken;
 
     final r = HttpItem();
-    r.fullUrl = '${PublicAccess.serverApi}/updateToken';
+    r.fullUrl = '${ApiManager.serverApi}/updateToken';
     r.method = 'PUT';
     r.body = js;
     r.headers['accept'] = 'application/json';
@@ -117,7 +117,7 @@ class JwtService {
     if(a.responseData?.statusCode == 200){
       final dataJs = a.getBodyAsJson()!;
       um.token?.token = dataJs['data'];
-      Session.sinkUserInfo(um);
+      SessionService.sinkUserInfo(um);
 
       if(!iaRefreshServiceRun()){
         runRefreshService();
@@ -132,7 +132,7 @@ class JwtService {
 
       AppToast.showToast(RouteTools.getBaseContext()!, message);
 
-      await Session.logoff(um.userId);
+      await SessionService.logoff(um.userId);
       AppBroadcast.reBuildMaterial();
 
       RouteTools.backToRoot(RouteTools.getTopContext()!);
@@ -144,7 +144,7 @@ class JwtService {
 
       AppToast.showToast(RouteTools.getBaseContext()!, message);
 
-      await Session.logoff(um.userId);
+      await SessionService.logoff(um.userId);
       AppBroadcast.reBuildMaterial();
 
       RouteTools.backToRoot(RouteTools.getTopContext()!);

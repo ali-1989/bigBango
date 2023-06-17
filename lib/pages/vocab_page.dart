@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:app/managers/api_manager.dart';
+import 'package:app/tools/app_tools.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
@@ -10,7 +12,7 @@ import 'package:iris_tools/widgets/attribute.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
 
-import 'package:app/managers/fontManager.dart';
+import 'package:app/managers/font_manager.dart';
 import 'package:app/services/audio_player_service.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
@@ -19,8 +21,7 @@ import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/vocabModels/vocabModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/routeTools.dart';
@@ -104,7 +105,7 @@ class _VocabPageState extends StateBase<VocabPage> {
       ReviewService.addReviews(ReviewSection.vocab, reviewIds);
     }
 
-    PublicAccess.requestGetLessonProgress(widget.injector.lessonModel);
+    ApiManager.requestGetLessonProgress(widget.injector.lessonModel);
 
     super.dispose();
   }
@@ -224,7 +225,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                             textDirection: TextDirection.ltr,
                             child: LinearProgressIndicator(
                                 value: calcProgress(),
-                                backgroundColor: AppColors.red.withAlpha(50)
+                                backgroundColor: AppDecoration.red.withAlpha(50)
                             )
                         ),
                       ),
@@ -263,7 +264,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                               SizedBox(width: 30),
                                               OutlinedButton.icon(
                                                 style: OutlinedButton.styleFrom(
-                                                  side: BorderSide(color: AppColors.red)
+                                                  side: BorderSide(color: AppDecoration.red)
                                                 ),
                                                   onPressed: resetVocab,
                                                   label: Image.asset(AppImages.returnArrow),
@@ -345,10 +346,10 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                           builder: (_, animate){
                                                             Color color = Colors.grey.shade200;
                                                             if(data == 'prepare'){
-                                                              color = animate.fromTween((v) => ColorTween(begin: AppColors.red, end: AppColors.red.withAlpha(50)))!;
+                                                              color = animate.fromTween((v) => ColorTween(begin: AppDecoration.red, end: AppDecoration.red.withAlpha(50)))!;
                                                             }
                                                             else if(data == 'play'){
-                                                              color = AppColors.red;
+                                                              color = AppDecoration.red;
                                                             }
 
                                                             return CustomCard(
@@ -390,10 +391,10 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                           builder: (_, animate){
                                                             Color color = Colors.grey.shade200;
                                                             if(data == 'prepare'){
-                                                              color = animate.fromTween((v) => ColorTween(begin: AppColors.red, end: AppColors.red.withAlpha(50)))!;
+                                                              color = animate.fromTween((v) => ColorTween(begin: AppDecoration.red, end: AppDecoration.red.withAlpha(50)))!;
                                                             }
                                                             else if(data == 'play'){
-                                                              color = AppColors.red;
+                                                              color = AppDecoration.red;
                                                             }
 
                                                             return CustomCard(
@@ -697,7 +698,7 @@ class _VocabPageState extends StateBase<VocabPage> {
   }
 
   void gotoNextPart(){
-    final page = PublicAccess.getNextPartOfLesson(widget.injector.lessonModel);
+    final page = AppTools.getNextPartOfLesson(widget.injector.lessonModel);
 
     if(page != null) {
       RouteTools.pushReplacePage(context, page);

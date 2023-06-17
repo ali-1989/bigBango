@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
@@ -21,7 +21,7 @@ class AppbarLesson extends StatelessWidget {
     return  ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(12)),
       child: ColoredBox(
-        color: AppColors.red,
+        color: AppDecoration.red,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 1.5),
           child: ClipRRect(

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -12,7 +13,6 @@ import 'package:app/structures/enums/transactionStatusFilter.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/transactionModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/currencyTools.dart';
@@ -147,7 +147,7 @@ class _TransactionsPageState extends StateBase<TransactionsPage> {
 
                   return RefreshConfiguration(
                     headerBuilder: () => MaterialClassicHeader(),
-                    footerBuilder: () => PublicAccess.classicFooter,
+                    footerBuilder: () => AppDecoration.classicFooter,
                     enableScrollWhenRefreshCompleted: true,
                     enableLoadingWhenFailed : true,
                     hideFooterWhenNotFull: true,

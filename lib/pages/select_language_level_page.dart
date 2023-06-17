@@ -1,3 +1,5 @@
+import 'package:app/managers/api_manager.dart';
+import 'package:app/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:im_animations/im_animations.dart';
@@ -5,17 +7,14 @@ import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/middleWares/requester.dart';
-import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/selectLevelOnline.dart';
 import 'package:app/views/components/selectSupportTime.dart';
 import 'package:app/views/components/videoPlayer.dart';
@@ -79,8 +78,8 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                                       waveFall: 10.0,
                                       waveMotionEffect: Curves.linear,
                                       waveMotion: WaveMotion.synced,
-                                      innerWaveColor: AppColors.red.withAlpha(100),
-                                      middleWaveColor: AppColors.red.withAlpha(50),
+                                      innerWaveColor: AppDecoration.red.withAlpha(100),
+                                      middleWaveColor: AppDecoration.red.withAlpha(50),
                                       outerWaveColor: Colors.transparent,
                                       duration: const Duration(seconds: 2),
                                       child: Image.asset(AppImages.playIcon, width: 40)
@@ -128,7 +127,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                                   children: [
                                     Image.asset(AppImages.atentionIco),
                                     const SizedBox(width: 12),
-                                    Text(AppMessages.selectLevelTerm1, style: TextStyle(color: AppColors.red),),
+                                    Text(AppMessages.selectLevelTerm1, style: TextStyle(color: AppDecoration.red),),
                                   ],
                                 ),
                               ),
@@ -325,7 +324,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
             body: VideoPlayerView(
               videoSourceType: VideoSourceType.network,
               autoPlay: true,
-              srcAddress: SystemParameterManager.systemParameters.advertisingVideos['determiningCourseLevel']?? '',
+              srcAddress: SettingsManager.globalSettings.advertisingVideos['determiningCourseLevel']?? '',
             ),
           );
         }
@@ -335,7 +334,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
   void sendClick() async {
     if(selectValue == 0) {
       showLoading();
-      final res = await PublicAccess.requestSetLevel(SystemParameterManager.getCourseLevelById(1));
+      final res = await ApiManager.requestSetLevel(SettingsManager.getCourseLevelById(1));
       await hideLoading();
 
       if(res){

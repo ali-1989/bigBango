@@ -1,3 +1,5 @@
+import 'package:app/services/jwt_service.dart';
+import 'package:app/services/session_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
@@ -6,10 +8,8 @@ import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/tools.dart';
 
-import 'package:app/managers/settingsManager.dart';
-import 'package:app/services/jwt_service.dart';
+import 'package:app/managers/settings_manager.dart';
 import 'package:app/system/httpProcess.dart';
-import 'package:app/system/session.dart';
 import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/app/appSheet.dart';
 
@@ -58,7 +58,7 @@ class Requester {
   void _prepareHttp(){
     _http = HttpItem();
     _http.setResponseIsPlain();
-    _http.fullUrl = SettingsManager.settingsModel.httpAddress;
+    _http.fullUrl = SettingsManager.localSettings.httpAddress;
   }
 
   void prepareUrl({required String pathUrl, bool isFull = false}){
@@ -67,7 +67,7 @@ class Requester {
       return;
     }
 
-    _http.fullUrl = SettingsManager.settingsModel.httpAddress + pathUrl;
+    _http.fullUrl = SettingsManager.localSettings.httpAddress + pathUrl;
   }
 
   void request([BuildContext? context, bool promptErrors = true]){
@@ -94,8 +94,8 @@ class Requester {
 
     AppHttpDio.cancelAndClose(_httpRequester);
 
-    if(Session.hasAnyLogin()) {
-      _http.headers.addAll({'authorization': 'Bearer ${Session.getLastLoginUser()!.token?.token}'});
+    if(SessionService.hasAnyLogin()) {
+      _http.headers.addAll({'authorization': 'Bearer ${SessionService.getLastLoginUser()!.token?.token}'});
     }
 
     _httpRequester = AppHttpDio.send(_http);
@@ -117,13 +117,22 @@ class Requester {
     });
 
     f = f.then((val) async {
-      if(kDebugMode) {
-        Tools.verbosePrint('@@@>> [${_httpRequester.requestOptions?.uri}]  response ======= [${_httpRequester.responseData?.statusCode}] $val');
+      if(kDebugMode && !kIsWeb) {
+        final url = _httpRequester.requestOptions?.uri;
+        var request = '';
+
+        if (_httpRequester.requestOptions?.data is String){
+          var str = _httpRequester.requestOptions!.data as String;
+
+          str = str.substring(0, 15);
+        }
+
+        Tools.verbosePrint('@@@>> [$url] [$request]  response ======= [${_httpRequester.responseData?.statusCode}] $val');
       }
 
-      if(_httpRequester.responseData?.statusCode == 401 && Session.getLastLoginUser() != null){
+      if(_httpRequester.responseData?.statusCode == 401 && SessionService.getLastLoginUser() != null){
         JwtService.stopRefreshService();
-        final getNewToken = await JwtService.requestNewToken(Session.getLastLoginUser()!);
+        final getNewToken = await JwtService.requestNewToken(SessionService.getLastLoginUser()!);
 
         /// try request old api again
         if(getNewToken) {
@@ -174,7 +183,7 @@ class Requester {
       else {
         await httpRequestEvents.onFailState?.call(_httpRequester, val);
 
-        if(context != null) {
+        if(context != null && context.mounted) {
           if (promptErrors && !HttpProcess.processCommonRequestError(context, _httpRequester, js)) {
             await AppSheet.showSheet$ServerNotRespondProperly(context);
           }

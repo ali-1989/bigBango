@@ -7,7 +7,7 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/abstract/ticketAttachmentShowSupper.dart';
 import 'package:app/structures/injectors/ticketDetailUserBubbleInjector.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/dateTools.dart';
@@ -109,7 +109,7 @@ class TicketDetailBigbangoBubbleComponentState extends StateBase<TicketDetailBig
                                           onPressed: (){
                                             showAttachment(context, widget.injector.ticketReply);
                                           },
-                                          icon: Icon(AppIcons.attach, size: 17, color: AppColors.red),
+                                          icon: Icon(AppIcons.attach, size: 17, color: AppDecoration.red),
                                         ),
                                       ],
                                     ),

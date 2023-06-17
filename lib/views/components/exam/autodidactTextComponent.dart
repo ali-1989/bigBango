@@ -23,7 +23,7 @@ import 'package:app/structures/enums/autodidactReplyType.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
@@ -272,12 +272,12 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
               waveFall: 10.0,
               waveMotionEffect: Curves.linear,
               waveMotion: WaveMotion.synced,
-              innerWaveColor: voiceRecorder.isRecording? AppColors.red.withAlpha(100) : Colors.transparent,
-              middleWaveColor: voiceRecorder.isRecording? AppColors.red.withAlpha(50) : Colors.transparent,
+              innerWaveColor: voiceRecorder.isRecording? AppDecoration.red.withAlpha(100) : Colors.transparent,
+              middleWaveColor: voiceRecorder.isRecording? AppDecoration.red.withAlpha(50) : Colors.transparent,
               outerWaveColor: Colors.transparent,
               duration: Duration(seconds: 2),
               child: CustomCard(
-                  color: AppColors.red,
+                  color: AppDecoration.red,
                   radius: 40,
                   padding: EdgeInsets.all(8),
                   child: Image.asset(AppImages.mic, width: 22, height: 22)
@@ -381,7 +381,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
   }
 
  void deleteVoice() {
-    Future<bool> delFn() async {
+    Future<bool> delFn(ctx) async {
       isVoiceFileOK = false;
       recordDuration = Duration();
 

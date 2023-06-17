@@ -1,16 +1,18 @@
 import 'dart:async';
 
+import 'package:app/managers/api_manager.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:dio/dio.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/models/twoStateReturn.dart';
 
 import 'package:app/managers/leitnerManager.dart';
 import 'package:app/managers/messageManager.dart';
-import 'package:app/managers/settingsManager.dart';
+import 'package:app/managers/settings_manager.dart';
 import 'package:app/structures/models/countryModel.dart';
 import 'package:app/structures/models/userModel.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/system/session.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/deviceInfoTools.dart';
@@ -18,6 +20,11 @@ import 'package:app/tools/routeTools.dart';
 
 class LoginService {
   LoginService._();
+
+  static void init(){
+    EventNotifierService.addListener(AppEvents.userLogin, onLoginObservable);
+    EventNotifierService.addListener(AppEvents.userLogoff, onLogoffObservable);
+  }
 
   static void onLoginObservable({dynamic data}){
     MessageManager.requestSetFirebaseToken();
@@ -37,7 +44,7 @@ class LoginService {
       reqJs['refreshToken'] = user.token?.refreshToken;
 
       final info = HttpItem();
-      info.fullUrl = '${SettingsManager.settingsModel.httpAddress}/logout';
+      info.fullUrl = '${SettingsManager.localSettings.httpAddress}/logout';
       info.method = 'POST';
       info.body = JsonHelper.mapToJson(reqJs);
       info.setResponseIsPlain();
@@ -48,8 +55,8 @@ class LoginService {
   }
 
   static Future forceLogoff(String userId) async {
-    final isCurrent = Session.getLastLoginUser()?.userId == userId;
-    await Session.logoff(userId);
+    final isCurrent = SessionService.getLastLoginUser()?.userId == userId;
+    await SessionService.logoff(userId);
 
     AppBroadcast.drawerMenuRefresher.update();
     //AppBroadcast.layoutPageKey.currentState?.scaffoldState.currentState?.closeDrawer();
@@ -61,7 +68,7 @@ class LoginService {
   }
 
   static Future forceLogoffAll() async {
-    await Session.logoffAll();
+    await SessionService.logoffAll();
 
     AppBroadcast.drawerMenuRefresher.update();
     //AppBroadcast.layoutPageKey.currentState?.scaffoldState.currentState?.closeDrawer();
@@ -78,7 +85,7 @@ class LoginService {
     js['phoneNumber'] = phoneNumber;
     js['smsReaderSignature'] = sign;
 
-    http.fullUrl = '${PublicAccess.serverApi}/login';
+    http.fullUrl = '${ApiManager.serverApi}/login';
     http.method = 'POST';
     http.setBodyJson(js);
 
@@ -115,7 +122,7 @@ class LoginService {
     js['code'] = code;
     js['clientSecret'] = DeviceInfoTools.deviceId;
 
-    http.fullUrl = '${PublicAccess.serverApi}/verifyPhoneNumber';
+    http.fullUrl = '${ApiManager.serverApi}/verifyPhoneNumber';
     http.method = 'POST';
     http.setBodyJson(js);
 

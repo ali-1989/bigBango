@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/models/versionModel.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appThemes.dart';
@@ -191,7 +191,7 @@ class MyCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint();
-    paint.color = AppColors.red;
+    paint.color = AppDecoration.red;
 
     canvas.drawRect(Rect.fromLTWH(0.0, 0.0, size.width, size.height), paint);
 

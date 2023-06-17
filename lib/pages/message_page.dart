@@ -10,10 +10,9 @@ import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/enums/notificationType.dart';
 import 'package:app/structures/models/messageModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appBadge.dart';
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/dateTools.dart';
@@ -91,7 +90,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
                 children: [
-                  Image.asset(AppImages.drawerSendIco, width: 32, height: 32, color: AppColors.red),
+                  Image.asset(AppImages.drawerSendIco, width: 32, height: 32, color: AppDecoration.red),
                   SizedBox(width: 5),
                   Text('اعلانات', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w200)),
                 ],
@@ -106,7 +105,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: RefreshConfiguration(
                   headerBuilder: () => MaterialClassicHeader(),
-                  footerBuilder: () => PublicAccess.classicFooter,
+                  footerBuilder: () => AppDecoration.classicFooter,
                   enableScrollWhenRefreshCompleted: true,
                   enableLoadingWhenFailed : true,
                   hideFooterWhenNotFull: true,
@@ -197,7 +196,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
               SizedBox(
                 width: 2,
                   height: double.infinity,
-                  child: ColoredBox(color: AppColors.red)
+                  child: ColoredBox(color: AppDecoration.red)
               ),
 
               Expanded(

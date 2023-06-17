@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/managers/api_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_notifier/iris_notifier.dart';
@@ -22,10 +23,9 @@ import 'package:app/structures/models/supportModels/supportSessionModel.dart';
 import 'package:app/structures/models/ticketModels/ticketModel.dart';
 import 'package:app/structures/models/ticketModels/ticketRole.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/system/session.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -79,7 +79,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     tabCtr = TabController(length: 2, vsync: this);
 
     tabBarStyle = TextStyle(
-      color: AppColors.red,
+      color: AppDecoration.red,
       fontWeight: FontWeight.w900
     );
 
@@ -144,7 +144,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
               TabBar(
                 controller: tabCtr,
-                  indicatorColor: AppColors.red,
+                  indicatorColor: AppDecoration.red,
                   labelColor: Colors.yellow,
                   overlayColor: MaterialStateProperty.all(Colors.transparent),
                   tabs: [
@@ -250,7 +250,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                                           assistCtr.updateAssist(assistId$userLeftTime);
                                           requestUserLeftTime();
                                         },
-                                        icon: Icon(AppIcons.refreshCircle, size: 17, color: AppColors.red)
+                                        icon: Icon(AppIcons.refreshCircle, size: 17, color: AppDecoration.red)
                                     );
                                 }
                               ),
@@ -260,7 +260,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                                 height: 30,
                                 child: FloatingActionButton(
                                   onPressed: showBuySessionTimeSheet,
-                                  backgroundColor: AppColors.red,
+                                  backgroundColor: AppDecoration.red,
                                   elevation: 0,
                                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   child: Icon(AppIcons.add, size: 15, color: Colors.white),
@@ -313,7 +313,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
                         return RefreshConfiguration(
                           headerBuilder: () => MaterialClassicHeader(),
-                          footerBuilder: () => PublicAccess.classicFooter,
+                          footerBuilder: () => AppDecoration.classicFooter,
                           //headerTriggerDistance: 80.0,
                           //maxOverScrollExtent :100,
                           //maxUnderScrollExtent:0,
@@ -369,7 +369,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
                       child: Text(LocaleHelper.embedLtr('${model.durationMinutes} \u{2032}'),
-                          style: TextStyle(color: AppColors.red, fontSize: 10)
+                          style: TextStyle(color: AppDecoration.red, fontSize: 10)
                       ),
                     ),
                   ),
@@ -457,7 +457,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
                       return RefreshConfiguration(
                         headerBuilder: () => MaterialClassicHeader(),
-                        footerBuilder: () => PublicAccess.classicFooter,
+                        footerBuilder: () => AppDecoration.classicFooter,
                         //headerTriggerDistance: 80.0,
                         //maxOverScrollExtent :100,
                         //maxUnderScrollExtent:0,
@@ -521,13 +521,13 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                   children: [
                     DecoratedBox(
                       decoration: BoxDecoration(
-                          color: tik.status == 1 ? AppColors.greenTint : AppColors.redTint,
+                          color: tik.status == 1 ? AppDecoration.greenTint : AppDecoration.redTint,
                           borderRadius: BorderRadius.circular(4)
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
                         child: Text(tik.status == 1 ? 'باز' : 'بسته',
-                            style: TextStyle(color: tik.status == 1 ? AppColors.green : Colors.red, fontSize: 10)
+                            style: TextStyle(color: tik.status == 1 ? AppDecoration.green : Colors.red, fontSize: 10)
                         ),
                       ),
                     ),
@@ -558,7 +558,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   ///-------------------------------------------------------------------------
   void gotoSupportTimeRequestPage() async {
     if(userTime == null){
-      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, SessionService.getLastLoginUser()!.userId);
       await requestUserLeftTime();
 
       if(userTime == null){
@@ -610,7 +610,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
   void showSelectPaymentMethodSheet(int amount, int minutes, String? planId) async {
     showLoading();
-    final balance = await PublicAccess.requestUserBalance();
+    final balance = await ApiManager.requestUserBalance();
     await hideLoading();
 
     if(balance == null){
@@ -628,7 +628,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     );
 
     if(mustUpdate is bool && mustUpdate){
-      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, SessionService.getLastLoginUser()!.userId);
       requestUserLeftTime();
     }
     else {
@@ -639,7 +639,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   void onBackOfBankGetWay({data}) {
     if(isInGetWay){
       isInGetWay = false;
-      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+      IrisRuntimeCache.resetUpdateTime(AppStoreScope.user$supportTime, SessionService.getLastLoginUser()!.userId);
       requestUserLeftTime();
     }
   }
@@ -701,7 +701,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   }
 
   void showUnReserveDialog(SupportSessionModel model) {
-    bool fn(){
+    bool fn(ctx){
       requestUnReserveTime(model);
       return false;
     }
@@ -873,13 +873,13 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
   }
 
   Future<void> requestUserLeftTime() async {
-    final rt = IrisRuntimeCache.find(AppStoreScope.user$supportTime, Session.getLastLoginUser()!.userId);
+    final rt = IrisRuntimeCache.find(AppStoreScope.user$supportTime, SessionService.getLastLoginUser()!.userId);
 
     if(rt != null && rt.isUpdate()){
       userTime = rt.value;
     }
     else {
-      userTime = await PublicAccess.requestUserRemainingMinutes(Session.getLastLoginUser()!.userId);
+      userTime = await ApiManager.requestUserRemainingMinutes(SessionService.getLastLoginUser()!.userId);
     }
 
     assistCtr.clearStatesFrom(assistId$userLeftTime);

@@ -6,22 +6,22 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:iris_route/iris_route.dart';
+import 'package:iris_tools/api/system.dart';
 import 'package:iris_tools/widgets/maxWidth.dart';
 
 import 'package:app/constants.dart';
-import 'package:app/managers/settingsManager.dart';
+import 'package:app/managers/settings_manager.dart';
 import 'package:app/services/firebase_service.dart';
 import 'package:app/structures/models/settingsModel.dart';
-import 'package:app/system/applicationInitialize.dart';
-import 'package:app/system/publicAccess.dart';
 import 'package:app/tools/app/appBroadcast.dart';
+import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appLocale.dart';
 import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/app/appToast.dart';
+import 'package:app/tools/log_tools.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/homeComponents/splashPage.dart';
-
 
 ///================ call on any hot restart
 Future<void> main() async {
@@ -29,16 +29,16 @@ Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
   }
 
-  final initOk = await ApplicationInitial.prepareDirectoriesAndLogger();
+  final initOk = await prepareDirectoriesAndLogger();
 
-  if(!initOk){
-    runApp(const MyErrorApp());
+  if(!initOk.$1){
+    runApp(MyErrorApp(errorLog: initOk.$2));
     return;
   }
 
   await mainInitialize();
 
-  zone() {
+  void zoneFn() {
     runApp(
         StreamBuilder<bool>(
             initialData: true,
@@ -50,9 +50,9 @@ Future<void> main() async {
                 child: Directionality(
                   textDirection: AppThemes.instance.textDirection,
                   child: DefaultTextHeightBehavior(
-                    textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false),
+                    textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false),
                     child: DefaultTextStyle(
-                      style: AppThemes.instance.themeData.textTheme.bodyMedium?? TextStyle(),
+                      style: AppThemes.instance.themeData.textTheme.bodyMedium?? const TextStyle(),
                       child: OrientationBuilder( /// detect orientation change and rotate screen
                           builder: (context, orientation) {
                             return Toaster(
@@ -70,7 +70,7 @@ Future<void> main() async {
   }
 
   //runZonedGuarded(zone, zonedGuardedCatch);
-  zone();
+  zoneFn();
 }
 
 Future<void> mainInitialize() async {
@@ -79,17 +79,35 @@ Future<void> mainInitialize() async {
   await FireBaseService.initializeApp();
 
   usePathUrlStrategy();
+
+  if(System.isAndroid()) {
+  }
+}
+
+Future<(bool, String?)> prepareDirectoriesAndLogger() async {
+  try {
+    if (!kIsWeb) {
+      await AppDirectories.prepareStoragePaths(Constants.appName);
+    }
+
+    LogTools.init();
+
+    return (true, null);
+  }
+  catch (e){
+    return (false, '$e\n\n${StackTrace.current}');
+  }
 }
 ///==============================================================================================
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
   ///============ call on any hot reload
   @override
   Widget build(BuildContext context) {
     RouteTools.materialContext = context;
 
-    if(kIsWeb && !ApplicationInitial.isInit()){
+    if(kIsWeb && !isInitialOk){
       return WidgetsApp(
         debugShowCheckedModeBanner: false,
         color: Colors.transparent,
@@ -116,11 +134,11 @@ class MyApp extends StatelessWidget {
           PointerDeviceKind.touch,
         },
       ),
-      locale: ApplicationInitial.isInit()? SettingsManager.settingsModel.appLocale : SettingsModel.defaultAppLocale,
+      locale: isInitialOk? SettingsManager.localSettings.appLocale : SettingsModel.defaultAppLocale,
       supportedLocales: AppLocale.getAssetSupportedLocales(),
       localizationsDelegates: AppLocale.getLocaleDelegates(), // this do correct Rtl/Ltr
       /*localeResolutionCallback: (deviceLocale, supportedLocales) {
-            return SettingsManager.settingsModel.appLocale;
+            return SettingsManager.localSettings.appLocale;
           },*/
 
       home: materialHomeBuilder(),
@@ -147,7 +165,9 @@ class MyApp extends StatelessWidget {
 }
 ///==============================================================================================
 class MyErrorApp extends StatelessWidget {
-  const MyErrorApp({Key? key}) : super(key: key);
+  final String? errorLog;
+
+  const MyErrorApp({Key? key, this.errorLog}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -160,8 +180,8 @@ class MyErrorApp extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Error in app initialization'),
-                Text(ApplicationInitial.errorInInit),
+                const Text('Error in app initialization'),
+                Text(errorLog?? ''),
               ],
             ),
           ),
@@ -180,7 +200,7 @@ void onErrorCatch(FlutterErrorDetails errorDetails) {
 
   txt += '\n**************************************** [END CATCH]';
 
-  PublicAccess.logger.logToAll(txt);
+  LogTools.logger.logToAll(txt);
 }
 ///==============================================================================================
 bool mainIsolateError(error, sTrace) {
@@ -191,7 +211,7 @@ bool mainIsolateError(error, sTrace) {
   }
 
   txt += '\n**************************************** [END MAIN-ISOLATE]';
-  PublicAccess.logger.logToAll(txt);
+  LogTools.logger.logToAll(txt);
 
   if(kDebugMode) {
     return false;
@@ -208,7 +228,7 @@ void zonedGuardedCatch(error, sTrace) {
   }
 
   txt += '\n**************************************** [END ZONED-GUARDED]';
-  PublicAccess.logger.logToAll(txt);
+  LogTools.logger.logToAll(txt);
 
   if(kDebugMode) {
     throw error;

@@ -8,7 +8,7 @@ import 'package:app/pages/phone_number_page.dart';
 import 'package:app/pages/register_form_page.dart';
 import 'package:app/pages/select_language_level_page.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/system/session.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appDb.dart';
 
@@ -17,10 +17,10 @@ class RouteDispatcher {
 
   static Widget dispatch(){
 
-    if(Session.hasAnyLogin()){
+    if(SessionService.hasAnyLogin()){
       System.showBothStatusBar();
 
-      final user = Session.getLastLoginUser()!;
+      final user = SessionService.getLastLoginUser()!;
 
       if(user.courseLevel == null){
         return SelectLanguageLevelPage();

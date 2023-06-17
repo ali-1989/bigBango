@@ -18,7 +18,7 @@ import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/session.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appImages.dart';
@@ -134,7 +134,7 @@ class DrawerMenuBuilder {
               visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
             ),*/
 
-            if(Session.hasAnyLogin())
+            if(SessionService.hasAnyLogin())
               ListTile(
                 title: Text(AppMessages.logout).color(Colors.redAccent),
                 //leading: Icon(AppIcons.logout, size: 18, color: Colors.redAccent),
@@ -154,8 +154,8 @@ class DrawerMenuBuilder {
     return StreamBuilder(
       stream: EventNotifierService.getStream(AppEvents.userProfileChange),
       builder: (_, data){
-        if(Session.hasAnyLogin()){
-          final user = Session.getLastLoginUser()!;
+        if(SessionService.hasAnyLogin()){
+          final user = SessionService.getLastLoginUser()!;
           return GestureDetector(
             onTap: (){
               gotoProfilePage();
@@ -240,7 +240,7 @@ class DrawerMenuBuilder {
 
   static void gotoProfilePage() async {
     await LayoutComponentState.toggleDrawer();
-    RouteTools.pushPage(RouteTools.getTopContext()!, ProfilePage(userModel: Session.getLastLoginUser()!));
+    RouteTools.pushPage(RouteTools.getTopContext()!, ProfilePage(userModel: SessionService.getLastLoginUser()!));
   }
 
   static void gotoAboutPage() async {
@@ -276,8 +276,8 @@ class DrawerMenuBuilder {
   static void onLogoffCall() async {
     await LayoutComponentState.hideDrawer(millSec: 100);
 
-    bool yesFn(){
-      LoginService.forceLogoff(Session.getLastLoginUser()!.userId);
+    bool yesFn(ctx){
+      LoginService.forceLogoff(SessionService.getLastLoginUser()!.userId);
       return false;
     }
 

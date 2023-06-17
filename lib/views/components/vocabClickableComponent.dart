@@ -9,7 +9,7 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/models/vocabModels/clickableVocabModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -91,10 +91,10 @@ class _VocabClickableComponentState extends StateBase<VocabClickableComponent> {
                                 builder: (_, animate){
                                   Color color = Colors.grey.shade200;
                                   if(data == 'prepare'){
-                                    color = animate.fromTween((v) => ColorTween(begin: AppColors.red, end: AppColors.red.withAlpha(50)))!;
+                                    color = animate.fromTween((v) => ColorTween(begin: AppDecoration.red, end: AppDecoration.red.withAlpha(50)))!;
                                   }
                                   else if(data == 'play'){
-                                    color = AppColors.red;
+                                    color = AppDecoration.red;
                                   }
 
                                   return CustomCard(
@@ -136,10 +136,10 @@ class _VocabClickableComponentState extends StateBase<VocabClickableComponent> {
                                 builder: (_, animate){
                                   Color color = Colors.grey.shade200;
                                   if(data == 'prepare'){
-                                    color = animate.fromTween((v) => ColorTween(begin: AppColors.red, end: AppColors.red.withAlpha(50)))!;
+                                    color = animate.fromTween((v) => ColorTween(begin: AppDecoration.red, end: AppDecoration.red.withAlpha(50)))!;
                                   }
                                   else if(data == 'play'){
-                                    color = AppColors.red;
+                                    color = AppDecoration.red;
                                   }
 
                                   return CustomCard(

@@ -7,13 +7,13 @@ import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
-import 'package:app/managers/fontManager.dart';
+import 'package:app/managers/font_manager.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/system/session.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
@@ -137,7 +137,7 @@ class _OtpPageState extends StateBase<OtpPage> {
                                       ),
                                       children: [
                                         TextSpan(text: AppMessages.otpDescriptionMobile),
-                                        TextSpan(text: ' ${widget.phoneNumber} ', style: TextStyle(color: AppColors.red)),
+                                        TextSpan(text: ' ${widget.phoneNumber} ', style: TextStyle(color: AppDecoration.red)),
                                         TextSpan(text: AppMessages.otpDescriptionMobile2),
                                       ]
                                   )
@@ -325,9 +325,10 @@ class _OtpPageState extends StateBase<OtpPage> {
         dataJs[Keys.mobileNumber] = widget.phoneNumber;
       }
 
-      await Session.login$newProfileData(dataJs);
+      await SessionService.login$newProfileData(dataJs);
       await hideLoading();
       AppBroadcast.reBuildMaterial();
+
       RouteTools.backToRoot(context);
     }
   }

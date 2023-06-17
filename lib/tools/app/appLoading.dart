@@ -106,7 +106,7 @@ class AppLoading {
     return AppOverlay.showDialogScreen(context, over, canBack: dismiss);
 
      /*if(!dismiss) {
-       AppOverlay.showIgnoreScreen(context *//*AppRoute.getContext()*//*);
+       AppOverlay.showIgnoreScreen(context *//*RouteTools.getContext()*//*);
      }*/
   }
 

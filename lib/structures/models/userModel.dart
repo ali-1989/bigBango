@@ -1,6 +1,6 @@
+import 'package:app/managers/settings_manager.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
-import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/services/jwt_service.dart';
 import 'package:app/structures/models/cityModel.dart';
 import 'package:app/structures/models/courseLevelModel.dart';
@@ -37,7 +37,7 @@ class UserModel {
     gender = map[Keys.gender];
     email = map['email'];
     iban = map['iban'];
-    courseLevel = SystemParameterManager.getCourseLevelById(map['courseLevelId']?? 0);
+    courseLevel = SettingsManager.getCourseLevelById(map['courseLevelId']?? 0);
 
     if(map[Keys.token] is Map) {
       token = Token.fromMap(map[Keys.token]);

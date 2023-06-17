@@ -6,7 +6,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/tools/app/appLoading.dart';
 import 'package:app/tools/app/appSizes.dart';
-import '/managers/settingsManager.dart';
+import '/managers/settings_manager.dart';
 
 /// with SingleTickerProviderStateMixin
 /// with TickerProviderStateMixin
@@ -54,7 +54,7 @@ abstract class StateBase<W extends StatefulWidget> extends State<W> {
 	}
 
 	void rotateToDefaultOrientation() {
-		OrientationManager.setAppRotation(SettingsManager.settingsModel.appRotationState);
+		OrientationManager.setAppRotation(SettingsManager.localSettings.appRotationState);
 	}
 
 	void rotateToPortrait() {
@@ -74,7 +74,7 @@ abstract class StateBase<W extends StatefulWidget> extends State<W> {
 			return;
 		}
 
-		await Future.delayed(Duration(milliseconds: 10), (){});
+		await Future.delayed(const Duration(milliseconds: 10), (){});
 
 		final status = ((subContext?? context) as Element).dirty;
 

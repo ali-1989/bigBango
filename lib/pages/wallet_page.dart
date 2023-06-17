@@ -17,8 +17,8 @@ import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/transactionWalletModel.dart';
 import 'package:app/structures/models/withdrawalModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/session.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/services/session_service.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
@@ -283,7 +283,7 @@ class _WalletPageState extends StateBase<WalletPage> {
               children: [
                 CustomCard(
                     radius: 0,
-                    color: transaction.isAmountPlus()? AppColors.greenTint : AppColors.redTint,
+                    color: transaction.isAmountPlus()? AppDecoration.greenTint : AppDecoration.redTint,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Builder(
@@ -291,11 +291,11 @@ class _WalletPageState extends StateBase<WalletPage> {
                             if(transaction.isAmountPlus()) {
                               return RotatedBox(
                                   quarterTurns: 2,
-                                  child: Icon(AppIcons.arrowDown, size: 14, color: AppColors.green)
+                                  child: Icon(AppIcons.arrowDown, size: 14, color: AppDecoration.green)
                               );
                             }
 
-                            return Icon(AppIcons.arrowDown, size: 14, color: AppColors.red);
+                            return Icon(AppIcons.arrowDown, size: 14, color: AppDecoration.red);
                           }
                       ),
                     )
@@ -310,7 +310,7 @@ class _WalletPageState extends StateBase<WalletPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(CurrencyTools.formatCurrencyString(transaction.amount.toString().replaceFirst('-', ''))),
-                          Text(transaction.getAmountHuman()).fsR(-2).color(transaction.isAmountPlus()? AppColors.green : AppColors.red),
+                          Text(transaction.getAmountHuman()).fsR(-2).color(transaction.isAmountPlus()? AppDecoration.green : AppDecoration.red),
                           SizedBox(height: 5),
                           Text(transaction.description?? '').fsR(-2).alpha(),
                         ],
@@ -371,9 +371,9 @@ class _WalletPageState extends StateBase<WalletPage> {
   }
 
   void showWithdrawalSheet() async {
-    if(Session.getLastLoginUser()!.iban == null){
+    if(SessionService.getLastLoginUser()!.iban == null){
       void fn(){
-        RouteTools.pushPage(context, ProfilePage(userModel: Session.getLastLoginUser()!));
+        RouteTools.pushPage(context, ProfilePage(userModel: SessionService.getLastLoginUser()!));
       }
 
       AppSheet.showSheetOneAction(context, 'ابتدا باید شماره شبای متعلق به خود را در بخش پروفایل وارد کنید', fn, buttonText: 'پروفایل');

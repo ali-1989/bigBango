@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/managers/api_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/callAction/taskQueueCaller.dart';
@@ -22,8 +23,7 @@ import 'package:app/structures/models/readingModel.dart';
 import 'package:app/structures/models/vocabModels/clickableVocabModel.dart';
 import 'package:app/structures/models/vocabModels/idiomModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appSheet.dart';
@@ -110,7 +110,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     }
     catch (e){/**/}
 
-    PublicAccess.requestGetLessonProgress(widget.injector.lessonModel);
+    ApiManager.requestGetLessonProgress(widget.injector.lessonModel);
     super.dispose();
   }
 
@@ -164,7 +164,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
               DecoratedBox(
                   decoration: BoxDecoration(
-                    color: AppColors.red,
+                    color: AppDecoration.red,
                     borderRadius: BorderRadius.circular(15)
                   ),
                 child: Center(
@@ -434,7 +434,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                       child: GestureDetector(
                         onTap: startExercise,
                         child: Chip(
-                            backgroundColor: AppColors.red,
+                            backgroundColor: AppDecoration.red,
                             elevation: 0,
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),

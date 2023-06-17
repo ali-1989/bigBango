@@ -1,101 +1,115 @@
 import 'dart:async';
 
+import 'package:app/managers/leitnerManager.dart';
+import 'package:app/managers/messageManager.dart';
+import 'package:app/managers/storeManager.dart';
+import 'package:app/services/audio_player_service.dart';
+import 'package:app/services/jwt_service.dart';
+import 'package:app/services/review_service.dart';
+import 'package:app/tools/app/appMessages.dart';
+import 'package:app/tools/app/appSheet.dart';
+import 'package:app/views/homeComponents/splashView.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:iris_tools/api/system.dart';
+import 'package:iris_tools/net/trustSsl.dart';
 
-import 'package:app/managers/settingsManager.dart';
-import 'package:app/managers/systemParameterManager.dart';
-import 'package:app/managers/versionManager.dart';
+import 'package:app/managers/settings_manager.dart';
+import 'package:app/managers/version_manager.dart';
+import 'package:app/services/firebase_service.dart';
+import 'package:app/services/login_service.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/system/applicationInitialize.dart';
-import 'package:app/system/session.dart';
+import 'package:app/system/applicationSignal.dart';
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appSheet.dart';
+import 'package:app/tools/app/appDb.dart';
+import 'package:app/tools/app/appLocale.dart';
+import 'package:app/tools/app/appNotification.dart';
+import 'package:app/tools/app/appThemes.dart';
+import 'package:app/tools/deviceInfoTools.dart';
+import 'package:app/tools/log_tools.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/homeComponents/routeDispatcher.dart';
-import 'package:app/views/homeComponents/splashScreen.dart';
 import 'package:app/views/states/waitToLoad.dart';
 
-bool _isInit = false;
-bool _isInLoadingSettings = true;
-bool _isConnectToServer = false;
-bool isInSplashTimer = true;
-int splashWaitingMil = 2000;
+bool isInitialOk = false;
+bool mustWaitToSplashTimer = true;
 
 class SplashPage extends StatefulWidget {
 
   SplashPage({super.key});
 
   @override
-  SplashScreenState createState() => SplashScreenState();
+  SplashPageState createState() => SplashPageState();
 }
 ///======================================================================================================
-class SplashScreenState extends StateBase<SplashPage> {
+class SplashPageState extends StateBase<SplashPage> {
+  static bool _callInSplashInit = false;
+  static bool _callLazyInit = false;
+  static bool _isInit = false;
+  static bool _isInLoadingSettings = true;
+  bool _isConnectToServer = true;
+  int splashWaitingMil = 4000;
 
   @override
   Widget build(BuildContext context) {
     splashWaitTimer();
-    init();
+    startInit();
 
-    if (waitInSplash()) {
-      System.hideBothStatusBarOnce();
+    if (mustWaitInSplash()) {
+      //System.hideBothStatusBarOnce();
       return getSplashView();
     }
     else {
       return getFirstPage();
     }
   }
-  ///==================================================================================================
+
   Widget getSplashView() {
     if(kIsWeb){
       return const WaitToLoad();
     }
 
-    return SplashScreen();
+    return const SplashView();
   }
-  ///==================================================================================================
+
   Widget getFirstPage(){
-    if(kIsWeb && !ApplicationInitial.isInit()){
-      return SizedBox();
+    if(kIsWeb && !isInitialOk){
+      return const SizedBox();
     }
 
     return RouteDispatcher.dispatch();
   }
 
-  bool waitInSplash(){
-    return !kIsWeb && (isInSplashTimer || _isInLoadingSettings || !_isConnectToServer);
+  bool mustWaitInSplash(){
+    return !kIsWeb && (mustWaitToSplashTimer || _isInLoadingSettings || !_isConnectToServer);
   }
 
   void splashWaitTimer() async {
-    if(splashWaitingMil > 0){
+    if(mustWaitToSplashTimer){
+      mustWaitToSplashTimer = false;
+
       Timer(Duration(milliseconds: splashWaitingMil), (){
-        isInSplashTimer = false;
         callState();
       });
-
-      splashWaitingMil = 0;
     }
   }
 
-  void init() async {
+  void startInit() async {
     if (_isInit) {
       return;
     }
 
     _isInit = true;
 
-    await ApplicationInitial.inSplashInit();
-    await ApplicationInitial.inSplashInitWithContext(context);
+    await inSplashInit(context);
     final settingsLoad = SettingsManager.loadSettings();
 
     if (settingsLoad) {
       await VersionManager.checkVersionOnLaunch();
       connectToServer();
 
-      ApplicationInitial.appLazyInit();
+      appLazyInit();
       _isInLoadingSettings = false;
 
       AppBroadcast.reBuildMaterialBySetTheme();
@@ -103,14 +117,14 @@ class SplashScreenState extends StateBase<SplashPage> {
   }
 
   void connectToServer() async {
-    final serverData = await SystemParameterManager.requestParameters();
+    final serverData = await SettingsManager.requestGlobalSettings();
 
-    if(serverData == null){
+    if (serverData == null) {
       AppSheet.showSheetOneAction(
         RouteTools.materialContext!,
         AppMessages.errorCommunicatingServer,
-         (){
-          AppBroadcast.gotoSplash(2000);
+            () {
+          AppBroadcast.gotoSplash();
 
           connectToServer();
         },
@@ -120,8 +134,99 @@ class SplashScreenState extends StateBase<SplashPage> {
     }
     else {
       _isConnectToServer = true;
-      Session.fetchLoginUsers();
+      SessionService.fetchLoginUsers();
       callState();
+    }
+  }
+
+  static Future<void> inSplashInit(BuildContext? context) async {
+    if (_callInSplashInit) {
+      return;
+    }
+
+    try {
+      _callInSplashInit = true;
+
+      await AppDB.init();
+      AppThemes.init();
+      await AppLocale.init();
+      await DeviceInfoTools.prepareDeviceInfo();
+      await DeviceInfoTools.prepareDeviceId();
+      TrustSsl.acceptBadCertificate();
+      AudioPlayerService.init();
+
+      if (!kIsWeb) {
+      	await AppNotification.initial();
+        AppNotification.startListenTap();
+      }
+
+      if(context != null && context.mounted){
+        RouteTools.prepareWebRoute();
+      }
+
+      isInitialOk = true;
+    }
+    catch (e){
+      LogTools.logger.logToAll('error in inSplashInit >> $e');
+    }
+
+    return;
+  }
+
+  static Future<void> appLazyInit() {
+    final c = Completer<void>();
+
+    if (!_callLazyInit) {
+      Timer.periodic(const Duration(milliseconds: 50), (Timer timer) async {
+        if (isInitialOk) {
+          timer.cancel();
+          await _lazyInitCommands();
+          c.complete();
+        }
+      });
+    }
+    else {
+      c.complete();
+    }
+
+    return c.future;
+  }
+
+  static Future<void> _lazyInitCommands() async {
+    if (_callLazyInit) {
+      return;
+    }
+
+    try {
+      _callLazyInit = true;
+
+      ApplicationSignal.start();
+      SettingsManager.init();
+      LoginService.init();
+      ReviewService.init();
+      MessageManager.init();
+      StoreManager.init();
+      SettingsManager.requestGlobalSettings();
+      await FireBaseService.start();
+      MessageManager.requestUnReadCount();
+      LeitnerManager.requestLeitnerCount();
+      JwtService.runRefreshService();
+
+      /*if (System.isWeb()) {
+        void onSizeCheng(oldW, oldH, newW, newH) {
+          AppDialogIris.prepareDialogDecoration();
+        }
+
+        AppSizes.instance.addMetricListener(onSizeCheng);
+      }*/
+
+      if(RouteTools.materialContext != null) {
+        //VersionManager.checkAppHasNewVersion(RouteTools.materialContext!);
+      }
+    }
+    catch (e){
+      _callLazyInit = false;
+      LogTools.logger.logToAll('error in lazyInitCommands >> $e');
     }
   }
 }

@@ -9,7 +9,7 @@ import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/routeTools.dart';
 
@@ -112,7 +112,7 @@ class _SelectReadingDialog extends StateBase<SelectReadingDialog> {
                     CustomCard(
                         padding: EdgeInsets.symmetric(horizontal: 6, vertical: 11),
                         radius: 14,
-                        child: Image.asset(AppImages.speakerIco, width: 25, color: AppColors.red,)
+                        child: Image.asset(AppImages.speakerIco, width: 25, color: AppDecoration.red,)
                     ),
                     SizedBox(height: 15),
                     Text('« ${itm.title} »', maxLines: 2,),

@@ -15,7 +15,7 @@ import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/ticketModels/ticketDetailModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
@@ -74,7 +74,7 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
                       children: [
                         Row(
                           children: [
-                            Icon(AppIcons.addCircle, color: AppColors.red),
+                            Icon(AppIcons.addCircle, color: AppDecoration.red),
                             SizedBox(width: 6),
                             Text('پاسخ تیکت', style: TextStyle(fontWeight: FontWeight.w700)),
                           ],

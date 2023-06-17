@@ -16,7 +16,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
@@ -117,7 +117,7 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
                   bottom: 10,
                     left: 10,
                     child: FloatingActionButton(
-                      backgroundColor: AppColors.red,
+                      backgroundColor: AppDecoration.red,
                       onPressed: addFileDialog,
                       mini: true,
                       child: Icon(AppIcons.add, color: Colors.white),
@@ -295,7 +295,7 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
   Future<String?> editImage(String imgPath) async {
     final comp = Completer<String?>();
 
-    final editOptions = EditOptions.byPath(imgPath);
+    final editOptions = EditOptions.byFile(imgPath);
     editOptions.cropBoxInitSize = const Size(200, 170);
 
     void onOk(EditOptions op) async {
@@ -319,7 +319,7 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
   }
 
   void removeImage(File itm) {
-    bool yesFn(){
+    bool yesFn(ctx){
       widget.files.removeWhere((element) => element.path == itm.path);
       assistCtr.updateHead();
       return false;

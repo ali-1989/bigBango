@@ -134,7 +134,7 @@ class AppDirectories {
     return _documentDir;
   }
 
-  static String getAppFolderInExternalStorage() {
+  static String getExternalAppFolder() {
     if(System.isWeb()) {
       return '/$_appName';
     }
@@ -170,9 +170,9 @@ class AppDirectories {
     name ??= Generator.generateDateMillWithKey(4);
 
     if(extension != null) {
-      return '${getTempDir$ex()}${PathHelper.getSeparator()}$name.$extension';
+      return '${getExternalTempDir()}${PathHelper.getSeparator()}$name.$extension';
     } else {
-      return getTempDir$ex()+ PathHelper.getSeparator() + name;
+      return getExternalTempDir()+ PathHelper.getSeparator() + name;
     }
   }
 
@@ -187,20 +187,20 @@ class AppDirectories {
   }
   ///================================================================================================
   // /storage/emulated/0/appName/tmp
-  static String getTempDir$ex(){
-    return '${getAppFolderInExternalStorage()}${PathHelper.getSeparator()}tmp';
+  static String getExternalTempDir(){
+    return '${getExternalAppFolder()}${PathHelper.getSeparator()}tmp';
   }
 
   static String getAvatarDir$ex() {
-    return '${getAppFolderInExternalStorage()}${PathHelper.getSeparator()}avatar';
+    return '${getAppFolderInInternalStorage()}${PathHelper.getSeparator()}avatar';
   }
 
   static String getAdvertisingDir$ex(){
-    return '${getAppFolderInExternalStorage()}${PathHelper.getSeparator()}advertising';
+    return '${getAppFolderInInternalStorage()}${PathHelper.getSeparator()}advertising';
   }
 
   static String getMediaDir$ex() {
-    return '${getAppFolderInExternalStorage()}${PathHelper.getSeparator()}media';
+    return '${getExternalAppFolder()}${PathHelper.getSeparator()}media';
   }
 
   static String getAudioDir$ex() {
@@ -230,7 +230,7 @@ class AppDirectories {
       return false;
     }
 
-    final tmpDir = getTempDir$ex();
+    final tmpDir = getExternalTempDir();
     var f = FileHelper.getFile('$tmpDir${PathHelper.getSeparator()}.nomedia');
     await f.create(recursive: true);
 

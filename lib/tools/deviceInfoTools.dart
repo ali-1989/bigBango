@@ -86,7 +86,7 @@ class DeviceInfoTools {
     return SynchronousFuture<String>(deviceId!);
   }
 
-  static Map<String, dynamic> getDeviceInfo() {
+  static Map<String, dynamic> mapDeviceInfo() {
     final js = <String, dynamic>{};
 
     if(kIsWeb){

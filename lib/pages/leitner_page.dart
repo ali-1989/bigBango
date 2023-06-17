@@ -11,7 +11,7 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/leitnerModels/leitnerBoxModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appThemes.dart';
@@ -162,7 +162,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
                         ),
 
                         SizedBox(height: 8),
-                        Text('آماده یادگیری').color(AppColors.red).fsR(-2),
+                        Text('آماده یادگیری').color(AppDecoration.red).fsR(-2),
                       ],
                     ),
                   ],
@@ -172,7 +172,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
                   children: [
                     Text('${itm.count}').bold().fsR(1),
                     SizedBox(height: 8),
-                    Text('${itm.readyToLearnCount}').color(AppColors.red).fsR(-2),
+                    Text('${itm.readyToLearnCount}').color(AppDecoration.red).fsR(-2),
                   ],
                 ),
               ],

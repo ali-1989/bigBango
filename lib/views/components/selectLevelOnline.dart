@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -166,7 +166,7 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
               borderRadius: BorderRadius.circular(5),
               child: LinearProgressIndicator(
                 backgroundColor: Colors.red.withAlpha(30),
-                color: AppColors.red,
+                color: AppDecoration.red,
                 value: calcQuestionProgress(),
                 minHeight: 5,
               ),

@@ -21,7 +21,7 @@ import 'package:app/structures/models/ticketModels/ticketRole.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
@@ -110,7 +110,7 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                         children: [
                           Row(
                             children: [
-                              Icon(AppIcons.addCircle, color: AppColors.red),
+                              Icon(AppIcons.addCircle, color: AppDecoration.red),
                               SizedBox(width: 6),
                               Text('ایجاد تیکت', style: TextStyle(fontWeight: FontWeight.w700)),
                             ],

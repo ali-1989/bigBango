@@ -116,7 +116,7 @@ class _WalletWithdrawalListSheetState extends StateBase<WalletWithdrawalListShee
   }
 
   void cancelWithdrawal(WithdrawalModel wModel){
-    void yesFn() {
+    void yesFn(ctx) {
       requestCancelWithdrawal(wModel);
     }
 

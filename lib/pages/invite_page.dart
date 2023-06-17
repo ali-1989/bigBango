@@ -8,8 +8,8 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/inviteUserModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/session.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/services/session_service.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -75,7 +75,7 @@ class _InvitePageState extends StateBase<InvitePage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(width: 10),
-                Image.asset(AppImages.drawerSendIco, color: AppColors.red),
+                Image.asset(AppImages.drawerSendIco, color: AppDecoration.red),
                 const SizedBox(width: 8),
                 Text('دعوت از دوستان', style: const TextStyle(fontSize: 17)),
               ],
@@ -97,7 +97,7 @@ class _InvitePageState extends StateBase<InvitePage> {
               height: 16,
               width: 1.5,
               child: ColoredBox(
-                color: AppColors.red,
+                color: AppDecoration.red,
               ),
             ),
             const SizedBox(width: 8),
@@ -146,7 +146,7 @@ class _InvitePageState extends StateBase<InvitePage> {
                 onTap: copyCodeCall,
                 child: Row(
                   children: [
-                    Text('${Session.getLastLoginUser()?.mobile}').color(AppColors.red),
+                    Text('${SessionService.getLastLoginUser()?.mobile}').color(AppDecoration.red),
                     const SizedBox(width: 6),
                     Icon(AppIcons.copy,
                         size: 15,
@@ -254,7 +254,7 @@ class _InvitePageState extends StateBase<InvitePage> {
   }
 
   void copyCodeCall(){
-    ClipboardHelper.insert('${Session.getLastLoginUser()?.mobile}');
+    ClipboardHelper.insert('${SessionService.getLastLoginUser()?.mobile}');
     AppToast.showToast(context, 'کد شما کپی شد');
   }
 

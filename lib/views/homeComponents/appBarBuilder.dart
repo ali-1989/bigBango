@@ -1,13 +1,13 @@
+import 'package:app/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
 
-import 'package:app/managers/systemParameterManager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appEvents.dart';
-import 'package:app/system/session.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appSheet.dart';
@@ -128,7 +128,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                               visualDensity: VisualDensity.compact,
                               padding: EdgeInsets.zero
                           ),
-                          child: Text(SystemParameterManager.getCourseLevelById(Session.getLastLoginUser()?.courseLevel?.id?? 1)?.name?? '-'),
+                          child: Text(SettingsManager.getCourseLevelById(SessionService.getLastLoginUser()?.courseLevel?.id?? 1)?.name?? '-'),
                         ),
                         const SizedBox(width: 5),
                         Image.asset(AppImages.levelBadgeIco),
@@ -146,7 +146,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                 StreamBuilder(
                   stream: EventNotifierService.getStream(AppEvents.userProfileChange),
                   builder: (_, data) {
-                      final user = Session.getLastLoginUser();
+                      final user = SessionService.getLastLoginUser();
 
                       if(user != null && user.hasAvatar()){
                         return CircleAvatar(

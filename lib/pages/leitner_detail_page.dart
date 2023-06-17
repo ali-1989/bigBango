@@ -10,7 +10,7 @@ import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/leitnerModels/leitnerBoxModel.dart';
 import 'package:app/structures/models/leitnerModels/leitnerModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
@@ -94,7 +94,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
             ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(12)),
               child: ColoredBox(
-                color: AppColors.red,
+                color: AppDecoration.red,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 1.5),
                   child: ClipRRect(
@@ -179,7 +179,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                 textDirection: TextDirection.ltr,
                 child: LinearProgressIndicator(
                     value: calcProgress(),
-                    backgroundColor: AppColors.red.withAlpha(50)
+                    backgroundColor: AppDecoration.red.withAlpha(50)
                 )
             ),
 
@@ -222,10 +222,10 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                                               Color color = Colors.grey.shade200;
 
                                               if(data == 'prepare'){
-                                                color = animate.fromTween((v) => ColorTween(begin: AppColors.red, end: AppColors.red.withAlpha(50)))!;
+                                                color = animate.fromTween((v) => ColorTween(begin: AppDecoration.red, end: AppDecoration.red.withAlpha(50)))!;
                                               }
                                               else if(data == 'play'){
-                                                color = AppColors.red;
+                                                color = AppDecoration.red;
                                               }
 
                                               return CustomCard(

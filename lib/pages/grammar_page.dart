@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/managers/api_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
@@ -16,8 +17,7 @@ import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/grammarModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/system/publicAccess.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -71,7 +71,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     chewieVideoController?.dispose();
     playerController?.dispose();
 
-    PublicAccess.requestGetLessonProgress(widget.injector.lessonModel);
+    ApiManager.requestGetLessonProgress(widget.injector.lessonModel);
 
     super.dispose();
   }
@@ -143,7 +143,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
                           Chip(
                             label: Text('گرامر'),
-                            backgroundColor: AppColors.red,
+                            backgroundColor: AppDecoration.red,
                             elevation: 0,
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
@@ -198,7 +198,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                       height: 30,
                       width: 3,
                       child: ColoredBox(
-                        color: AppColors.red,
+                        color: AppDecoration.red,
                       ),
                     ),
 
@@ -239,7 +239,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                         child: GestureDetector(
                           onTap: startExercise,
                           child: Chip(
-                            backgroundColor: AppColors.red,
+                            backgroundColor: AppDecoration.red,
                               elevation: 0,
                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),

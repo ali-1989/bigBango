@@ -9,7 +9,7 @@ import 'package:app/structures/abstract/ticketAttachmentShowSupper.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/injectors/ticketDetailUserBubbleInjector.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appColors.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/dateTools.dart';
@@ -81,7 +81,7 @@ class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBub
                               onPressed: (){
                                 showAttachment(context, widget.injector.ticketReply);
                               },
-                              icon: Icon(AppIcons.attach, size: 17, color: AppColors.red),
+                              icon: Icon(AppIcons.attach, size: 17, color: AppDecoration.red),
                           ),
                         ),
                         SizedBox(width: 60),
