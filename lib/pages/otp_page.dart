@@ -137,7 +137,7 @@ class _OtpPageState extends StateBase<OtpPage> {
                                       ),
                                       children: [
                                         TextSpan(text: AppMessages.otpDescriptionMobile),
-                                        TextSpan(text: ' ${widget.phoneNumber} ', style: TextStyle(color: AppDecoration.red)),
+                                        TextSpan(text: ' ${widget.phoneNumber} ', style: const TextStyle(color: AppDecoration.red)),
                                         TextSpan(text: AppMessages.otpDescriptionMobile2),
                                       ]
                                   )
@@ -266,7 +266,9 @@ class _OtpPageState extends StateBase<OtpPage> {
     final httpRequester = await LoginService.requestSendOtp(phoneNumber: widget.phoneNumber, sign: widget.sign);
 
     if(httpRequester == null){
-      AppSnack.showSnack$errorCommunicatingServer(context);
+      if(context.mounted) {
+        AppSnack.showSnack$errorCommunicatingServer(context);
+      }
       return;
     }
 
@@ -280,10 +282,14 @@ class _OtpPageState extends StateBase<OtpPage> {
       }
 
       if(message == null) {
-        AppSnack.showSnack$serverNotRespondProperly(context);
+        if(context.mounted) {
+          AppSnack.showSnack$serverNotRespondProperly(context);
+        }
       }
       else {
-        AppSnack.showError(context, message);
+        if(context.mounted) {
+          AppSnack.showError(context, message);
+        }
       }
     }
   }
@@ -293,9 +299,11 @@ class _OtpPageState extends StateBase<OtpPage> {
 
     final twoReturn = await LoginService.requestVerifyOtp(phoneNumber: widget.phoneNumber, code: otpCode);
 
-    if(!twoReturn.hasResult1() && !twoReturn.hasResult2()){//todo :hasEmpty
+    if(twoReturn.isEmpty()){
       await hideLoading();
-      AppSnack.showSnack$errorCommunicatingServer(context);
+      if(context.mounted) {
+        AppSnack.showSnack$errorCommunicatingServer(context);
+      }
       return;
     }
 
@@ -304,10 +312,14 @@ class _OtpPageState extends StateBase<OtpPage> {
       String? message = twoReturn.result2![Keys.message];
 
       if(message == null) {
-        AppSnack.showSnack$serverNotRespondProperly(context);
+        if(context.mounted) {
+          AppSnack.showSnack$serverNotRespondProperly(context);
+        }
       }
       else {
-        AppSnack.showError(context, message);
+        if(context.mounted) {
+          AppSnack.showError(context, message);
+        }
       }
     }
 
@@ -318,7 +330,10 @@ class _OtpPageState extends StateBase<OtpPage> {
       AppDB.setReplaceKv(Keys.setting$registerPhoneNumber, widget.phoneNumber);
       AppDB.setReplaceKv(Keys.setting$registerPhoneNumberTs, DateHelper.getNowTimestamp());
       AppBroadcast.reBuildMaterial();
-      RouteTools.backToRoot(context);
+
+      if(context.mounted) {
+        RouteTools.backToRoot(context);
+      }
     }
     else {
       if(dataJs[Keys.mobileNumber] == null){
@@ -329,7 +344,9 @@ class _OtpPageState extends StateBase<OtpPage> {
       await hideLoading();
       AppBroadcast.reBuildMaterial();
 
-      RouteTools.backToRoot(context);
+      if(context.mounted) {
+        RouteTools.backToRoot(context);
+      }
     }
   }
 }

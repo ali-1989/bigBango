@@ -72,8 +72,8 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
       itemCount: itemListGroup.length,
       itemBuilder: buildExamViewByGroup,
       separatorBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+        return const Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0),
           child: Divider(color: Colors.black, height: 2),
         );
       },
@@ -114,7 +114,7 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
       }
     }
 
-    return SizedBox();
+    return const SizedBox();
   }
 
   Widget buildBodyWithoutGroup() {
@@ -123,8 +123,8 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
       itemCount: itemList.length,
       itemBuilder: buildExamView,
       separatorBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+        return const Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0),
           child: Divider(color: Colors.black, height: 2),
         );
       },
@@ -172,6 +172,6 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
       }
     }
 
-    return SizedBox();
+    return const SizedBox();
   }
 }
