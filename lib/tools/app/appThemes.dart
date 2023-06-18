@@ -79,7 +79,8 @@ class AppThemes {
 		_instance.themeList.clear();
 
 		{
-			final mainTheme = ColorTheme(AppDecoration.mainColor, AppDecoration.secondColor,
+			final mainTheme = ColorTheme(
+					AppDecoration.mainColor, AppDecoration.secondColor,
 					AppDecoration.differentColor, Colors.black);
 
 			mainTheme.themeName = 'main_light';

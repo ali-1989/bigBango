@@ -43,6 +43,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    namespace "ir.nicode.bigbango"
     compileSdkVersion compileSdkVersionVal.toInteger()
     //ndkVersion flutter.ndkVersion
 

@@ -11,7 +11,7 @@ import 'package:app/pages/home_page.dart';
 import 'package:app/pages/layout_page.dart';
 import 'package:app/structures/structure/messageStateStructure.dart';
 import 'package:app/tools/app/appThemes.dart';
-import 'package:app/views/homeComponents/splashPage.dart';
+import 'package:app/views/baseComponents/splashPage.dart';
 
 class AppBroadcast {
   AppBroadcast._();

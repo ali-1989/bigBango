@@ -8,10 +8,10 @@ import 'package:app/pages/message_page.dart';
 import 'package:app/pages/store_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/views/homeComponents/appBarBuilder.dart';
-import 'package:app/views/homeComponents/bottomNavBarBuilder.dart';
-import 'package:app/views/homeComponents/drawerMenuBuilder.dart';
-import 'package:app/views/homeComponents/layoutComponent.dart';
+import 'package:app/views/baseComponents/appBarBuilder.dart';
+import 'package:app/views/baseComponents/bottomNavBarBuilder.dart';
+import 'package:app/views/baseComponents/drawerMenuBuilder.dart';
+import 'package:app/views/baseComponents/layoutComponent.dart';
 
 class LayoutPage extends StatefulWidget {
   const LayoutPage({Key? key}) : super(key: key);

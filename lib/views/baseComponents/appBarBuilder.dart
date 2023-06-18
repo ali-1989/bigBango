@@ -11,7 +11,7 @@ import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appSheet.dart';
-import 'package:app/views/homeComponents/layoutComponent.dart';
+import 'package:app/views/baseComponents/layoutComponent.dart';
 import 'package:app/views/sheets/changeLanguageLevelSheet.dart';
 
 /*class AppBarCustom2 extends AppBar {

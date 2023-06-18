@@ -104,9 +104,9 @@ class SettingsManager {
 		return res > 0;
 	}
 
-	static Future<HttpRequester?> requestGlobalSettings() async {
+	static Future<GlobalSettingsModel?> requestGlobalSettings() async {
 		final http = HttpItem();
-		final result = Completer<HttpRequester?>();
+		final result = Completer<GlobalSettingsModel?>();
 
 		var os = 1;
 
@@ -146,7 +146,7 @@ class SettingsManager {
 			final versionModel = VersionModel.fromMap(globalSettings.version);
 			VersionManager.checkAppHasNewVersion(RouteTools.getTopContext()!, versionModel);
 
-			result.complete(request);
+			result.complete(globalSettings);
 			return null;
 		});
 

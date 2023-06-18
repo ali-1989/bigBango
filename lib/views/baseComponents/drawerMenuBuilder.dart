@@ -25,7 +25,7 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/routeTools.dart';
-import 'package:app/views/homeComponents/layoutComponent.dart';
+import 'package:app/views/baseComponents/layoutComponent.dart';
 
 class DrawerMenuBuilder {
 

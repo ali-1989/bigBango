@@ -54,17 +54,8 @@ class AppTools {
     return page;
   }
 
-
   static WidgetsBinding getAppWidgetsBinding() {
     return WidgetsBinding.instance;
   }
-
-  static ClassicFooter classicFooter = const ClassicFooter(
-    loadingText: '',
-    idleText: '',
-    noDataText: '',
-    failedText: '',
-    loadStyle: LoadStyle.ShowWhenLoading,
-  );
 }
 
