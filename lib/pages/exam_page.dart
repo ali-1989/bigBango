@@ -1,4 +1,11 @@
+import 'package:app/structures/enums/quizType.dart';
+import 'package:app/structures/models/examModels/examModel.dart';
+import 'package:app/structures/models/examModels/examSuperModel.dart';
 import 'package:app/tools/app/appDecoration.dart';
+import 'package:app/views/components/exam/examBlankSpaseBuilder.dart';
+import 'package:app/views/components/exam/examMakeSentenceBuilder.dart';
+import 'package:app/views/components/exam/examOptionBuilder.dart';
+import 'package:app/views/components/exam/examSelectWordBuilder.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -19,11 +26,9 @@ import 'package:app/tools/app/appSnack.dart';
 
 class ExamPage extends StatefulWidget {
   final ExamBuilderContent builder;
-  final bool groupSameTypes;
 
   const ExamPage({
     required this.builder,
-    this.groupSameTypes = true,
     Key? key
   }) : super(key: key);
 
@@ -34,12 +39,15 @@ class ExamPage extends StatefulWidget {
 class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
   Requester requester = Requester();
   late TabController tabController;
+  late ExamSuperModel currentExam;
+  int currentIndex = 0;
 
 
   @override
   void initState(){
     super.initState();
 
+    currentExam = widget.builder.examList.first;
     tabController = TabController(length: 2, vsync: this);
   }
 
@@ -69,7 +77,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           /// page header
           DecoratedBox(
@@ -77,20 +85,20 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
               color: Colors.grey.shade200,
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 4,
                         height: 26,
                         child: ColoredBox(color: AppDecoration.red),
                       ),
 
-                      SizedBox(width: 7),
-                      Text('تمرین').bold().fsR(4),
+                      const SizedBox(width: 7),
+                      const Text('تمرین').bold().fsR(4),
                     ],
                   ),
 
@@ -101,10 +109,10 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
                     child: Row(
                       children: [
                         Text(AppMessages.back),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         CustomCard(
                             color: Colors.white,
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             child: Image.asset(AppImages.arrowLeftIco)
                         ),
                       ],
@@ -115,7 +123,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
             ),
           ),
 
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
 
           /// tabBar view
           Builder(
@@ -123,21 +131,21 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
               if(widget.builder.autodidactList.isNotEmpty){
                 return TabBar(
                   controller: tabController,
-                  tabs: [
+                  tabs: const [
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: Text('تمرین'),
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: Text('خودآموز'),
                     ),
                   ],
                 );
               }
 
-              return SizedBox();
+              return const SizedBox();
             },
           ),
 
@@ -146,7 +154,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
           Expanded(
             child: TabBarView(
                 controller: tabController,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   buildPage1(),
 
@@ -163,41 +171,123 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
   Widget buildPage1(){
     return Column(
       children: [
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
 
         /// exams
-        Expanded(child: ExamBuilder(builder: widget.builder, groupSameTypes: widget.groupSameTypes)),
-
-        /// send button
-        Visibility(
-            visible: widget.builder.showSendButton && !widget.builder.examList.any((element) => element.showAnswer),
-            child: ElevatedButton(
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: Size(200, 40),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity: VisualDensity(horizontal: 0, vertical: -2),
-                //shape: StadiumBorder()
-              ),
-              onPressed: sendAnswer,
-              child: Text(widget.builder.sendButtonText).englishFont().color(Colors.white),
-            )
+        /*Expanded(child: ExamBuilder(builder: widget.builder, groupSameTypes: widget.groupSameTypes)),*/
+        Expanded(
+            child: buildExamView(),
         ),
 
-        SizedBox(height: 10),
+        /// send button
+        buildBottomSectionPage1(),
+
+        const SizedBox(height: 10),
       ],
     );
+  }
+
+  Widget buildExamView(){
+    if(currentExam is ExamModel){
+      final model = currentExam as ExamModel;
+
+      if(model.quizType == QuizType.fillInBlank){
+        return ExamBlankSpaceBuilder(
+          key: ValueKey(model.id),
+          examModel: model,
+        );
+      }
+      else if(model.quizType == QuizType.recorder){
+        return ExamSelectWordBuilder(
+          key: ValueKey(model.id),
+          exam: model,
+        );
+      }
+      else if(model.quizType == QuizType.multipleChoice){
+        return ExamOptionBuilder(
+          key: ValueKey(model.id),
+          examModel: model,
+        );
+      }
+      else if(model.quizType == QuizType.makeSentence){
+        return ExamMakeSentenceBuilder(
+          key: ValueKey(model.id),
+          examModel: model,
+        );
+      }
+    }
+
+    return const SizedBox();
+  }
+
+  Widget buildBottomSectionPage1() {
+    return Visibility(
+        visible: widget.builder.showSendButton,
+        child: Builder(
+          builder: (context) {
+            if (widget.builder.examList.length < 2) {
+              return ElevatedButton(
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: const Size(200, 40),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: const VisualDensity(
+                      horizontal: 0, vertical: -2),
+                  //shape: StadiumBorder()
+                ),
+                onPressed: sendAnswer,
+                child: Text(widget.builder.sendButtonText).englishFont().color(
+                    Colors.white),
+              );
+            }
+
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+
+                ElevatedButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: const Size(100, 40),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: const VisualDensity(
+                        horizontal: 0, vertical: -2),
+                    //shape: StadiumBorder()
+                  ),
+                  onPressed: sendAnswer,
+                  child: Text(widget.builder.sendButtonText).englishFont().color(
+                      Colors.white),
+                ),
+
+                TextButton(
+                    onPressed: onSkipClick,
+                    child: const Text('skip')
+                ),
+              ],
+            );
+          }
+        )
+    );
+    }
+
+  void onSkipClick() {
+    if(currentIndex < widget.builder.examList.length){
+      currentIndex++;
+      currentExam = widget.builder.examList[currentIndex];
+
+      assistCtr.updateHead();
+    }
   }
 
   Widget buildPage2(){
     return Column(
       children: [
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
 
         /// exams
         Expanded(child: AutodidactBuilder(builder: widget.builder)),
 
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
       ],
     );
   }
@@ -206,7 +296,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     AppDialogIris.instance.showYesNoDialog(
       context,
       yesFn: (ctx) {
-        Future.delayed(Duration(milliseconds: 500)).then((value) {
+        Future.delayed(const Duration(milliseconds: 500)).then((value) {
           requestSendAnswer();
         });
       },
@@ -236,7 +326,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
       AppSnack.showInfo(context, message);
 
       for(final x in widget.builder.examList){
-        ExamController.getControllerFor(x.getFirst().id)?.showAnswers(true);
+        ExamController.getControllerFor(x)?.showAnswer(true);
       }
 
       assistCtr.updateHead();
@@ -248,9 +338,9 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     for(final x in widget.builder.examList){
       if(x.items.length < 2) {
         tempList.add({
-          'exerciseId': x.getFirst().id,
-          'answer': x.getFirst().getUserAnswerText(),
-          'isCorrect': x.getFirst().isUserAnswerCorrect(),
+          'exerciseId': x.getExamItem().id,
+          'answer': x.getExamItem().getUserAnswerText(),
+          'isCorrect': x.getExamItem().isUserAnswerCorrect(),
         });
       }
       else {

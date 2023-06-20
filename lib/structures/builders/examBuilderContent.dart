@@ -42,7 +42,7 @@ class ExamBuilderContent {
       if(element.quizType == QuizType.fillInBlank) {
         for (var x in element.items) {
           final starLen = x.question.split('**').length;
-          if (x.options.length != starLen - 1) {
+          if (x.teacherOptions.length != starLen - 1) {
             return true;
           }
         }

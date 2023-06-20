@@ -5,9 +5,10 @@ import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/models/examModels/examSuperModel.dart';
 
 class ExamModel extends ExamSuperModel {
+  late String id;
   String? title;
   QuizType quizType = QuizType.unKnow;
-  List<ExamSolvedOptionModel> solvedOptions = [];
+  //List<ExamSolvedOptionModel> solvedOptions = [];
   List<ExamItem> items = [];
   MediaModel? voice;
 
@@ -15,19 +16,21 @@ class ExamModel extends ExamSuperModel {
   bool showAnswer = false;
   bool isPrepare = false;
 
-  ExamModel();
+  ExamModel(this.id);
 
   ExamModel.fromMap(Map js){
     quizType = QuizType.fromType(js['exerciseType']);
     title = js['title'];
 
-    if(js['solveItems'] is List){
+    /*if(js['solveItems'] is List){
       solvedOptions = js['solveItems'].map<ExamSolvedOptionModel>((e) => ExamSolvedOptionModel.fromMap(e)).toList();
-    }
+    }*///todo
 
     if(js['items'] is List){
       items = js['items'].map<ExamItem>((e) => ExamItem.fromMap(e, quizType)).toList();
     }
+
+    id = items[0].id;
 
     if(js['voice'] is Map) {
       voice = MediaModel.fromMap(js['voice']);
@@ -37,33 +40,38 @@ class ExamModel extends ExamSuperModel {
   Map<String, dynamic> toMap(){
     final js = <String, dynamic>{};
 
+    js['id'] = id;
     js['title'] = title;
     js['exerciseType'] = quizType.number;
     js['items'] = items.map((e) => e.toMap()).toList();
-    js['solveItems'] = solvedOptions.map((e) => e.toMap()).toList();
+    //js['solveItems'] = solvedOptions.map((e) => e.toMap()).toList();
     js['voice'] = voice?.toMap();
 
     return js;
   }
 
-  ExamItem getFirst(){
+  ExamItem _getFirst(){
+    return items[0];
+  }
+
+  ExamItem getExamItem(){
     return items[0];
   }
 
   void prepare(){
     if(quizType == QuizType.multipleChoice){
-      getFirst()._generateUserAnswer();
+      _getFirst()._generateUserAnswer();
     }
 
     if(quizType == QuizType.recorder){
-      getFirst()._doSplitQuestion();
+      _getFirst()._doSplitQuestion();
 
-      getFirst().shuffleWords = [...getFirst().options];
-      getFirst().shuffleWords.shuffle();
+      _getFirst().shuffleWords = [..._getFirst().teacherOptions];
+      _getFirst().shuffleWords.shuffle();
     }
 
     if(quizType == QuizType.fillInBlank){
-      getFirst()._doSplitQuestion();
+      _getFirst()._doSplitQuestion();
     }
 
     if(quizType == QuizType.makeSentence){
@@ -74,7 +82,7 @@ class ExamModel extends ExamSuperModel {
 
   @override
   String toString(){
-    return '::ExamModel::[title:$title | quizType: ${quizType.name} | items:$items    |  solvedOptions: $solvedOptions]';
+    return '::ExamModel::[title:$title | quizType: ${quizType.name} | items:$items]';
   }
 }
 ///==================================================================================================
@@ -82,9 +90,9 @@ class ExamItem {
   late String id;
   late String question;
   int order = 1;
-  List<ExamOptionModel> options = [];
-
+  List<ExamOptionModel> teacherOptions = [];
   late QuizType quizType;
+  //------- local
   List<ExamOptionModel> userAnswers = [];
   List<String> questionSplit = [];
   List<ExamOptionModel> shuffleWords = [];
@@ -97,7 +105,7 @@ class ExamItem {
     order = js['order']?? 1;
 
     if(js['choices'] is List){
-      options = js['choices'].map<ExamOptionModel>((e) => ExamOptionModel.fromMap(e)).toList();
+      teacherOptions = js['choices'].map<ExamOptionModel>((e) => ExamOptionModel.fromMap(e)).toList();
     }
 
     //----------- local
@@ -112,7 +120,7 @@ class ExamItem {
     js['id'] = id;
     js['question'] = question;
     js['order'] = order;
-    js['choices'] = options.map((e) => e.toMap()).toList();
+    js['choices'] = teacherOptions.map((e) => e.toMap()).toList();
 
     //----------- local
     js['userAnswers'] = userAnswers.map((e) => e.toMap()).toList();
@@ -144,9 +152,9 @@ class ExamItem {
     }
   }
 
-  int getIndexOfCorrectChoice(){
-    for(int i = 0; i< options.length; i++){
-      if(options[i].isCorrect){
+  int getIndexOfCorrectOption(){
+    for(int i = 0; i< teacherOptions.length; i++){
+      if(teacherOptions[i].isCorrect){
         return i;
       }
     }
@@ -154,27 +162,37 @@ class ExamItem {
     return -1;
   }
 
-  ExamOptionModel? getCorrectChoice(){
-    for(int i = 0; i< options.length; i++){
-      if(options[i].isCorrect){
-        return options[i];
+  ExamOptionModel? getCorrectOption(){
+    for(int i = 0; i< teacherOptions.length; i++){
+      if(teacherOptions[i].isCorrect){
+        return teacherOptions[i];
       }
     }
 
     return null;
   }
 
-  ExamOptionModel? getChoiceByOrder(int order){
-    for(int i = 0; i < options.length; i++){
-      if(options[i].order == order){
-        return options[i];
+  ExamOptionModel? getTeacherOptionByOrder(int order){
+    for(int i = 0; i < teacherOptions.length; i++){
+      if(teacherOptions[i].order == order){
+        return teacherOptions[i];
       }
     }
 
     return null;
   }
 
-  ExamOptionModel? getUserChoiceByOrder(int order){
+  ExamOptionModel? getTeacherOptionById(String id){
+    for(int i = 0; i< teacherOptions.length; i++){
+      if(teacherOptions[i].id == id){
+        return teacherOptions[i];
+      }
+    }
+
+    return null;
+  }
+
+  ExamOptionModel? getUserOptionByOrder(int order){
     for(int i = 0; i < userAnswers.length; i++){
       if(userAnswers[i].order == order){
         return userAnswers[i];
@@ -184,7 +202,7 @@ class ExamItem {
     return null;
   }
 
-  ExamOptionModel? getUserChoiceById(String id){
+  ExamOptionModel? getUserOptionById(String id){
     for(int i = 0; i < userAnswers.length; i++){
       if(userAnswers[i].id == id){
         return userAnswers[i];
@@ -194,28 +212,20 @@ class ExamItem {
     return null;
   }
 
-  ExamOptionModel? getChoiceById(String id){
-    for(int i = 0; i< options.length; i++){
-      if(options[i].id == id){
-        return options[i];
-      }
-    }
-
-    return null;
-  }
-
   String getUserAnswerText(){
     if(quizType == QuizType.multipleChoice){
       if(userAnswers.isNotEmpty){
-        return getChoiceById(userAnswers[0].id)!.text;
+        return getTeacherOptionById(userAnswers[0].id)!.text;
       }
+
+      return 'بدون پاسخ';
     }
     else if (quizType == QuizType.recorder){
       var txt = question;
       var order = 1;
 
       while(txt.contains('**')){
-        final ans = getUserChoiceByOrder(order)?.text?? '';
+        final ans = getUserOptionByOrder(order)?.text?? '';
 
         txt = txt.replaceFirst('**', '[${ans.isEmpty? 'بدون پاسخ': ans}]');
         order++;
@@ -228,7 +238,7 @@ class ExamItem {
       var order = 1;
 
       while(txt.contains('**')){
-        final ans = getUserChoiceByOrder(order)?.text?? '';
+        final ans = getUserOptionByOrder(order)?.text?? '';
 
         txt = txt.replaceFirst('**', '[${ans.isEmpty? 'بدون پاسخ': ans}]');
         order++;
@@ -238,7 +248,7 @@ class ExamItem {
     }
     else if (quizType == QuizType.makeSentence){
       var txt = question;
-      return txt;
+      return txt;//todo
     }
 
     return 'بدون پاسخ';
@@ -250,7 +260,7 @@ class ExamItem {
         return false;
       }
 
-      return userAnswers[0].id == getCorrectChoice()!.id;
+      return userAnswers[0].id == getCorrectOption()!.id;
     }
     else if (quizType == QuizType.recorder){
       for (final k in userAnswers) {
@@ -259,9 +269,9 @@ class ExamItem {
         }
       }
 
-      for(int i=1; i <= options.length; i++){
-        final correctAnswer = getChoiceByOrder(i)!.text;
-        final userAnswer = getUserChoiceByOrder(i)?.text;
+      for(int i=1; i <= teacherOptions.length; i++){
+        final correctAnswer = getTeacherOptionByOrder(i)!.text;
+        final userAnswer = getUserOptionByOrder(i)?.text;
 
         if(correctAnswer != userAnswer){
           return false;
@@ -271,9 +281,9 @@ class ExamItem {
       return true;
     }
     else if (quizType == QuizType.fillInBlank){
-      for(int i = 1; i <= options.length; i++){
-        final correctAnswer = getChoiceByOrder(i)?.text;
-        final userAnswer = getUserChoiceByOrder(i)?.text;
+      for(int i = 1; i <= teacherOptions.length; i++){
+        final correctAnswer = getTeacherOptionByOrder(i)?.text;
+        final userAnswer = getUserOptionByOrder(i)?.text;
 
         if(correctAnswer != userAnswer){
           return false;
@@ -283,7 +293,38 @@ class ExamItem {
       return true;
     }
     else if (quizType == QuizType.makeSentence){
+      return true;//todo
+    }
+
+    return false;
+  }
+
+  bool isUserAnswer(){
+    if(quizType == QuizType.multipleChoice){
+      return userAnswers.isNotEmpty;
+    }
+    else if (quizType == QuizType.recorder){
+      for (final k in userAnswers) {
+        if (k.id.isEmpty) {
+          return false;
+        }
+      }
+
       return true;
+    }
+    else if (quizType == QuizType.fillInBlank){
+      for(int i = 1; i <= teacherOptions.length; i++){
+        final userAnswer = getUserOptionByOrder(i)?.text;
+
+        if(userAnswer == null){
+          return false;
+        }
+      }
+
+      return true;
+    }
+    else if (quizType == QuizType.makeSentence){
+      return true;//todo
     }
 
     return false;
@@ -291,7 +332,7 @@ class ExamItem {
 
   @override
   String toString(){
-    return '::ExamItem::[id:$id | question: $question | order:$order    | \n options: $options]';
+    return '::ExamItem::[id:$id | question: $question | order:$order    | \n options: $teacherOptions]';
   }
 }
 ///==================================================================================================
@@ -327,25 +368,23 @@ class ExamOptionModel {
   }
 }
 ///==================================================================================================
-class ExamSolvedOptionModel {
+class ExamOptionModelForMakeSentence extends ExamOptionModel {
   String quizId = '';
   String answer = '';
-  bool isCorrect = false;
 
-  ExamSolvedOptionModel();
+  ExamOptionModelForMakeSentence();
 
-  ExamSolvedOptionModel.fromMap(Map js){
+  ExamOptionModelForMakeSentence.fromMap(Map js): super.fromMap(js){
     quizId = js['quizId'];
     answer = js['answer'];
-    isCorrect = js['isCorrect']?? false;
   }
 
+  @override
   Map<String, dynamic> toMap(){
-    final js = <String, dynamic>{};
+    final js = super.toMap();
 
     js['quizId'] = quizId;
     js['answer'] = answer;
-    js['isCorrect'] = isCorrect;
 
     return js;
   }

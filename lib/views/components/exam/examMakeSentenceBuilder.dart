@@ -6,25 +6,17 @@ import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/structures/abstract/examStateMethods.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/controllers/examController.dart';
-import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:iris_tools/widgets/text/autoDirection.dart';
 
 class ExamMakeSentenceBuilder extends StatefulWidget {
-  final ExamBuilderContent content;
-  final String controllerId;
-  final int? index;
-  final bool showTitle;
+  final ExamModel examModel;
 
   const ExamMakeSentenceBuilder({
-    required this.content,
-    required this.controllerId,
-    this.showTitle = true,
-    this.index,
+    required this.examModel,
     Key? key
   }) : super(key: key);
 
@@ -34,35 +26,27 @@ class ExamMakeSentenceBuilder extends StatefulWidget {
 ///===============================================================================================================
 class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> with ExamStateMethods {
   late TextStyle pickedStyle;
-  List<ExamHolder> examList = [];
+  late ExamHolder examHolder;
   int currentSentence = 0;
 
   @override
   void initState() {
     super.initState();
 
-    if(widget.index == null) {
-      final filteredList = widget.content.examList.where((element) => element.quizType == QuizType.makeSentence);
+    examHolder = ExamHolder(widget.examModel);
 
-      examList.addAll(filteredList.map((e) => ExamHolder(e)));
-    }
-    else {
-      final eh = ExamHolder(widget.content.examList[widget.index!]);
-      examList.add(eh);
-    }
-
-    pickedStyle = TextStyle(
+    pickedStyle = const TextStyle(
       //decorationStyle: TextDecorationStyle.solid,
       //decoration: TextDecoration.lineThrough,
       //decorationColor: Colors.red,
     );
 
-    ExamController(widget.controllerId, this);
+    ExamController(widget.examModel, this);
   }
 
   @override
   void dispose(){
-    ExamController.removeControllerFor(widget.controllerId);
+    ExamController.removeControllerFor(widget.examModel);
     super.dispose();
   }
 
@@ -74,46 +58,13 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
           return buildBody();
         }
     );
-  }
+  }//'با چینش کلمات جمله بسازید
 
   Widget buildBody() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: CustomScrollView(
-        shrinkWrap: true,
-        physics: ScrollPhysics(),
-        slivers: [
-          SliverVisibility(
-              visible: widget.showTitle,
-              sliver: SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Text('با چینش کلمات جمله بسازید'),
-                ),
-              )
-          ),
-
-
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              listItemBuilder,
-              childCount: examList.length * 2 - 1,
-            ),
-          ),
-        ],
-      ),
+      child: buildExam(examHolder),
     );
-  }
-
-  Widget listItemBuilder(ctx, idx) {
-    ///=== Divider
-    if (idx % 2 != 0) {
-      return Divider(color: Colors.black12, height: 1);
-    }
-
-    final item = examList[idx ~/ 2];
-
-    return buildExam(item);
   }
 
   Widget buildExam(ExamHolder holder) {
@@ -124,7 +75,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
 
           ///=== question
           Visibility(
@@ -142,7 +93,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
               ).wrapBackground(backColor: Colors.grey.shade100)
           ),
 
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           ///=== selected words
           Builder(
@@ -165,7 +116,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
                   );
                 }
 
-                return SizedBox();
+                return const SizedBox();
               }
           ),
 
@@ -194,11 +145,11 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
                   );
                 }
 
-                return SizedBox();
+                return const SizedBox();
               }
           ),
 
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
 
           Row(
             children: [
@@ -209,8 +160,8 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
                       holder.back();
                       assistCtr.updateHead();
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
                       child: Icon(AppIcons.refresh, size: 18, color: Colors.blue),
                     ),
                   )
@@ -220,7 +171,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
               Builder(
                   builder: (context) {
                     if(holder.examModel.showAnswer){
-                      return SizedBox();
+                      return const SizedBox();
                     }
 
                     return buildWords(holder);
@@ -229,7 +180,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
             ],
           ),
 
-          SizedBox(height: 14),
+          const SizedBox(height: 14),
         ],
       ),
     );
@@ -268,7 +219,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
               child: CustomCard(
                   color: color,
                   radius: 2,
-                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                   child: Text(w.text,
                     style: AppThemes.baseTextStyle(),
                   ).fsR(2)
@@ -302,38 +253,9 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
   }
 
   @override
-  void showAnswer(String id, bool state) {
-    firstIf:
-    for (final holder in examList) {
-      for(final itm in holder.examModel.items){
-        if(itm.id == id){
-          holder.examModel.showAnswer = state;
-          break firstIf;
-        }
-      }
-    }
-  }
-
-  @override
-  void showAnswers(bool state) {
-    for (final holder in examList) {
-      holder.examModel.showAnswer = state;
-    }
-
+  void showAnswer(bool state) {
+    examHolder.examModel.showAnswer = state;
     assistCtr.updateHead();
-  }
-
-  @override
-  bool isAnswerToAll(){
-    for(final holder in examList){
-      for(int i =0; i < holder.shuffleWords.length; i++) {
-        if (holder.getSelectedWordsFor(idx: i).length != holder.getShuffleFor(idx: i).length) {
-          return false;
-        }
-      }
-    }
-
-    return true;
   }
 }
 ///=====================================================================================
@@ -345,7 +267,7 @@ class ExamHolder {
 
   ExamHolder(this.examModel){
     for(final x in examModel.items){
-      final lis = x.options.toList();
+      final lis = x.teacherOptions.toList();
       lis.shuffle();
 
       selectedWords.add([]);
@@ -434,7 +356,7 @@ class ExamHolder {
     for(int i =0; i < examModel.items.length; i++){
       final x = examModel.items[i];
 
-      for(final x2 in x.options){
+      for(final x2 in x.teacherOptions){
         txt += ' ${x2.text}';
       }
 
@@ -449,12 +371,12 @@ class ExamHolder {
       final itm = examModel.items[i];
       final se = selectedWords[i];
 
-      if(itm.options.length != se.length){
+      if(itm.teacherOptions.length != se.length){
         return false;
       }
 
-      for(int j=0; j < itm.options.length; j++){
-        if(itm.options[j].text != se[j].text){
+      for(int j=0; j < itm.teacherOptions.length; j++){
+        if(itm.teacherOptions[j].text != se[j].text){
           return false;
         }
       }

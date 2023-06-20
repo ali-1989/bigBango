@@ -310,30 +310,21 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     if (currentItem!.quiz.quizType == QuizType.fillInBlank) {
       examComponent = ExamBlankSpaceBuilder(
         key: ValueKey(currentItem?.id),
-        content: examContent,
-        controllerId: currentItem!.id,
-        index: 0,
-        showTitle: false,
+        examModel: currentItem!.quiz,
       );
       description = 'با توجه به صوت جای خالی را پر کنید';
     }
     else if (currentItem!.quiz.quizType == QuizType.recorder) {
       examComponent = ExamSelectWordBuilder(
         key: ValueKey(currentItem?.id),
-        content: examContent,
-        controllerId: currentItem!.id,
-        index: 0,
-        showTitle: false,
+        exam: currentItem!.quiz,
       );
       description = 'با توجه به صوت کلمه ی مناسب را انتخاب کنید';
     }
     else if (currentItem!.quiz.quizType == QuizType.multipleChoice) {
       examComponent = ExamOptionBuilder(
         key: ValueKey(currentItem?.id),
-        builder: examContent,
-        controllerId: currentItem!.id,
-        index: 0,
-        showTitle: false,
+        examModel: currentItem!.quiz,
       );
       description = 'با توجه به صوت گزینه ی مناسب را انتخاب کنید';
     }
@@ -478,10 +469,10 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   }
 
   void registerExerciseResult() {
-    examController = ExamController.getControllerFor(currentItem!.id);
+    examController = ExamController.getControllerFor(currentItem!.quiz);
 
     if(examController != null){
-      if(!examController!.isAnswerToAll()){
+      if(!examController!.isAnswer()){
         AppToast.showToast(context, 'لطفا تمرین را انجام دهید ');
         return;
       }
@@ -500,7 +491,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
-      examController?.showAnswers(true);
+      examController?.showAnswer(true);
 
       final message = res['message']?? 'پاسخ شما ثبت شد';
       AppSnack.showInfo(context, message);
@@ -511,9 +502,9 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
     if(currentItem!.quiz.items.length < 2) {
       tempList.add({
-        'exerciseId': currentItem!.quiz.getFirst().id,
-        'answer': currentItem!.quiz.getFirst().getUserAnswerText(),
-        'isCorrect': currentItem!.quiz.getFirst().isUserAnswerCorrect(),
+        'exerciseId': currentItem!.quiz.getExamItem().id,
+        'answer': currentItem!.quiz.getExamItem().getUserAnswerText(),
+        'isCorrect': currentItem!.quiz.getExamItem().isUserAnswerCorrect(),
       });
     }
     else {

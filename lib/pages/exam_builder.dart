@@ -14,11 +14,9 @@ import 'package:app/views/components/exam/examSelectWordBuilder.dart';
 
 class ExamBuilder extends StatefulWidget {
   final ExamBuilderContent builder;
-  final bool groupSameTypes;
 
   const ExamBuilder({
     required this.builder,
-    this.groupSameTypes = true,
     Key? key
   }) : super(key: key);
 
@@ -41,13 +39,13 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
 
       itemList.add(element);
 
-      if(widget.groupSameTypes){
+      /*if(widget.groupSameTypes){
         bool existType = itemListGroup.indexWhere((elm){return (elm as ExamModel).quizType == element.quizType;}) > -1;
 
         if(!existType){
           itemListGroup.add(element);
         }
-      }
+      }*/
     }
   }
 
@@ -61,63 +59,12 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
     return Assist(
         controller: assistCtr,
         builder: (ctx, ctr, data){
-          return widget.groupSameTypes? buildBodyByGroup(): buildBodyWithoutGroup();
+          return /*widget.groupSameTypes?*/ buildBody();
         }
     );
   }
 
-  Widget buildBodyByGroup() {
-    return ListView.separated(
-      shrinkWrap: true,
-      itemCount: itemListGroup.length,
-      itemBuilder: buildExamViewByGroup,
-      separatorBuilder: (BuildContext context, int index) {
-        return const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0),
-          child: Divider(color: Colors.black, height: 2),
-        );
-      },
-    );
-  }
-
-  Widget buildExamViewByGroup(_, int idx){
-    ExamSuperModel model = itemListGroup[idx];
-
-    if(model is ExamModel){
-      if(model.quizType == QuizType.fillInBlank){
-        return ExamBlankSpaceBuilder(
-          key: ValueKey(model.getFirst().id),
-          content: widget.builder,
-          controllerId: model.getFirst().id,
-        );
-      }
-      else if(model.quizType == QuizType.recorder){
-        return ExamSelectWordBuilder(
-          key: ValueKey(model.getFirst().id),
-          content: widget.builder,
-          controllerId: model.getFirst().id,
-        );
-      }
-      else if(model.quizType == QuizType.multipleChoice){
-        return ExamOptionBuilder(
-          key: ValueKey(model.getFirst().id),
-          builder: widget.builder,
-          controllerId: model.getFirst().id,
-        );
-      }
-      else if(model.quizType == QuizType.makeSentence){
-        return ExamMakeSentenceBuilder(
-          key: ValueKey(model.getFirst().id),
-          content: widget.builder,
-          controllerId: model.getFirst().id,
-        );
-      }
-    }
-
-    return const SizedBox();
-  }
-
-  Widget buildBodyWithoutGroup() {
+  /*Widget buildBody() {
     return ListView.separated(
       shrinkWrap: true,
       itemCount: itemList.length,
@@ -129,6 +76,15 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
         );
       },
     );
+  }*/
+
+  Widget buildBody() {
+    return Column(
+      children: [
+
+
+      ],
+    );
   }
 
   Widget buildExamView(_, int idx){
@@ -137,41 +93,31 @@ class _ExamBuilderState extends StateBase<ExamBuilder> {
     if(model is ExamModel){
       if(model.quizType == QuizType.fillInBlank){
         return ExamBlankSpaceBuilder(
-          key: ValueKey(model.getFirst().id),
-          content: widget.builder,
-          controllerId: model.getFirst().id,
-          showTitle: true,
-          index: idx,
+          key: ValueKey(model.id),
+          examModel: model,
         );
       }
       else if(model.quizType == QuizType.recorder){
         return ExamSelectWordBuilder(
-            key: ValueKey(model.getFirst().id),
-            content: widget.builder,
-            controllerId: model.getFirst().id,
-            index: idx
+          key: ValueKey(model.id),
+          exam: model,
         );
       }
       else if(model.quizType == QuizType.multipleChoice){
         return ExamOptionBuilder(
-            key: ValueKey(model.getFirst().id),
-            builder: widget.builder,
-            controllerId: model.getFirst().id,
-            showTitle: true,
-            index: idx
+          key: ValueKey(model.id),
+          examModel: model,
         );
       }
       else if(model.quizType == QuizType.makeSentence){
         return ExamMakeSentenceBuilder(
-            key: ValueKey('${model.hashCode}'),
-            content: widget.builder,
-            controllerId: '${model.hashCode}',
-            showTitle: true,
-            index: idx
+          key: ValueKey(model.id),
+          examModel: model,
         );
       }
     }
 
     return const SizedBox();
   }
+
 }

@@ -6,24 +6,16 @@ import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/structures/abstract/examStateMethods.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/builders/examBuilderContent.dart';
 import 'package:app/structures/controllers/examController.dart';
-import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appThemes.dart';
 
 class ExamSelectWordBuilder extends StatefulWidget {
-  final ExamBuilderContent content;
-  final String controllerId;
-  final int? index;
-  final bool showTitle;
+  final ExamModel exam;
 
   const ExamSelectWordBuilder({
-    required this.content,
-    required this.controllerId,
-    this.showTitle = true,
-    this.index,
+    required this.exam,
     Key? key
   }) : super(key: key);
 
@@ -36,38 +28,33 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
   late TextStyle falseStyle;
   late TextStyle pickedStyle;
   int currentSpaceOrder = 1;
-  List<ExamModel> examList = [];
+  late ExamModel exam;
 
   @override
   void initState() {
     super.initState();
 
-    if(widget.index == null) {
-      examList.addAll(widget.content.examList.where((element) => element.quizType == QuizType.recorder));
-    }
-    else {
-      examList.add(widget.content.examList[widget.index!]);
-    }
+    exam = widget.exam;
 
-    questionNormalStyle = TextStyle(fontSize: 16, color: Colors.black);
-    falseStyle = TextStyle(fontSize: 16,
+    questionNormalStyle = const TextStyle(fontSize: 16, color: Colors.black);
+    falseStyle = const TextStyle(fontSize: 16,
         color: Colors.red,
         decorationStyle: TextDecorationStyle.solid,
         decoration: TextDecoration.lineThrough,
         decorationColor: Colors.red
     );
-    pickedStyle = TextStyle(
+    pickedStyle = const TextStyle(
       decorationStyle: TextDecorationStyle.solid,
       decoration: TextDecoration.lineThrough,
       decorationColor: Colors.red,
     );
 
-    ExamController(widget.controllerId, this);
+    ExamController(widget.exam, this);
   }
 
   @override
   void dispose(){
-    ExamController.removeControllerFor(widget.controllerId);
+    ExamController.removeControllerFor(widget.exam);
     super.dispose();
   }
 
@@ -79,91 +66,42 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
           return buildBody();
         }
     );
-  }
+  }//'کلمات را در جای مناسب قرار دهید
 
   Widget buildBody() {
+    final List<InlineSpan> spans = generateSpans(exam);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: CustomScrollView(
-        shrinkWrap: true,
-        physics: ScrollPhysics(),
-        slivers: [
-          SliverVisibility(
-              visible: widget.showTitle,
-              sliver: SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Text('کلمات را در جای مناسب قرار دهید'),
-                ),
-              )
-          ),
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10),
 
-
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              listItemBuilder,
-              childCount: examList.length * 2 - 1,
+            ///=== question
+            RichText(
+              text: TextSpan(children: spans),
+              textDirection: TextDirection.ltr,
             ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget listItemBuilder(ctx, idx) {
-    ///=== Divider
-    if (idx % 2 != 0) {
-      return Divider(color: Colors.black, height: 2);
-    }
+            const SizedBox(height: 20),
 
-    final item = examList[idx ~/ 2];
-    final List<InlineSpan> spans = generateSpans(item);
+            ///=== words
+            Builder(
+                builder: (context) {
+                  if(exam.showAnswer){
+                    return const SizedBox();
+                  }
 
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 10),
-
-          ///=== number box
-          /*Visibility(
-            visible: examList.length > 1,
-            child: CustomCard(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              child: Text('${idx ~/ 2 + 1}').bold(weight: FontWeight.w900).fsR(1),
-            ).wrapBoxBorder(
-                padding: EdgeInsets.all(2),
-                radius: 9,
-                stroke: 1.0,
-                color: Colors.black
-            ),
-          ),
-
-          SizedBox(height: 15),*/
-
-          ///=== question
-          RichText(
-            text: TextSpan(children: spans),
-            textDirection: TextDirection.ltr,
-          ),
-
-          SizedBox(height: 20),
-
-          ///=== words
-          Builder(
-              builder: (context) {
-                if(item.showAnswer){
-                  return SizedBox();
+                  return buildWords(exam);
                 }
+            ),
 
-                return buildWords(item);
-              }
-          ),
-
-          SizedBox(height: 14),
-        ],
+            const SizedBox(height: 14),
+          ],
+        ),
       ),
     );
   }
@@ -171,8 +109,8 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
   List<InlineSpan> generateSpans(ExamModel model) {
     final List<InlineSpan> spans = [];
 
-    for (int i = 0; i < model.getFirst().questionSplit.length; i++) {
-      final q = TextSpan(text: model.getFirst().questionSplit[i], style: questionNormalStyle);
+    for (int i = 0; i < model.getExamItem().questionSplit.length; i++) {
+      final q = TextSpan(text: model.getExamItem().questionSplit[i], style: questionNormalStyle);
       spans.add(q);
 
       void onSpanClick(gesDetail) {
@@ -197,7 +135,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
         assistCtr.updateHead();
       }
 
-      if (i < model.getFirst().questionSplit.length - 1) {
+      if (i < model.getExamItem().questionSplit.length - 1) {
         InlineSpan choiceSpan;
         String choiceText = '';
         Color choiceColor;
@@ -205,8 +143,8 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
         final tapRecognizer = TapGestureRecognizer()..onTapUp = onSpanClick;
 
         if (model.showAnswer) {
-          final correctAnswer = model.getFirst().getChoiceByOrder(i+1)!.text;
-          var userAnswer = model.getFirst().getUserChoiceByOrder(i+1)?.text;
+          final correctAnswer = model.getExamItem().getTeacherOptionByOrder(i+1)!.text;
+          var userAnswer = model.getExamItem().getUserOptionByOrder(i+1)?.text;
           Color trueColor = Colors.green;
           Color falseColor = Colors.red;
 
@@ -238,7 +176,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
                     //Image.asset(AppImages.falseCheckIco),
                     //SizedBox(width: 5),
                     Text(userAnswer?? '--', style: falseStyle.copyWith(color: falseColor)),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Text('[$correctAnswer]', style: questionNormalStyle.copyWith(color: trueColor))
                   ],
                 )
@@ -246,7 +184,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
           }
         }
         else {
-          final userAnswer = model.getFirst().getUserChoiceByOrder(i+1)?.text ?? '';
+          final userAnswer = model.getExamItem().getUserOptionByOrder(i+1)?.text ?? '';
 
           if (userAnswer.isNotEmpty) {
             choiceText = userAnswer;
@@ -281,10 +219,10 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
   }
 
   Widget buildWords(ExamModel model) {
-    final list = model.getFirst().shuffleWords.map((w) {
+    final list = model.getExamItem().shuffleWords.map((w) {
       var isPicked = false;
 
-      for (final k in model.getFirst().userAnswers) {
+      for (final k in model.getExamItem().userAnswers) {
         if (k.id == w.id) {
           isPicked = true;
           break;
@@ -306,7 +244,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
           child: CustomCard(
               color: bColor,
               radius: 2,
-              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
               child: Text(w.text,
                 style: isPicked ? pickedStyle : AppThemes.baseTextStyle(),
               ).fsR(2)
@@ -342,18 +280,21 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
 
     List<String> selectedWordIds = [];
 
-    for (final k in model.getFirst().userAnswers) {
+    print('==============selectedWordIds:==========');
+    print('$selectedWordIds');
+    print('========================');
+    for (final k in model.getExamItem().userAnswers) {
       if (k.text.isNotEmpty) {
         selectedWordIds.add(k.id);
       }
     }
 
-    if (selectedWordIds.length + 1 == model.getFirst().options.length) {
-      for (final k in model.getFirst().userAnswers) {
+    if (selectedWordIds.length + 1 == model.getExamItem().teacherOptions.length) {
+      for (final k in model.getExamItem().userAnswers) {
         if (k.text.isEmpty) {
           ExamOptionModel? examChoiceModel;
 
-          for (final kk in model.getFirst().options) {
+          for (final kk in model.getExamItem().teacherOptions) {
             if (!selectedWordIds.contains(kk.id)) {
               examChoiceModel = kk;
               currentSpaceOrder++;
@@ -372,8 +313,8 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
   }
 
   void setUserAnswer(ExamModel model, int order, ExamOptionModel? ec) {
-    final u = model.getFirst().getUserChoiceByOrder(order);
-
+    final u = model.getExamItem().getUserOptionByOrder(order);
+    print('=========== setUserAnswer: ${u?.text} <  ${ec != null}');
     if (ec != null) {
       u!.text = ec.text;
       u.id = ec.id;
@@ -387,39 +328,9 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
   }
 
   @override
-  void showAnswer(String id, bool state) {
-    for (final model in examList) {
-      if(model.getFirst().id == id){
-        model.showAnswer = state;
-        break;
-      }
-    }
-  }
-
-  @override
-  void showAnswers(bool state) {
-    /*if (!isAllQuestionAnswered()) {
-      AppSnack.showError(context, 'لطفا همه ی سوالات را پاسخ دهید');
-      return;
-    }*/
-
-    for (final element in examList) {
-      element.showAnswer = state;
-    }
+  void showAnswer(bool state) {
+    exam.showAnswer = state;
 
     assistCtr.updateHead();
-  }
-
-  @override
-  bool isAnswerToAll(){
-    for(final k in examList){
-      for(final x in k.getFirst().userAnswers) {
-        if (x.text.isEmpty || x.id.isEmpty) {
-          return false;
-        }
-      }
-    }
-
-    return true;
   }
 }

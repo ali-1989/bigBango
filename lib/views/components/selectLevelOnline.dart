@@ -65,15 +65,15 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
 
   Widget buildBody() {
     if(assistCtr.hasState(AssistController.state$loading)){
-      return WaitToLoad();
+      return const WaitToLoad();
     }
 
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(backButton: BackBtn());
+      return ErrorOccur(backButton: const BackBtn());
     }
 
     if(questions.isEmpty){
-      return EmptyData(backButton: BackBtn());
+      return const EmptyData(backButton: BackBtn());
     }
 
     Color preColor = Colors.black;
@@ -105,7 +105,7 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
                 ],
               ),
 
-              BackBtn(button: Icon(AppIcons.close)),
+              const BackBtn(button: Icon(AppIcons.close)),
             ],
           ),
 
@@ -131,7 +131,7 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
               Row(
                 children: [
                   Text(' ${questions.length}  /',
-                      style: TextStyle(fontSize: 15)
+                      style: const TextStyle(fontSize: 15)
                   ),
 
                   const SizedBox(width: 12),
@@ -144,7 +144,7 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
                         height: 25,
                         child: Center(
                           child: Text('${currentQuestionIdx+1}',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)
                           ),
                         ),
                       ),
@@ -185,14 +185,14 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
                     goNextQuestion();
                   },
                   icon: Image.asset(AppImages.arrowRightIco, color: nextColor),
-                  label: Text('Next').englishFont().color(nextColor)
+                  label: const Text('Next').englishFont().color(nextColor)
               ),
 
               TextButton.icon(
                   onPressed: (){
                     goPrevQuestion();
                   },
-                  icon: Text('pre').englishFont().color(preColor),
+                  icon: const Text('pre').englishFont().color(preColor),
                   label: Image.asset(AppImages.arrowLeftIco, color: preColor)
               ),
             ],
@@ -203,44 +203,36 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
   }
 
   Widget buildQuestion(){
-    final builder = ExamBuilderContent();
-    builder.showSendButton = false;
-    builder.examList.add(currentQuestion!);
+    //final builder = ExamBuilderContent();
+    //builder.showSendButton = false;
+    //builder.examList.add(currentQuestion!);
     
     if(currentQuestion!.quizType == QuizType.fillInBlank){
       return ExamBlankSpaceBuilder(
         key: ValueKey('id_${currentQuestion!.hashCode}'),
-        content: builder,
-        controllerId: 'id_${currentQuestion!.hashCode}',
-        showTitle: true,
+        examModel: currentQuestion!,
       );
     }
     else if(currentQuestion!.quizType == QuizType.recorder){
       return ExamSelectWordBuilder(
           key: ValueKey('id_${currentQuestion!.hashCode}'),
-          content: builder,
-          controllerId: 'id_${currentQuestion!.hashCode}',
+          exam: currentQuestion!,
       );
     }
     else if(currentQuestion!.quizType == QuizType.multipleChoice){
       return ExamOptionBuilder(
           key: ValueKey('id_${currentQuestion!.hashCode}'),
-          builder: builder,
-          controllerId: 'id_${currentQuestion!.hashCode}',
-          showTitle: true,
-        index: 0,
+          examModel: currentQuestion!,
       );
     }
     else if(currentQuestion!.quizType == QuizType.makeSentence){
       return ExamMakeSentenceBuilder(
           key: ValueKey('id_${currentQuestion!.hashCode}'),
-          content: builder,
-          controllerId: 'id_${currentQuestion!.hashCode}',
-          showTitle: true,
+          examModel: currentQuestion!,
       );
     }
     
-    return SizedBox();
+    return const SizedBox();
   }
   
   void goNextQuestion() {
