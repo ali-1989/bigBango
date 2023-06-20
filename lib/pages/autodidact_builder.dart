@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/builders/autodidactBuilderContent.dart';
-import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/examModels/examSuperModel.dart';
 import 'package:app/views/components/exam/autodidactTextComponent.dart';
 import 'package:app/views/components/exam/autodidactVoiceComponent.dart';
 
 class AutodidactBuilder extends StatefulWidget {
-  final ExamBuilderContent builder;
+  final ExamPageInjector builder;
 
   const AutodidactBuilder({
     required this.builder,
@@ -55,8 +54,8 @@ class _AutodidactBuilderState extends StateBase<AutodidactBuilder> {
       itemCount: itemList.length,
       itemBuilder: buildExamView,
       separatorBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+        return const Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0),
           child: Divider(color: Colors.black, height: 2),
         );
       },
@@ -67,18 +66,16 @@ class _AutodidactBuilderState extends StateBase<AutodidactBuilder> {
     ExamSuperModel model = itemList[idx];
 
     if(model is AutodidactModel){
-      final content = AutodidactBuilderContent();
-      content.autodidactModel = model;
 
       if(model.text != null){
-        return AutodidactTextComponent(content: content);
+        return AutodidactTextComponent(model: model);
       }
       else if(model.voice != null){
-        return AutodidactVoiceComponent(content: content);
+        return AutodidactVoiceComponent(model: model);
       }
     }
 
-    return SizedBox();
+    return const SizedBox();
   }
 }
 

@@ -11,6 +11,8 @@ import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/views/widgets/animationPositionScale.dart';
 
 class ExamBlankSpaceBuilder extends StatefulWidget {
+  static const questionTitle = 'در جای خالی کلمه ی مناسب بنویسید';
+
   final ExamModel examModel;
 
   const ExamBlankSpaceBuilder({

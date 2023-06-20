@@ -13,6 +13,7 @@ import 'package:app/tools/app/appThemes.dart';
 import 'package:iris_tools/widgets/text/autoDirection.dart';
 
 class ExamMakeSentenceBuilder extends StatefulWidget {
+  static const questionTitle = 'با چینش کلمات جمله بسازید';
   final ExamModel examModel;
 
   const ExamMakeSentenceBuilder({
@@ -58,7 +59,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
           return buildBody();
         }
     );
-  }//'با چینش کلمات جمله بسازید
+  }
 
   Widget buildBody() {
     return Padding(

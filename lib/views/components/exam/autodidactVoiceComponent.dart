@@ -21,7 +21,6 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:app/services/file_upload_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/builders/autodidactBuilderContent.dart';
 import 'package:app/structures/enums/autodidactReplyType.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/middleWares/requester.dart';
@@ -42,10 +41,10 @@ import 'package:app/tools/permissionTools.dart';
 import 'package:app/tools/routeTools.dart';
 
 class AutodidactVoiceComponent extends StatefulWidget {
-  final AutodidactBuilderContent content;
+  final AutodidactModel model;
 
   const AutodidactVoiceComponent({
-    required this.content,
+    required this.model,
     Key? key
   }) : super(key: key);
 
@@ -65,11 +64,11 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   late String savePath;
   AudioPlayer questionPlayer = AudioPlayer();
   AudioPlayer answerPlayer = AudioPlayer();
-  Duration questionTotalTime = Duration();
-  Duration recordTotalTime = Duration();
-  Duration recordPlayCurrentTime = Duration();
-  Duration questionCurrentTime = Duration();
-  Duration recordDuration = Duration();
+  Duration questionTotalTime = const Duration();
+  Duration recordTotalTime = const Duration();
+  Duration recordPlayCurrentTime = const Duration();
+  Duration questionCurrentTime = const Duration();
+  Duration recordDuration = const Duration();
   bool questionVoiceIsPrepare = false;
   bool answerVoiceIsPrepare = false;
 
@@ -77,7 +76,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   void initState(){
     super.initState();
 
-    autodidactModel = widget.content.autodidactModel;
+    autodidactModel = widget.model;
 
     final p = AppDirectories.getAppFolderInInternalStorage();
     savePath = PathHelper.resolvePath('$p/record.mp4')!;
@@ -119,16 +118,16 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
         Row(
           children: [
             Image.asset(AppImages.doubleArrow),
-            SizedBox(width: 4),
+            const SizedBox(width: 4),
             Text(autodidactModel.question?? ''),
           ],
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
 
         Directionality(
           textDirection: TextDirection.ltr,
           child: CustomCard(
-            padding: EdgeInsets.all(5),
+            padding: const EdgeInsets.all(5),
             color: Colors.grey.shade200,
             child: Row(
               children: [
@@ -136,7 +135,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
                   onTap: playPauseQuestionVoice,
                   child: CustomCard(
                     radius: 50,
-                    padding: EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(14),
                     child: Image.asset(questionPlayer.playing? AppImages.pauseIco : AppImages.playIco, width: 16, height: 16),
                   ),
                 ),
@@ -147,7 +146,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
                         primaryColor: AppThemes.instance.currentTheme.primaryColor,
                         primaryColorDark: AppThemes.instance.currentTheme.primaryColor,
                         primaryColorLight: AppThemes.instance.currentTheme.primaryColor,
-                        valueIndicatorTextStyle: TextStyle(),
+                        valueIndicatorTextStyle: const TextStyle(),
                     ).copyWith(),
                     child: Slider(
                       value: percentOfPlayer(),
@@ -165,18 +164,18 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
           ),
         ),
 
-        SizedBox(height: 30),
-        Align(
+        const SizedBox(height: 30),
+        const Align(
             alignment: Alignment.topRight,
             child: Text('پاسخ:')
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
 
         buildReply(),
 
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         buildCorrectAnswerView(),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
       ],
     );
   }
@@ -198,7 +197,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
           controller: answerCtr,
           minLines: 4,
           maxLines: 6,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: InputBorder.none,
             enabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
@@ -217,7 +216,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       return Directionality(
         textDirection: TextDirection.ltr,
         child: CustomCard(
-          padding: EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5),
           color: Colors.grey.shade200,
           child: Row(
             children: [
@@ -225,7 +224,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
                 onTap: playPauseAnswerVoice,
                 child: CustomCard(
                   radius: 30,
-                  padding: EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(14),
                   child: Image.asset(answerPlayer.playing? AppImages.pauseIco : AppImages.playIco, width: 16, height: 16),
                 ),
               ),
@@ -244,7 +243,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
 
               IconButton(
                   onPressed: deleteVoice,
-                icon: Icon(AppIcons.delete, color:Colors.red),
+                icon: const Icon(AppIcons.delete, color:Colors.red),
               )
             ],
           ),
@@ -254,13 +253,13 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
 
     return Column(
       children: [
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
 
         SizedBox(
           width: 60,
           child: CustomCard(
             color: Colors.red,
-            padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
             child: SizedBox(
                 width: 60,
                 child: Center(child: Text(DurationFormatter.duration(recordDuration, showSuffix: false)).color(Colors.white))
@@ -268,7 +267,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
           ),
         ),
 
-        SizedBox(height: 25),
+        const SizedBox(height: 25),
 
         GestureDetector(
           onTap: toggleRecord,
@@ -280,11 +279,11 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
               innerWaveColor: voiceRecorder.isRecording? AppDecoration.red.withAlpha(100) : Colors.transparent,
               middleWaveColor: voiceRecorder.isRecording? AppDecoration.red.withAlpha(50) : Colors.transparent,
               outerWaveColor: Colors.transparent,
-              duration: Duration(seconds: 2),
+              duration: const Duration(seconds: 2),
               child: CustomCard(
                   color: AppDecoration.red,
                   radius: 40,
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   child: Image.asset(AppImages.mic, width: 22, height: 22)
               )
           ),
@@ -299,10 +298,10 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       children: [
         OutlinedButton(
           onPressed: showAnswer,
-          child: Text('نمایش پاسخ صحیح'),
+          child: const Text('نمایش پاسخ صحیح'),
         ),
 
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
 
         SizedBox(
           width: 120,
@@ -311,7 +310,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
                 backgroundColor: Colors.green
             ),
             onPressed: sendAnswer,
-            child: Text('ارسال پاسخ'),
+            child: const Text('ارسال پاسخ'),
           ),
         ),
       ],
@@ -330,7 +329,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
     voiceRecorder.setLogLevel(Level.nothing);
     await voiceRecorder.openRecorder();
 
-    voiceRecorder.setSubscriptionDuration(Duration(milliseconds: 500));
+    voiceRecorder.setSubscriptionDuration(const Duration(milliseconds: 500));
 
     _recorderSubscription = voiceRecorder.onProgress!.listen((e) {
       if( e.duration.inMilliseconds > 100) {
@@ -413,7 +412,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
  void deleteVoice() {
     Future<bool> delFn(ctx) async {
       isVoiceFileOK = false;
-      recordDuration = Duration();
+      recordDuration = const Duration();
 
       if(answerPlayer.playing){
         await answerPlayer.stop();
@@ -445,8 +444,8 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: Column(
             children: [
-              Text('پاسخ استاد').bold().fsR(4),
-              SizedBox(height: 25),
+              const Text('پاسخ استاد').bold().fsR(4),
+              const SizedBox(height: 25),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Directionality(
@@ -464,14 +463,14 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
                   dashPattern: [4,8]
               ),
 
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: (){
                       RouteTools.popTopView(context: context);
                     },
-                    child: Text('بستن')
+                    child: const Text('بستن')
                 ),
               ),
             ],
@@ -510,7 +509,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       }
       else {
         await answerPlayer.pause();
-        await answerPlayer.seek(Duration());
+        await answerPlayer.seek(const Duration());
         await answerPlayer.play();
       }
     }
@@ -535,7 +534,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       }
       else {
         await questionPlayer.pause();
-        await questionPlayer.seek(Duration());
+        await questionPlayer.seek(const Duration());
         await questionPlayer.play();
       }
     }

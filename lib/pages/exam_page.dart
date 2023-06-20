@@ -1,7 +1,10 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:app/structures/enums/quizType.dart';
+import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
-import 'package:app/structures/models/examModels/examSuperModel.dart';
 import 'package:app/tools/app/appDecoration.dart';
+import 'package:app/views/components/exam/autodidactTextComponent.dart';
+import 'package:app/views/components/exam/autodidactVoiceComponent.dart';
 import 'package:app/views/components/exam/examBlankSpaseBuilder.dart';
 import 'package:app/views/components/exam/examMakeSentenceBuilder.dart';
 import 'package:app/views/components/exam/examOptionBuilder.dart';
@@ -11,10 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
-import 'package:app/pages/autodidact_builder.dart';
-import 'package:app/pages/exam_builder.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/system/extensions.dart';
@@ -25,10 +26,10 @@ import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appSnack.dart';
 
 class ExamPage extends StatefulWidget {
-  final ExamBuilderContent builder;
+  final ExamPageInjector injector;
 
   const ExamPage({
-    required this.builder,
+    required this.injector,
     Key? key
   }) : super(key: key);
 
@@ -39,15 +40,18 @@ class ExamPage extends StatefulWidget {
 class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
   Requester requester = Requester();
   late TabController tabController;
-  late ExamSuperModel currentExam;
-  int currentIndex = 0;
-
+  late ExamModel currentExam;
+  late AutodidactModel currentAutodidact;
+  int currentExamIndex = 0;
+  int currentAutodidactIndex = 0;
+  List<String> answeredExamList = [];
+  List<String> answeredAutodidactList = [];
 
   @override
   void initState(){
     super.initState();
 
-    currentExam = widget.builder.examList.first;
+    currentExam = widget.injector.examList.first;
     tabController = TabController(length: 2, vsync: this);
   }
 
@@ -80,55 +84,14 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
           const SizedBox(height: 20),
 
           /// page header
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      const SizedBox(
-                        width: 4,
-                        height: 26,
-                        child: ColoredBox(color: AppDecoration.red),
-                      ),
-
-                      const SizedBox(width: 7),
-                      const Text('تمرین').bold().fsR(4),
-                    ],
-                  ),
-
-                  GestureDetector(
-                    onTap: (){
-                      AppNavigator.pop(context);
-                    },
-                    child: Row(
-                      children: [
-                        Text(AppMessages.back),
-                        const SizedBox(width: 10),
-                        CustomCard(
-                            color: Colors.white,
-                            padding: const EdgeInsets.all(5),
-                            child: Image.asset(AppImages.arrowLeftIco)
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          buildHeader(),
 
           const SizedBox(height: 10),
 
           /// tabBar view
           Builder(
             builder: (ctx){
-              if(widget.builder.autodidactList.isNotEmpty){
+              if(widget.injector.examList.isNotEmpty && widget.injector.autodidactList.isNotEmpty){
                 return TabBar(
                   controller: tabController,
                   tabs: const [
@@ -149,7 +112,6 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
             },
           ),
 
-
           /// body view
           Expanded(
             child: TabBarView(
@@ -167,8 +129,56 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     );
   }
 
+  Widget buildHeader(){
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                const SizedBox(
+                  width: 4,
+                  height: 26,
+                  child: ColoredBox(color: AppDecoration.red),
+                ),
+
+                const SizedBox(width: 7),
+                const Text('تمرین').bold().fsR(4),
+              ],
+            ),
+
+            GestureDetector(
+              onTap: (){
+                AppNavigator.pop(context);
+              },
+              child: Row(
+                children: [
+                  Text(AppMessages.back),
+                  const SizedBox(width: 10),
+                  CustomCard(
+                      color: Colors.white,
+                      padding: const EdgeInsets.all(5),
+                      child: Image.asset(AppImages.arrowLeftIco)
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget buildPage1(){
+    if(widget.injector.examList.isEmpty){
+      return const SizedBox();
+    }
+    
     return Column(
       children: [
         const SizedBox(height: 10),
@@ -188,123 +198,195 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
   }
 
   Widget buildExamView(){
-    if(currentExam is ExamModel){
-      final model = currentExam as ExamModel;
+    return FadeIn(
+      animate: true,
+      duration: const Duration(milliseconds: 400),
+      child: Builder(
+          builder: (_){
+            if(currentExam.quizType == QuizType.fillInBlank){
+              return Column(
+                children: [
+                  const Text(ExamBlankSpaceBuilder.questionTitle),
+                  const SizedBox(height: 20),
 
-      if(model.quizType == QuizType.fillInBlank){
-        return ExamBlankSpaceBuilder(
-          key: ValueKey(model.id),
-          examModel: model,
-        );
-      }
-      else if(model.quizType == QuizType.recorder){
-        return ExamSelectWordBuilder(
-          key: ValueKey(model.id),
-          exam: model,
-        );
-      }
-      else if(model.quizType == QuizType.multipleChoice){
-        return ExamOptionBuilder(
-          key: ValueKey(model.id),
-          examModel: model,
-        );
-      }
-      else if(model.quizType == QuizType.makeSentence){
-        return ExamMakeSentenceBuilder(
-          key: ValueKey(model.id),
-          examModel: model,
-        );
-      }
-    }
+                  ExamBlankSpaceBuilder(
+                    key: ValueKey(currentExam.id),
+                    examModel: currentExam,
+                  ),
+                ],
+              );
+            }
+            else if(currentExam.quizType == QuizType.recorder){
+              return Column(
+                children: [
+                  const Text(ExamSelectWordBuilder.questionTitle),
+                  const SizedBox(height: 20),
 
-    return const SizedBox();
-  }
+                  ExamSelectWordBuilder(
+                    key: ValueKey(currentExam.id),
+                    exam: currentExam,
+                  ),
+                ],
+              );
+            }
+            else if(currentExam.quizType == QuizType.multipleChoice){
+              return Column(
+                children: [
+                  const Text(ExamOptionBuilder.questionTitle),
+                  const SizedBox(height: 20),
 
-  Widget buildBottomSectionPage1() {
-    return Visibility(
-        visible: widget.builder.showSendButton,
-        child: Builder(
-          builder: (context) {
-            if (widget.builder.examList.length < 2) {
-              return ElevatedButton(
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: const Size(200, 40),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  visualDensity: const VisualDensity(
-                      horizontal: 0, vertical: -2),
-                  //shape: StadiumBorder()
-                ),
-                onPressed: sendAnswer,
-                child: Text(widget.builder.sendButtonText).englishFont().color(
-                    Colors.white),
+                  ExamOptionBuilder(
+                    key: ValueKey(currentExam.id),
+                    examModel: currentExam,
+                  ),
+                ],
+              );
+            }
+            else if(currentExam.quizType == QuizType.makeSentence){
+              return Column(
+                children: [
+                  const Text(ExamMakeSentenceBuilder.questionTitle),
+                  const SizedBox(height: 20),
+
+                  ExamMakeSentenceBuilder(
+                    key: ValueKey(currentExam.id),
+                    examModel: currentExam,
+                  ),
+                ],
               );
             }
 
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-
-                ElevatedButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    minimumSize: const Size(100, 40),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: const VisualDensity(
-                        horizontal: 0, vertical: -2),
-                    //shape: StadiumBorder()
-                  ),
-                  onPressed: sendAnswer,
-                  child: Text(widget.builder.sendButtonText).englishFont().color(
-                      Colors.white),
-                ),
-
-                TextButton(
-                    onPressed: onSkipClick,
-                    child: const Text('skip')
-                ),
-              ],
-            );
+            return const SizedBox();
           }
-        )
+      ),
+    );
+  }
+
+  Widget buildBottomSectionPage1() {
+    if(answeredExamList.length == widget.injector.examList.length || !widget.injector.showSendButton){
+      return const SizedBox();
+    }
+
+    return Builder(
+      builder: (context) {
+        if (widget.injector.examList.length < 2) {
+          return ElevatedButton(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(200, 40),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              visualDensity: const VisualDensity(
+                  horizontal: 0, vertical: -2),
+              //shape: StadiumBorder()
+            ),
+            onPressed: onSendExamAnswerClick,
+            child: Text(AppMessages.send)
+                .englishFont().color(Colors.white),
+          );
+        }
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+
+            ElevatedButton(
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(100, 40),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
+                //shape: StadiumBorder()
+              ),
+              onPressed: onSendExamAnswerClick,
+              child: Text(answeredExamList.contains(currentExam.id) ? AppMessages.send : AppMessages.next)
+                  .englishFont().color(Colors.white),
+            ),
+
+            Visibility(
+              visible: currentExamIndex < widget.injector.examList.length-1,
+              child: TextButton(
+                  onPressed: onExamSkipClick,
+                  child: const Text('skip')
+              ),
+            ),
+          ],
+        );
+      }
     );
     }
 
-  void onSkipClick() {
-    if(currentIndex < widget.builder.examList.length){
-      currentIndex++;
-      currentExam = widget.builder.examList[currentIndex];
+  void onExamSkipClick() {
+    if(currentExamIndex < widget.injector.examList.length){
+      currentExamIndex++;
+      currentExam = widget.injector.examList[currentExamIndex];
 
       assistCtr.updateHead();
     }
   }
 
   Widget buildPage2(){
+    if(widget.injector.autodidactList.isEmpty){
+      return const SizedBox();
+    }
+
     return Column(
       children: [
         const SizedBox(height: 20),
 
         /// exams
-        Expanded(child: AutodidactBuilder(builder: widget.builder)),
+        Expanded(child: buildAutodidactView()),
 
         const SizedBox(height: 10),
       ],
     );
   }
 
-  void sendAnswer(){
+  Widget buildAutodidactView(){
+    return FadeIn(
+      animate: true,
+      duration: const Duration(milliseconds: 400),
+      child: Builder(
+          builder: (_){
+            if(currentAutodidact.text != null){
+              return Column(
+                children: [
+                  const Text(ExamBlankSpaceBuilder.questionTitle),
+                  const SizedBox(height: 20),
+
+                  AutodidactTextComponent(model: currentAutodidact),
+                ],
+              );
+            }
+            else if(currentAutodidact.voice != null){
+              return Column(
+                children: [
+                  const Text(ExamBlankSpaceBuilder.questionTitle),
+                  const SizedBox(height: 20),
+
+                  AutodidactVoiceComponent(model: currentAutodidact),
+                ],
+              );
+            }
+
+            return const SizedBox();
+          }
+      ),
+    );
+  }
+
+  void onSendExamAnswerClick(){
     AppDialogIris.instance.showYesNoDialog(
       context,
       yesFn: (ctx) {
         Future.delayed(const Duration(milliseconds: 500)).then((value) {
-          requestSendAnswer();
+          requestSendExamAnswer();
         });
       },
       desc: 'آیا جواب تمرین ارسال شود؟',
     );
   }
 
-  void requestSendAnswer(){
+  void requestSendExamAnswer(){
     /*if(!examController.isAnswerToAll()){
         AppToast.showToast(context, 'لطفا به سوالات پاسخ دهید');
         return;
@@ -319,15 +401,12 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
-      //bool sentResult = false; sentResult = true;
-
+      answeredExamList.add(currentExam.id);
       final message = res['message']?? 'پاسخ تمرین ثبت شد';
 
       AppSnack.showInfo(context, message);
 
-      for(final x in widget.builder.examList){
-        ExamController.getControllerFor(x)?.showAnswer(true);
-      }
+      ExamController.getControllerFor(currentExam)?.showAnswer(true);
 
       assistCtr.updateHead();
     };
@@ -335,34 +414,30 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     final tempList = [];
     final js = <String, dynamic>{};
 
-    for(final x in widget.builder.examList){
-      if(x.items.length < 2) {
+    if(currentExam.items.length < 2) {
+      tempList.add({
+        'exerciseId': currentExam.getExamItem().id,
+        'answer': currentExam.getExamItem().getUserAnswerText(),
+        'isCorrect': currentExam.getExamItem().isUserAnswerCorrect(),
+      });
+    }
+    else {
+      for (final itm in currentExam.items){
         tempList.add({
-          'exerciseId': x.getExamItem().id,
-          'answer': x.getExamItem().getUserAnswerText(),
-          'isCorrect': x.getExamItem().isUserAnswerCorrect(),
+          'exerciseId': itm.id,
+          'answer': itm.getUserAnswerText(),
+          'isCorrect': itm.isUserAnswerCorrect(),
         });
-      }
-      else {
-        for (final itm in x.items){
-          tempList.add({
-            'exerciseId': itm.id,
-            'answer': itm.getUserAnswerText(),
-            'isCorrect': itm.isUserAnswerCorrect(),
-          });
-        }
       }
     }
 
     js['items'] = tempList;
 
     requester.methodType = MethodType.post;
-    requester.prepareUrl(pathUrl: widget.builder.answerUrl);
+    requester.prepareUrl(pathUrl: widget.injector.answerUrl);
     requester.bodyJson = js;
 
     showLoading();
     requester.request(context);
   }
 }
-
-

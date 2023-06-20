@@ -11,7 +11,7 @@ import 'package:video_player/video_player.dart';
 import 'package:app/pages/exam_page.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
@@ -48,7 +48,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   GrammarModel? currentItem;
   VideoPlayerController? playerController;
   ChewieController? chewieVideoController;
-  Duration lastPos = Duration();
+  Duration lastPos = const Duration();
   bool isVideoInit = false;
   bool isVideoError = false;
   int currentItemIdx = 0;
@@ -92,15 +92,15 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onTryAgain: onRefresh, backButton: BackBtn());
+      return ErrorOccur(onTryAgain: onRefresh, backButton: const BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
-      return WaitToLoad();
+      return const WaitToLoad();
     }
 
     if(assistCtr.hasState(AssistController.state$noData)){
-      return EmptyData(backButton: BackBtn());
+      return const EmptyData(backButton: BackBtn());
     }
 
     Color preColor = Colors.black;
@@ -124,24 +124,24 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
                       AppbarLesson(title: widget.injector.lessonModel.title),
 
-                      SizedBox(height: 14),
+                      const SizedBox(height: 14),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Chip(
-                            label: Text('${currentItem?.title}', style:TextStyle(color: Colors.black)),
+                            label: Text('${currentItem?.title}', style:const TextStyle(color: Colors.black)),
                             backgroundColor: Colors.grey.shade400,
                             elevation: 0,
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                            visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                            labelPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
                           ),
 
-                          Chip(
+                          const Chip(
                             label: Text('گرامر'),
                             backgroundColor: AppDecoration.red,
                             elevation: 0,
@@ -152,7 +152,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                         ],
                       ),
 
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                      SizedBox(
                        height: 200,
@@ -166,8 +166,8 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                                  return Column(
                                    children: [
                                      Image.asset(AppImages.falseCheckIco, width: 100, height: 100,),
-                                     SizedBox(height: 20),
-                                     Text('متاسفانه فایل قابل پخش نیست'),
+                                     const SizedBox(height: 20),
+                                     const Text('متاسفانه فایل قابل پخش نیست'),
                                    ],
                                  );
                                }
@@ -186,15 +186,15 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                 ),
               ),
 
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               ColoredBox(
                 color: Colors.grey.shade200,
                 child: Row(
                   children: [
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
 
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                       width: 3,
                       child: ColoredBox(
@@ -202,14 +202,14 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                       ),
                     ),
 
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('تمرین', style: TextStyle(fontSize: 14)),
-                          SizedBox(height: 4),
+                          const Text('تمرین', style: TextStyle(fontSize: 14)),
+                          const SizedBox(height: 4),
                           Text('بعد از نمایش ویدیو ، شروع به تمرین کنید و خودتون را محک بزنید',
                               style: TextStyle(fontSize: 10, color: Colors.grey.shade600)
                           ),
@@ -220,7 +220,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Stack(
                 children: [
                   MaxHeight(
@@ -238,7 +238,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                       child: Center(
                         child: GestureDetector(
                           onTap: startExercise,
-                          child: Chip(
+                          child: const Chip(
                             backgroundColor: AppDecoration.red,
                               elevation: 0,
                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -252,7 +252,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                 ],
               ),
 
-              SizedBox(height: 14),
+              const SizedBox(height: 14),
             ],
           ),
         ),
@@ -268,13 +268,13 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                       quarterTurns: 2,
                       child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
                   ),
-                  label: Text('next').englishFont().color(nextColor)
+                  label: const Text('next').englishFont().color(nextColor)
               ),
 
               TextButton.icon(
                   style: TextButton.styleFrom(),
                   onPressed: onPreClick,
-                  icon: Text('pre').englishFont().color(preColor),
+                  icon: const Text('pre').englishFont().color(preColor),
                   label: Image.asset(AppImages.arrowLeftIco, color: preColor)
               ),
             ],
@@ -308,7 +308,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
   void startReviewTimer(){
     if(reviewSendTimer == null || !reviewSendTimer!.isActive){
-      reviewSendTimer = Timer.periodic(Duration(seconds: 5), (t) async {
+      reviewSendTimer = Timer.periodic(const Duration(seconds: 5), (t) async {
         if(isVideoInit) {
           final dur = chewieVideoController?.videoPlayerController.value.duration;
           final pos = await chewieVideoController?.videoPlayerController.position;
@@ -348,7 +348,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   void initVideo() async {
     isVideoInit = false;
     isVideoError = false;
-    lastPos = Duration();
+    lastPos = const Duration();
 
     if(currentItem?.media?.fileLocation == null){
       return;
@@ -396,7 +396,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
         backgroundColor: Colors.green, bufferedColor: AppThemes.instance.currentTheme.primaryColor,
       ),
       errorBuilder: (_, s){
-        return SizedBox(
+        return const SizedBox(
           child: Center(
               child: Text('Can not load media.')
           ),
@@ -408,13 +408,12 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   }
 
   void gotoExamPage() async {
-    final examPageInjector = ExamBuilderContent();
+    final examPageInjector = ExamPageInjector();
     examPageInjector.prepareExamList(examList);
     examPageInjector.answerUrl = '/grammars/exercises/solving';
     examPageInjector.showSendButton = true;
-    examPageInjector.sendButtonText = 'ارسال';
 
-    final examPage = ExamPage(builder: examPageInjector);
+    final examPage = ExamPage(injector: examPageInjector);
     await RouteTools.pushPage(context, examPage);
   }
 

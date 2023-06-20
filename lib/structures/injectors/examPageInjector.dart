@@ -2,15 +2,14 @@ import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 
-class ExamBuilderContent {
+class ExamPageInjector {
   final List<ExamModel> examList = [];
   final List<AutodidactModel> autodidactList = [];
   String answerUrl = '';
   bool showSendButton = true;
-  String sendButtonText = 'ارسال جواب';
 
 
-  ExamBuilderContent();
+  ExamPageInjector();
 
   void setAutodidacts(List<AutodidactModel> list){
     autodidactList.clear();

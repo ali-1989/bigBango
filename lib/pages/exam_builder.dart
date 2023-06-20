@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/examModels/examSuperModel.dart';
@@ -13,7 +13,7 @@ import 'package:app/views/components/exam/examOptionBuilder.dart';
 import 'package:app/views/components/exam/examSelectWordBuilder.dart';
 
 class ExamBuilder extends StatefulWidget {
-  final ExamBuilderContent builder;
+  final ExamPageInjector builder;
 
   const ExamBuilder({
     required this.builder,

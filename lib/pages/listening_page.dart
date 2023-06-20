@@ -7,7 +7,7 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
@@ -43,10 +43,10 @@ class ListeningPage extends StatefulWidget {
 class _ListeningPageState extends StateBase<ListeningPage> {
   Requester requester = Requester();
   AudioPlayer player = AudioPlayer();
-  Duration totalTime = Duration();
-  Duration currentTime = Duration();
-  ExamBuilderContent examContent = ExamBuilderContent();
-  Widget examComponent = SizedBox();
+  Duration totalTime = const Duration();
+  Duration currentTime = const Duration();
+  ExamPageInjector examContent = ExamPageInjector();
+  Widget examComponent = const SizedBox();
   ExamController? examController;
   int currentItemIdx = 0;
   List<ListeningModel> itemList = [];
@@ -95,11 +95,11 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onTryAgain: onTryAgain, backButton: BackBtn());
+      return ErrorOccur(onTryAgain: onTryAgain, backButton: const BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
-      return WaitToLoad();
+      return const WaitToLoad();
     }
 
     Color preColor = Colors.black;
@@ -119,9 +119,9 @@ class _ListeningPageState extends StateBase<ListeningPage> {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             children: [
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               AppbarLesson(title: widget.injector.segment.title),
-              SizedBox(height: 14),
+              const SizedBox(height: 14),
 
               DecoratedBox(
                   decoration: BoxDecoration(
@@ -129,11 +129,11 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                     borderRadius: BorderRadius.circular(15)
                   ),
                 child: Center(
-                  child: Text('Listening').color(Colors.white),
+                  child: const Text('Listening').color(Colors.white),
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               /// title
               Visibility(
@@ -162,7 +162,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               /// player
               DecoratedBox(
@@ -186,11 +186,11 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                                   CustomCard(
                                       color: Colors.pinkAccent,
                                       radius: 4,
-                                      padding: EdgeInsets.symmetric(horizontal: 14, vertical:4),
+                                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical:4),
                                       child: Column(
                                         children: [
-                                          Text(DurationFormatter.duration(currentTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
-                                          Text(DurationFormatter.duration(totalTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
+                                          Text(DurationFormatter.duration(currentTime, showSuffix: false), style: const TextStyle(fontSize: 10, color: Colors.white)),
+                                          Text(DurationFormatter.duration(totalTime, showSuffix: false), style: const TextStyle(fontSize: 10, color: Colors.white)),
                                         ],
                                       )
                                   ),
@@ -230,21 +230,21 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                                 textDirection: TextDirection.ltr,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  SizedBox(width: 14),
+                                  const SizedBox(width: 14),
 
                                   GestureDetector(
                                     onTap: playSound,
                                     child: CustomCard(
                                         color: Colors.white,
                                         radius: 20,
-                                        padding: EdgeInsets.all(5),
+                                        padding: const EdgeInsets.all(5),
                                         child: isPlaying() ?
-                                        Icon(AppIcons.pause, size: 20)
-                                            : Icon(AppIcons.playArrow, size: 20)
+                                        const Icon(AppIcons.pause, size: 20)
+                                            : const Icon(AppIcons.playArrow, size: 20)
                                     ),
                                   ),
 
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
                                 ],
                               ),
                             ],
@@ -255,7 +255,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                   )
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               Visibility(
                 visible: description != null,
@@ -264,7 +264,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
               examComponent,
 
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 22.0),
                 child: ElevatedButton(
@@ -272,7 +272,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
                     ),
                     onPressed: registerExerciseResult,
-                    child: Text('ثبت')
+                    child: const Text('ثبت')
                 ),
               )
             ],
@@ -290,13 +290,13 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                       quarterTurns: 2,
                       child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
                   ),
-                  label: Text('next').englishFont().color(nextColor)
+                  label: const Text('next').englishFont().color(nextColor)
               ),
 
               TextButton.icon(
                   style: TextButton.styleFrom(),
                   onPressed: onPreClick,
-                  icon: Text('pre').englishFont().color(preColor),
+                  icon: const Text('pre').englishFont().color(preColor),
                   label: Image.asset(AppImages.arrowLeftIco, color: preColor)
               ),
             ],
@@ -345,7 +345,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       }
       else {
         await player.pause();
-        await player.seek(Duration());
+        await player.seek(const Duration());
         await player.play();
       }
     }

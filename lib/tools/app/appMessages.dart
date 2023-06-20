@@ -58,6 +58,10 @@ class AppMessages {
     return 'ارسال';
   }
 
+  static String get next {
+    return 'بعدی';
+  }
+
   static String get home {
     return 'خانه';
   }

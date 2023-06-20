@@ -16,6 +16,7 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:just_audio/just_audio.dart';
 
 class ExamOptionBuilder extends StatefulWidget {
+  static const questionTitle = 'با توجه به سوال گزینه ی مناسب را انتخاب کنید';
   final ExamModel examModel;
 
   const ExamOptionBuilder({
@@ -204,7 +205,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
         ),
       ),
     );
-  }//'با توجه به سوال گزینه ی مناسب را انتخاب کنید
+  }
   
   List<Widget> buildOptions(ExamModel exam){
     List<Widget> res = [];

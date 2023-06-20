@@ -12,6 +12,7 @@ import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appThemes.dart';
 
 class ExamSelectWordBuilder extends StatefulWidget {
+  static const questionTitle = 'کلمات را در جای مناسب قرار دهید';
   final ExamModel exam;
 
   const ExamSelectWordBuilder({
@@ -66,7 +67,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
           return buildBody();
         }
     );
-  }//'کلمات را در جای مناسب قرار دهید
+  }
 
   Widget buildBody() {
     final List<InlineSpan> spans = generateSpans(exam);

@@ -15,7 +15,7 @@ import 'package:app/pages/exam_page.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/services/vocab_clickable_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
@@ -643,11 +643,11 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
   }
 
   void gotoExamPage() async {
-    final content = ExamBuilderContent();
+    final content = ExamPageInjector();
     content.prepareExamList(examList);
     content.answerUrl = '/reading/exercises/solving';
 
-    final examPage = ExamPage(builder: content);
+    final examPage = ExamPage(injector: content);
     await RouteTools.pushPage(context, examPage);
   }
 

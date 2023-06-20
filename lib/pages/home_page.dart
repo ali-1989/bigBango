@@ -15,7 +15,7 @@ import 'package:app/pages/reading_page.dart';
 import 'package:app/pages/timetable_page.dart';
 import 'package:app/pages/vocab_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/builders/examBuilderContent.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
@@ -815,12 +815,12 @@ class HomePageState extends StateBase<HomePage> {
         }
 
         if(quizzes.isNotEmpty || autodidacts.isNotEmpty){
-          final examPageInjector = ExamBuilderContent();
+          final examPageInjector = ExamPageInjector();
           examPageInjector.prepareExamList(examList);
           examPageInjector.setAutodidacts(autodidactList);
           examPageInjector.answerUrl = '/quiz/solving';
 
-          final examPage = ExamPage(builder: examPageInjector);
+          final examPage = ExamPage(injector: examPageInjector);
 
           RouteTools.pushPage(context, examPage);
         }
