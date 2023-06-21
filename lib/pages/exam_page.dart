@@ -44,15 +44,33 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
   late AutodidactModel currentAutodidact;
   int currentExamIndex = 0;
   int currentAutodidactIndex = 0;
-  List<String> answeredExamList = [];
-  List<String> answeredAutodidactList = [];
+  Set<String> answeredExamList = {};
+  Set<String> answeredAutodidactList = {};
+  late AnimationController examAnimController;
+  late AnimationController autodidactAnimController;
 
   @override
   void initState(){
     super.initState();
 
-    currentExam = widget.injector.examList.first;
+    print('>>>>>>>>>>>>>>>>>> ${widget.injector.examList.length}');
+    print('>>>>>>>>>>>>>>>>>> ${widget.injector.autodidactList.length}');
+
+    if(widget.injector.examList.isNotEmpty) {
+      currentExam = widget.injector.examList.first;
+    }
+
+    if(widget.injector.autodidactList.isNotEmpty) {
+      currentAutodidact = widget.injector.autodidactList.first;
+    }
+
     tabController = TabController(length: 2, vsync: this);
+
+    addPostOrCall(fn: (){
+      if(widget.injector.examList.isEmpty){
+        tabController.animateTo(1);
+      }
+    });
   }
 
   @override
@@ -200,13 +218,22 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
   Widget buildExamView(){
     return FadeIn(
       animate: true,
-      duration: const Duration(milliseconds: 400),
+      manualTrigger: true,
+      controller: (animCtr){
+        examAnimController = animCtr;
+      },
+      duration: const Duration(milliseconds: 500),
       child: Builder(
           builder: (_){
             if(currentExam.quizType == QuizType.fillInBlank){
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const Text(ExamBlankSpaceBuilder.questionTitle),
+                  const Row(
+                    children: [
+                      Text(ExamBlankSpaceBuilder.questionTitle),
+                    ],
+                  ),
                   const SizedBox(height: 20),
 
                   ExamBlankSpaceBuilder(
@@ -218,8 +245,13 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
             }
             else if(currentExam.quizType == QuizType.recorder){
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const Text(ExamSelectWordBuilder.questionTitle),
+                  const Row(
+                    children: [
+                      Text(ExamSelectWordBuilder.questionTitle),
+                    ],
+                  ),
                   const SizedBox(height: 20),
 
                   ExamSelectWordBuilder(
@@ -231,8 +263,13 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
             }
             else if(currentExam.quizType == QuizType.multipleChoice){
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const Text(ExamOptionBuilder.questionTitle),
+                  const Row(
+                    children: [
+                      Text(ExamOptionBuilder.questionTitle),
+                    ],
+                  ),
                   const SizedBox(height: 20),
 
                   ExamOptionBuilder(
@@ -244,6 +281,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
             }
             else if(currentExam.quizType == QuizType.makeSentence){
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(ExamMakeSentenceBuilder.questionTitle),
                   const SizedBox(height: 20),
@@ -298,30 +336,93 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
                 //shape: StadiumBorder()
               ),
               onPressed: onSendExamAnswerClick,
-              child: Text(answeredExamList.contains(currentExam.id) ? AppMessages.send : AppMessages.next)
+              child: Text(answeredExamList.contains(currentExam.id) ? AppMessages.next : AppMessages.send)
                   .englishFont().color(Colors.white),
             ),
 
-            Visibility(
-              visible: currentExamIndex < widget.injector.examList.length-1,
+            Text('${currentExamIndex+1} / ${widget.injector.examList.length}').ltr(),
+
+            TextButton(
+                onPressed: hasNextExam() ? onExamSkipClick : null,
+                child: const Text('skip')
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  Widget buildBottomSectionPage2() {
+    if(answeredAutodidactList.length == widget.injector.autodidactList.length || widget.injector.autodidactList.length < 2){
+      return const SizedBox();
+    }
+
+    return Builder(
+      builder: (context) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+
+            const Flexible(
+                flex: 1,
+              child: Text('')
+            ),
+
+            Flexible(
+                flex: 1,
+                child: Text('${currentAutodidactIndex+1} / ${widget.injector.autodidactList.length}').ltr()
+            ),
+
+            Flexible(
+              flex: 1,
               child: TextButton(
-                  onPressed: onExamSkipClick,
-                  child: const Text('skip')
+                  onPressed: hasNextAutodidact() ? onAutodidactSkipClick : null,
+                  child: Text(answeredAutodidactList.contains(currentAutodidact.id)? 'next' : 'skip')
               ),
             ),
           ],
         );
       }
     );
-    }
+  }
+
+  bool hasNextExam(){
+    return currentExamIndex < widget.injector.examList.length-1;
+  }
+
+  bool hasNextAutodidact(){
+    return currentAutodidactIndex < widget.injector.autodidactList.length-1;
+  }
 
   void onExamSkipClick() {
-    if(currentExamIndex < widget.injector.examList.length){
+    if(hasNextExam()){
+      answeredExamList.add(currentExam.id);
+
       currentExamIndex++;
       currentExam = widget.injector.examList[currentExamIndex];
 
+      examAnimController.reset();
       assistCtr.updateHead();
+      examAnimController.forward();
     }
+  }
+
+  void onAutodidactSkipClick() {
+    if(hasNextAutodidact()){
+      answeredAutodidactList.add(currentAutodidact.id);
+
+      currentAutodidactIndex++;
+      currentAutodidact = widget.injector.autodidactList[currentAutodidactIndex];
+
+      autodidactAnimController.reset();
+      assistCtr.updateHead();
+      autodidactAnimController.forward();
+    }
+  }
+
+  void onAutodidactSendAnswer() {
+    answeredAutodidactList.add(currentAutodidact.id);
+    assistCtr.updateHead();
   }
 
   Widget buildPage2(){
@@ -336,6 +437,8 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
         /// exams
         Expanded(child: buildAutodidactView()),
 
+        buildBottomSectionPage2(),
+
         const SizedBox(height: 10),
       ],
     );
@@ -344,37 +447,32 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
   Widget buildAutodidactView(){
     return FadeIn(
       animate: true,
-      duration: const Duration(milliseconds: 400),
+      manualTrigger: true,
+      controller: (animCtr){
+        autodidactAnimController = animCtr;
+      },
+      duration: const Duration(milliseconds: 500),
       child: Builder(
           builder: (_){
             if(currentAutodidact.text != null){
-              return Column(
-                children: [
-                  const Text(ExamBlankSpaceBuilder.questionTitle),
-                  const SizedBox(height: 20),
-
-                  AutodidactTextComponent(model: currentAutodidact),
-                ],
-              );
+              return AutodidactTextComponent(model: currentAutodidact, onSendAnswer: onAutodidactSendAnswer);
             }
             else if(currentAutodidact.voice != null){
-              return Column(
-                children: [
-                  const Text(ExamBlankSpaceBuilder.questionTitle),
-                  const SizedBox(height: 20),
-
-                  AutodidactVoiceComponent(model: currentAutodidact),
-                ],
-              );
+              return AutodidactVoiceComponent(model: currentAutodidact, onSendAnswer: onAutodidactSendAnswer);
             }
 
-            return const SizedBox();
+            return const Text('Sorry');
           }
       ),
     );
   }
 
   void onSendExamAnswerClick(){
+    if(answeredExamList.contains(currentExam.id)){
+      onExamSkipClick();
+      return;
+    }
+
     AppDialogIris.instance.showYesNoDialog(
       context,
       yesFn: (ctx) {

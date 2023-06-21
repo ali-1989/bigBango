@@ -94,7 +94,7 @@ class HomePageState extends StateBase<HomePage> {
         }
 
         if(assistCtr.hasState(state$loading)){
-          return WaitToLoad();
+          return const WaitToLoad();
         }
 
         return Column(
@@ -265,7 +265,7 @@ class HomePageState extends StateBase<HomePage> {
               padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 3),
               child: Row(
                 children: [
-                   SizedBox(
+                   const SizedBox(
                     width: 1.5,
                     height: 20,
                     child: ColoredBox(
@@ -306,7 +306,7 @@ class HomePageState extends StateBase<HomePage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('${lesson.improvementPercentage} %', style: TextStyle(fontSize: 12)),
+                              Text('${lesson.improvementPercentage} %', style: const TextStyle(fontSize: 12)),
 
                               const SizedBox(height: 4),
                               SizedBox(
@@ -353,7 +353,7 @@ class HomePageState extends StateBase<HomePage> {
 
                   Row(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 1.5,
                         height: 20,
                         child: ColoredBox(
@@ -385,7 +385,7 @@ class HomePageState extends StateBase<HomePage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('${lesson.improvementPercentage} %', style: TextStyle(fontSize: 12),),
+                              Text('${lesson.improvementPercentage} %', style: const TextStyle(fontSize: 12),),
 
                               const SizedBox(height: 4),
                               SizedBox(
@@ -431,7 +431,7 @@ class HomePageState extends StateBase<HomePage> {
                               bool hasAny = hasVocab || hasGrammar;
 
                               if(!hasAny){
-                                return SizedBox();
+                                return const SizedBox();
                               }
 
                               return Padding(
@@ -440,7 +440,7 @@ class HomePageState extends StateBase<HomePage> {
                                   children: [
                                     buildSegment(lesson, hasVocab? lesson.vocabSegmentModel : lesson.grammarModel),
 
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 8),
 
                                     buildSegment(lesson, !hasVocab ? null : lesson.grammarModel),
                                   ],
@@ -459,7 +459,7 @@ class HomePageState extends StateBase<HomePage> {
                               bool hasAny = hasReading || hasListening;
 
                               if(!hasAny){
-                                return SizedBox();
+                                return const SizedBox();
                               }
 
                               return Padding(
@@ -468,7 +468,7 @@ class HomePageState extends StateBase<HomePage> {
                                   children: [
                                     buildSegment(lesson, hasReading? lesson.readingModel : lesson.listeningModel),
 
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 8),
 
                                     buildSegment(lesson, !hasReading ? null : lesson.listeningModel),
                                   ],
@@ -479,66 +479,69 @@ class HomePageState extends StateBase<HomePage> {
 
                         const SizedBox(width: 7),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 7),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                  child: Stack(
-                                    children: [
-                                      CustomCard(
-                                        color: Colors.grey.shade200,
-                                        padding: const EdgeInsets.symmetric(horizontal:5.0, vertical: 10),
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                CustomCard(
-                                                    color: Colors.white,
-                                                    padding: EdgeInsets.all(5),
-                                                    child: Image.asset(AppImages.examIco)
-                                                ),
+                        Visibility(
+                          visible: lesson.hasQuiz || lesson.hasAutodidact,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 7),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: Stack(
+                                      children: [
+                                        CustomCard(
+                                          color: Colors.grey.shade200,
+                                          padding: const EdgeInsets.symmetric(horizontal:5.0, vertical: 10),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  CustomCard(
+                                                      color: Colors.white,
+                                                      padding: const EdgeInsets.all(5),
+                                                      child: Image.asset(AppImages.examIco)
+                                                  ),
 
-                                                SizedBox(width: 10),
+                                                  const SizedBox(width: 10),
 
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text('آزمون'),
-                                                    SizedBox(height: 5),
-                                                    Text('Quiz').alpha(alpha: 100),
-                                                  ],
-                                                ),
+                                                  Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      const Text('آزمون'),
+                                                      const SizedBox(height: 5),
+                                                      const Text('Quiz').alpha(alpha: 100),
+                                                    ],
+                                                  ),
 
-                                              ],
-                                            ),
-                                          ],
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
 
-                                      Positioned(
-                                        bottom: 10,
-                                        left: 5,
-                                        child: GestureDetector(
-                                          onTap: (){
-                                            requestExams(lesson);
-                                          },
-                                          child: CustomCard(
-                                            padding: EdgeInsets.all(10),
-                                            child: Row(
-                                              children: [
-                                                Image.asset(AppImages.startExercise),
-                                                SizedBox(width: 10),
-                                                Text('شروع'),
-                                              ],
+                                        Positioned(
+                                          bottom: 10,
+                                          left: 5,
+                                          child: GestureDetector(
+                                            onTap: (){
+                                              requestExams(lesson);
+                                            },
+                                            child: CustomCard(
+                                              padding: const EdgeInsets.all(10),
+                                              child: Row(
+                                                children: [
+                                                  Image.asset(AppImages.startExercise),
+                                                  const SizedBox(width: 10),
+                                                  const Text('شروع'),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  )
-                              ),
-                            ],
+                                      ],
+                                    )
+                                ),
+                              ],
+                            ),
                           ),
                         ),
 
@@ -572,7 +575,7 @@ class HomePageState extends StateBase<HomePage> {
   Widget buildSegment(LessonModel lesson, ISegmentModel? segmentModel){
 
     if(segmentModel == null){
-      return Flexible(
+      return const Flexible(
         fit: FlexFit.tight,
         flex: 1,
         child: SizedBox(),
@@ -580,7 +583,7 @@ class HomePageState extends StateBase<HomePage> {
     }
 
     if(segmentModel is ListeningSegmentModel && segmentModel.listeningList.isEmpty){
-      return Flexible(
+      return const Flexible(
         fit: FlexFit.tight,
         flex: 1,
         child: SizedBox(),
@@ -605,17 +608,17 @@ class HomePageState extends StateBase<HomePage> {
                       children: [
                         CustomCard(
                             color: Colors.white,
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             child: Image.asset(segmentModel.icon)
                         ),
 
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
 
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(segmentModel.title),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             Text(segmentModel.engTitle).alpha(alpha: 100),
                           ],
                         ),
@@ -623,7 +626,7 @@ class HomePageState extends StateBase<HomePage> {
                       ],
                     ),
 
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
 
                     Directionality(
                       textDirection: TextDirection.ltr,

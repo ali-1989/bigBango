@@ -36,9 +36,11 @@ import 'package:app/tools/routeTools.dart';
 
 class AutodidactTextComponent extends StatefulWidget {
   final AutodidactModel model;
+  final VoidCallback onSendAnswer;
 
   const AutodidactTextComponent({
     required this.model,
+    required this.onSendAnswer,
     Key? key
   }) : super(key: key);
 
@@ -101,44 +103,46 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
   }
 
   Widget buildBody(){
-    return Column(
-      children: [
-        Row(
-          children: [
-            Image.asset(AppImages.doubleArrow),
-            const SizedBox(width: 4),
-            Text(autodidactModel.question?? ''),
-          ],
-        ),
-        const SizedBox(height: 20),
-
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: ColoredBox(
-            color: Colors.grey.shade200,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 15),
-              child: Text(autodidactModel.text!).englishFont().fsR(-1),
-            ).wrapDotBorder(
-                color: Colors.black12,
-                alpha: 100,
-                dashPattern: [4,8]),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Image.asset(AppImages.doubleArrow),
+              const SizedBox(width: 4),
+              Text(autodidactModel.question?? ''),
+            ],
           ),
-        ),
+          const SizedBox(height: 20),
 
-        const SizedBox(height: 30),
-        const Align(
-          alignment: Alignment.topRight,
-            child: Text('پاسخ:')
-        ),
-        const SizedBox(height: 8),
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: ColoredBox(
+              color: Colors.grey.shade200,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 15),
+                child: Text(autodidactModel.text!).englishFont().fsR(-1),
+              ).wrapDotBorder(
+                  color: Colors.black12,
+                  alpha: 100,
+                  dashPattern: [4,8]),
+            ),
+          ),
 
-        buildReply(),
+          const SizedBox(height: 30),
+          const Align(
+            alignment: Alignment.topRight,
+              child: Text('پاسخ:')
+          ),
+          const SizedBox(height: 8),
 
-        const SizedBox(height: 20),
-        buildCorrectAnswerView(),
-        const SizedBox(height: 10),
-      ],
+          buildReply(),
+
+          const SizedBox(height: 20),
+          buildCorrectAnswerView(),
+          const SizedBox(height: 10),
+        ],
+      ),
     );
   }
 
@@ -541,7 +545,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
       }
     }
 
-    FocusHelper.hideKeyboardByUnFocusRoot();
+    await FocusHelper.hideKeyboardByUnFocusRootWait();
 
     requester.httpRequestEvents.onAnyState = (req) async {
       await hideLoading();
@@ -566,6 +570,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
       final message = res['message']?? 'پاسخ شما ثبت شد';
 
       AppSnack.showInfo(context, message);
+      widget.onSendAnswer.call();
     };
 
     final js = <String, dynamic>{};

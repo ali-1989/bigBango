@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:animator/animator.dart';
 import 'package:iris_tools/api/callAction/taskQueueCaller.dart';
 import 'package:iris_tools/api/generator.dart';
+import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/attribute.dart';
 import 'package:iris_tools/widgets/customCard.dart';
@@ -127,15 +128,15 @@ class _VocabPageState extends StateBase<VocabPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onTryAgain: onRefresh, backButton: BackBtn());
+      return ErrorOccur(onTryAgain: onRefresh, backButton: const BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
-      return WaitToLoad();
+      return const WaitToLoad();
     }
 
     if(vocabList.isEmpty){
-      return EmptyData(backButton: BackBtn());
+      return const EmptyData(backButton: BackBtn());
     }
 
     currentVocab = vocabList[currentVocabIdx];
@@ -162,11 +163,11 @@ class _VocabPageState extends StateBase<VocabPage> {
                   controller: atrCtr2,
                   child: Column(
                     children: [
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       AppbarLesson(title: widget.injector.lessonModel.title),
 
-                      SizedBox(height: 14),
+                      const SizedBox(height: 14),
 
                       /// 7/20
                       Row(
@@ -178,11 +179,11 @@ class _VocabPageState extends StateBase<VocabPage> {
                               children: [
                                 Chip(
                                   label: Text('${widget.injector.segment?.title}').bold().color(Colors.white),
-                                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                                  padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
                                   visualDensity: VisualDensity.compact,
                                 ),
 
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
 
                                 /*SizedBox(
                                   height: 15,
@@ -201,13 +202,13 @@ class _VocabPageState extends StateBase<VocabPage> {
                               children: [
                                 Text('${vocabList.length}').englishFont().fsR(4),
 
-                                SizedBox(width: 10),
-                                Text('/').englishFont().fsR(5),
+                                const SizedBox(width: 10),
+                                const Text('/').englishFont().fsR(5),
 
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 CustomCard(
                                   color: Colors.grey.shade200,
-                                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                                     child: Text('${currentVocabIdx+1}').englishFont().bold().fsR(4)
                                 )
                               ],
@@ -216,7 +217,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                         ],
                       ),
 
-                      SizedBox(height: 14),
+                      const SizedBox(height: 14),
 
                       /// progressbar
                       Visibility(
@@ -230,7 +231,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                         ),
                       ),
 
-                      SizedBox(height: 14),
+                      const SizedBox(height: 14),
 
                       Builder(
                           builder: (ctx){
@@ -251,24 +252,24 @@ class _VocabPageState extends StateBase<VocabPage> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           buildGreetingView(),
-                                          SizedBox(height: 20),
+                                          const SizedBox(height: 20),
 
                                           Row(
                                             children: [
                                               ElevatedButton.icon(
                                                   onPressed: gotoNextPart,
                                                   label: Image.asset(AppImages.arrowRight2),
-                                                  icon: Text('بخش بعدی')
+                                                  icon: const Text('بخش بعدی')
                                               ),
 
-                                              SizedBox(width: 30),
+                                              const SizedBox(width: 30),
                                               OutlinedButton.icon(
                                                 style: OutlinedButton.styleFrom(
-                                                  side: BorderSide(color: AppDecoration.red)
+                                                  side: const BorderSide(color: AppDecoration.red)
                                                 ),
                                                   onPressed: resetVocab,
                                                   label: Image.asset(AppImages.returnArrow),
-                                                  icon: Text('شروع مجدد')
+                                                  icon: const Text('شروع مجدد')
                                               ),
                                             ],
                                           )
@@ -287,7 +288,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                       url: currentVocab.image?.fileLocation,
                                       beforeLoadWidget: SizedBox(
                                           height: sh/3,
-                                          child: WaitToLoad()
+                                          child: const WaitToLoad()
                                       ),
                                     ),
                                   ),
@@ -297,7 +298,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                     child: Image.asset(AppImages.noImage),
                                   ),
 
-                                  SizedBox(height: 14),
+                                  const SizedBox(height: 14),
                                   DecoratedBox(
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
@@ -318,13 +319,13 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                       leitnerClick();
                                                     },
                                                     child: CustomCard(
-                                                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 7),
+                                                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 7),
                                                       color: Colors.grey.shade200,
                                                       child: Image.asset(currentVocab.inLeitner? AppImages.leitnerIcoRed : AppImages.leitnerIcoBlack),
                                                     ),
                                                   ),
 
-                                                  SizedBox(width: 10),
+                                                  const SizedBox(width: 10),
 
                                                   GestureDetector(
                                                     onTap: (){
@@ -341,7 +342,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                         return AnimateWidget(
                                                           resetOnRebuild: true,
                                                           triggerOnRebuild: true,
-                                                          duration: Duration(milliseconds: 500),
+                                                          duration: const Duration(milliseconds: 500),
                                                           cycles: data == 'prepare' ? 100 : 1,
                                                           builder: (_, animate){
                                                             Color color = Colors.grey.shade200;
@@ -353,13 +354,13 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                             }
 
                                                             return CustomCard(
-                                                              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+                                                              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
                                                               color: color,
                                                               child: Column(
                                                                 children: [
                                                                   Image.asset(AppImages.speaker2Ico, height: 16, width: 20),
-                                                                  SizedBox(height: 3),
-                                                                  Text('US', style: TextStyle(fontSize: 9))
+                                                                  const SizedBox(height: 3),
+                                                                  const Text('US', style: TextStyle(fontSize: 9))
                                                                 ],
                                                               ),
                                                             );
@@ -369,7 +370,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                     ),
                                                   ),
 
-                                                  SizedBox(width: 10),
+                                                  const SizedBox(width: 10),
 
                                                   GestureDetector(
                                                     onTap: (){
@@ -386,7 +387,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                         return AnimateWidget(
                                                           resetOnRebuild: true,
                                                           triggerOnRebuild: true,
-                                                          duration: Duration(milliseconds: 500),
+                                                          duration: const Duration(milliseconds: 500),
                                                           cycles: data == 'prepare' ? 100 : 1,
                                                           builder: (_, animate){
                                                             Color color = Colors.grey.shade200;
@@ -398,13 +399,13 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                             }
 
                                                             return CustomCard(
-                                                                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+                                                                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
                                                                 color: color,
                                                                 child: Column(
                                                                   children: [
                                                                     Image.asset(AppImages.speaker2Ico, height: 16, width: 20),
-                                                                    SizedBox(height: 3),
-                                                                    Text('UK', style: TextStyle(fontSize: 9),)
+                                                                    const SizedBox(height: 3),
+                                                                    const Text('UK', style: TextStyle(fontSize: 9),)
                                                                   ],
                                                                 )
                                                             );
@@ -414,14 +415,14 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                     ),
                                                   ),
 
-                                                  SizedBox(width: 10),
+                                                  const SizedBox(width: 10),
 
                                                   RichText(
                                                     text: TextSpan(
                                                         children: [
-                                                          TextSpan(text: '[ ', style: TextStyle(fontSize: 16, color: Colors.black)),
-                                                          TextSpan(text: '${currentVocab.pronunciation}', style: TextStyle(fontSize: 12, color: Colors.black)),
-                                                          TextSpan(text: ' ]', style: TextStyle(fontSize: 16, color: Colors.black))
+                                                          const TextSpan(text: '[ ', style: TextStyle(fontSize: 16, color: Colors.black)),
+                                                          TextSpan(text: '${currentVocab.pronunciation}', style: const TextStyle(fontSize: 12, color: Colors.black)),
+                                                          const TextSpan(text: ' ]', style: TextStyle(fontSize: 16, color: Colors.black))
                                                         ]
                                                     ),
                                                   ),
@@ -436,7 +437,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                           ),
 
                                           /// divider
-                                          Padding(
+                                          const Padding(
                                             padding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
                                             child: SizedBox(
                                               width: double.infinity,
@@ -451,17 +452,17 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                   showTranslate = !showTranslate;
                                                   assistCtr.updateHead();
                                                 },
-                                                label: Text('مشاهده ترجمه'),
+                                                label: const Text('مشاهده ترجمه'),
                                               ),
                                               secondChild: Padding(
                                                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                                                 child: Text(currentVocab.translation),
                                               ),
                                               crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                                              duration: Duration(milliseconds: 300)
+                                              duration: const Duration(milliseconds: 300)
                                           ),
 
-                                          SizedBox(height: 10),
+                                          const SizedBox(height: 10),
 
                                           ...buildDescription(),
                                         ],
@@ -474,7 +475,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                           }
                       ),
 
-                      SizedBox(height: 14),
+                      const SizedBox(height: 14),
                     ],
                   ),
                 ),
@@ -492,13 +493,13 @@ class _VocabPageState extends StateBase<VocabPage> {
                     quarterTurns: 2,
                     child: Image.asset(AppImages.arrowLeftIco, color: nextBtnColor)
                 ),
-                label: Text('next').englishFont().color(nextBtnColor)
+                label: const Text('next').englishFont().color(nextBtnColor)
             ),
 
             TextButton.icon(
                 style: TextButton.styleFrom(),
                 onPressed: onPreClick,
-                icon: Text('pre').englishFont().color(preBtnColor),
+                icon: const Text('pre').englishFont().color(preBtnColor),
                 label: Image.asset(AppImages.arrowLeftIco, color: preBtnColor)
             ),
           ],
@@ -511,42 +512,44 @@ class _VocabPageState extends StateBase<VocabPage> {
     List<Widget> list = [];
 
     for(int i=0; i < currentVocab.descriptions.length; i++) {
-      final k = currentVocab.descriptions[i];
+      final desc = currentVocab.descriptions[i];
 
-      if(k.content != null) {
+      if(desc.content != null) {
+        final dir = LocaleHelper.autoDirection(desc.content!);
+
         final t = Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
-          textDirection: TextDirection.ltr,
+          textDirection: dir,
           children: [
-            Text('${k.number}  ',
+            Text('${desc.number}) ',
               style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 13,
                   fontFamily: FontManager.instance.getEnglishFont()?.family,
               ),
-              textDirection: TextDirection.ltr,
+              textDirection: dir,
             ),
 
             Flexible(
-                child: Text('${k.content}',
+                child: Text('${desc.content}',
                   style: TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 13,
                       fontFamily: FontManager.instance.getEnglishFont()?.family,
                   ),
-                  textDirection: TextDirection.ltr,
+                  textDirection: dir,
                 )
             ),
           ],
         );
 
         list.add(t);
-        list.add(SizedBox(height: 10,));
+        list.add(const SizedBox(height: 10,));
       }
 
-      for(final sample in k.samples) {
+      for(final sample in desc.samples) {
         if (sample.type == 2) {
           final t = Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -565,9 +568,9 @@ class _VocabPageState extends StateBase<VocabPage> {
             ],
           );
 
-          list.add(SizedBox(height: 10));
+          list.add(const SizedBox(height: 10));
           list.add(t);
-          list.add(SizedBox(height: 10));
+          list.add(const SizedBox(height: 10));
         }
         else {
           final contentText = Row(
@@ -604,7 +607,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                 return AnimateWidget(
                   resetOnRebuild: true,
                   triggerOnRebuild: true,
-                  duration: Duration(milliseconds: 600),
+                  duration: const Duration(milliseconds: 600),
                   cycles: data == 'prepare'  || data == 'play'? 100 : 1,
                   builder: (_, animate){
                     double val = 1;
@@ -632,22 +635,22 @@ class _VocabPageState extends StateBase<VocabPage> {
             textDirection: TextDirection.ltr,
             children: [
               voiceView,
-              SizedBox(width: 6),
+              const SizedBox(width: 6),
               Flexible(child: contentText),
             ],
           ));
 
-          list.add(SizedBox(height: 7));
+          list.add(const SizedBox(height: 7));
           list.add(transText);
-          list.add(SizedBox(height: 7));
+          list.add(const SizedBox(height: 7));
         }
       }
 
       if(i+1 < currentVocab.descriptions.length) {
-        if (k.samples.isNotEmpty) {
-          list.add(SizedBox(height: 15));
-          list.add(Divider());
-          list.add(SizedBox(height: 12));
+        if (desc.samples.isNotEmpty) {
+          list.add(const SizedBox(height: 15));
+          list.add(const Divider());
+          list.add(const SizedBox(height: 12));
         }
       }
     }
@@ -656,7 +659,7 @@ class _VocabPageState extends StateBase<VocabPage> {
   }
 
   Widget buildGreetingView(){
-    return GreetingView();
+    return const GreetingView();
   }
 
   double calcProgress(){
@@ -820,7 +823,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     reviewIds.add(id);
 
     if(reviewSendTimer == null || !reviewSendTimer!.isActive){
-      reviewSendTimer = Timer(Duration(seconds: 5), (){
+      reviewSendTimer = Timer(const Duration(seconds: 5), (){
         reviewTaskQue.addObject({...reviewIds});
       });
     }

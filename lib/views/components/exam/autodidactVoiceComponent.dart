@@ -42,9 +42,11 @@ import 'package:app/tools/routeTools.dart';
 
 class AutodidactVoiceComponent extends StatefulWidget {
   final AutodidactModel model;
+  final VoidCallback onSendAnswer;
 
   const AutodidactVoiceComponent({
     required this.model,
+    required this.onSendAnswer,
     Key? key
   }) : super(key: key);
 
@@ -113,70 +115,72 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   }
 
   Widget buildBody(){
-    return Column(
-      children: [
-        Row(
-          children: [
-            Image.asset(AppImages.doubleArrow),
-            const SizedBox(width: 4),
-            Text(autodidactModel.question?? ''),
-          ],
-        ),
-        const SizedBox(height: 20),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Image.asset(AppImages.doubleArrow),
+              const SizedBox(width: 4),
+              Text(autodidactModel.question?? ''),
+            ],
+          ),
+          const SizedBox(height: 20),
 
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: CustomCard(
-            padding: const EdgeInsets.all(5),
-            color: Colors.grey.shade200,
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: playPauseQuestionVoice,
-                  child: CustomCard(
-                    radius: 50,
-                    padding: const EdgeInsets.all(14),
-                    child: Image.asset(questionPlayer.playing? AppImages.pauseIco : AppImages.playIco, width: 16, height: 16),
-                  ),
-                ),
-
-                Expanded(
-                  child: SliderTheme(
-                    data: SliderThemeData.fromPrimaryColors(
-                        primaryColor: AppThemes.instance.currentTheme.primaryColor,
-                        primaryColorDark: AppThemes.instance.currentTheme.primaryColor,
-                        primaryColorLight: AppThemes.instance.currentTheme.primaryColor,
-                        valueIndicatorTextStyle: const TextStyle(),
-                    ).copyWith(),
-                    child: Slider(
-                      value: percentOfPlayer(),
-                      onChanged: (v){
-                        var x = v * 100;
-                        x = x * questionTotalTime.inMilliseconds / 100;
-
-                        questionPlayer.seek(Duration(milliseconds: x.toInt()));
-                      },
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: CustomCard(
+              padding: const EdgeInsets.all(5),
+              color: Colors.grey.shade200,
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: playPauseQuestionVoice,
+                    child: CustomCard(
+                      radius: 50,
+                      padding: const EdgeInsets.all(14),
+                      child: Image.asset(questionPlayer.playing? AppImages.pauseIco : AppImages.playIco, width: 16, height: 16),
                     ),
                   ),
-                ),
-              ],
+
+                  Expanded(
+                    child: SliderTheme(
+                      data: SliderThemeData.fromPrimaryColors(
+                          primaryColor: AppThemes.instance.currentTheme.primaryColor,
+                          primaryColorDark: AppThemes.instance.currentTheme.primaryColor,
+                          primaryColorLight: AppThemes.instance.currentTheme.primaryColor,
+                          valueIndicatorTextStyle: const TextStyle(),
+                      ).copyWith(),
+                      child: Slider(
+                        value: percentOfPlayer(),
+                        onChanged: (v){
+                          var x = v * 100;
+                          x = x * questionTotalTime.inMilliseconds / 100;
+
+                          questionPlayer.seek(Duration(milliseconds: x.toInt()));
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
 
-        const SizedBox(height: 30),
-        const Align(
-            alignment: Alignment.topRight,
-            child: Text('پاسخ:')
-        ),
-        const SizedBox(height: 8),
+          const SizedBox(height: 30),
+          const Align(
+              alignment: Alignment.topRight,
+              child: Text('پاسخ:')
+          ),
+          const SizedBox(height: 8),
 
-        buildReply(),
+          buildReply(),
 
-        const SizedBox(height: 20),
-        buildCorrectAnswerView(),
-        const SizedBox(height: 10),
-      ],
+          const SizedBox(height: 20),
+          buildCorrectAnswerView(),
+          const SizedBox(height: 10),
+        ],
+      ),
     );
   }
 
@@ -696,6 +700,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
       final message = res['message']?? 'پاسخ شما ثبت شد';
 
       AppSnack.showInfo(context, message);
+      widget.onSendAnswer.call();
     };
 
     final js = <String, dynamic>{};
