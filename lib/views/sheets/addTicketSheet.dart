@@ -197,7 +197,7 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                               const SizedBox(height: 15),
                               Visibility(
                                 visible: attachmentFiles.isNotEmpty,
-                                  child: Text('تعداد فایل ها: ${attachmentFiles.length}').subFont().fsR(-2),
+                                  child: Text('تعداد فایل ها: ${attachmentFiles.length}').thinFont().fsR(-2),
                               ),
                               const SizedBox(height: 15),
 

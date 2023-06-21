@@ -10,7 +10,9 @@ import 'package:im_animations/im_animations.dart';
 import 'package:iris_tools/api/duration/durationFormatter.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
+import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/api/helpers/pathHelper.dart';
+import 'package:iris_tools/api/helpers/textHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 import 'package:just_audio/just_audio.dart';
@@ -116,25 +118,41 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
           const SizedBox(height: 20),
 
           Directionality(
-            textDirection: TextDirection.ltr,
-            child: ColoredBox(
-              color: Colors.grey.shade200,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 15),
-                child: Text(autodidactModel.text!).englishFont().fsR(-1),
-              ).wrapDotBorder(
-                  color: Colors.black12,
-                  alpha: 100,
-                  dashPattern: [4,8]),
-            ),
+            textDirection: LocaleHelper.autoDirection(autodidactModel.text!),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 15),
+              child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minWidth: double.infinity,
+                    minHeight: 50,
+                  ),
+                  child: Text(autodidactModel.text!).englishFont().fsR(-1)),
+            ).wrapDotBorder(
+                color: Colors.black12,
+                alpha: 100,
+                dashPattern: [4,8]),
           ),
 
           const SizedBox(height: 30),
+          const Divider(color: Colors.black,),
+          const SizedBox(height: 15),
+
           const Align(
             alignment: Alignment.topRight,
-              child: Text('پاسخ:')
+              child: Row(
+                children: [
+                  SizedBox(
+                    height: 15,
+                    width: 2,
+                    child: ColoredBox(color: Colors.black),
+                  ),
+
+                  SizedBox(width: 6),
+                  Text('پاسخ شما:'),
+                ],
+              )
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 15),
 
           buildReply(),
 
@@ -178,18 +196,21 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
   }
 
   Widget buildCorrectAnswerView(){
-    return Row(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        OutlinedButton(
-          onPressed: showAnswer,
-          child: const Text('نمایش پاسخ صحیح'),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: showAnswer,
+            child: const Text('مشاهده پاسخ استاد'),
+          ),
         ),
 
         const SizedBox(width: 10),
 
         SizedBox(
-          width: 120,
+          width: double.infinity,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green

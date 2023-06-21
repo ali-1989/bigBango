@@ -74,7 +74,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
               ? null
               : ElevatedButton(
                 onPressed: openNewResponse,
-                child: Text('پاسخ دادن'),
+                child: const Text('پاسخ دادن'),
           ),
         );
       },
@@ -83,32 +83,32 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onTryAgain: onRefresh, backButton: BackBtn());
+      return ErrorOccur(onTryAgain: onRefresh, backButton: const BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
-      return WaitToLoad();
+      return const WaitToLoad();
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// header
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 18),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 4,
                     height: 36,
                     child: ColoredBox(color: AppDecoration.red),
                   ),
 
-                  SizedBox(width: 7),
+                  const SizedBox(width: 7),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -137,16 +137,16 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.zero,
-                          visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
                         ),
                         onPressed: closeTicket,
-                        child: Text('بستن',
+                        child: const Text('بستن',
                             textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: true, applyHeightToLastDescent: true)
-                        ).subFont().color(Colors.white)
+                        ).thinFont().color(Colors.white)
                     ),
                   ),
 
-                  SizedBox(width: 10,),
+                  const SizedBox(width: 10,),
                   GestureDetector(
                     onTap: (){
                       AppNavigator.pop(context);
@@ -154,10 +154,10 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
                     child: Row(
                       children: [
                         //Text(AppMessages.back),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         CustomCard(
                             color: Colors.grey.shade200,
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             child: Image.asset(AppImages.arrowLeftIco)
                         ),
                       ],
@@ -168,8 +168,8 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
             ],
           ),
         ),
-        Divider(indent: 15, endIndent: 15, color: Colors.black54,),
-        SizedBox(height: 20),
+        const Divider(indent: 15, endIndent: 15, color: Colors.black54,),
+        const SizedBox(height: 20),
 
         /// content
         Expanded(
@@ -238,7 +238,7 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
   }
 
   void scrollToEnd(){
-    srcCtr.animateTo(srcCtr.position.maxScrollExtent, duration: Duration(milliseconds: 100), curve: Curves.linear);
+    srcCtr.animateTo(srcCtr.position.maxScrollExtent, duration: const Duration(milliseconds: 100), curve: Curves.linear);
   }
 
   void requestPermission(){

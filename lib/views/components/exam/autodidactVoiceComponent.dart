@@ -168,11 +168,25 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
           ),
 
           const SizedBox(height: 30),
+          const Divider(color: Colors.black,),
+          const SizedBox(height: 15),
+
           const Align(
               alignment: Alignment.topRight,
-              child: Text('پاسخ:')
+              child: Row(
+                children: [
+                  SizedBox(
+                    height: 15,
+                    width: 2,
+                    child: ColoredBox(color: Colors.black),
+                  ),
+
+                  SizedBox(width: 6),
+                  Text('پاسخ شما:'),
+                ],
+              )
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 15),
 
           buildReply(),
 
@@ -297,24 +311,30 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   }
 
   Widget buildCorrectAnswerView(){
-    return Row(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        OutlinedButton(
-          onPressed: showAnswer,
-          child: const Text('نمایش پاسخ صحیح'),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: showAnswer,
+            child: const Text('مشاهده پاسخ استاد'),
+          ),
         ),
 
         const SizedBox(width: 10),
 
-        SizedBox(
-          width: 120,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green
+        Visibility(
+          visible: isVoiceFileOK,
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green
+              ),
+              onPressed: sendAnswer,
+              child: const Text('ارسال پاسخ'),
             ),
-            onPressed: sendAnswer,
-            child: const Text('ارسال پاسخ'),
           ),
         ),
       ],

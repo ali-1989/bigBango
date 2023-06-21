@@ -27,7 +27,7 @@ class AnimationPositionScaleState extends State<AnimationPositionScale> with Tic
 
     animCtr = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
     );
 
     moveAmin = Tween(begin:widget.y-100, end: 0.0).animate(animCtr);

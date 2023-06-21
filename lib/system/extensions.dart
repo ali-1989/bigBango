@@ -442,162 +442,9 @@ extension IconExtension on Icon {
 }
 ///==========================================================================================================
 extension TextExtension on Text {
-  Text whiteOrAppBarItemOn(Color color) {
-    Color replace;
 
-    if(ColorHelper.isNearColors(color, [Colors.white, Colors.grey[200]!])) {
-      replace = AppThemes.instance.currentTheme.appBarItemColor;
-    } else {
-      replace = Colors.white;
-    }
-
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: replace);
-
-    return Text(
-      data!,
-      key: key,
-      style: ts,
-      strutStyle: strutStyle,
-      textAlign: textAlign,
-      locale: locale,
-      maxLines: maxLines,
-      overflow: overflow,
-      semanticsLabel: semanticsLabel,
-      softWrap: softWrap,
-      textDirection: textDirection,
-      textHeightBehavior: textHeightBehavior,
-      textScaleFactor: textScaleFactor,
-      textWidthBasis: textWidthBasis,
-    );
-  }
-
-  Text whiteOrAppBarItemOnPrimary() {
-    Color replace;
-
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.primaryColor,
-        [Colors.grey[900]!, Colors.white, Colors.grey[600]!])) {
-      replace = AppThemes.instance.currentTheme.appBarItemColor;
-    } else {
-      replace = Colors.white;
-    }
-
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: replace);
-
-    return Text(
-      data!,
-      key: key,
-      style: ts,
-      strutStyle: strutStyle,
-      textAlign: textAlign,
-      locale: locale,
-      maxLines: maxLines,
-      overflow: overflow,
-      semanticsLabel: semanticsLabel,
-      softWrap: softWrap,
-      textDirection: textDirection,
-      textHeightBehavior: textHeightBehavior,
-      textScaleFactor: textScaleFactor,
-      textWidthBasis: textWidthBasis,
-    );
-  }
-
-  Text whiteOrDifferentOnPrimary() {
-    Color replace;
-
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.primaryColor,
-        [Colors.grey[900]!, Colors.white, Colors.grey[600]!])) {
-      replace = AppThemes.instance.currentTheme.differentColor;
-    } else {
-      replace = Colors.white;
-    }
-
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: replace);
-
-    return Text(
-      data!,
-      key: key,
-      style: ts,
-      strutStyle: strutStyle,
-      textAlign: textAlign,
-      locale: locale,
-      maxLines: maxLines,
-      overflow: overflow,
-      semanticsLabel: semanticsLabel,
-      softWrap: softWrap,
-      textDirection: textDirection,
-      textHeightBehavior: textHeightBehavior,
-      textScaleFactor: textScaleFactor,
-      textWidthBasis: textWidthBasis,
-    );
-  }
-
-  Text whiteOrDifferentOnBackColor() {
-    Color replace;
-
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.backgroundColor,
-        [Colors.black, Colors.white, Colors.grey[200]!, Colors.grey[900]!])) {
-      replace = AppThemes.instance.currentTheme.differentColor;
-    } else {
-      replace = Colors.white;
-    }
-
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: replace);
-
-    return Text(
-      data!,
-      key: key,
-      style: ts,
-      strutStyle: strutStyle,
-      textAlign: textAlign,
-      locale: locale,
-      maxLines: maxLines,
-      overflow: overflow,
-      semanticsLabel: semanticsLabel,
-      softWrap: softWrap,
-      textDirection: textDirection,
-      textHeightBehavior: textHeightBehavior,
-      textScaleFactor: textScaleFactor,
-      textWidthBasis: textWidthBasis,
-    );
-  }
-
-  Text primaryOrAppBarItemOnBackColor({Color? backColor}) {
-    backColor ??= AppThemes.instance.currentTheme.backgroundColor;
-    Color replace;
-
-    if (ColorHelper.isNearColors(backColor, [AppThemes.instance.currentTheme.primaryColor])) {
-      replace = AppThemes.instance.currentTheme.appBarItemColor;
-    } else {
-      replace = AppThemes.instance.currentTheme.primaryColor;
-    }
-
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: replace);
-
-    return Text(
-      data!,
-      key: key,
-      style: ts,
-      strutStyle: strutStyle,
-      textAlign: textAlign,
-      locale: locale,
-      maxLines: maxLines,
-      overflow: overflow,
-      semanticsLabel: semanticsLabel,
-      softWrap: softWrap,
-      textDirection: textDirection,
-      textHeightBehavior: textHeightBehavior,
-      textScaleFactor: textScaleFactor,
-      textWidthBasis: textWidthBasis,
-    );
-  }
-
-  Text infoColor() {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
+  Text infoColor({bool baseStyle = false}) {
+    var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
     ts = ts.copyWith(color: AppThemes.instance.currentTheme.infoTextColor);
 
     return Text(
@@ -705,35 +552,8 @@ extension TextExtension on Text {
     );
   }
 
-  Text subAlpha([int alpha = 160]) {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-
-    ts = ts.copyWith(
-        //fontWeight: FontWeight.bold,
-        color: ts.color?.withAlpha(alpha)
-    );
-
-    return Text(
-      data!,
-      key: key,
-      style: ts,
-      strutStyle: strutStyle,
-      textAlign: textAlign,
-      //textAlign: center ? TextAlign.center : textAlign,
-      locale: locale,
-      maxLines: maxLines,
-      overflow: overflow,
-      semanticsLabel: semanticsLabel,
-      softWrap: softWrap,
-      textDirection: textDirection,
-      textHeightBehavior: textHeightBehavior,
-      textScaleFactor: textScaleFactor,
-      textWidthBasis: textWidthBasis,
-    );
-  }
-
-  Text subFont() {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
+  Text thinFont({bool baseStyle = false}) {
+    var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
 
     ts = ts.copyWith(
         fontFamily: AppThemes.instance.currentTheme.subTextStyle.fontFamily,
@@ -757,8 +577,8 @@ extension TextExtension on Text {
     );
   }
 
-  Text boldFont() {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
+  Text boldFont({bool baseStyle = false}) {
+    var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
 
     ts = ts.copyWith(
         fontFamily: AppThemes.instance.currentTheme.boldTextStyle.fontFamily,
@@ -832,12 +652,6 @@ extension TextExtension on Text {
     );
   }
 
-  Text underLineClickable() {
-    return bold()
-        .fsR(4)// fs(18)
-        .color(AppThemes.instance.currentTheme.underLineDecorationColor);
-  }
-
   Text fs(double size, {bool baseStyle = false}) {
     var ts = style ??  (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
     ts = ts.copyWith(fontSize: size);
@@ -861,9 +675,7 @@ extension TextExtension on Text {
   }
 
   Text fsR(double size, {double? max /*20*/}) {
-    var siz = style?.fontSize;
-    siz ??= AppThemes.instance.currentTheme.baseTextStyle.fontSize;
-
+    var siz = style?.fontSize?? AppThemes.instance.currentTheme.baseTextStyle.fontSize;
     siz = siz! + size;
 
     if (max != null) {
@@ -873,9 +685,11 @@ extension TextExtension on Text {
     return fs(siz);
   }
 
-  Text alpha({int alpha = 160}) {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: ts.color!.withAlpha(alpha));
+  Text alpha({int alpha = 160, bool baseStyle = false}) {
+    var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
+    final color = ts.color?? AppThemes.instance.currentTheme.baseTextStyle.color;
+
+    ts = ts.copyWith(color: color!.withAlpha(alpha));
 
     return Text(
       data!,
@@ -895,9 +709,9 @@ extension TextExtension on Text {
     );
   }
 
-  Text color(Color v) {
+  Text color(Color v, {int? alpha}) {
     var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: v);
+    ts = ts.copyWith(color: alpha != null ? v.withAlpha(alpha) : v);
 
     return Text(
       data!,
@@ -917,8 +731,8 @@ extension TextExtension on Text {
     );
   }
 
-  Text lineHeight(double v) {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
+  Text lineHeight(double v, {bool baseStyle = false}) {
+    var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
     ts = ts.copyWith(height: v);
 
     return Text(
@@ -938,150 +752,18 @@ extension TextExtension on Text {
       textWidthBasis: textWidthBasis,
     );
   }
+
+  Text underLineClickable() {
+    return bold()
+        .fsR(4)// fs(18)
+        .color(AppThemes.instance.currentTheme.underLineDecorationColor);
+  }
 }
 ///==========================================================================================================
 extension SelectableTextExtension on SelectableText {
-  SelectableText whiteOrAppBarItemOn(Color color) {
-    Color replace;
 
-    if(ColorHelper.isNearColors(color, [Colors.white, Colors.grey[200]!])) {
-      replace = AppThemes.instance.currentTheme.appBarItemColor;
-    } else {
-      replace = Colors.white;
-    }
-
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: replace);
-
-    return SelectableText(
-      data!,
-      key: key,
-      style: ts,
-      strutStyle: strutStyle,
-      textAlign: textAlign,
-      maxLines: maxLines,
-      semanticsLabel: semanticsLabel,
-      textDirection: textDirection,
-      textHeightBehavior: textHeightBehavior,
-      textScaleFactor: textScaleFactor,
-      textWidthBasis: textWidthBasis,
-    );
-  }
-
-  SelectableText whiteOrAppBarItemOnPrimary() {
-    Color replace;
-
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.primaryColor,
-        [Colors.grey[900]!, Colors.white, Colors.grey[600]!])) {
-      replace = AppThemes.instance.currentTheme.appBarItemColor;
-    } else {
-      replace = Colors.white;
-    }
-
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: replace);
-
-    return SelectableText(
-      data!,
-      key: key,
-      style: ts,
-      strutStyle: strutStyle,
-      textAlign: textAlign,
-      maxLines: maxLines,
-      semanticsLabel: semanticsLabel,
-      textDirection: textDirection,
-      textHeightBehavior: textHeightBehavior,
-      textScaleFactor: textScaleFactor,
-      textWidthBasis: textWidthBasis,
-    );
-  }
-
-  SelectableText whiteOrDifferentOnPrimary() {
-    Color replace;
-
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.primaryColor,
-        [Colors.grey[900]!, Colors.white, Colors.grey[600]!])) {
-      replace = AppThemes.instance.currentTheme.differentColor;
-    } else {
-      replace = Colors.white;
-    }
-
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: replace);
-
-    return SelectableText(
-      data!,
-      key: key,
-      style: ts,
-      strutStyle: strutStyle,
-      textAlign: textAlign,
-      maxLines: maxLines,
-      semanticsLabel: semanticsLabel,
-      textDirection: textDirection,
-      textHeightBehavior: textHeightBehavior,
-      textScaleFactor: textScaleFactor,
-      textWidthBasis: textWidthBasis,
-    );
-  }
-
-  SelectableText whiteOrDifferentOnBackColor() {
-    Color replace;
-
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.backgroundColor,
-        [Colors.black, Colors.white, Colors.grey[200]!, Colors.grey[900]!])) {
-      replace = AppThemes.instance.currentTheme.differentColor;
-    } else {
-      replace = Colors.white;
-    }
-
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: replace);
-
-    return SelectableText(
-      data!,
-      key: key,
-      style: ts,
-      strutStyle: strutStyle,
-      textAlign: textAlign,
-      maxLines: maxLines,
-      semanticsLabel: semanticsLabel,
-      textDirection: textDirection,
-      textHeightBehavior: textHeightBehavior,
-      textScaleFactor: textScaleFactor,
-      textWidthBasis: textWidthBasis,
-    );
-  }
-
-  SelectableText primaryOrAppBarItemOnBackColor({Color? backColor}) {
-    backColor ??= AppThemes.instance.currentTheme.backgroundColor;
-    Color replace;
-
-    if (ColorHelper.isNearColors(backColor, [AppThemes.instance.currentTheme.primaryColor])) {
-      replace = AppThemes.instance.currentTheme.appBarItemColor;
-    } else {
-      replace = AppThemes.instance.currentTheme.primaryColor;
-    }
-
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: replace);
-
-    return SelectableText(
-      data!,
-      key: key,
-      style: ts,
-      strutStyle: strutStyle,
-      textAlign: textAlign,
-      maxLines: maxLines,
-      semanticsLabel: semanticsLabel,
-      textDirection: textDirection,
-      textHeightBehavior: textHeightBehavior,
-      textScaleFactor: textScaleFactor,
-      textWidthBasis: textWidthBasis,
-    );
-  }
-
-  SelectableText infoColor() {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
+  SelectableText infoColor({bool baseStyle = false}) {
+    var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
     ts = ts.copyWith(color: AppThemes.instance.currentTheme.infoTextColor);
 
     return SelectableText(
@@ -1155,8 +837,8 @@ extension SelectableTextExtension on SelectableText {
     );
   }
 
-  SelectableText bold({FontWeight? weight = FontWeight.bold}) {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
+  SelectableText bold({FontWeight? weight = FontWeight.bold, bool baseStyle = false}) {
+    var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
     ts = ts.copyWith(fontWeight: weight); // FontWeight.w900 is bigger then FontWeight.bold
 
     return SelectableText(
@@ -1174,32 +856,8 @@ extension SelectableTextExtension on SelectableText {
     );
   }
 
-  SelectableText subAlpha([int alpha = 160]) {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-
-    ts = ts.copyWith(
-        //fontWeight: FontWeight.bold,
-        color: ts.color?.withAlpha(alpha)
-    );
-
-    return SelectableText(
-      data!,
-      key: key,
-      style: ts,
-      strutStyle: strutStyle,
-      textAlign: textAlign,
-      //textAlign: center ? TextAlign.center : textAlign,
-      maxLines: maxLines,
-      semanticsLabel: semanticsLabel,
-      textDirection: textDirection,
-      textHeightBehavior: textHeightBehavior,
-      textScaleFactor: textScaleFactor,
-      textWidthBasis: textWidthBasis,
-    );
-  }
-
-  SelectableText subFont() {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
+  SelectableText thinFont({bool baseStyle = false}) {
+    var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
 
     ts = ts.copyWith(
         fontFamily: AppThemes.instance.currentTheme.subTextStyle.fontFamily,
@@ -1220,8 +878,8 @@ extension SelectableTextExtension on SelectableText {
     );
   }
 
-  SelectableText boldFont() {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
+  SelectableText boldFont({bool baseStyle = false}) {
+    var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
 
     ts = ts.copyWith(
         fontFamily: AppThemes.instance.currentTheme.boldTextStyle.fontFamily,
@@ -1286,17 +944,12 @@ extension SelectableTextExtension on SelectableText {
     );
   }
 
-  SelectableText underLineClickable() {
-    return bold()
-        .fsR(4)// fs(18)
-        .color(AppThemes.instance.currentTheme.underLineDecorationColor);
-  }
+ SelectableText fs(double size, {bool baseStyle = false}) {
+  var ts = style ??  (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
+  ts = ts.copyWith(fontSize: size);
 
-  SelectableText fs(double size) {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(fontSize: size);
 
-    return SelectableText(
+  return SelectableText(
       data!,
       key: key,
       style: ts,
@@ -1324,9 +977,11 @@ extension SelectableTextExtension on SelectableText {
     return fs(siz);
   }
 
-  SelectableText alpha({int alpha = 160}) {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: ts.color!.withAlpha(alpha));
+  SelectableText alpha({int alpha = 160, bool baseStyle = false}) {
+    var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
+    final color = ts.color?? AppThemes.instance.currentTheme.baseTextStyle.color;
+
+    ts = ts.copyWith(color: color!.withAlpha(alpha));
 
     return SelectableText(
       data!,
@@ -1343,9 +998,9 @@ extension SelectableTextExtension on SelectableText {
     );
   }
 
-  SelectableText color(Color v) {
+  SelectableText color(Color v, {int? alpha}) {
     var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    ts = ts.copyWith(color: v);
+    ts = ts.copyWith(color: alpha != null ? v.withAlpha(alpha) : v);
 
     return SelectableText(
       data!,
@@ -1362,8 +1017,8 @@ extension SelectableTextExtension on SelectableText {
     );
   }
 
-  SelectableText lineHeight(double v) {
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
+  SelectableText lineHeight(double v, {bool baseStyle = false}) {
+    var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
     ts = ts.copyWith(height: v);
 
     return SelectableText(
@@ -1379,6 +1034,12 @@ extension SelectableTextExtension on SelectableText {
       textScaleFactor: textScaleFactor,
       textWidthBasis: textWidthBasis,
     );
+  }
+
+  SelectableText underLineClickable() {
+    return bold()
+        .fsR(4)// fs(18)
+        .color(AppThemes.instance.currentTheme.underLineDecorationColor);
   }
 }
 ///==========================================================================================================

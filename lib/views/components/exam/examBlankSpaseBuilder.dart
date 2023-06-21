@@ -145,7 +145,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
                     ),
 
                     Positioned(
-                      top: 60,
+                      top: 80,
                       left: 0,
                       right: 0,
                       child: AnimationPositionScale(
@@ -154,7 +154,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 14.0),
                           child: Card(
-                              color: Colors.blue.shade200,
+                              color: Colors.grey.shade200,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                                 child: Directionality(

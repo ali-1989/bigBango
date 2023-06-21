@@ -3,6 +3,7 @@ import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/tools/app/appDecoration.dart';
+import 'package:app/tools/app/appIcons.dart';
 import 'package:app/views/components/exam/autodidactTextComponent.dart';
 import 'package:app/views/components/exam/autodidactVoiceComponent.dart';
 import 'package:app/views/components/exam/examBlankSpaseBuilder.dart';
@@ -324,24 +325,54 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
 
-            ElevatedButton(
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: const Size(100, 40),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
-                //shape: StadiumBorder()
+            Expanded(
+              child: ElevatedButton(
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: const Size(100, 40),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
+                  //shape: StadiumBorder()
+                ),
+                onPressed: onSendExamAnswerClick,
+                child: Text(answeredExamList.contains(currentExam.id) ? AppMessages.next : AppMessages.send)
+                    .englishFont().color(Colors.white),
               ),
-              onPressed: onSendExamAnswerClick,
-              child: Text(answeredExamList.contains(currentExam.id) ? AppMessages.next : AppMessages.send)
-                  .englishFont().color(Colors.white),
             ),
 
-            Text('${currentExamIndex+1} / ${widget.injector.examList.length}').ltr(),
+            Expanded(
+                child: Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      textDirection: TextDirection.ltr,
+                      children: [
+                        CustomCard(
+                            color: Colors.grey.shade200,
+                            padding: const EdgeInsets.symmetric(horizontal:6, vertical: 2),
+                            radius: 4,
+                            child: Text('${currentExamIndex+1}').bold().ltr()
+                        ),
 
-            TextButton(
-                onPressed: hasNextExam() ? onExamSkipClick : null,
-                child: const Text('skip')
+                        Text('  /  ${widget.injector.examList.length}').ltr(),
+                      ],
+                    )
+                )
+            ),
+
+            Expanded(
+              child: Visibility(
+                visible: hasNextExam(),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.black87,
+                    ),
+                      onPressed: onExamSkipClick,
+                      child: const Text('skip')
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -350,32 +381,66 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
   }
 
   Widget buildBottomSectionPage2() {
-    if(answeredAutodidactList.length == widget.injector.autodidactList.length || widget.injector.autodidactList.length < 2){
+    if(/*answeredAutodidactList.length == widget.injector.autodidactList.length ||*/ widget.injector.autodidactList.length < 2){
       return const SizedBox();
     }
 
     return Builder(
       builder: (context) {
         return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
 
-            const Flexible(
-                flex: 1,
-              child: Text('')
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                    style: TextButton.styleFrom(
+                      foregroundColor: hasNextAutodidact()? Colors.black : Colors.grey,
+                    ),
+                    onPressed: onAutodidactNextClick,
+                    icon: const Icon(AppIcons.arrowLeftIos, size: 16),
+                    label: const Text('Next')
+                ),
+              )
             ),
 
-            Flexible(
-                flex: 1,
-                child: Text('${currentAutodidactIndex+1} / ${widget.injector.autodidactList.length}').ltr()
+            Expanded(
+                child: Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      textDirection: TextDirection.ltr,
+                      children: [
+                        CustomCard(
+                          color: Colors.grey.shade200,
+                            padding: const EdgeInsets.symmetric(horizontal:6, vertical: 2),
+                            radius: 4,
+                            child: Text('${currentAutodidactIndex+1}').bold().ltr()
+                        ),
+
+                        Text('  /  ${widget.injector.autodidactList.length}').ltr(),
+                      ],
+                    )
+                )
             ),
 
-            Flexible(
-              flex: 1,
-              child: TextButton(
-                  onPressed: hasNextAutodidact() ? onAutodidactSkipClick : null,
-                  child: Text(answeredAutodidactList.contains(currentAutodidact.id)? 'next' : 'skip')
-              ),
+            //answeredAutodidactList.contains(currentAutodidact.id)?
+            Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    style: TextButton.styleFrom(
+                      foregroundColor: canPrevAutodidact()? Colors.black : Colors.grey,
+                    ),
+                  onPressed: onAutodidactPrevClick,
+                  icon: const Text('Prev'),
+                  label: const RotatedBox(
+                    quarterTurns: 2,
+                      child: Icon(AppIcons.arrowLeftIos, size: 16)
+                  )
+                ),
+                )
             ),
           ],
         );
@@ -391,6 +456,10 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     return currentAutodidactIndex < widget.injector.autodidactList.length-1;
   }
 
+  bool canPrevAutodidact(){
+    return currentAutodidactIndex > 0;
+  }
+
   void onExamSkipClick() {
     if(hasNextExam()){
       answeredExamList.add(currentExam.id);
@@ -404,9 +473,22 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     }
   }
 
-  void onAutodidactSkipClick() {
+  void onAutodidactPrevClick() {
+    if(canPrevAutodidact()){
+      //answeredAutodidactList.add(currentAutodidact.id);
+
+      currentAutodidactIndex--;
+      currentAutodidact = widget.injector.autodidactList[currentAutodidactIndex];
+
+      autodidactAnimController.reset();
+      assistCtr.updateHead();
+      autodidactAnimController.forward();
+    }
+  }
+
+  void onAutodidactNextClick() {
     if(hasNextAutodidact()){
-      answeredAutodidactList.add(currentAutodidact.id);
+      //answeredAutodidactList.add(currentAutodidact.id);
 
       currentAutodidactIndex++;
       currentAutodidact = widget.injector.autodidactList[currentAutodidactIndex];

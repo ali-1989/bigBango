@@ -233,20 +233,15 @@ class HomePageState extends StateBase<HomePage> {
   }
 
   Widget buildListItem(LessonModel lesson){
-    return GestureDetector(
-      onTap: (){
-        onLessonClick(lesson);
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: AnimatedCrossFade(
-            duration: const Duration(milliseconds: 500),
-            crossFadeState: isOpen(lesson) ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-            firstChild: buildFirstStateOfLesson(lesson),
-            secondChild: buildSecondStateOfLesson(lesson),
-          ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: AnimatedCrossFade(
+          duration: const Duration(milliseconds: 500),
+          crossFadeState: isOpen(lesson) ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          firstChild: buildFirstStateOfLesson(lesson),
+          secondChild: buildSecondStateOfLesson(lesson),
         ),
       ),
     );
@@ -255,80 +250,85 @@ class HomePageState extends StateBase<HomePage> {
   Widget buildFirstStateOfLesson(LessonModel lesson){
     return ColoredBox(
       color: Colors.grey.withAlpha(50),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: ColoredBox(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 3),
-              child: Row(
-                children: [
-                   const SizedBox(
-                    width: 1.5,
-                    height: 20,
-                    child: ColoredBox(
-                      color: AppDecoration.red,
+      child: GestureDetector(
+        onTap: (){
+          onLessonClick(lesson);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: ColoredBox(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 3),
+                child: Row(
+                  children: [
+                     const SizedBox(
+                      width: 1.5,
+                      height: 20,
+                      child: ColoredBox(
+                        color: AppDecoration.red,
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(width: 12),
-                  Card(
-                      elevation: 0,
-                      color: Colors.grey.shade100,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                        child: Text('${lesson.number}', style: const TextStyle(color: Colors.black)),
-                      )
-                  ),
+                    const SizedBox(width: 12),
+                    Card(
+                        elevation: 0,
+                        color: Colors.grey.shade100,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                          child: Text('${lesson.number}', style: const TextStyle(color: Colors.black)),
+                        )
+                    ),
 
-                  const SizedBox(width: 12),
+                    const SizedBox(width: 12),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    child: Text(lesson.title),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      child: Text(lesson.title),
+                    ),
 
-                  Expanded(
-                    child: Builder(
-                      builder: (context) {
-                        if(lesson.isLock){
-                          return Align(
-                            alignment: Alignment.centerLeft,
-                              child: Image.asset(AppImages.lockIco, width: 30, height: 30)
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          if(lesson.isLock){
+                            return Align(
+                              alignment: Alignment.centerLeft,
+                                child: Image.asset(AppImages.lockIco, width: 30, height: 30)
+                            );
+                          }
+
+                          return Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('${lesson.improvementPercentage} %', style: const TextStyle(fontSize: 12)),
+
+                                const SizedBox(height: 4),
+                                SizedBox(
+                                  width: 70,
+                                  child: LinearProgressIndicator(
+                                    backgroundColor: Colors.greenAccent.withAlpha(40),
+                                    color: Colors.greenAccent,
+                                    value: lesson.improvementPercentage/100,
+                                    minHeight: 3,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                const Text('میزان پیشرفت', style: TextStyle(fontSize: 10),),
+                              ],
+                            ),
                           );
                         }
-
-                        return Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('${lesson.improvementPercentage} %', style: const TextStyle(fontSize: 12)),
-
-                              const SizedBox(height: 4),
-                              SizedBox(
-                                width: 70,
-                                child: LinearProgressIndicator(
-                                  backgroundColor: Colors.greenAccent.withAlpha(40),
-                                  color: Colors.greenAccent,
-                                  value: lesson.improvementPercentage/100,
-                                  minHeight: 3,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              const Text('میزان پیشرفت', style: TextStyle(fontSize: 10),),
-                            ],
-                          ),
-                        );
-                      }
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(width: 8),
-                ],
+                    const SizedBox(width: 8),
+                  ],
+                ),
               ),
             ),
           ),
@@ -351,61 +351,67 @@ class HomePageState extends StateBase<HomePage> {
               child: Column(
                 children: [
 
-                  Row(
-                    children: [
-                      const SizedBox(
-                        width: 1.5,
-                        height: 20,
-                        child: ColoredBox(
-                          color: AppDecoration.red,
-                        ),
-                      ),
-
-                      const SizedBox(width: 12),
-                      Card(
-                          elevation: 0,
-                          color: AppDecoration.red,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                            child: Text('${lesson.number}', style: const TextStyle(color: Colors.white)),
-                          )
-                      ),
-
-                      const SizedBox(width: 12),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        child: Text(lesson.title),
-                      ),
-
-                      Expanded(
-                        child: Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('${lesson.improvementPercentage} %', style: const TextStyle(fontSize: 12),),
-
-                              const SizedBox(height: 4),
-                              SizedBox(
-                                width: 70,
-                                child: LinearProgressIndicator(
-                                  backgroundColor: Colors.greenAccent.withAlpha(40),
-                                  color: Colors.greenAccent,
-                                  value: lesson.improvementPercentage/100,
-                                  minHeight: 3,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              const Text('میزان پیشرفت', style: TextStyle(fontSize: 10)),
-                            ],
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: (){
+                      onLessonClick(lesson);
+                    },
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 1.5,
+                          height: 20,
+                          child: ColoredBox(
+                            color: AppDecoration.red,
                           ),
                         ),
-                      ),
 
-                      const SizedBox(width: 8),
-                    ],
+                        const SizedBox(width: 12),
+                        Card(
+                            elevation: 0,
+                            color: AppDecoration.red,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                              child: Text('${lesson.number}', style: const TextStyle(color: Colors.white)),
+                            )
+                        ),
+
+                        const SizedBox(width: 12),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          child: Text(lesson.title),
+                        ),
+
+                        Expanded(
+                          child: Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('${lesson.improvementPercentage} %', style: const TextStyle(fontSize: 12),),
+
+                                const SizedBox(height: 4),
+                                SizedBox(
+                                  width: 70,
+                                  child: LinearProgressIndicator(
+                                    backgroundColor: Colors.greenAccent.withAlpha(40),
+                                    color: Colors.greenAccent,
+                                    value: lesson.improvementPercentage/100,
+                                    minHeight: 3,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                const Text('میزان پیشرفت', style: TextStyle(fontSize: 10)),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(width: 8),
+                      ],
+                    ),
                   ),
 
                   Padding(
