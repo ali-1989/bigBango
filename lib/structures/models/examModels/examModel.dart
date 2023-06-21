@@ -1,4 +1,5 @@
 import 'package:app/structures/models/mediaModel.dart';
+import 'package:app/system/extensions.dart';
 import 'package:iris_tools/api/generator.dart';
 
 import 'package:app/structures/enums/quizType.dart';
@@ -8,9 +9,9 @@ class ExamModel extends ExamSuperModel {
   late String id;
   String? title;
   QuizType quizType = QuizType.unKnow;
-  //List<ExamSolvedOptionModel> solvedOptions = [];
   List<ExamItem> items = [];
   MediaModel? voice;
+  MakeSentenceExtra? sentenceExtra;
 
   //----------- local
   bool showAnswer = false;
@@ -21,10 +22,6 @@ class ExamModel extends ExamSuperModel {
   ExamModel.fromMap(Map js){
     quizType = QuizType.fromType(js['exerciseType']);
     title = js['title'];
-
-    /*if(js['solveItems'] is List){
-      solvedOptions = js['solveItems'].map<ExamSolvedOptionModel>((e) => ExamSolvedOptionModel.fromMap(e)).toList();
-    }*///todo
 
     if(js['items'] is List){
       items = js['items'].map<ExamItem>((e) => ExamItem.fromMap(e, quizType)).toList();
@@ -75,6 +72,7 @@ class ExamModel extends ExamSuperModel {
     }
 
     if(quizType == QuizType.makeSentence){
+      sentenceExtra = MakeSentenceExtra(items);
     }
 
     isPrepare = true;
@@ -246,10 +244,6 @@ class ExamItem {
 
       return txt;
     }
-    else if (quizType == QuizType.makeSentence){
-      var txt = question;
-      return txt;//todo
-    }
 
     return 'بدون پاسخ';
   }
@@ -292,9 +286,6 @@ class ExamItem {
 
       return true;
     }
-    else if (quizType == QuizType.makeSentence){
-      return true;//todo
-    }
 
     return false;
   }
@@ -322,9 +313,6 @@ class ExamItem {
       }
 
       return true;
-    }
-    else if (quizType == QuizType.makeSentence){
-      return true;//todo
     }
 
     return false;
@@ -392,5 +380,184 @@ class ExamOptionModelForMakeSentence extends ExamOptionModel {
   @override
   String toString(){
     return '::SolvedOption::[quizId: $quizId, answer: $answer, isCorrect: $isCorrect]';
+  }
+}
+///=====================================================================================
+class MakeSentenceExtra {
+  late List<ExamItem> items;
+  Map<String, List<ExamOptionModel>> selectedWords = {};
+  Map<String, List<ExamOptionModel>> shuffleWords = {};
+  int currentIndex = 0;
+
+  MakeSentenceExtra(this.items){
+    for(final x in items){
+      final lis = x.teacherOptions.toList();
+      lis.shuffle();
+
+      selectedWords[x.id] = [];
+      shuffleWords[x.id] = lis;
+    }
+  }
+
+  List<ExamOptionModel> getShuffleForIndex({int? idx}){
+    idx ??= currentIndex;
+
+    if(shuffleWords.length > idx) {
+      return shuffleWords.values.toList()[idx];
+    }
+
+    return [];
+  }
+
+  List<ExamOptionModel> getShuffleForId(String id){
+    final f = shuffleWords[id];
+
+    return f?? [];
+  }
+
+  List<ExamOptionModel> getSelectedWordsForIndex({int? idx}){
+    idx ??= currentIndex;
+
+    if(selectedWords.length > idx) {
+      return selectedWords.values.toList()[idx];
+    }
+
+    return [];
+  }
+
+  List<ExamOptionModel> getSelectedWordsForId(String id){
+    final f = selectedWords[id];
+
+    return f?? [];
+  }
+
+  bool isSentenceFullByIndex({int? idx}){
+    idx ??= currentIndex;
+
+    if(selectedWords.length > idx) {
+      return getSelectedWordsForIndex(idx: idx).length == getShuffleForIndex(idx: idx).length;
+    }
+
+    return false;
+  }
+
+  bool isSentenceFullById(String id){
+    return getSelectedWordsForId(id).length == getShuffleForId(id).length;
+  }
+
+  bool hasAnswer(){
+    return selectedWords.values.toList()[0].isNotEmpty;
+  }
+
+  void forward(){
+    if(currentIndex < shuffleWords.length-1) {
+      currentIndex++;
+    }
+  }
+
+  void back(){
+    final lis = getSelectedWordsForIndex();
+
+    if(lis.isNotEmpty){
+      lis.clear();
+    }
+    else {
+      currentIndex--;
+
+      if(currentIndex < 0){
+        currentIndex = 0;
+      }
+
+      getSelectedWordsForIndex().clear();
+    }
+  }
+
+  String joinUserAnswer() {
+    String txt = '';
+
+    for(int i =0; i < selectedWords.length; i++){
+      final x = selectedWords.values.toList()[i];
+
+      for(final x2 in x){
+        txt += ' ${x2.text}';
+      }
+
+      if(x.length == getShuffleForIndex(idx: i).length) {
+        if(!txt.endsWith('.')) {
+          txt += '.';
+        }
+      }
+    }
+
+    return txt.trim();
+  }
+
+  String joinCorrectAnswer() {
+    String txt = '';
+
+    for(int i =0; i < items.length; i++){
+      final x = items[i];
+
+      for(final x2 in x.teacherOptions){
+        txt += ' ${x2.text}';
+      }
+
+      if(!txt.endsWith('.')) {
+        txt += '.';
+      }
+    }
+
+    return txt.trim();
+  }
+
+  String joinUserAnswerById(String id) {
+    String txt = '';
+    final user = selectedWords[id]!.toList();
+
+    if(user.isEmpty){
+      return 'بدون پاسخ';
+    }
+
+    for(final w in user){
+      txt += ' ${w.text}';
+    }
+
+    return txt.trim();
+  }
+
+  bool isCorrectAll(){
+    for(int i =0; i < items.length; i++){
+      final itm = items[i];
+      final user = selectedWords.values.toList()[i];
+
+      if(itm.teacherOptions.length != user.length){
+        return false;
+      }
+
+      for(int j=0; j < itm.teacherOptions.length; j++){
+        if(itm.teacherOptions[j].text != user[j].text){
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  bool isCorrectById(String id){
+    final user = getSelectedWordsForId(id);
+    final itm = items.firstWhereSafe((elm) => elm.id == id);
+
+    if(user.isEmpty || itm == null){
+      return false;
+    }
+
+    for(int j=0; j < itm.teacherOptions.length; j++){
+      if(itm.teacherOptions[j].text != user[j].text){
+        return false;
+      }
+    }
+
+    return true;
   }
 }

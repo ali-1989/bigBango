@@ -69,14 +69,14 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
 
     selectedTicketRoleId = dropList[0].value!;
 
-    boldStyle = TextStyle(fontWeight: FontWeight.w700, fontSize: 11);
+    boldStyle = const TextStyle(fontWeight: FontWeight.w700, fontSize: 11);
 
     inputDecoration = InputDecoration(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
       disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
-      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       isDense: true,
       filled: true,
       fillColor: Colors.grey.shade100,
@@ -108,7 +108,7 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
+                          const Row(
                             children: [
                               Icon(AppIcons.addCircle, color: AppDecoration.red),
                               SizedBox(width: 6),
@@ -122,9 +122,9 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                             },
                             child: CustomCard(
                                 color: Colors.grey.shade200,
-                                padding: EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+                                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
                                 radius: 4,
-                                child: Icon(AppIcons.close, size: 10)
+                                child: const Icon(AppIcons.close, size: 10)
                             ),
                           ),
                         ],
@@ -134,18 +134,18 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                           child: ListView(
                             shrinkWrap: true,
                             children: [
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               Text('موضوع', style: boldStyle),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
 
                               TextField(
                                 controller: titleCtr,
                                 decoration: inputDecoration,
                               ),
 
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Text('بخش مربوطه', style: boldStyle),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
 
                               DecoratedBox(
                                 decoration: BoxDecoration(
@@ -169,9 +169,9 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                                           thickness: MaterialStateProperty.all<double>(5)
                                       ),
                                     ),
-                                    menuItemStyleData: MenuItemStyleData(
+                                    menuItemStyleData: const MenuItemStyleData(
                                       height: 40,
-                                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                                      padding: EdgeInsets.symmetric(horizontal: 5),
                                     ),
                                     onChanged: (value) {
                                       setState(() {
@@ -183,9 +183,9 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                                 ),
                               ),
 
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Text('توضیحات', style: boldStyle),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
 
                               TextField(
                                 controller: descriptionCtr,
@@ -194,28 +194,28 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                                 decoration: inputDecoration,
                               ),
 
-                              SizedBox(height: 15),
+                              const SizedBox(height: 15),
                               Visibility(
                                 visible: attachmentFiles.isNotEmpty,
                                   child: Text('تعداد فایل ها: ${attachmentFiles.length}').subFont().fsR(-2),
                               ),
-                              SizedBox(height: 15),
+                              const SizedBox(height: 15),
 
                               Row(
                                 children: [
                                   ElevatedButton.icon(
                                       style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                                      icon: Icon(AppIcons.attach),
+                                      icon: const Icon(AppIcons.attach),
                                       onPressed: showAttachmentDialog,
-                                      label: Text('فایل ها')
+                                      label: const Text('فایل ها')
                                   ),
 
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
 
                                   Expanded(
                                     child: ElevatedButton(
                                         onPressed: sendClick,
-                                        child: Text('ارسال')
+                                        child: const Text('ارسال')
                                     ),
                                   ),
                                 ],
@@ -353,7 +353,7 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
 
       final message = res['message']?? 'تیکت ثبت شد';
 
-      AppSheet.showSheetOneAction(context, message, (){RouteTools.popTopView(context: context);},
+      AppSheet.showSheetOneAction(context, message, builder: (){RouteTools.popTopView(context: context);},
         buttonText:  'بله',
         dismissOnAction: true,
       );

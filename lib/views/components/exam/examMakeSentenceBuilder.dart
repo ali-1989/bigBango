@@ -27,14 +27,14 @@ class ExamMakeSentenceBuilder extends StatefulWidget {
 ///===============================================================================================================
 class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> with ExamStateMethods {
   late TextStyle pickedStyle;
-  late ExamHolder examHolder;
+  late MakeSentenceExtra sentenceExtra;
   int currentSentence = 0;
 
   @override
   void initState() {
     super.initState();
 
-    examHolder = ExamHolder(widget.examModel);
+    sentenceExtra = widget.examModel.sentenceExtra!;
 
     pickedStyle = const TextStyle(
       //decorationStyle: TextDecorationStyle.solid,
@@ -64,12 +64,12 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
   Widget buildBody() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: buildExam(examHolder),
+      child: buildExam(),
     );
   }
 
-  Widget buildExam(ExamHolder holder) {
-    final question = generateQuestion(holder);
+  Widget buildExam() {
+    final question = generateQuestion(sentenceExtra);
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -99,8 +99,8 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
           ///=== selected words
           Builder(
               builder: (_){
-                if(holder.hasAnswer()){
-                  final answer = holder.generateUserAnswer();
+                if(sentenceExtra.hasAnswer()){
+                  final answer = sentenceExtra.joinUserAnswer();
 
                   return AutoDirection(
                     builder: (_, AutoDirectionController direction) {
@@ -113,7 +113,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
                       );
                     },
                   ).wrapBackground(
-                      backColor: holder.examModel.showAnswer? (holder.isCorrect()? Colors.green.shade400: Colors.red.shade400): Colors.grey.shade100
+                      backColor: widget.examModel.showAnswer? (sentenceExtra.isCorrectAll()? Colors.green.shade400: Colors.red.shade400): Colors.grey.shade100
                   );
                 }
 
@@ -121,11 +121,11 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
               }
           ),
 
-          ///=== selected words
+          ///=== correct answer
           Builder(
               builder: (_){
-                if(holder.examModel.showAnswer && !holder.isCorrect()){
-                  final answer = holder.generateCorrectAnswer();
+                if(widget.examModel.showAnswer && !sentenceExtra.isCorrectAll()){
+                  final answer = sentenceExtra.joinCorrectAnswer();
 
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
@@ -155,10 +155,10 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
           Row(
             children: [
               Visibility(
-                  visible: holder.hasAnswer() && !holder.examModel.showAnswer,
+                  visible: sentenceExtra.hasAnswer() && !widget.examModel.showAnswer,
                   child: GestureDetector(
                     onTap: (){
-                      holder.back();
+                      sentenceExtra.back();
                       assistCtr.updateHead();
                     },
                     child: const Padding(
@@ -169,14 +169,16 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
               ),
 
               ///=== words
-              Builder(
-                  builder: (context) {
-                    if(holder.examModel.showAnswer){
-                      return const SizedBox();
-                    }
+              Expanded(
+                child: Builder(
+                    builder: (context) {
+                      if(widget.examModel.showAnswer){
+                        return const SizedBox();
+                      }
 
-                    return buildWords(holder);
-                  }
+                      return buildWords();
+                    }
+                ),
               ),
             ],
           ),
@@ -187,22 +189,23 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
     );
   }
 
-  String generateQuestion(ExamHolder holder) {
+  String generateQuestion(MakeSentenceExtra holder) {
     String txt = '';
 
-    for(final x in holder.examModel.items){
+    for(final x in widget.examModel.items){
       txt += ' ${x.question}';
     }
 
     return txt.trim();
   }
 
-  Widget buildWords(ExamHolder holder) {
+  Widget buildWords() {
     final widgetList = <Widget>[];
     Color color = Colors.grey.shade200;
 
-    for (final w in holder.getShuffleFor()) {
-      if (holder.getSelectedWordsFor().indexWhere((element) => element.id == w.id) > -1) {
+    for (final w in sentenceExtra.getShuffleForIndex()) {
+      /// is picked before
+      if (sentenceExtra.getSelectedWordsForIndex().indexWhere((element) => element.id == w.id) > -1) {
         continue;
       }
 
@@ -211,11 +214,11 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
             padding: const EdgeInsets.only(right: 8),
             child: GestureDetector(
               onTap: () {
-                if(holder.examModel.showAnswer){
+                if(widget.examModel.showAnswer){
                   return;
                 }
 
-                onWordClick(holder, w);
+                onWordClick(w);
               },
               child: CustomCard(
                   color: color,
@@ -238,16 +241,15 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
     );
   }
 
-  void onWordClick(ExamHolder holder, ExamOptionModel ec) {
-    //setUserAnswer(model, currentSpaceOrder, ec);
-    if(holder.examModel.showAnswer){
+  void onWordClick(ExamOptionModel word) {
+    if(widget.examModel.showAnswer){
       return;
     }
 
-    holder.getSelectedWordsFor().add(ec);
+    sentenceExtra.getSelectedWordsForIndex().add(word);
 
-    if(holder.isSentenceFull()){
-      holder.forward();
+    if(sentenceExtra.isSentenceFullByIndex()){
+      sentenceExtra.forward();
     }
 
     assistCtr.updateHead();
@@ -255,135 +257,8 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
 
   @override
   void showAnswer(bool state) {
-    examHolder.examModel.showAnswer = state;
+    widget.examModel.showAnswer = state;
     assistCtr.updateHead();
-  }
-}
-///=====================================================================================
-class ExamHolder {
-  late ExamModel examModel;
-  List<List<ExamOptionModel>> selectedWords = [];
-  List<List<ExamOptionModel>> shuffleWords = [];
-  int currentIndex = 0;
-
-  ExamHolder(this.examModel){
-    for(final x in examModel.items){
-      final lis = x.teacherOptions.toList();
-      lis.shuffle();
-
-      selectedWords.add([]);
-      shuffleWords.add(lis);
-    }
-  }
-
-  List<ExamOptionModel> getShuffleFor({int? idx}){
-    idx ??= currentIndex;
-
-    if(shuffleWords.length > idx) {
-      return shuffleWords[idx];
-    }
-
-    return [];
-  }
-
-  List<ExamOptionModel> getSelectedWordsFor({int? idx}){
-    idx ??= currentIndex;
-
-    if(selectedWords.length > idx) {
-      return selectedWords[idx];
-    }
-
-    return [];
-  }
-
-  bool isSentenceFull({int? idx}){
-    idx ??= currentIndex;
-
-    if(selectedWords.length > idx) {
-      return selectedWords[idx].length == shuffleWords[idx].length;
-    }
-
-    return false;
-  }
-
-  bool hasAnswer(){
-    return selectedWords[0].isNotEmpty;
-  }
-
-  void forward(){
-    if(currentIndex < shuffleWords.length-1) {
-      currentIndex++;
-    }
-  }
-
-  void back(){
-    final lis = getSelectedWordsFor();
-
-    if(lis.isNotEmpty){
-      lis.clear();
-    }
-    else {
-      currentIndex--;
-
-      if(currentIndex < 0){
-        currentIndex = 0;
-      }
-
-      getSelectedWordsFor().clear();
-    }
-  }
-
-  String generateUserAnswer() {
-    String txt = '';
-
-    for(int i =0; i < selectedWords.length; i++){
-      final x = selectedWords[i];
-
-      for(final x2 in x){
-        txt += ' ${x2.text}';
-      }
-
-      if(x.length == getShuffleFor(idx: i).length) {
-        txt += '.';
-      }
-    }
-
-    return txt.trim();
-  }
-
-  String generateCorrectAnswer() {
-    String txt = '';
-
-    for(int i =0; i < examModel.items.length; i++){
-      final x = examModel.items[i];
-
-      for(final x2 in x.teacherOptions){
-        txt += ' ${x2.text}';
-      }
-
-      txt += '.';
-    }
-
-    return txt.trim();
-  }
-
-  bool isCorrect(){
-    for(int i =0; i < shuffleWords.length; i++){
-      final itm = examModel.items[i];
-      final se = selectedWords[i];
-
-      if(itm.teacherOptions.length != se.length){
-        return false;
-      }
-
-      for(int j=0; j < itm.teacherOptions.length; j++){
-        if(itm.teacherOptions[j].text != se[j].text){
-          return false;
-        }
-      }
-    }
-
-    return true;
   }
 }
 

@@ -53,9 +53,6 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
   void initState(){
     super.initState();
 
-    print('>>>>>>>>>>>>>>>>>> ${widget.injector.examList.length}');
-    print('>>>>>>>>>>>>>>>>>> ${widget.injector.autodidactList.length}');
-
     if(widget.injector.examList.isNotEmpty) {
       currentExam = widget.injector.examList.first;
     }
@@ -523,8 +520,8 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
       for (final itm in currentExam.items){
         tempList.add({
           'exerciseId': itm.id,
-          'answer': itm.getUserAnswerText(),
-          'isCorrect': itm.isUserAnswerCorrect(),
+          'answer': currentExam.sentenceExtra!.joinUserAnswerById(itm.id),
+          'isCorrect': currentExam.sentenceExtra!.isCorrectById(itm.id),
         });
       }
     }

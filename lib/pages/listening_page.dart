@@ -511,8 +511,8 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       for (final itm in currentItem!.quiz.items){
         tempList.add({
           'exerciseId': itm.id,
-          'answer': itm.getUserAnswerText(),
-          'isCorrect': itm.isUserAnswerCorrect(),
+          'answer': currentItem!.quiz.sentenceExtra!.joinUserAnswerById(itm.id),
+          'isCorrect': currentItem!.quiz.sentenceExtra!.isCorrectById(itm.id),
         });
       }
     }

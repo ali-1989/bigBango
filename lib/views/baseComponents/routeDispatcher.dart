@@ -23,7 +23,7 @@ class RouteDispatcher {
       final user = SessionService.getLastLoginUser()!;
 
       if(user.courseLevel == null){
-        return SelectLanguageLevelPage();
+        return const SelectLanguageLevelPage();
       }
 
       return LayoutPage(key: AppBroadcast.layoutPageKey);

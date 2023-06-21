@@ -77,19 +77,19 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
                   padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 15),
                   child: Column(
                     children: [
-                      Text('هزینه را چطور پرداخت می کنید؟').bold().fsR(2),
+                      const Text('هزینه را چطور پرداخت می کنید؟').bold().fsR(2),
 
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           CustomCard(
                             color: Colors.grey.shade200,
-                              padding: EdgeInsets.all(3),
+                              padding: const EdgeInsets.all(3),
                               child: Text('مبلغ : ${CurrencyTools.formatCurrency(widget.amount)} تومان')
                           ),
                         ],
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
 
 
                       IgnorePointer(
@@ -100,7 +100,7 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
                             groupValue: radioGroupValue,
                             description: Row(
                               children: [
-                                Text('پرداخت از کیف پول').fsR(2).alpha(alpha: canPayByWallet? 255: 150),
+                                const Text('پرداخت از کیف پول').fsR(2).alpha(alpha: canPayByWallet? 255: 150),
                                 Text(' (موجودی ${CurrencyTools.formatCurrency(widget.userBalance)} تومان)').fsR(-2).alpha(),
                               ],
                             ),
@@ -112,11 +112,11 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
                           ),
                         ),
 
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       RadioRow(
                         value: 2,
                         groupValue: radioGroupValue,
-                        description: Text('پرداخت با کارت عضو شتاب').fsR(2),
+                        description: const Text('پرداخت با کارت عضو شتاب').fsR(2),
                         //mainAxisSize: MainAxisSize.min,
                         onChanged: (v){
                           radioGroupValue = 2;
@@ -131,7 +131,7 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
                             backgroundColor: Colors.green,
                           ),
                             onPressed: requestBuy,
-                            child: Text('پرداخت')
+                            child: const Text('پرداخت')
                         ),
                       ),
                     ],
@@ -174,7 +174,7 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
       if(isPaid){
         final message = res['message']?? 'با موفقیت پرداخت شد';
 
-        AppSheet.showSheetOneAction(context, message, () {
+        AppSheet.showSheetOneAction(context, message, builder: () {
           RouteTools.popTopView(context: context, data: true);
         });
       }

@@ -1,4 +1,5 @@
 import 'package:app/structures/abstract/examStateMethods.dart';
+import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 
 class ExamController {
@@ -18,11 +19,19 @@ class ExamController {
   }
 
   bool isAnswerCorrect(){
-    return _examModel.getExamItem().isUserAnswerCorrect();
+    if(_examModel.quizType != QuizType.makeSentence) {
+      return _examModel.getExamItem().isUserAnswerCorrect();
+    }
+
+    return _examModel.sentenceExtra!.isCorrectAll();
   }
 
   bool isAnswer(){
-    return _examModel.getExamItem().isUserAnswer();
+    if(_examModel.quizType != QuizType.makeSentence) {
+      return _examModel.getExamItem().isUserAnswer();
+    }
+
+    return _examModel.sentenceExtra!.hasAnswer();
   }
 
   static ExamController? getControllerFor(ExamModel exam){

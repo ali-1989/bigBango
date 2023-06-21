@@ -58,7 +58,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
 
   Widget buildBody() {
     if(dayHourList.isEmpty){
-      return WaitToLoad();
+      return const WaitToLoad();
     }
 
     return Padding(
@@ -97,7 +97,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
           const SizedBox(height: 20),
 
           buildDays(),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
 
           Expanded(
               child: ListView(
@@ -264,8 +264,8 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
     final hours = dayHourList.firstWhere((element) => element.dayOfWeek == day.dayOfWeek);
 
     if(hours.hours.isEmpty){
-      result.add(Padding(
-        padding: const EdgeInsets.all(30.0),
+      result.add(const Padding(
+        padding: EdgeInsets.all(30.0),
         child: Text('زمان قابل رزرو در این روز وجود ندارد'),
       ));
 
@@ -362,7 +362,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
 
   void requestFreeTimes() async {
     FocusHelper.hideKeyboardByUnFocusRoot();
-    await Future.delayed(Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 200));
 
     final min = SettingsManager.globalSettings.timeTable['determineCourseLevelMinutes'];
     final minNumber = MathHelper.clearToInt(min);
@@ -442,7 +442,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
       final data = jsData['data'];
       String msg = data['message']?? 'رزرو شد';
 
-      AppSheet.showSheetOneAction(context, msg, () async {
+      AppSheet.showSheetOneAction(context, msg, builder: () async {
         showLoading();
         final res = await ApiManager.requestSetLevel(SettingsManager.getCourseLevelById(1));
         await hideLoading();

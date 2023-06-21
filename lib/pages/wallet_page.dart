@@ -84,11 +84,11 @@ class _WalletPageState extends StateBase<WalletPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onTryAgain: tryAgain, backButton: BackBtn());
+      return ErrorOccur(onTryAgain: tryAgain, backButton: const BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
-      return WaitToLoad();
+      return const WaitToLoad();
     }
 
     return Column(
@@ -102,8 +102,8 @@ class _WalletPageState extends StateBase<WalletPage> {
                 children: [
                   //Image.asset(AppImages.watchIco, color: Colors.red),
                   Icon(AppIcons.wallet, color: Colors.red.withAlpha(200)),
-                  SizedBox(width: 5),
-                  Text('کیف پول').bold().fsR(1),
+                  const SizedBox(width: 5),
+                  const Text('کیف پول').bold().fsR(1),
                 ],
               ),
 
@@ -111,17 +111,17 @@ class _WalletPageState extends StateBase<WalletPage> {
                 children: [
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 6),
-                      visualDensity: VisualDensity(horizontal: 0, vertical: -3),
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      visualDensity: const VisualDensity(horizontal: 0, vertical: -3),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      shape: StadiumBorder(),
+                      shape: const StadiumBorder(),
                     ),
                       onPressed: gotoIncreaseAmount,
-                      icon: Icon(AppIcons.addCircle, size: 15),
-                      label: Text('افزایش اعتبار').fsR(-2).color(Colors.white)
+                      icon: const Icon(AppIcons.addCircle, size: 15),
+                      label: const Text('افزایش اعتبار').fsR(-2).color(Colors.white)
                   ),
 
-                  RotatedBox(
+                  const RotatedBox(
                     quarterTurns: 2,
                       child: BackButton()
                   ),
@@ -131,7 +131,7 @@ class _WalletPageState extends StateBase<WalletPage> {
           ),
         ),
 
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
 
@@ -143,14 +143,14 @@ class _WalletPageState extends StateBase<WalletPage> {
               elevation: 0,
               color: Colors.grey.shade200,
               child: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   children: [
-                    Text('کل موجودی'),
-                    SizedBox(height: 4),
+                    const Text('کل موجودی'),
+                    const SizedBox(height: 4),
                     Text(CurrencyTools.formatCurrency(walletBalance)).fsR(5).bold(),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -160,11 +160,11 @@ class _WalletPageState extends StateBase<WalletPage> {
                           elevation: 0,
                           color: Colors.white,
                           child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
+                                const Row(
                                   children: [
                                     //Icon(Icons.percent, size: 12, color: Colors.red),
                                     //SizedBox(width: 4),
@@ -188,32 +188,32 @@ class _WalletPageState extends StateBase<WalletPage> {
                             visible: withdrawalBalance > 0,
                             child: TextButton(
                               style: TextButton.styleFrom(
-                                visualDensity: VisualDensity(vertical: -4, horizontal: -2)
+                                visualDensity: const VisualDensity(vertical: -4, horizontal: -2)
                               ),
                                 onPressed: showWithdrawalSheet,
-                                child: Text('درخواست برداشت').fsR(-3).color(Colors.blue)
+                                child: const Text('درخواست برداشت').fsR(-3).color(Colors.blue)
                             ),
                           ),
 
                           Builder(
                               builder: (_){
                                 if(withdrawalList.isEmpty){
-                                  return SizedBox();
+                                  return const SizedBox();
                                 }
 
                                 return Row(
                                   children: [
                                     Visibility(
                                       visible: withdrawalBalance > 0,
-                                        child: Text('/')
+                                        child: const Text('/')
                                     ),
 
                                     TextButton(
                                         style: TextButton.styleFrom(
-                                            visualDensity: VisualDensity(vertical: -4, horizontal: -2)
+                                            visualDensity: const VisualDensity(vertical: -4, horizontal: -2)
                                         ),
                                         onPressed: showWithdrawalListSheet,
-                                        child: Text('درخواست های در حال بررسی').fsR(-3).color(Colors.blue)
+                                        child: const Text('درخواست های در حال بررسی').fsR(-3).color(Colors.blue)
                                     ),
                                   ],
                                 );
@@ -229,7 +229,7 @@ class _WalletPageState extends StateBase<WalletPage> {
           ),
         ),
 
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
 
@@ -237,14 +237,14 @@ class _WalletPageState extends StateBase<WalletPage> {
           padding: const EdgeInsets.symmetric(horizontal: 14),
           child: Row(
             children: [
-              Icon(AppIcons.list),
-              SizedBox(width: 5),
-              Text('تراکنش ها').bold().fsR(3)
+              const Icon(AppIcons.list),
+              const SizedBox(width: 5),
+              const Text('تراکنش ها').bold().fsR(3)
             ],
           ),
         ),
 
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
 
@@ -253,7 +253,7 @@ class _WalletPageState extends StateBase<WalletPage> {
             child: Builder(
                 builder: (_){
                   if(transactionList.isEmpty){
-                    return EmptyData();
+                    return const EmptyData();
                   }
 
                   return ListView.builder(
@@ -275,7 +275,7 @@ class _WalletPageState extends StateBase<WalletPage> {
       onTap: (){
       },
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 14),
         child: Column(
           children: [
             Row(
@@ -289,13 +289,13 @@ class _WalletPageState extends StateBase<WalletPage> {
                       child: Builder(
                           builder: (context) {
                             if(transaction.isAmountPlus()) {
-                              return RotatedBox(
+                              return const RotatedBox(
                                   quarterTurns: 2,
                                   child: Icon(AppIcons.arrowDown, size: 14, color: AppDecoration.green)
                               );
                             }
 
-                            return Icon(AppIcons.arrowDown, size: 14, color: AppDecoration.red);
+                            return const Icon(AppIcons.arrowDown, size: 14, color: AppDecoration.red);
                           }
                       ),
                     )
@@ -305,17 +305,17 @@ class _WalletPageState extends StateBase<WalletPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(CurrencyTools.formatCurrencyString(transaction.amount.toString().replaceFirst('-', ''))),
                           Text(transaction.getAmountHuman()).fsR(-2).color(transaction.isAmountPlus()? AppDecoration.green : AppDecoration.red),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(transaction.description?? '').fsR(-2).alpha(),
                         ],
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       //Text(transaction.getAmountHuman()),
                     ],
                   ),
@@ -324,16 +324,16 @@ class _WalletPageState extends StateBase<WalletPage> {
                 Row(
                   children: [
                     Text(DateTools.dateAndHmRelative(transaction.date)).alpha(),
-                    SizedBox(width: 5),
-                    Icon(AppIcons.calendar, size: 13, color: Colors.black54),
+                    const SizedBox(width: 5),
+                    const Icon(AppIcons.calendar, size: 13, color: Colors.black54),
                   ],
                 ),
               ],
             ),
 
-            SizedBox(height: 6),
-            Divider(color: Colors.black38),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
+            const Divider(color: Colors.black38),
+            const SizedBox(height: 6),
           ],
         ),
       ),
@@ -357,7 +357,7 @@ class _WalletPageState extends StateBase<WalletPage> {
     final res = await AppSheet.showSheetCustom(
         context,
         builder: (ctx){
-          return IncreaseAmountSheet();
+          return const IncreaseAmountSheet();
         },
       routeName: 'IncreaseAmount',
       backgroundColor: Colors.transparent,
@@ -376,7 +376,7 @@ class _WalletPageState extends StateBase<WalletPage> {
         RouteTools.pushPage(context, ProfilePage(userModel: SessionService.getLastLoginUser()!));
       }
 
-      AppSheet.showSheetOneAction(context, 'ابتدا باید شماره شبای متعلق به خود را در بخش پروفایل وارد کنید', fn, buttonText: 'پروفایل');
+      AppSheet.showSheetOneAction(context, 'ابتدا باید شماره شبای متعلق به خود را در بخش پروفایل وارد کنید', builder: fn, buttonText: 'پروفایل');
       return;
     }
 

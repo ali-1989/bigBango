@@ -48,8 +48,8 @@ class SplashPageState extends StateBase<SplashPage> {
   static bool _callLazyInit = false;
   static bool _isInit = false;
   static bool _isInLoadingSettings = true;
-  bool _isConnectToServer = true;
-  int splashWaitingMil = 4000;
+  bool _isConnectToServer = false;
+  int splashWaitingMil = 3000;
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +111,6 @@ class SplashPageState extends StateBase<SplashPage> {
 
       appLazyInit();
       _isInLoadingSettings = false;
-
       AppBroadcast.reBuildMaterialBySetTheme();
     }
   }
@@ -123,9 +122,8 @@ class SplashPageState extends StateBase<SplashPage> {
       AppSheet.showSheetOneAction(
         RouteTools.materialContext!,
         AppMessages.errorCommunicatingServer,
-            () {
+        builder: () {
           AppBroadcast.gotoSplash();
-
           connectToServer();
         },
         buttonText: AppMessages.tryAgain,
@@ -134,6 +132,7 @@ class SplashPageState extends StateBase<SplashPage> {
     }
     else {
       _isConnectToServer = true;
+
       SessionService.fetchLoginUsers();
       callState();
     }
@@ -206,7 +205,7 @@ class SplashPageState extends StateBase<SplashPage> {
       ReviewService.init();
       MessageManager.init();
       StoreManager.init();
-      SettingsManager.requestGlobalSettings();
+      //SettingsManager.requestGlobalSettings(); in connectToServer is call
       await FireBaseService.start();
       MessageManager.requestUnReadCount();
       LeitnerManager.requestLeitnerCount();

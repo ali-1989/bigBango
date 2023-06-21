@@ -38,7 +38,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
     /*final starLen = x.question.split('**').length;
     if(x.teacherOptions.length != starLen-1){
       return true;
-    }*///todo
+    }*/
     
     questionNormalStyle = const TextStyle(fontSize: 16, color: Colors.black);
     falseStyle = const TextStyle(fontSize: 16,

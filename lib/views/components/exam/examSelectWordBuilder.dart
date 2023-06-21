@@ -281,9 +281,6 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
 
     List<String> selectedWordIds = [];
 
-    print('==============selectedWordIds:==========');
-    print('$selectedWordIds');
-    print('========================');
     for (final k in model.getExamItem().userAnswers) {
       if (k.text.isNotEmpty) {
         selectedWordIds.add(k.id);
@@ -315,7 +312,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
 
   void setUserAnswer(ExamModel model, int order, ExamOptionModel? ec) {
     final u = model.getExamItem().getUserOptionByOrder(order);
-    print('=========== setUserAnswer: ${u?.text} <  ${ec != null}');
+
     if (ec != null) {
       u!.text = ec.text;
       u.id = ec.id;

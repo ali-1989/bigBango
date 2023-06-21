@@ -90,7 +90,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
     return Column(
       children: [
         const SizedBox(height: 15),
-        Align(
+        const Align(
             alignment: Alignment.topLeft,
             child: RotatedBox(
                 quarterTurns: 2,
@@ -109,10 +109,10 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                     child: Image.asset(AppImages.timetable)
                 ),
                 const SizedBox(height: 10),
-                Center(child: Text('پشتیبانی', style: const TextStyle(fontSize: 17)).bold()),
+                Center(child: const Text('پشتیبانی', style: TextStyle(fontSize: 17)).bold()),
                 const SizedBox(height: 20),
 
-                Divider(color: Colors.black54, indent: 0, endIndent: 0),
+                const Divider(color: Colors.black54, indent: 0, endIndent: 0),
                 const SizedBox(height: 10),
 
                 UnconstrainedBox(
@@ -123,10 +123,10 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.zero,
-                            visualDensity: VisualDensity(vertical: -2)
+                            visualDensity: const VisualDensity(vertical: -2)
                         ),
                         onPressed: onChargeTime,
-                        child: Text('شارژ زمان')
+                        child: const Text('شارژ زمان')
                     ),
                   ),
                 ),
@@ -137,7 +137,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                       children: [
                         Row(
                           children: [
-                            Text('نام درس').fsR(2),
+                            const Text('نام درس').fsR(2),
                           ],
                         ),
 
@@ -158,7 +158,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
 
                 Row(
                   children: [
-                    Text('موضوع مورد نظر').fsR(2),
+                    const Text('موضوع مورد نظر').fsR(2),
                   ],
                 ),
 
@@ -168,7 +168,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                     Expanded(
                       child: TextField(
                         controller: titleCtr,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           disabledBorder: InputBorder.none,
@@ -184,8 +184,8 @@ class _TimetablePageState extends StateBase<TimetablePage> {
 
                 Row(
                   children: [
-                    Text('مدت زمان مورد نظر').fsR(2),
-                    Text('(به دقیقه)').fsR(-2),
+                    const Text('مدت زمان مورد نظر').fsR(2),
+                    const Text('(به دقیقه)').fsR(-2),
                   ],
                 ),
 
@@ -207,14 +207,14 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                         ).wrapBoxBorder(color: Colors.black)
                     ),
 
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.zero,
-                        visualDensity: VisualDensity(vertical: -2)
+                        visualDensity: const VisualDensity(vertical: -2)
                       ),
                         onPressed: requestFreeTimes,
-                        child: Text('بررسی')
+                        child: const Text('بررسی')
                     ),
                   ],
                 ),
@@ -222,25 +222,25 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                 Builder(
                     builder: (_){
                       if(dayHourList.isEmpty){
-                        return SizedBox();
+                        return const SizedBox();
                       }
 
                       return Column(
                         children: [
-                          SizedBox(height: 20),
-                          Text('لطفا روز و زمان مورد نظر خود را انتخاب کنید'),
-                          SizedBox(height: 15),
+                          const SizedBox(height: 20),
+                          const Text('لطفا روز و زمان مورد نظر خود را انتخاب کنید'),
+                          const SizedBox(height: 15),
 
                           buildDays(),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           ...buildTimes(),
 
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Visibility(
                             visible: dayHourList.isNotEmpty && timeSelectId != '',
                             child: ElevatedButton(
                               onPressed: showConfirmSheet,
-                              child: Text('ثبت درخواست پشتیبانی'),
+                              child: const Text('ثبت درخواست پشتیبانی'),
                             ),
                           ),
                         ],
@@ -337,8 +337,8 @@ class _TimetablePageState extends StateBase<TimetablePage> {
     final hours = dayHourList.firstWhere((element) => element.dayOfWeek == day.dayOfWeek);
 
     if(hours.hours.isEmpty){
-      result.add(Padding(
-        padding: const EdgeInsets.all(30.0),
+      result.add(const Padding(
+        padding: EdgeInsets.all(30.0),
         child: Text('موردی وجود ندارد'),
       ));
 
@@ -578,7 +578,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
 
   void requestFreeTimes() async {
     FocusHelper.hideKeyboardByUnFocusRoot();
-    await Future.delayed(Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 200));
 
     final min = timeCtr.text.trim();
     final title = titleCtr.text.trim();
@@ -658,8 +658,8 @@ class _TimetablePageState extends StateBase<TimetablePage> {
       currentDay = today.getDay();
       assistCtr.updateHead();
 
-      Future.delayed(Duration(milliseconds: 500), (){
-        srcCtr.animateTo(400, duration: Duration(milliseconds: 400), curve: Curves.linear);
+      Future.delayed(const Duration(milliseconds: 500), (){
+        srcCtr.animateTo(400, duration: const Duration(milliseconds: 400), curve: Curves.linear);
       });
     };
 
@@ -695,7 +695,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
       final data = jsData['data'];
       String msg = data['message']?? 'رزرو شد';
 
-      AppSheet.showSheetOneAction(context, msg, () {
+      AppSheet.showSheetOneAction(context, msg, builder: () {
         RouteTools.popTopView(context: context, data: true);
       });
     };

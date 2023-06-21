@@ -222,11 +222,11 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                                               padding: EdgeInsets.symmetric(horizontal: 10),
                                                               child: Text('استان', style: TextStyle(color: Colors.grey)),
                                                             ),
-                                                            menuItemStyleData: MenuItemStyleData(
+                                                            menuItemStyleData: const MenuItemStyleData(
                                                               height: 40,
-                                                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                              padding: EdgeInsets.symmetric(horizontal: 5),
                                                             ),
-                                                            buttonStyleData: ButtonStyleData(
+                                                            buttonStyleData: const ButtonStyleData(
                                                               padding: EdgeInsets.symmetric(horizontal: 5),
                                                               width: double.infinity,
                                                             ),
@@ -271,11 +271,11 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                                               padding: EdgeInsets.symmetric(horizontal: 10),
                                                               child: Text('شهر', style: TextStyle(color: Colors.grey)),
                                                             ),
-                                                            menuItemStyleData: MenuItemStyleData(
+                                                            menuItemStyleData: const MenuItemStyleData(
                                                               height: 40,
-                                                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                              padding: EdgeInsets.symmetric(horizontal: 5),
                                                             ),
-                                                            buttonStyleData: ButtonStyleData(
+                                                            buttonStyleData: const ButtonStyleData(
                                                                 padding: EdgeInsets.symmetric(horizontal: 5),
                                                                 width: double.infinity,
                                                             ),
@@ -324,11 +324,11 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                                         padding: EdgeInsets.symmetric(horizontal: 10),
                                                         child: Text('جنسیت', style: TextStyle(color: Colors.grey)),
                                                       ),
-                                                      menuItemStyleData: MenuItemStyleData(
+                                                      menuItemStyleData: const MenuItemStyleData(
                                                         height: 40,
-                                                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                        padding: EdgeInsets.symmetric(horizontal: 5),
                                                       ),
-                                                      buttonStyleData: ButtonStyleData(
+                                                      buttonStyleData: const ButtonStyleData(
                                                         padding: EdgeInsets.symmetric(horizontal: 5),
                                                         width: double.infinity,
                                                       ),
@@ -388,18 +388,18 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                   text: TextSpan(
                                       style: AppThemes.bodyTextStyle()?.copyWith(fontSize: 14),
                                       children: [
-                                        TextSpan(
+                                        const TextSpan(
                                             text: 'شما با ثبت نام در بیگ بنگو  '
                                         ),
 
                                         TextSpan(
-                                            style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                                            style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
                                             text: 'قوانین',
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = gotoTermPage
                                         ),
 
-                                        TextSpan(
+                                        const TextSpan(
                                             text: '  ما را می پذیرید'
                                         ),
                                       ]
@@ -426,7 +426,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
                                   const SizedBox(height: 10),
                                   TextButton(
                                     onPressed: backToPhoneNumber,
-                                    child: Text('برگشت'),
+                                    child: const Text('برگشت'),
                                   ),
 
                                   const SizedBox(height: 10),
@@ -494,7 +494,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
         initDay: curBirthdate?.day,
         initMonth: curBirthdate?.month,
         initYear: curBirthdate?.year,
-        margin: EdgeInsets.only(bottom: 50),
+        margin: const EdgeInsets.only(bottom: 50),
         border: const BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15)),
         validate: (ctx, date) {
           return date.year < 1400;
@@ -666,7 +666,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
         if(res.statusCode == 403){
           AppDB.deleteKv(Keys.setting$registerPhoneNumber);
 
-          AppSheet.showSheetOneAction(context, message, (){
+          AppSheet.showSheetOneAction(context, message, builder: (){
             AppBroadcast.reBuildMaterial();
           });
 
