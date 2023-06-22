@@ -122,7 +122,7 @@ class SplashPageState extends StateBase<SplashPage> {
       AppSheet.showSheetOneAction(
         RouteTools.materialContext!,
         AppMessages.errorCommunicatingServer,
-        builder: () {
+        onButton: () {
           AppBroadcast.gotoSplash();
           connectToServer();
         },

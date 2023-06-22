@@ -236,7 +236,7 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
 
       final message = res['message']?? 'تیکت ثبت شد';
 
-      AppSheet.showSheetOneAction(context, message, builder: (){RouteTools.popTopView(context: context, data: true);},
+      AppSheet.showSheetOneAction(context, message, onButton: (){RouteTools.popTopView(context: context, data: true);},
         buttonText:  'بله',
         dismissOnAction: true,
       );

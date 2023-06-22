@@ -442,7 +442,7 @@ class _SelectSupportTimeState extends StateBase<SelectSupportTime> {
       final data = jsData['data'];
       String msg = data['message']?? 'رزرو شد';
 
-      AppSheet.showSheetOneAction(context, msg, builder: () async {
+      AppSheet.showSheetOneAction(context, msg, onButton: () async {
         showLoading();
         final res = await ApiManager.requestSetLevel(SettingsManager.getCourseLevelById(1));
         await hideLoading();

@@ -666,7 +666,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
         if(res.statusCode == 403){
           AppDB.deleteKv(Keys.setting$registerPhoneNumber);
 
-          AppSheet.showSheetOneAction(context, message, builder: (){
+          AppSheet.showSheetOneAction(context, message, onButton: (){
             AppBroadcast.reBuildMaterial();
           });
 

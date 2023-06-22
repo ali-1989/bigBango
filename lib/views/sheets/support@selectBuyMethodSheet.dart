@@ -174,7 +174,7 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
       if(isPaid){
         final message = res['message']?? 'با موفقیت پرداخت شد';
 
-        AppSheet.showSheetOneAction(context, message, builder: () {
+        AppSheet.showSheetOneAction(context, message, onButton: () {
           RouteTools.popTopView(context: context, data: true);
         });
       }

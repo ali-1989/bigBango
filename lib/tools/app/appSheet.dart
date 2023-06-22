@@ -118,7 +118,7 @@ class AppSheet {
   static Future<T?> showSheetOneAction<T>(
       BuildContext context,
       String message, {
-        VoidCallback? builder,
+        VoidCallback? onButton,
         String? title,
         String? buttonText,
         bool dismissOnAction = true,
@@ -131,13 +131,13 @@ class AppSheet {
 
     void close() {
       RouteTools.popTopView(context: context);
-      builder?.call();
+      onButton?.call();
     }
 
     final txtStyle = AppThemes.relativeSheetTextStyle();
 
     final posBtn = TextButton(
-        onPressed: dismissOnAction ? close : builder,
+        onPressed: dismissOnAction ? close : onButton,
         child: Text(buttonText, style: txtStyle)
     );
     //TextButton.icon(onPressed: fn, label: Text(btnText,), icon: Icon(icon, color: textColor,),);
@@ -470,7 +470,7 @@ class AppSheet {
   }
 
   static Future<T?> showSheet$SuccessOperation<T>(BuildContext context, {VoidCallback? onBtn}) {
-    return showSheetOneAction<T>(context, AppMessages.operationSuccess, builder: onBtn);
+    return showSheetOneAction<T>(context, AppMessages.operationSuccess, onButton: onBtn);
   }
 
   static Future<T?> showSheet$OperationFailed<T>(BuildContext context) {

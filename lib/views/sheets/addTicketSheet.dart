@@ -353,7 +353,7 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
 
       final message = res['message']?? 'تیکت ثبت شد';
 
-      AppSheet.showSheetOneAction(context, message, builder: (){RouteTools.popTopView(context: context);},
+      AppSheet.showSheetOneAction(context, message, onButton: (){RouteTools.popTopView(context: context);},
         buttonText:  'بله',
         dismissOnAction: true,
       );

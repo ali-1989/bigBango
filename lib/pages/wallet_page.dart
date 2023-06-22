@@ -376,7 +376,7 @@ class _WalletPageState extends StateBase<WalletPage> {
         RouteTools.pushPage(context, ProfilePage(userModel: SessionService.getLastLoginUser()!));
       }
 
-      AppSheet.showSheetOneAction(context, 'ابتدا باید شماره شبای متعلق به خود را در بخش پروفایل وارد کنید', builder: fn, buttonText: 'پروفایل');
+      AppSheet.showSheetOneAction(context, 'ابتدا باید شماره شبای متعلق به خود را در بخش پروفایل وارد کنید', onButton: fn, buttonText: 'پروفایل');
       return;
     }
 

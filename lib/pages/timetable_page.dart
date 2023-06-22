@@ -695,7 +695,7 @@ class _TimetablePageState extends StateBase<TimetablePage> {
       final data = jsData['data'];
       String msg = data['message']?? 'رزرو شد';
 
-      AppSheet.showSheetOneAction(context, msg, builder: () {
+      AppSheet.showSheetOneAction(context, msg, onButton: () {
         RouteTools.popTopView(context: context, data: true);
       });
     };
