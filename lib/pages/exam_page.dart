@@ -316,7 +316,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
               //shape: StadiumBorder()
             ),
             onPressed: onSendExamAnswerClick,
-            child: Text(AppMessages.send)
+            child: const Text('ثبت و بررسی')
                 .englishFont().color(Colors.white),
           );
         }
@@ -335,7 +335,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
                   //shape: StadiumBorder()
                 ),
                 onPressed: onSendExamAnswerClick,
-                child: Text(answeredExamList.contains(currentExam.id) ? AppMessages.next : AppMessages.send)
+                child: Text(answeredExamList.contains(currentExam.id) ? AppMessages.next : 'ثبت و بررسی')
                     .englishFont().color(Colors.white),
               ),
             ),

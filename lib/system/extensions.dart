@@ -1,15 +1,14 @@
 // ignore_for_file: empty_catches
 
+import 'package:app/tools/app/appLocale.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
-import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/widgets/border/dottedBorder.dart';
 
 import 'package:app/managers/font_manager.dart';
-import 'package:app/managers/settings_manager.dart';
 import 'package:app/tools/app/appThemes.dart';
 
 // usage: import 'package:common_version/tools/centers/extensions.dart';
@@ -34,25 +33,26 @@ extension StringExtension on String {
   }
 
   String localeNum({Locale? locale}) {
-    locale ??= SettingsManager.localSettings.appLocale;
+    /*locale ??= SettingsManager.localSettings.appLocale;
 
     if (LocaleHelper.isRtlLocal(locale)) {
       return LocaleHelper.numberToFarsi(this);
     }
 
-    return this;
+    return this;*/
+    return AppLocale.numberRelative(this)?? this;
   }
 }
 ///==========================================================================================================
 extension FunctionExtension on Function {
   /// (await fn.delay()).call(args);
-  Future<Function> delay({Duration dur = const Duration(milliseconds: 180)}) {
+  Future<Function> delay({Duration dur = const Duration(milliseconds: 200)}) {
     return Future.delayed(dur, () => this);
   }
 }
 ///==========================================================================================================
 extension ContextExtension on BuildContext {
-  void nextEditableTextFocus() {
+  void focusNextEditableText() {
     do {
       final foundFocusNode = FocusScope.of(this).nextFocus();
 
@@ -237,109 +237,7 @@ extension WidgetExtension on Widget {
   }
 }
 ///==========================================================================================================
-extension DividerExtension on Divider {
-  Divider intelliWhite() {
-    Color replace;
-
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.primaryColor,
-        [Colors.grey[900]!, Colors.white, Colors.grey[600]!])) {
-      replace = AppThemes.instance.currentTheme.appBarItemColor;
-    } else {
-      replace = Colors.white;
-    }
-
-    return Divider(
-      key: key,
-      color: replace,
-      endIndent: endIndent,
-      indent: indent,
-      thickness: thickness,
-      height: height,
-    );
-  }
-}
-///==========================================================================================================
 extension IconExtension on Icon {
-  Icon whiteOrAppBarItemOnPrimary() {
-    Color replace;
-
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.primaryColor,
-        [Colors.grey[900]!, Colors.white, Colors.grey[600]!])) {
-      replace = AppThemes.instance.currentTheme.appBarItemColor;
-    } else {
-      replace = Colors.white;
-    }
-
-    return Icon(
-      icon,
-      key: key,
-      color: replace,
-      textDirection: textDirection,
-      semanticLabel: semanticLabel,
-      size: size,
-    );
-  }
-
-  Icon whiteOrDifferentOnPrimary() {
-    Color replace;
-
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.primaryColor,
-        [Colors.grey[900]!, Colors.white, Colors.grey[600]!])) {
-      replace = AppThemes.instance.currentTheme.differentColor;
-    } else {
-      replace = Colors.white;
-    }
-
-    return Icon(
-      icon,
-      key: key,
-      color: replace,
-      textDirection: textDirection,
-      semanticLabel: semanticLabel,
-      size: size,
-    );
-  }
-
-  Icon whiteOrDifferentOnBackColor() {
-    Color replace;
-
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.backgroundColor,
-        [Colors.black, Colors.white, Colors.grey[200]!, Colors.grey[900]!])) {
-      replace = AppThemes.instance.currentTheme.differentColor;
-    } else {
-      replace = Colors.white;
-    }
-
-    return Icon(
-      icon,
-      key: key,
-      color: replace,
-      textDirection: textDirection,
-      semanticLabel: semanticLabel,
-      size: size,
-    );
-  }
-
-  Icon primaryOrAppBarItemOnBackColor({Color? backColor}) {
-    backColor ??= AppThemes.instance.currentTheme.backgroundColor;
-    Color replace;
-
-    if (ColorHelper.isNearColors(backColor, [AppThemes.instance.currentTheme.primaryColor])) {
-      replace = AppThemes.instance.currentTheme.appBarItemColor;
-    } else {
-      replace = AppThemes.instance.currentTheme.primaryColor;
-    }
-
-    return Icon(
-      icon,
-      key: key,
-      color: replace,
-      textDirection: textDirection,
-      semanticLabel: semanticLabel,
-      size: size,
-    );
-  }
-
   Icon btnTextColor() {
     final replace = AppThemes.instance.currentTheme.buttonTextColor;
 
@@ -384,17 +282,6 @@ extension IconExtension on Icon {
       icon,
       key: key,
       color: c,
-      textDirection: textDirection,
-      semanticLabel: semanticLabel,
-      size: size,
-    );
-  }
-
-  Icon chipItemColor() {
-    return Icon(
-      icon,
-      key: key,
-      color: AppThemes.instance.themeData.chipTheme.deleteIconColor,
       textDirection: textDirection,
       semanticLabel: semanticLabel,
       size: size,
@@ -1043,188 +930,6 @@ extension SelectableTextExtension on SelectableText {
   }
 }
 ///==========================================================================================================
-extension TextFieldExtension on TextField {
-  TextField intelliWhite() {
-    Color replace;
-
-    var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    var dec = decoration ?? const InputDecoration();
-
-    replace = Colors.white;
-
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.primaryColor,
-        [Colors.grey[900]!, Colors.white, Colors.grey[600]!])) {
-      replace = AppThemes.instance.currentTheme.appBarItemColor;
-    }
-
-    ts = ts.copyWith(color: replace);
-
-    final border = dec.border?? AppThemes.instance.themeData.inputDecorationTheme.border;
-    final enabledBorder = dec.enabledBorder?? AppThemes.instance.themeData.inputDecorationTheme.enabledBorder;
-    final disabledBorder = dec.disabledBorder?? AppThemes.instance.themeData.inputDecorationTheme.disabledBorder;
-    final errorBorder = dec.errorBorder?? AppThemes.instance.themeData.inputDecorationTheme.errorBorder;
-    final focusedBorder = dec.focusedBorder?? AppThemes.instance.themeData.inputDecorationTheme.focusedBorder;
-    final focusedErrorBorder = dec.focusedErrorBorder?? AppThemes.instance.themeData.inputDecorationTheme.focusedErrorBorder;
-
-    dec = InputDecoration(
-      border: border?.copyWith(borderSide: border.borderSide.copyWith(color: replace)),
-      enabledBorder: enabledBorder?.copyWith(borderSide: enabledBorder.borderSide.copyWith(color: replace)),
-      disabledBorder: disabledBorder?.copyWith(borderSide: disabledBorder.borderSide.copyWith(color: replace)),
-      errorBorder: errorBorder?.copyWith(borderSide: errorBorder.borderSide.copyWith(color: replace)),
-      focusedBorder: focusedBorder?.copyWith(borderSide: focusedBorder.borderSide.copyWith(color: replace)),
-      focusedErrorBorder: focusedErrorBorder?.copyWith(borderSide: focusedErrorBorder.borderSide.copyWith(color: replace)),
-      alignLabelWithHint: dec.alignLabelWithHint,
-      contentPadding: dec.contentPadding,
-      counter: dec.counter,
-      counterStyle: dec.counterStyle,
-      counterText: dec.counterText,
-      fillColor: dec.fillColor,
-      filled: dec.filled,
-      prefix: dec.prefix,
-      prefixIcon: dec.prefixIcon,
-      prefixStyle: dec.prefixStyle,
-      prefixText: dec.prefixText,
-      prefixIconConstraints: dec.prefixIconConstraints,
-      suffix: dec.suffix,
-      suffixStyle: dec.suffixStyle,
-      suffixText: dec.suffixText,
-      suffixIcon: dec.suffixIcon,
-      suffixIconConstraints: dec.suffixIconConstraints,
-      floatingLabelBehavior: dec.floatingLabelBehavior,
-      semanticCounterText: dec.semanticCounterText,
-      labelText: dec.labelText,
-      labelStyle: dec.labelStyle,
-      isDense: dec.isDense,
-      isCollapsed: dec.isCollapsed,
-      hintText: dec.hintText,
-      hintStyle: dec.hintStyle,
-      hintMaxLines: dec.hintMaxLines,
-      helperText: dec.helperText,
-      helperStyle: dec.helperStyle,
-      helperMaxLines: dec.helperMaxLines,
-    );
-
-    return TextField(
-      key: key,
-      controller: controller,
-      style: ts,
-      strutStyle: strutStyle,
-      decoration: dec,
-      textInputAction: textInputAction,
-      keyboardType: keyboardType,
-      keyboardAppearance: keyboardAppearance,
-      textAlign: textAlign,
-      cursorColor: replace,
-      cursorWidth: cursorWidth,
-      onSubmitted: onSubmitted,
-      onChanged: onChanged,
-      onEditingComplete: onEditingComplete,
-      onTap: onTap,
-      onAppPrivateCommand: onAppPrivateCommand,
-      inputFormatters: inputFormatters,
-      autofillHints: autofillHints,
-      buildCounter: buildCounter,
-      contextMenuBuilder: contextMenuBuilder,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      readOnly: readOnly,
-      autocorrect: autocorrect,
-    );
-  }
-}
-///==========================================================================================================
-extension TextFormFieldExtension on TextFormField {
-  TextFormField intelliWhite() {
-    final my = this as TextField;
-    var replace = Colors.white;
-
-    var ts = my.style ?? AppThemes.instance.currentTheme.baseTextStyle;
-    var dec = my.decoration ?? const InputDecoration();
-
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.primaryColor,
-        [Colors.grey[900]!, Colors.white, Colors.grey[600]!])) {
-      replace = AppThemes.instance.currentTheme.appBarItemColor;
-    }
-
-    ts = ts.copyWith(color: replace);
-
-    final border = dec.border?? AppThemes.instance.themeData.inputDecorationTheme.border;
-    final enabledBorder = dec.enabledBorder?? AppThemes.instance.themeData.inputDecorationTheme.enabledBorder;
-    final disabledBorder = dec.disabledBorder?? AppThemes.instance.themeData.inputDecorationTheme.disabledBorder;
-    final errorBorder = dec.errorBorder?? AppThemes.instance.themeData.inputDecorationTheme.errorBorder;
-    final focusedBorder = dec.focusedBorder?? AppThemes.instance.themeData.inputDecorationTheme.focusedBorder;
-    final focusedErrorBorder = dec.focusedErrorBorder?? AppThemes.instance.themeData.inputDecorationTheme.focusedErrorBorder;
-
-    dec = InputDecoration(
-      border: border?.copyWith(borderSide: border.borderSide.copyWith(color: replace)),
-      enabledBorder: enabledBorder?.copyWith(borderSide: enabledBorder.borderSide.copyWith(color: replace)),
-      disabledBorder: disabledBorder?.copyWith(borderSide: disabledBorder.borderSide.copyWith(color: replace)),
-      errorBorder: errorBorder?.copyWith(borderSide: errorBorder.borderSide.copyWith(color: replace)),
-      focusedBorder: focusedBorder?.copyWith(borderSide: focusedBorder.borderSide.copyWith(color: replace)),
-      focusedErrorBorder: focusedErrorBorder?.copyWith(borderSide: focusedErrorBorder.borderSide.copyWith(color: replace)),
-        alignLabelWithHint: dec.alignLabelWithHint,
-        contentPadding: dec.contentPadding,
-        counter: dec.counter,
-        counterStyle: dec.counterStyle,
-        counterText: dec.counterText,
-        fillColor: dec.fillColor,
-        filled: dec.filled,
-        prefix: dec.prefix,
-        prefixIcon: dec.prefixIcon,
-        prefixStyle: dec.prefixStyle,
-        prefixText: dec.prefixText,
-        prefixIconConstraints: dec.prefixIconConstraints,
-        suffix: dec.suffix,
-        suffixStyle: dec.suffixStyle,
-        suffixText: dec.suffixText,
-        suffixIcon: dec.suffixIcon,
-        suffixIconConstraints: dec.suffixIconConstraints,
-        floatingLabelBehavior: dec.floatingLabelBehavior,
-        semanticCounterText: dec.semanticCounterText,
-        labelText: dec.labelText,
-        labelStyle: dec.labelStyle,
-        isDense: dec.isDense,
-        isCollapsed: dec.isCollapsed,
-        hintText: dec.hintText,
-        hintStyle: dec.hintStyle,
-        hintMaxLines: dec.hintMaxLines,
-        helperText: dec.helperText,
-        helperStyle: dec.helperStyle,
-        helperMaxLines: dec.helperMaxLines,
-      );
-    
-    return TextFormField(
-      //key: this.key,
-      controller: controller,
-      onSaved: onSaved,
-      autovalidateMode: autovalidateMode,
-      enabled: enabled,
-      validator: validator,
-      initialValue: initialValue,
-      decoration: dec,
-      style: ts,
-      strutStyle: my.strutStyle,
-      textInputAction: my.textInputAction,
-      keyboardType: my.keyboardType,
-      keyboardAppearance: my.keyboardAppearance,
-      textAlign: my.textAlign,
-      cursorColor: replace,
-      cursorWidth: my.cursorWidth,
-      onChanged: my.onChanged,
-      onEditingComplete: my.onEditingComplete,
-      onTap: my.onTap,
-      inputFormatters: my.inputFormatters,
-      autofillHints: my.autofillHints,
-      buildCounter: my.buildCounter,
-      contextMenuBuilder: my.contextMenuBuilder,
-      focusNode: my.focusNode,
-      autofocus: my.autofocus,
-      readOnly: my.readOnly,
-      autocorrect: my.autocorrect,
-    );
-  }
-}
-///==========================================================================================================
 extension DropdownButtonExtension on DropdownButton {
   Widget wrap(
     BuildContext context, {
@@ -1260,7 +965,7 @@ extension DropdownButtonExtension on DropdownButton {
         child: DropdownButton(
           items: items,
           value: value,
-          isExpanded: true,
+          isExpanded: isExpanded,
           selectedItemBuilder: selectedItemBuilder,
           iconDisabledColor: iconDisabledColor?? arrowColor,
           iconEnabledColor: iconEnabledColor?? arrowColor,
@@ -1281,38 +986,6 @@ extension DropdownButtonExtension on DropdownButton {
           disabledHint: disabledHint,
         ),
       ),
-    );
-  }
-}
-///==========================================================================================================
-extension RadioExtension on Radio {
-  Radio intelliWhite<T>() {
-    Color replace;
-
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.primaryColor,
-        [Colors.grey[900]!, Colors.white, Colors.grey[600]!])) {
-      replace = AppThemes.instance.currentTheme.appBarItemColor;
-    } else {
-      replace = Colors.white;
-    }
-
-    return Radio<T>(
-      key: key,
-      value: value,
-      groupValue: groupValue,
-      onChanged: onChanged,
-      activeColor: replace,
-      fillColor:  MaterialStateProperty.all(replace),
-      hoverColor: hoverColor,
-      overlayColor: overlayColor,
-      focusColor: focusColor,
-      autofocus: autofocus,
-      focusNode: focusNode,
-      materialTapTargetSize: materialTapTargetSize,
-      mouseCursor: mouseCursor,
-      splashRadius: splashRadius,
-      toggleable: toggleable,
-      visualDensity: visualDensity,
     );
   }
 }

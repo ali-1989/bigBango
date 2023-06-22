@@ -64,7 +64,7 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
                     children: [
                       Image.asset(AppImages.selectLevelIco2),
                       const SizedBox(width: 8),
-                      Text(AppMessages.selectLevelTitle, style: const TextStyle(fontSize: 18)),
+                      Text(AppMessages.selectLevelTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
                     ],
                   ),
 
@@ -95,7 +95,7 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
                                   children: [
                                     Image.asset(AppImages.atentionIco),
                                     const SizedBox(width: 12),
-                                    Text(AppMessages.selectLevelTerm1, style: TextStyle(color: AppDecoration.red)),
+                                    Text(AppMessages.selectLevelTerm1, style: const TextStyle(color: AppDecoration.red)),
                                   ],
                                 ),
                               ),
@@ -160,17 +160,17 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
                     }
                 ),
                 const SizedBox(width: 18),
-                RichText(
-                  text: TextSpan(
+                Text.rich(
+                   TextSpan(
                       children: [
-                        TextSpan(
+                        const TextSpan(
                           text: 'سطح ',
                           style: TextStyle(color: Colors.black),
                         ),
 
                         TextSpan(
                           text: k.name,
-                          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
+                          style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
                         ),
                       ]
                   ),
@@ -215,7 +215,7 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
       AppBroadcast.homePageKey.currentState?.requestLessons();
       AppBroadcast.homePageKey.currentState?.assistCtr.updateHead();
 
-      Future.delayed(Duration(seconds: 1), (){
+      Future.delayed(const Duration(seconds: 1), (){
         RouteTools.popTopView(context: context);
         EventNotifierService.notify(AppEvents.languageLevelChanged);
       });

@@ -360,7 +360,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
             TextButton.icon(
                 style: TextButton.styleFrom(),
                 onPressed: onPreClick,
-                icon: Text('pre').englishFont().color(preColor),
+                icon: Text('prev').englishFont().color(preColor),
                 label: Image.asset(AppImages.arrowLeftIco, color: preColor)
             ),
           ],

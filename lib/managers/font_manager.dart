@@ -143,7 +143,7 @@ class FontManager {
       ..defaultLanguage = 'fa'
       ..defaultUsage = FontUsage.normal
       ..usages = [FontUsage.sub]
-      ..textHeightBehavior = TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false)
+      ..textHeightBehavior = const TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false)
       ..height = 1.4;
 
     final shabnamBold = Font.bySize()
@@ -152,7 +152,7 @@ class FontManager {
       ..defaultLanguage = 'fa'
       ..defaultUsage = FontUsage.bold
       ..usages = [FontUsage.normal, FontUsage.bold]
-      ..textHeightBehavior = TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false)
+      ..textHeightBehavior = const TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false)
       ..height = 1.4;
 
 

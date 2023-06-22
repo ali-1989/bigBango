@@ -98,7 +98,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                     children: [
                       Image.asset(AppImages.selectLevelIco2),
                       const SizedBox(width: 8),
-                      Text(AppMessages.selectLevelTitle, style: const TextStyle(fontSize: 18)),
+                      Text(AppMessages.selectLevelTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
                     ],
                   ),
 
@@ -127,7 +127,7 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                                   children: [
                                     Image.asset(AppImages.atentionIco),
                                     const SizedBox(width: 12),
-                                    Text(AppMessages.selectLevelTerm1, style: TextStyle(color: AppDecoration.red),),
+                                    Text(AppMessages.selectLevelTerm1, style: const TextStyle(color: AppDecoration.red),),
                                   ],
                                 ),
                               ),
@@ -157,8 +157,8 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                                         }
                                     ),
                                     const SizedBox(width: 18),
-                                    RichText(
-                                      text: const TextSpan(
+                                    const Text.rich(
+                                      TextSpan(
                                           children: [
                                             TextSpan(
                                               text: 'شروع از ',
@@ -248,8 +248,8 @@ class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
                                     ),
 
                                     const SizedBox(width: 18),
-                                    RichText(
-                                      text: const TextSpan(
+                                    const Text.rich(
+                                       TextSpan(
                                           children: [
                                             TextSpan(
                                               text: 'تعیین سطح ',

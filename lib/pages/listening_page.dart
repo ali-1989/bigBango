@@ -7,7 +7,6 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
@@ -45,7 +44,6 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   AudioPlayer player = AudioPlayer();
   Duration totalTime = const Duration();
   Duration currentTime = const Duration();
-  ExamPageInjector examContent = ExamPageInjector();
   Widget examComponent = const SizedBox();
   ExamController? examController;
   int currentItemIdx = 0;
@@ -61,7 +59,6 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   void initState(){
     super.initState();
 
-    examContent.showSendButton = false;
     assistCtr.addState(AssistController.state$loading);
 
     player.playbackEventStream.listen(eventListener);
@@ -262,17 +259,21 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                   child: Text('$description')
               ),
 
+              const SizedBox(height: 10),
               examComponent,
 
               const SizedBox(height: 20,),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 22.0),
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
-                    ),
-                    onPressed: registerExerciseResult,
-                    child: const Text('ثبت')
+              Visibility(
+                visible: !currentItem!.quiz.showAnswer,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
+                      ),
+                      onPressed: onRegisterExamClick,
+                      child: const Text('ثبت')
+                  ),
                 ),
               )
             ],
@@ -296,7 +297,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
               TextButton.icon(
                   style: TextButton.styleFrom(),
                   onPressed: onPreClick,
-                  icon: const Text('pre').englishFont().color(preColor),
+                  icon: const Text('prev').englishFont().color(preColor),
                   label: Image.asset(AppImages.arrowLeftIco, color: preColor)
               ),
             ],
@@ -307,6 +308,8 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   }
 
   void buildExamView() {
+    currentItem!.quiz.prepare();
+
     if (currentItem!.quiz.quizType == QuizType.fillInBlank) {
       examComponent = ExamBlankSpaceBuilder(
         key: ValueKey(currentItem?.id),
@@ -328,6 +331,41 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       );
       description = 'با توجه به صوت گزینه ی مناسب را انتخاب کنید';
     }
+    else {
+      examComponent = const Text('تمرین ثبت نشده است')
+          .bold().wrapDotBorder(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5));
+      description = '';
+    }
+  }
+
+  void onNextClick() async {
+    if(currentItemIdx < itemList.length-1) {
+      currentItemIdx++;
+      currentItem = itemList[currentItemIdx];
+
+      await player.stop();
+      await prepareVoice();
+      playerSliderValue = 0;
+
+      buildExamView();
+
+      assistCtr.updateHead();
+    }
+  }
+
+  void onPreClick() async {
+    if(currentItemIdx > 0){
+      currentItemIdx--;
+      currentItem = itemList[currentItemIdx];
+
+      await player.stop();
+      await prepareVoice();
+      playerSliderValue = 0;
+
+      buildExamView();
+
+      assistCtr.updateHead();
+    }
   }
 
   void playSound() async {
@@ -348,38 +386,6 @@ class _ListeningPageState extends StateBase<ListeningPage> {
         await player.seek(const Duration());
         await player.play();
       }
-    }
-  }
-
-  void onNextClick() async {
-    if(currentItemIdx < itemList.length-1) {
-      currentItemIdx++;
-      currentItem = itemList[currentItemIdx];
-
-      await player.stop();
-      await prepareVoice();
-      playerSliderValue = 0;
-
-      examContent.prepareExamList([currentItem!.quiz]);
-      buildExamView();
-
-      assistCtr.updateHead();
-    }
-  }
-
-  void onPreClick() async {
-    if(currentItemIdx > -1){
-      currentItemIdx--;
-      currentItem = itemList[currentItemIdx];
-
-      await player.stop();
-      await prepareVoice();
-      playerSliderValue = 0;
-
-      examContent.prepareExamList([currentItem!.quiz]);
-      buildExamView();
-
-      assistCtr.updateHead();
     }
   }
 
@@ -457,7 +463,6 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       else {
         currentItem = itemList[0];
         prepareVoice();
-        examContent.prepareExamList([currentItem!.quiz]);
         buildExamView();
         assistCtr.updateHead();
       }
@@ -468,7 +473,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     requester.request(context);
   }
 
-  void registerExerciseResult() {
+  void onRegisterExamClick() {
     examController = ExamController.getControllerFor(currentItem!.quiz);
 
     if(examController != null){
@@ -495,6 +500,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
       final message = res['message']?? 'پاسخ شما ثبت شد';
       AppSnack.showInfo(context, message);
+      assistCtr.updateHead();
     };
 
     final js = <String, dynamic>{};

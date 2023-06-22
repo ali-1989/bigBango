@@ -1,4 +1,6 @@
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
+import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/widgets/sliders.dart';
 import 'package:flutter/material.dart';
@@ -207,7 +209,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
     );
   }
   
-  List<Widget> buildOptions(ExamModel exam){
+  /*List<Widget> buildOptions(ExamModel exam){
     List<Widget> res = [];
 
     for(final opt in exam.items[0].teacherOptions){
@@ -286,6 +288,136 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
     }
 
     return res;
+  }
+*/
+
+  List<Widget> buildOptions(ExamModel exam){
+    List<Widget> res = [];
+
+    for(final opt in exam.items[0].teacherOptions){
+      final w = GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: (){
+          if(exam.showAnswer){
+            return;
+          }
+
+          bool isSelected = exam.getExamItem().getUserOptionById(opt.id) != null;
+
+          if(isSelected){
+            exam.getExamItem().userAnswers.removeWhere((element) => element.id == opt.id);
+          }
+          else {
+            final ex = ExamOptionModel()..order = opt.order;
+            ex.id = opt.id;
+
+            exam.getExamItem().userAnswers.clear();
+            exam.getExamItem().userAnswers.add(ex);
+          }
+
+          assistCtr.updateHead();
+        },
+        child: Builder(
+          builder: (_){
+            final optionIdx = exam.getExamItem().teacherOptions.indexOf(opt);
+            bool isSelected = exam.getExamItem().getUserOptionById(opt.id) != null;
+            bool isCorrect = optionIdx == exam.getExamItem().getIndexOfCorrectOption();
+
+            const trueColor = AppDecoration.green;
+            const falseColor = AppDecoration.red;
+            //final borderColor = isSelected? (exam.showAnswer? (isCorrect? trueColor: falseColor) : Colors.black): Colors.black;
+            final borderColor = exam.showAnswer? (isSelected? (isCorrect? trueColor: falseColor): (isCorrect? trueColor:Colors.black)) : Colors.black;
+            final checkboxColor = exam.showAnswer? (isSelected? (isCorrect? trueColor: falseColor): (isCorrect? trueColor:Colors.black)) : Colors.black;
+
+            TextStyle selectStl = const TextStyle(color: Colors.black, fontWeight: FontWeight.w700);
+            TextStyle unSelectStl = const TextStyle(color: Colors.black87);
+
+            return DecoratedBox(
+              decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: borderColor)
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Text('  ${optionIdx+1} -  ', style: (isSelected || (!isSelected && exam.showAnswer && isCorrect))? selectStl : unSelectStl).englishFont(),
+                      Text(opt.text, style: (isSelected || (!isSelected && exam.showAnswer && isCorrect))? selectStl : unSelectStl).englishFont(),
+                    ],
+                  ),
+
+                  Builder(
+                      builder: (_){
+                        if(exam.showAnswer){
+                          if(isSelected){
+                            if(isCorrect){
+                              return getSelectedGreenBox();
+                            }
+                            else {
+                              return getSelectedRedBox();
+                            }
+                          }
+                          else {
+                            if(isCorrect){
+                              return getSelectedGreenBox();
+                            }
+                            else {
+                              return getEmptyBox();
+                            }
+                          }
+                        }
+                        else {
+                          if(isSelected){
+                            return getSelectedBlackBox();
+                          }
+
+                          return getEmptyBox();
+                        }
+                      }
+                  ),
+                  /*Checkbox(
+                      value: exam.showAnswer? (isCorrect || isSelected) : isSelected,
+                      visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      activeColor: borderColor,
+                      fillColor: MaterialStateProperty.all(checkboxColor),
+                      onChanged: (v){}
+                  )*/
+                ],
+              ).wrapBoxBorder(
+                  color: Colors.black,
+                  alpha: 100,
+                  radius: 5,
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 5)
+              ),
+            );
+          },
+        ),
+      );
+
+      res.add(const SizedBox(height: 10));
+      res.add(w);
+    }
+
+    return res;
+  }
+
+  Widget getEmptyBox(){
+    return Image.asset(AppImages.emptyBoxIco, color: Colors.grey.shade100);
+  }
+
+  Widget getSelectedRedBox(){
+    return Image.asset(AppImages.selectLevelIco);
+  }
+
+  Widget getSelectedGreenBox(){
+    return Image.asset(AppImages.selectLevelGreenIco);
+  }
+
+  Widget getSelectedBlackBox(){
+    return Image.asset(AppImages.selectLevelBlackIco);
   }
 
   bool isPlaying() {

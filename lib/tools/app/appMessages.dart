@@ -311,7 +311,7 @@ class AppMessages {
   }
 
   static String get selectLevelTitle {
-    return 'تعیین سطح';
+    return 'تعییــن سطــح';
   }
 
   static String get selectLevelTerm1 {

@@ -191,7 +191,7 @@ class _SelectLevelOnlineState extends StateBase<SelectLevelOnline> {
                   onPressed: (){
                     goPrevQuestion();
                   },
-                  icon: const Text('pre').englishFont().color(preColor),
+                  icon: const Text('prev').englishFont().color(preColor),
                   label: Image.asset(AppImages.arrowLeftIco, color: preColor)
               ),
             ],

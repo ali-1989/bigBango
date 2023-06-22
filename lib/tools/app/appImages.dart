@@ -21,6 +21,8 @@ class AppImages {
   static const selectLevelIco2 = 'assets/images/selectLevelIco2.png';
   static const atentionIco = 'assets/images/atentionIco.png';
   static const selectLevelIco = 'assets/images/selectLevelIco.png';
+  static const selectLevelGreenIco = 'assets/images/selectLevelIcoGreen.png';
+  static const selectLevelBlackIco = 'assets/images/selectLevelIcoBlack.png';
   static const emptyBoxIco = 'assets/images/emptyBox.png';
   static const supportTimeIco = 'assets/images/supportTime.png';
   static const arrowIco = 'assets/images/arrow.png';

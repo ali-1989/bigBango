@@ -34,7 +34,7 @@ class RouteDispatcher {
     if(pNumber != null){
       final ts = AppDB.fetchKv(Keys.setting$registerPhoneNumberTs);
 
-      if(ts != null && !DateHelper.isPastOf(DateHelper.tsToSystemDate(ts), Duration(minutes: 10))) {
+      if(ts != null && !DateHelper.isPastOf(DateHelper.tsToSystemDate(ts), const Duration(minutes: 10))) {
         return RegisterFormPage(phoneNumber: pNumber);
       }
     }

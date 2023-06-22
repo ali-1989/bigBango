@@ -1,3 +1,4 @@
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -42,10 +43,10 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
     
     questionNormalStyle = const TextStyle(fontSize: 16, color: Colors.black);
     falseStyle = const TextStyle(fontSize: 16,
-        color: Colors.red,
+        color: AppDecoration.red,
         decorationStyle: TextDecorationStyle.solid,
         decoration: TextDecoration.lineThrough,
-        decorationColor: Colors.red
+        decorationColor: AppDecoration.red
     );
 
     ExamController(widget.examModel, this);
@@ -197,7 +198,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
 
         if(exam.showAnswer){
           Color trueColor = Colors.green;
-          Color falseColor = Colors.red;
+          Color falseColor = AppDecoration.red;
 
           ///answer is correct
 
@@ -269,14 +270,14 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
           }
         }
         else {
-          Color blankColor = Colors.blue;
+          Color blankColor = Colors.grey;
 
           if(hasUserAnswer){
             blankText = ' ${exam.getExamItem().userAnswers[i].text} ';
           }
           else {
             blankText = ' [\u00A0____\u00A0] '; // \u202F , \u2007
-            blankColor = Colors.blue.shade200;
+            blankColor = Colors.grey.shade200;
           }
 
           /// blank space ==> [xxx]

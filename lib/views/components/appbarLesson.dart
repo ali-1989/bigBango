@@ -19,13 +19,13 @@ class AppbarLesson extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(12)),
+      borderRadius: const BorderRadius.all(Radius.circular(12)),
       child: ColoredBox(
         color: AppDecoration.red,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 1.5),
           child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
             child: ColoredBox(
               color: Colors.white,
               child: Padding(
@@ -36,8 +36,8 @@ class AppbarLesson extends StatelessWidget {
                     Row(
                       children: [
                         Image.asset(AppImages.lessonListIco),
-                        SizedBox(width: 10),
-                        Text(title).bold().fsR(3)
+                        const SizedBox(width: 10),
+                        Text(title).bold().fsR(3),
                       ],
                     ),
 
@@ -48,10 +48,10 @@ class AppbarLesson extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(AppMessages.back),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           CustomCard(
                               color: Colors.grey.shade200,
-                              padding: EdgeInsets.all(6),
+                              padding: const EdgeInsets.all(6),
                               child: Image.asset(AppImages.arrowLeftIco, width: 13, height: 13)
                           ),
                         ],

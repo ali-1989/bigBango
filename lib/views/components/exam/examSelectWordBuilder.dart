@@ -1,3 +1,4 @@
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -189,11 +190,11 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
 
           if (userAnswer.isNotEmpty) {
             choiceText = userAnswer;
-            choiceColor = Colors.blue;
+            choiceColor = AppDecoration.blue;
           }
           else {
             choiceText = '\u00A0_____\u00A0';
-            choiceColor = Colors.blue.shade200;
+            choiceColor = Colors.grey.shade200;
           }
 
           choiceSpan = WidgetSpan(
@@ -233,7 +234,7 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
       Color bColor = Colors.grey.shade200;
 
       if (/*currentSelectIndex > 0 && */!isPicked) {
-        bColor = Colors.lightBlueAccent;
+        bColor = Colors.grey.shade300;
       }
 
       return Padding(

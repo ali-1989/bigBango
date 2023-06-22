@@ -69,7 +69,7 @@ class _VocabPageState extends StateBase<VocabPage> {
   void initState(){
     super.initState();
 
-    currentVocabIdx = widget.injector.lessonModel.vocabSegmentModel?.reviewCount?? 0;
+    //currentVocabIdx = widget.injector.lessonModel.vocabSegmentModel?.reviewCount?? 0;
 
     if(currentVocabIdx > 0){
       currentVocabIdx--;
@@ -169,7 +169,7 @@ class _VocabPageState extends StateBase<VocabPage> {
 
                       const SizedBox(height: 14),
 
-                      /// 7/20
+                      /// 7/20 & title
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -185,6 +185,12 @@ class _VocabPageState extends StateBase<VocabPage> {
 
                                 const SizedBox(width: 10),
 
+                                const SizedBox(
+                                    height: 14,
+                                    child: VerticalDivider(width: 3, color: Colors.black54)
+                                ),
+                                const SizedBox(width: 10),
+                                const Text('بخش اول').alpha()
                                 /*SizedBox(
                                   height: 15,
                                   width: 2,
@@ -247,6 +253,7 @@ class _VocabPageState extends StateBase<VocabPage> {
 
                               return SizedBox(
                                 height: regulator,
+                                  width: double.infinity,
                                   child: FittedBox(
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
@@ -268,14 +275,19 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                   side: const BorderSide(color: AppDecoration.red)
                                                 ),
                                                   onPressed: resetVocab,
-                                                  label: Image.asset(AppImages.returnArrow),
-                                                  icon: const Text('شروع مجدد')
+                                                  label: const Text('شروع مجدد'),
+                                                  icon: Image.asset(AppImages.returnArrow)
                                               ),
                                             ],
-                                          )
+                                          ),
+
+                                          const SizedBox(height: 15)
                                         ],
                                       )
                                   )
+                              )
+                              .wrapBoxBorder(
+                                color: Colors.black54,
                               );
                             }
                             else {
@@ -337,7 +349,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                     child: Assist(
                                                       controller: assistCtr,
                                                       id: id$usVoicePlayerSectionId,
-                                                      groupIds: [AppAssistKeys.voicePlayerGroupId$vocabPage],
+                                                      groupIds: const [AppAssistKeys.voicePlayerGroupId$vocabPage],
                                                       builder: (_, ctr, data){
                                                         return AnimateWidget(
                                                           resetOnRebuild: true,
@@ -382,7 +394,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                                     child: Assist(
                                                       controller: assistCtr,
                                                       id: id$ukVoicePlayerSectionId,
-                                                      groupIds: [AppAssistKeys.voicePlayerGroupId$vocabPage],
+                                                      groupIds: const [AppAssistKeys.voicePlayerGroupId$vocabPage],
                                                       builder: (_, ctr, data){
                                                         return AnimateWidget(
                                                           resetOnRebuild: true,
@@ -456,7 +468,17 @@ class _VocabPageState extends StateBase<VocabPage> {
                                               ),
                                               secondChild: Padding(
                                                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                                child: Text(currentVocab.translation),
+                                                child: Row(
+                                                  children: [
+                                                    const SizedBox(
+                                                        height: 14,
+                                                        child: VerticalDivider(width: 3, color: Colors.black54)
+                                                    ),
+
+                                                    const SizedBox(width: 10),
+                                                    Text(currentVocab.translation),
+                                                  ],
+                                                ),
                                               ),
                                               crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
                                               duration: const Duration(milliseconds: 300)
@@ -499,7 +521,7 @@ class _VocabPageState extends StateBase<VocabPage> {
             TextButton.icon(
                 style: TextButton.styleFrom(),
                 onPressed: onPreClick,
-                icon: const Text('pre').englishFont().color(preBtnColor),
+                icon: const Text('prev').englishFont().color(preBtnColor),
                 label: Image.asset(AppImages.arrowLeftIco, color: preBtnColor)
             ),
           ],
@@ -602,7 +624,7 @@ class _VocabPageState extends StateBase<VocabPage> {
             child: Assist(
               controller: assistCtr,
               id: id,
-              groupIds: [AppAssistKeys.voicePlayerGroupId$vocabPage],
+              groupIds: const [AppAssistKeys.voicePlayerGroupId$vocabPage],
               builder: (_, ctr, data){
                 return AnimateWidget(
                   resetOnRebuild: true,

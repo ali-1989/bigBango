@@ -221,23 +221,24 @@ class _GrammarPageState extends StateBase<GrammarPage> {
               ),
 
               const SizedBox(height: 20),
-              Stack(
-                children: [
-                  MaxHeight(
-                    maxHeight: 150,
-                      child: AspectRatio(
-                        aspectRatio: 2/1,
-                          child: Image.asset(AppImages.examManMen)
-                      )
-                  ),
+              GestureDetector(
+                onTap: onStartExerciseClick,
+                behavior: HitTestBehavior.translucent,
+                child: Stack(
+                  children: [
+                    MaxHeight(
+                      maxHeight: 150,
+                        child: AspectRatio(
+                          aspectRatio: 2/1,
+                            child: Image.asset(AppImages.examManMen)
+                        )
+                    ),
 
-                  Positioned(
-                    bottom: 16,
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: GestureDetector(
-                          onTap: startExercise,
+                    const Positioned(
+                      bottom: 16,
+                        left: 0,
+                        right: 0,
+                        child: Center(
                           child: const Chip(
                             backgroundColor: AppDecoration.red,
                               elevation: 0,
@@ -247,9 +248,9 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                               label: Text('شروع تمرین', style: TextStyle(fontSize: 14))
                           ),
                         ),
-                      ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
 
               const SizedBox(height: 14),
@@ -274,7 +275,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
               TextButton.icon(
                   style: TextButton.styleFrom(),
                   onPressed: onPreClick,
-                  icon: const Text('pre').englishFont().color(preColor),
+                  icon: const Text('prev').englishFont().color(preColor),
                   label: Image.asset(AppImages.arrowLeftIco, color: preColor)
               ),
             ],
@@ -330,7 +331,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     }
   }
 
-  void startExercise() async{
+  void onStartExerciseClick() async{
     if(examList.isEmpty){
       showLoading();
       await requestExercise();
