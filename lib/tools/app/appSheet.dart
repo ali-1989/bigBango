@@ -490,11 +490,11 @@ class AppSheet {
   }
 
   /*static Future<T?> showSheet$YouDoNotHaveAccess<T>(BuildContext context) {
-    return showSheetOneAction<T>(context, AppMessages.sorryYouDoNotHaveAccess, null);
+    return showSheetOneAction<T>(context, AppMessages.sorryYouDoNotHaveAccess);
   }
 
   static Future<T?> showSheet$ThereAreNoResults<T>(BuildContext context) {
-    return showSheetOneAction<T>(context, AppMessages.thereAreNoResults, null);
+    return showSheetOneAction<T>(context, AppMessages.thereAreNoResults);
   }*/
   ///======== third party package ===============================================================================
   static void showSheetDialog(

@@ -1,5 +1,7 @@
+import 'package:app/managers/api_manager.dart';
 import 'package:app/services/jwt_service.dart';
 import 'package:app/services/session_service.dart';
+import 'package:app/system/commonHttpHandler.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
@@ -8,8 +10,6 @@ import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/tools.dart';
 
-import 'package:app/managers/settings_manager.dart';
-import 'package:app/system/httpProcess.dart';
 import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/app/appSheet.dart';
 
@@ -58,7 +58,7 @@ class Requester {
   void _prepareHttp(){
     _http = HttpItem();
     _http.setResponseIsPlain();
-    _http.fullUrl = SettingsManager.localSettings.httpAddress;
+    _http.fullUrl = ApiManager.serverApi;
   }
 
   void prepareUrl({required String pathUrl, bool isFull = false}){
@@ -67,7 +67,7 @@ class Requester {
       return;
     }
 
-    _http.fullUrl = SettingsManager.localSettings.httpAddress + pathUrl;
+    _http.fullUrl = ApiManager.serverApi + pathUrl;
   }
 
   void request([BuildContext? context, bool promptErrors = true]){
@@ -184,7 +184,7 @@ class Requester {
         await httpRequestEvents.onFailState?.call(_httpRequester, val);
 
         if(context != null && context.mounted) {
-          if (promptErrors && !HttpProcess.processCommonRequestError(context, _httpRequester, js)) {
+          if (promptErrors && !CommonHttpHandler.processCommonRequestError(context, _httpRequester, js)) {
             await AppSheet.showSheet$ServerNotRespondProperly(context);
           }
         }

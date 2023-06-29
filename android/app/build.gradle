@@ -129,6 +129,4 @@ flutter {
 
 dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.2.2')
-    //implementation 'androidx.annotation:annotation:1.4.0'
-    //implementation 'androidx.multidex:multidex:2.0.1'
 }

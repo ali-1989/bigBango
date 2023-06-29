@@ -62,6 +62,103 @@ extension ContextExtension on BuildContext {
     }
     while (FocusScope.of(this).focusedChild?.context?.widget is! EditableText);
   }
+
+  //--------------------------------------------------
+  String? t(String key, {String? key2, String? key3}) {
+    var res1 = AppLocale.appLocalize.translate(key);
+
+    if(res1 == null) {
+      return null;
+    }
+
+    if(key2 != null) {
+      res1 += ' ${AppLocale.appLocalize.translate(key2)?? ''}';
+    }
+
+    if(key3 != null) {
+      res1 += ' ${AppLocale.appLocalize.translate(key3)?? ''}';
+    }
+
+    return res1;
+  }
+  //--------------------------------------------------
+  String? tC(String key, {String? key2, String? key3}) {
+    var res1 = AppLocale.appLocalize.translateCapitalize(key);
+
+    if(res1 == null) {
+      return null;
+    }
+
+    if(key2 != null) {
+      res1 += ' ${AppLocale.appLocalize.translate(key2)?? ''}';
+    }
+
+    if(key3 != null) {
+      res1 += ' ${AppLocale.appLocalize.translate(key3)?? ''}';
+    }
+
+    return res1;
+  }
+  //--------------------------------------------------
+  Map<String, dynamic>? tAsMap(String key) {
+    return AppLocale.appLocalize.translateAsMap(key);
+  }
+
+  Map<String, String>? tAsStringMap(String key, String subMapKey) {
+    final res = tAsMap(key)?[subMapKey];
+
+    if(res is Map){
+      return res.map<String, String>((key, value) => MapEntry(key, value.toString()));
+    }
+
+    return res;
+  }
+
+  String? tInMap(String key, String subKey) {
+    return tAsMap(key)?[subKey];
+  }
+
+  dynamic tDynamicOrFirst(String key, String subKey) {
+    final list = tAsMap(key);
+
+    if(list == null) {
+      return null;
+    }
+
+    final Iterable<MapEntry> tra = list.entries;
+    MapEntry? find;
+
+    try {
+      find = tra.firstWhere((element) {
+        return element.key == subKey;
+      });
+    }
+    catch (e){}
+
+    if(find != null) {
+      return find.value;
+    }
+
+    return tra.first.value;
+  }
+
+  String? tJoin(String key, {String join = ''}) {
+    final list = tAsMap(key);
+
+    if(list == null) {
+      return null;
+    }
+
+    var res = '';
+
+    for (var s in list.entries) {
+      res += s.value.toString() + join;
+    }
+
+    res = res.replaceFirst(RegExp(join), '');
+
+    return res;
+  }
 }
 ///==========================================================================================================
 extension IterableExtension<E> on Iterable<E> {
