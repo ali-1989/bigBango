@@ -68,7 +68,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
             }
 
             if(assistCtr.hasState(AssistController.state$loading)){
-              return WaitToLoad();
+              return const WaitToLoad();
             }
 
             return Scaffold(
@@ -89,16 +89,16 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
               child: ColoredBox(
                 color: AppDecoration.red,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 1.5),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
                     child: ColoredBox(
                       color: Colors.white,
                       child: Padding(
@@ -109,8 +109,8 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                             Row(
                               children: [
                                 Image.asset(AppImages.leitnerIcoRed),
-                                SizedBox(width: 10),
-                                Text('جعبه لایتنر').bold().fsR(3)
+                                const SizedBox(width: 10),
+                                const Text('جعبه لایتنر').bold().fsR(3)
                               ],
                             ),
 
@@ -121,10 +121,10 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                               child: Row(
                                 children: [
                                   Text(AppMessages.back),
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
                                   CustomCard(
                                     color: Colors.grey.shade200,
-                                      padding: EdgeInsets.all(5),
+                                      padding: const EdgeInsets.all(5),
                                       child: Image.asset(AppImages.arrowLeftIco)
                                   ),
                                 ],
@@ -140,7 +140,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
             ),
 
 
-            SizedBox(height: 14),
+            const SizedBox(height: 14),
 
             /// 7/20
             Row(
@@ -156,15 +156,15 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                   children: [
                     Text('${leitnerItems.length}').englishFont().fsR(4),
 
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
 
-                    Text('/').englishFont().fsR(5),
+                    const Text('/').englishFont().fsR(5),
 
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
 
                     CustomCard(
                       color: Colors.grey.shade200,
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                         child: Text('${currentIdx+1}').englishFont().bold().fsR(4)
                     )
                   ],
@@ -172,7 +172,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
               ],
             ),
 
-            SizedBox(height: 14),
+            const SizedBox(height: 14),
 
             /// progressbar
             Directionality(
@@ -183,7 +183,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                 )
             ),
 
-            SizedBox(height: 60),
+            const SizedBox(height: 60),
 
             DecoratedBox(
                 decoration: BoxDecoration(
@@ -193,10 +193,10 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
               child: SizedBox(
                 width: double.infinity,
                 child: Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   child: Column(
                     children: [
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Visibility(
                         visible: current.contentType == 1,
                         child: Column(
@@ -204,7 +204,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children:[
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   GestureDetector(
                                     onTap: (){
                                       playSound(current);
@@ -216,7 +216,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                                           return AnimateWidget(
                                               resetOnRebuild: true,
                                               triggerOnRebuild: true,
-                                              duration: Duration(milliseconds: 500),
+                                              duration: const Duration(milliseconds: 500),
                                               cycles: data == 'prepare' ? 100 : 1,
                                             builder: (_, animate) {
                                               Color color = Colors.grey.shade200;
@@ -229,7 +229,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                                               }
 
                                               return CustomCard(
-                                                padding: EdgeInsets.all(5),
+                                                padding: const EdgeInsets.all(5),
                                                 color: color,//Colors.grey.shade200,
                                                 child: Image.asset(AppImages.speaker2Ico, width: 20)
                                         );
@@ -239,22 +239,22 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                                     ),
                                   ),
 
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   RichText(
                                       text: TextSpan(
                                           children: [
-                                            TextSpan(text: '[ ', style: AppThemes.bodyTextStyle()),
-                                            TextSpan(text: '${current.getPronunciation()}', style: AppThemes.bodyTextStyle()),
-                                            TextSpan(text: ' ]', style: AppThemes.bodyTextStyle()),
+                                            TextSpan(text: '[ ', style: AppThemes.baseTextStyle()),
+                                            TextSpan(text: '${current.getPronunciation()}', style: AppThemes.baseTextStyle()),
+                                            TextSpan(text: ' ]', style: AppThemes.baseTextStyle()),
                                           ]
                                       )
                                   ),
                                 ]
                             ),
 
-                            SizedBox(height: 10),
-                            Divider(color: Colors.black45),
-                            SizedBox(height: 50),
+                            const SizedBox(height: 10),
+                            const Divider(color: Colors.black45),
+                            const SizedBox(height: 50),
                           ],
                         ),
                       ),
@@ -272,17 +272,17 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                                 showTranslate = !showTranslate;
                                 assistCtr.updateHead();
                               },
-                              child: Text('نمایش معنی')
+                              child: const Text('نمایش معنی')
                           ),
                           secondChild: Padding(
                             padding: const EdgeInsets.only(top: 14.0),
                             child: Text(current.getTranslate()),
                           ),
                           crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                          duration: Duration(milliseconds: 250)
+                          duration: const Duration(milliseconds: 250)
                       ),
 
-                      SizedBox(height: 50),
+                      const SizedBox(height: 50),
                       Row(
                         children: [
                           Expanded(
@@ -293,23 +293,23 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
                                 onPressed: (){
                                   requestSetReview(current, true);
                                 },
-                                child: Text('بلدم'),
+                                child: const Text('بلدم'),
                               )
                           ),
 
 
-                          SizedBox(width: 20),
+                          const SizedBox(width: 20),
                           Expanded(
                               child: ElevatedButton(
                                 onPressed: (){
                                   requestSetReview(current, false);
                                 },
-                                child: Text('بلد نیستم'),
+                                child: const Text('بلد نیستم'),
                               )
                           ),
                         ],
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
 
                     ],
                   ),
@@ -317,7 +317,7 @@ class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
               ),
             ),
 
-            SizedBox(height: 14),
+            const SizedBox(height: 14),
           ],
         ),
       ),

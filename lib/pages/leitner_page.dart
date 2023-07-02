@@ -58,48 +58,48 @@ class _LightnerPageState extends StateBase<LightnerPage> {
         }
 
         if(assistCtr.hasState(AssistController.state$loading)){
-          return WaitToLoad();
+          return const WaitToLoad();
         }
 
         if(boxItems.isEmpty){
-          return EmptyData();
+          return const EmptyData();
         }
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             children: [
-              SizedBox(height: 70),
+              const SizedBox(height: 70),
               AspectRatio(
                   aspectRatio: 5/2.5,
                   child: Image.asset(AppImages.lightner)
               ),
 
               //Expanded(child: SizedBox()),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
-                      Text('جعبه لایتنر ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+                      const Text('جعبه لایتنر ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
                       GestureDetector(
                         onTap: (){
                           UrlHelper.launchWeb('https://fa.wikipedia.org/wiki/%D8%AC%D8%B9%D8%A8%D9%87_%D9%84%D8%A7%DB%8C%D8%AA%D9%86%D8%B1');
                         },
-                          child: CircularIcon(icon: AppIcons.questionMark, size: 17)
+                          child: const CircularIcon(icon: AppIcons.questionMark, size: 17)
                       ),
                     ],
                   ),
 
                   Text('${boxItems.fold<int>(0, (sum, element) => sum + element.count)}',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800)
                   ),
                 ],
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
                     itemCount: boxItems.length,
@@ -131,13 +131,13 @@ class _LightnerPageState extends StateBase<LightnerPage> {
             border: Border.all(color: Colors.black45, width: 1),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
 
                     CustomCard(
                       color: Colors.grey.shade200,
@@ -146,23 +146,23 @@ class _LightnerPageState extends StateBase<LightnerPage> {
                         child: Text('${idx + 1}').fsR(1),
                     ),
 
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         RichText(
                           text: TextSpan(
                             children: [
-                              TextSpan(text: 'جعبه ی ', style: AppThemes.bodyTextStyle()),
+                              TextSpan(text: 'جعبه ی ', style: AppThemes.baseTextStyle()),
                               TextSpan(text: itm.getNumText(idx+1),
-                                  style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
+                                  style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
                               ),
                             ]
                           ),
                         ),
 
-                        SizedBox(height: 8),
-                        Text('آماده یادگیری').color(AppDecoration.red).fsR(-2),
+                        const SizedBox(height: 8),
+                        const Text('آماده یادگیری').color(AppDecoration.red).fsR(-2),
                       ],
                     ),
                   ],
@@ -171,7 +171,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
                 Column(
                   children: [
                     Text('${itm.count}').bold().fsR(1),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text('${itm.readyToLearnCount}').color(AppDecoration.red).fsR(-2),
                   ],
                 ),

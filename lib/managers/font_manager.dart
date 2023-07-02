@@ -10,6 +10,8 @@ class FontManager {
   FontManager._();
 
   static late final FontManager _instance;
+  static bool useFlutterFontSize = true;
+  static const double _defaultFontSize = 13;
 
   static final List<Font> _fontList = [];
   static late Font _platformDefaultFont;
@@ -180,7 +182,8 @@ class FontManager {
   }
 
   static void _createThemes(){
-    final fs = Font.getRelativeFontSize();
+    useFlutterFontSize = PlatformDispatcher.instance.implicitView!.devicePixelRatio > 2.9;
+    final fs = useFlutterFontSize? null : Font.getRelativeFontSize();
     final temp = ThemeData();
     const c1 = Colors.teal;
     final c2 = Colors.blue.shade700;
@@ -215,8 +218,8 @@ class FontManager {
   }
 
   static String _getDefaultFontFamily(){
-    var ff = _rawTextTheme.bodyLarge?.fontFamily;
-    return ff ?? _rawTextTheme.bodyMedium?.fontFamily?? (kIsWeb? 'Segoe UI' : 'Roboto');
+    var ff = _rawTextTheme.bodyMedium?.fontFamily;
+    return ff ?? _rawTextTheme.bodySmall?.fontFamily?? (kIsWeb? 'Segoe UI' : 'Roboto');
   }
 
   static Future<bool> saveFontThemeData(String lang) async {
@@ -235,21 +238,21 @@ class FontManager {
     return res > 0;
   }
 
-  static Future fetchFontThemeData(String lang) async {
+  static Future<void> fetchFontThemeData(String lang) async {
     var res = AppDB.fetchKv(Keys.setting$fontThemeData);
 
     if(res == null) {
       /// can set app default font
-      //AppThemes.baseFont.size = 14;
-      //AppThemes.baseFont.family = 'Nazanin';
+      //AppThemes.instance.baseFont.size = _defaultFontSize;
+      //AppThemes.instance.baseFont.family = 'Nazanin';
     }
+    else {
+      final Map data = res[lang] ?? <String, dynamic>{};
 
-    res ??= {};
-    final Map data = res[lang]?? <String, dynamic>{};
-
-    AppThemes.instance.baseFont = Font.fromMap(data['UserBaseFont']);
-    AppThemes.instance.subFont = Font.fromMap(data['UserSubFont']);
-    AppThemes.instance.boldFont = Font.fromMap(data['UserBoldFont']);
+      AppThemes.instance.baseFont = Font.fromMap(data['UserBaseFont']);
+      AppThemes.instance.subFont = Font.fromMap(data['UserSubFont']);
+      AppThemes.instance.boldFont = Font.fromMap(data['UserBoldFont']);
+    }
 
     if(AppThemes.instance.baseFont.family == null) {
       AppThemes.instance.baseFont = FontManager.instance.defaultFontFor(lang, FontUsage.normal);
@@ -262,8 +265,6 @@ class FontManager {
     if(AppThemes.instance.boldFont.family == null) {
       AppThemes.instance.boldFont = FontManager.instance.defaultFontFor(lang, FontUsage.bold);
     }
-
-    return;
   }
 }
 ///=====================================================================================================
@@ -297,7 +298,7 @@ class Font {
   Font();
 
   Font.bySize(){
-    size = getRelativeFontSize();
+    size = FontManager.useFlutterFontSize? null: getRelativeFontSize();
   }
 
   Font.fromMap(Map? map){
@@ -307,7 +308,7 @@ class Font {
 
     family = map['family'];
     fileName = map['file_name'];
-    size = map['size']?? 10;
+    size = map['size']?? FontManager._defaultFontSize;
     height = map['height'];
     textHeightBehavior = const TextHeightBehavior().fromMap(map['textHeightBehavior']);
     defaultUsage = FontUsage.fromName(map['default_usage']);
@@ -343,7 +344,7 @@ class Font {
     }
     else {
       final appHeight = (isLandscape ? realPixelWidth : realPixelHeight) / pixelRatio;
-      return (appHeight / 100 /* ~6 */) + 5;    //  this is relative to any fonts
+      return (appHeight / 51);    //  this is relative to any fonts
     }
   }
 }

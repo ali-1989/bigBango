@@ -1,5 +1,6 @@
 // ignore_for_file: empty_catches
 
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appLocale.dart';
 import 'package:flutter/material.dart';
 
@@ -660,7 +661,7 @@ extension TextExtension on Text {
 
   Text fsR(double size, {double? max /*20*/}) {
     var siz = style?.fontSize?? AppThemes.instance.currentTheme.baseTextStyle.fontSize;
-    siz = siz! + size;
+    siz = (siz?? 13) + size;
 
     if (max != null) {
       siz = MathHelper.minDouble(siz, max);
@@ -952,7 +953,7 @@ extension SelectableTextExtension on SelectableText {
     var siz = style?.fontSize;
     siz ??= AppThemes.instance.currentTheme.baseTextStyle.fontSize;
 
-    siz = siz! + size;
+    siz = (siz?? 13) + size;
 
     if (max != null) {
       siz = MathHelper.minDouble(siz, max);
@@ -1034,17 +1035,12 @@ extension DropdownButtonExtension on DropdownButton {
     double radius = 5,
     Color? backColor,
     Color? arrowColor,
+    EdgeInsets? padding,
   }) {
 
-    if(ColorHelper.isNearColors(AppThemes.instance.currentTheme.primaryColor,
-        [Colors.grey[900]!, Colors.white, Colors.grey[600]!])) {
-      arrowColor ??= AppThemes.instance.currentTheme.appBarItemColor;
-    }
-    else {
-      arrowColor ??= Colors.white;
-    }
-
-    final back = backColor?? ColorHelper.changeLight(AppThemes.instance.themeData.colorScheme.secondary); //primaryColor
+    arrowColor ??= AppDecoration.dropdownArrowColor();
+    backColor ??= AppDecoration.dropdownBackColor();
+    padding ??= const EdgeInsets.symmetric(horizontal: 4, vertical: 0);
 
     void fn(){
       FocusHelper.unFocus(context);
@@ -1055,10 +1051,10 @@ extension DropdownButtonExtension on DropdownButton {
 
     return Container(
       width: width,
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-      decoration: AppThemes.dropdownDecoration(color: back, radius: radius),
+      padding: padding,
+      decoration: AppDecoration.dropdownDecoration(color: backColor, radius: radius),
       child: Theme(
-        data: AppThemes.dropdownTheme(context, color: back),
+        data: AppDecoration.dropdownTheme(context, color: backColor),
         child: DropdownButton(
           items: items,
           value: value,

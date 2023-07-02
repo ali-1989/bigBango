@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -134,7 +135,7 @@ class AppSheet {
       onButton?.call();
     }
 
-    final txtStyle = AppThemes.relativeSheetTextStyle();
+    final txtStyle = AppDecoration.relativeSheetTextStyle();
 
     final posBtn = TextButton(
         onPressed: dismissOnAction ? close : onButton,

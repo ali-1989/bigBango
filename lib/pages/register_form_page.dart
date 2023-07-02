@@ -386,7 +386,7 @@ class _RegisterFormPageState extends StateBase<RegisterFormPage> {
 
                               RichText(
                                   text: TextSpan(
-                                      style: AppThemes.bodyTextStyle()?.copyWith(fontSize: 14),
+                                      style: AppThemes.baseTextStyle().copyWith(fontSize: 14),
                                       children: [
                                         const TextSpan(
                                             text: 'شما با ثبت نام در بیگ بنگو  '

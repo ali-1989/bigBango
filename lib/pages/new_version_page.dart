@@ -74,7 +74,7 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
                   height: sh * .24,
                   child: CustomPaint(
                     painter: MyCustomPainter(),
-                    child: SizedBox(),
+                    child: const SizedBox(),
                   ),
                 )
             ),
@@ -84,7 +84,7 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
                   Padding(
                     padding: const EdgeInsets.all(20.0),
@@ -101,16 +101,16 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
                       Row(
                         children: [
                           Image.asset(AppImages.newVersionIco, width: 26,),
-                          SizedBox(width: 10),
-                          Text('تغییرات نسخه جدید', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900))
+                          const SizedBox(width: 10),
+                          const Text('تغییرات نسخه جدید', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900))
                         ],
                       ),
 
-                      Text(' ${widget.versionModel.newVersionName}', style: TextStyle(fontSize: 14))
+                      Text(' ${widget.versionModel.newVersionName}', style: const TextStyle(fontSize: 14))
                     ],
                   ),
 
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
                   Expanded(
                       child: Directionality(
@@ -119,13 +119,13 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
                           thumbVisibility: true,
                           trackVisibility: false,
                           child: SingleChildScrollView(
-                            child: HTML.toRichText(context, html, defaultTextStyle: AppThemes.bodyTextStyle()),
+                            child: HTML.toRichText(context, html, defaultTextStyle: AppThemes.baseTextStyle()),
                           ),
                         ),
                       ),
                   ),
 
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -133,7 +133,7 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: onUpdateClick,
-                          child: Text('بروز رسانی')
+                          child: const Text('بروز رسانی')
                       ),
                     ),
                   ),
@@ -143,7 +143,7 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
                       child: Center(
                         child: TextButton(
                           onPressed: onDirectLinkClick,
-                          child: Text('لینک مستقیم'),
+                          child: const Text('لینک مستقیم'),
                         ),
                       )
                   ),
@@ -155,12 +155,12 @@ class _NewVersionPageState extends StateBase<NewVersionPage> {
                           onPressed: (){
                             AppNavigator.pop(context);
                           },
-                          child: Text('بعدا'),
+                          child: const Text('بعدا'),
                         ),
                       )
                   ),
 
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                 ],
               ),
             ),
