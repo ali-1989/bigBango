@@ -1,3 +1,4 @@
+import 'package:app/tools/app/appThemes.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_notifier/iris_notifier.dart';
@@ -41,110 +42,121 @@ class DrawerMenuBuilder {
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: Colors.grey.shade50,
-           borderRadius: BorderRadius.only(topLeft: Radius.circular(15), bottomLeft: Radius.circular(15))
+           borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), bottomLeft: Radius.circular(15))
         ),
 
-        child: ListView(
-          children: [
-            //SizedBox(height: 30),
-
-            Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  onPressed: (){
-                    LayoutComponentState.toggleDrawer();
-                  },
-                  icon: Image.asset(AppImages.arrowRightIco, color: Colors.black),
-                )
-            ),
-
-            _buildProfileSection(),
-
-            SizedBox(height: 30),
-
-            ListTile(
-              title: Text('پروفایل و اطلاعات'),
-              leading: Image.asset(AppImages.drawerProfileIco, width: 16, height: 16),
-              onTap: gotoProfilePage,
-              dense: true,
-              horizontalTitleGap: 0,
-              visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
-            ),
-
-            ListTile(
-              title: Text('کیف پول'),
-              leading: Image.asset(AppImages.drawerWalletIco, width: 16, height: 16),
-              onTap: gotoWalletPage,
-              dense: true,
-              horizontalTitleGap: 0,
-              visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
-            ),
-
-            ListTile(
-              title: Text('تراکنش ها'),
-              leading: Image.asset(AppImages.transactionMenuIco, width: 16, height: 16),
-              onTap: gotoTransactionPage,
-              dense: true,
-              horizontalTitleGap: 0,
-              visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
-            ),
-
-            ListTile(
-              title: Text('پشتیبانی'),
-              leading: Image.asset(AppImages.drawerSupportIco, width: 16, height: 16),
-              onTap: gotoSupportPage,
-              dense: true,
-              horizontalTitleGap: 0,
-              visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
-            ),
-
-            ListTile(
-              title: Text('دعوت از دوستان'),
-              leading: Image.asset(AppImages.drawerSendIco, width: 16, height: 16),
-              onTap: gotoInvitePage,
-              dense: true,
-              horizontalTitleGap: 0,
-              visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
-            ),
-
-            /*ListTile(
-              title: Text('گزارشات و آزمون ها'),
-              leading: Image.asset(AppImages.drawerLogIco, width: 16, height: 16),
-              onTap: gotoLogsPage,
-              dense: true,
-              horizontalTitleGap: 0,
-              visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
-            ),*/
-
-            ListTile(
-              title: Text(AppMessages.aboutUs),
-              leading: Image.asset(AppImages.drawerAboutIco, width: 16, height: 16),
-              onTap: gotoAboutPage,
-              dense: true,
-              horizontalTitleGap: 0,
-              visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
-            ),
-
-            /*ListTile(
-              title: Text('تنظیمات'),
-              leading: Image.asset(AppImages.drawerSettingIco, width: 16, height: 16),
-              onTap: gotoProfilePage,
-              dense: true,
-              horizontalTitleGap: 0,
-              visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
-            ),*/
-
-            if(SessionService.hasAnyLogin())
-              ListTile(
-                title: Text(AppMessages.logout).color(Colors.redAccent),
-                //leading: Icon(AppIcons.logout, size: 18, color: Colors.redAccent),
-                leading: Image.asset(AppImages.drawerExitIco, width: 16, height: 16),
-                onTap: onLogoffCall,
-                dense: true,
-                horizontalTitleGap: 0,
-                visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
+        child: Builder(
+          builder: (context) {
+            return ListTileTheme(
+              data: ListTileTheme.of(context).copyWith(
+                style: ListTileStyle.drawer,
+                titleTextStyle: AppThemes.baseTextStyle(),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
               ),
-          ],
+              child: ListView(
+                children: [
+                  //SizedBox(height: 30),
+
+                  Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: (){
+                          LayoutComponentState.toggleDrawer();
+                        },
+                        icon: Image.asset(AppImages.arrowRightIco, color: Colors.black),
+                      )
+                  ),
+
+                  _buildProfileSection(),
+
+                  const SizedBox(height: 30),
+
+                  ListTile(
+                    title: const Text('پروفایل و اطلاعات'),
+                    leading: Image.asset(AppImages.drawerProfileIco, width: 20, height: 20),
+                    onTap: gotoProfilePage,
+                    dense: true,
+                    horizontalTitleGap: 0,
+                    visualDensity: const VisualDensity(horizontal: 0, vertical: -3.0),
+                  ),
+
+                  ListTile(
+                    title: const Text('کیف پول'),
+                    leading: Image.asset(AppImages.drawerWalletIco, width: 20, height: 20),
+                    onTap: gotoWalletPage,
+                    dense: true,
+                    horizontalTitleGap: 0,
+                    visualDensity: const VisualDensity(horizontal: 0, vertical: -3.0),
+                  ),
+
+                  ListTile(
+                    title: const Text('تراکنش ها'),
+                    leading: Image.asset(AppImages.transactionMenuIco, width: 20, height: 20),
+                    onTap: gotoTransactionPage,
+                    dense: true,
+                    horizontalTitleGap: 0,
+                    visualDensity: const VisualDensity(horizontal: 0, vertical: -3.0),
+                  ),
+
+                  ListTile(
+                    title: const Text('پشتیبانی'),
+                    leading: Image.asset(AppImages.drawerSupportIco, width: 20, height: 20),
+                    onTap: gotoSupportPage,
+                    dense: true,
+                    horizontalTitleGap: 0,
+                    visualDensity: const VisualDensity(horizontal: 0, vertical: -3.0),
+                  ),
+
+                  ListTile(
+                    title: const Text('دعوت از دوستان'),
+                    leading: Image.asset(AppImages.drawerSendIco, width: 20, height: 20),
+                    onTap: gotoInvitePage,
+                    dense: true,
+                    horizontalTitleGap: 0,
+                    visualDensity: const VisualDensity(horizontal: 0, vertical: -3.0),
+                  ),
+
+                  /*ListTile(
+                    title: Text('گزارشات و آزمون ها'),
+                    leading: Image.asset(AppImages.drawerLogIco, width: 20, height: 20),
+                    onTap: gotoLogsPage,
+                    dense: true,
+                    horizontalTitleGap: 0,
+                    visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
+                  ),*/
+
+                  ListTile(
+                    title: Text(AppMessages.aboutUs),
+                    leading: Image.asset(AppImages.drawerAboutIco, width: 20, height: 20),
+                    onTap: gotoAboutPage,
+                    dense: true,
+                    horizontalTitleGap: 0,
+                    visualDensity: const VisualDensity(horizontal: 0, vertical: -3.0),
+                  ),
+
+                  /*ListTile(
+                    title: Text('تنظیمات'),
+                    leading: Image.asset(AppImages.drawerSettingIco, width: 20, height: 20),
+                    onTap: gotoProfilePage,
+                    dense: true,
+                    horizontalTitleGap: 0,
+                    visualDensity: VisualDensity(horizontal: 0, vertical: -3.0),
+                  ),*/
+
+                  if(SessionService.hasAnyLogin())
+                    ListTile(
+                      title: Text(AppMessages.logout),/*.color(Colors.redAccent),*/
+                      //leading: Icon(AppIcons.logout, size: 18, color: Colors.redAccent),
+                      leading: Image.asset(AppImages.drawerExitIco, width: 20, height: 20),
+                      onTap: onLogoffCall,
+                      dense: true,
+                      horizontalTitleGap: 0,
+                      visualDensity: const VisualDensity(horizontal: 0, vertical: -3.0),
+                    ),
+                ],
+              ),
+            );
+          }
         ),
       ),
     );
@@ -173,12 +185,12 @@ class DrawerMenuBuilder {
 
                           return CircleAvatar(
                               backgroundColor: ColorHelper.textToColor(user.nameFamily),
-                              radius: 30,
+                              radius: 35,
                               child: IrisImageView(
-                                height: 60,
-                                width: 60,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                                beforeLoadWidget: CircularProgressIndicator(),
+                                height: 70,
+                                width: 70,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)),
+                                beforeLoadWidget: const CircularProgressIndicator(),
                                 bytes: user.avatarModel?.bytes,
                                 url: user.avatarModel?.fileLocation,
                                 onDownloadFn: (bytes, path){
@@ -191,7 +203,7 @@ class DrawerMenuBuilder {
                         //checkAvatar(user);
                         return CircleAvatar(
                           backgroundColor: ColorHelper.textToColor(user.nameFamily),
-                          radius: 30,
+                          radius: 35,
                           child: Image.asset(AppImages.profileBig),
                         );
                       },
@@ -199,7 +211,7 @@ class DrawerMenuBuilder {
                   },
                 ),
 
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Row(
@@ -245,32 +257,32 @@ class DrawerMenuBuilder {
 
   static void gotoAboutPage() async {
     await LayoutComponentState.toggleDrawer();
-    RouteTools.pushPage(RouteTools.getTopContext()!, AboutPage());
+    RouteTools.pushPage(RouteTools.getTopContext()!, const AboutPage());
   }
 
   static void gotoWalletPage() async {
     await LayoutComponentState.toggleDrawer();
-    RouteTools.pushPage(RouteTools.getTopContext()!, WalletPage());
+    RouteTools.pushPage(RouteTools.getTopContext()!, const WalletPage());
   }
 
   static void gotoTransactionPage() async {
     await LayoutComponentState.toggleDrawer();
-    RouteTools.pushPage(RouteTools.getTopContext()!, TransactionsPage());
+    RouteTools.pushPage(RouteTools.getTopContext()!, const TransactionsPage());
   }
 
   static void gotoSupportPage() async {
     await LayoutComponentState.toggleDrawer();
-    RouteTools.pushPage(RouteTools.getTopContext()!, SupportPage());
+    RouteTools.pushPage(RouteTools.getTopContext()!, const SupportPage());
   }
 
   static void gotoLogsPage() async {
     await LayoutComponentState.toggleDrawer();
-    RouteTools.pushPage(RouteTools.getTopContext()!, LogsPage());
+    RouteTools.pushPage(RouteTools.getTopContext()!, const LogsPage());
   }
 
   static void gotoInvitePage() async {
     await LayoutComponentState.toggleDrawer();
-    RouteTools.pushPage(RouteTools.getTopContext()!, InvitePage());
+    RouteTools.pushPage(RouteTools.getTopContext()!, const InvitePage());
   }
 
   static void onLogoffCall() async {

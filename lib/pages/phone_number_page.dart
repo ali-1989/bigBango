@@ -66,7 +66,7 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
               controller: atrCtr,
               child: Column(
                 children: [
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 40),
 
                   /// background
                   SizedBox(
@@ -76,7 +76,9 @@ class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
                         fit: StackFit.passthrough,
                         children: [
                           Center(
-                              child: Image.asset(AppImages.register, width: sw*0.88, height: sh*0.53, fit: BoxFit.fill)
+                              child: AspectRatio(
+                                aspectRatio: 3/3.4,
+                                  child: Image.asset(AppImages.register, width: sw*0.8, height: sh*0.5, fit: BoxFit.fill))
                           ),
 
                           /// play icon

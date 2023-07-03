@@ -33,10 +33,10 @@ dependencies:
   #community_material_icon: ^5.9.55      # https://materialdesignicons.com/
   device_info_plus: ^9.0.2
   platform_device_id: ^1.0.1
-  permission_handler: ^10.3.0            # NoWeb
-  video_player: ^2.6.1
+  permission_handler: ^10.4.1            # NoWeb
+  video_player: ^2.7.0
   chewie: ^1.5.0
-  http: ^1.0.0
+  http: ^1.1.0
   dio: ^5.2.1+1
   connectivity_plus: ^4.0.1
   url_launcher: ^6.1.11
@@ -48,9 +48,9 @@ dependencies:
   iris_notifier: ^0.0.4
   numberpicker: ^2.1.2
   pull_to_refresh: ^2.0.0
-  image_picker: ^0.8.9
+  image_picker: ^1.0.0
   toggle_switch: ^2.1.0
-  firebase_messaging: ^14.6.3
+  firebase_messaging: ^14.6.4
   firebase_core: ^2.14.0
   im_animations: ^0.1.2                          # ColorSonar
   animate_do: ^3.0.2
@@ -90,14 +90,14 @@ dependency_overrides:
   win32: 4.1.4    # file_picker, wakelock_windows
   shamsi_date: 1.0.1
   collection: ^1.17.2
-  http: ^1.0.0
-  file: ^7.0.0
+  http: 1.1.0
+  file: 7.0.0
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.1
+  flutter_lints: ^2.0.2
 
 
 flutter:

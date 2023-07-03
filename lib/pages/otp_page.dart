@@ -105,7 +105,7 @@ class _OtpPageState extends StateBase<OtpPage> {
                   UnconstrainedBox(
                     alignment: Alignment.topCenter,
                     child: SizedBox(
-                        height: sh * 0.70,
+                        height: sh * calc(0.8, 660, 0.7, 580, sh, symmetry: true),
                         width: sw,
                         child: Image.asset(AppImages.otp, fit: BoxFit.fill)
                     ),
@@ -348,5 +348,32 @@ class _OtpPageState extends StateBase<OtpPage> {
         RouteTools.backToRoot(context);
       }
     }
+  }
+
+  double calc(double maxResult, double maxResultFor, double minResult, double minResultFor, double num, {bool symmetry = false}){
+    if(symmetry){
+      double temp = maxResult;
+      maxResult = minResult;
+      minResult = temp;
+    }
+
+    if(num >= maxResultFor){
+      return maxResult;
+    }
+
+    if(num <= minResultFor){
+      return minResult;
+    }
+
+    double difResult = maxResult - minResult;
+    double difRange = maxResultFor - minResultFor;
+
+    double percent = 100 * (num - minResultFor) / difRange;
+    double wPer = difResult * percent / 100;
+    double res = wPer + minResult;
+    //print('>>>>>>>>>>( $difResult  ,   $difRange)    __percent: $percent%  | wPer:$wPer');
+
+    //print('-- pow:$res');
+    return res;
   }
 }

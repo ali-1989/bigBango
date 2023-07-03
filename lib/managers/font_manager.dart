@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -182,7 +184,7 @@ class FontManager {
   }
 
   static void _createThemes(){
-    useFlutterFontSize = PlatformDispatcher.instance.implicitView!.devicePixelRatio > 2.9;
+    useFlutterFontSize = PlatformDispatcher.instance.implicitView!.devicePixelRatio > 2.5;
     final fs = useFlutterFontSize? null : Font.getRelativeFontSize();
     final temp = ThemeData();
     const c1 = Colors.teal;
@@ -344,7 +346,9 @@ class Font {
     }
     else {
       final appHeight = (isLandscape ? realPixelWidth : realPixelHeight) / pixelRatio;
-      return (appHeight / 51);    //  this is relative to any fonts
+      final fSize = appHeight / 52;
+
+      return max(10.0, fSize);
     }
   }
 }

@@ -91,7 +91,7 @@ class AppMessages {
   }
 
   static String get logout {
-    return 'خروج از حساب';
+    return 'خروج از حساب کاربری';
   }
 
   static String get exit {
