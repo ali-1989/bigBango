@@ -28,7 +28,7 @@ import 'package:app/tools/routeTools.dart';
 import 'package:app/views/sheets/incraseAmountComponent.dart';
 import 'package:app/views/sheets/wallet@withdrawaSheet.dart';
 import 'package:app/views/sheets/wallet@withdrawalListSheet.dart';
-import 'package:app/views/states/backBtn.dart';
+import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';

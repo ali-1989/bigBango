@@ -23,7 +23,7 @@ import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/appbarLesson.dart';
-import 'package:app/views/states/backBtn.dart';
+import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
@@ -413,6 +413,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     examPageInjector.prepareExamList(examList);
     examPageInjector.answerUrl = '/grammars/exercises/solving';
     examPageInjector.showSendButton = true;
+    examPageInjector.askConfirmToSend = false;
 
     final examPage = ExamPage(injector: examPageInjector);
     await RouteTools.pushPage(context, examPage);

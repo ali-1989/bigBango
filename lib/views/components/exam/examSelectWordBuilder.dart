@@ -120,8 +120,13 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
           return;
         }
 
-        setUserAnswer(model, i+1, null);
 
+        //setUserAnswer(model, i+1, null);
+        currentSpaceOrder = 1;
+        for (final value in model.getExamItem().userAnswers) {
+          value.id = '';
+          value.text = '';
+        }
         /*if (currentSelectIndex > 0) {
           if (currentSelectIndex == i+1) {
             currentSelectIndex = 0;
@@ -314,13 +319,17 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
   void setUserAnswer(ExamModel model, int order, ExamOptionModel? ec) {
     final u = model.getExamItem().getUserOptionByOrder(order);
 
+    if(u == null){
+      return;
+    }
+
     if (ec != null) {
-      u!.text = ec.text;
+      u.text = ec.text;
       u.id = ec.id;
       currentSpaceOrder++;
     }
     else {
-      u!.text = '';
+      u.text = '';
       u.id = '';
       currentSpaceOrder--;
     }

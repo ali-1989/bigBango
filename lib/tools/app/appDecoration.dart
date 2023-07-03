@@ -1,3 +1,5 @@
+import 'package:app/tools/app/appMessages.dart';
+import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/colorHelper.dart';
@@ -109,6 +111,68 @@ class AppDecoration {
 
   static Color dropdownBackColor() {
     return ColorHelper.changeLight(AppThemes.instance.themeData.colorScheme.secondary);
+  }
+
+  static SnackBar buildSnackBar(String message, {
+    SnackBarAction? action,
+    Color? backgroundColor,
+    Widget? replaceContent,
+    Duration? duration,
+    double? width,
+    SnackBarBehavior? behavior = SnackBarBehavior.floating,
+    double? elevation,
+    EdgeInsets? padding,
+    EdgeInsets? margin,
+    ShapeBorder? shape,
+    Clip clip = Clip.hardEdge,
+  }){
+
+    return SnackBar(
+      content: replaceContent?? Text(message),
+      behavior: behavior,
+      duration: duration?? Duration(milliseconds: action == null? 3500 : 50000),
+      backgroundColor: backgroundColor,
+      dismissDirection: DismissDirection.horizontal,
+      action: action,
+      width: width?? (AppSizes.isBigWidth()? AppSizes.webMaxWidthSize: null),
+      elevation: elevation,
+      padding: padding,
+      margin: margin,
+      clipBehavior: clip,
+      shape: shape,
+    );
+  }
+
+  static MaterialBanner buildBanner(
+      String message, {
+        List<Widget> actions = const [],
+        Color? backgroundColor,
+        Color? dividerColor,
+        Widget? replaceContent,
+        TextStyle? textStyle,
+        bool forceActionsBelow = false,
+        Animation<double>? animation,
+        double? elevation,
+        EdgeInsets? padding,
+        EdgeInsets? margin,
+      }){
+
+    if(actions.isEmpty){
+      actions.add(SnackBarAction(label: AppMessages.ok, onPressed: (){}));
+    }
+    
+    return MaterialBanner(
+      content: replaceContent?? Text(message),
+      backgroundColor: backgroundColor,
+      actions: actions,
+      animation: animation,
+      contentTextStyle: textStyle,
+      dividerColor: dividerColor,
+      elevation: elevation,
+      forceActionsBelow: forceActionsBelow,
+      margin: margin,
+      padding: padding,
+    );
   }
 
   static Color cardColorOnCard() {

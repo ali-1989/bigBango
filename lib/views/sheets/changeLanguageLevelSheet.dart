@@ -114,7 +114,7 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                                 onPressed: sendClick,
-                                child: Text(AppMessages.send)
+                                child: Text(AppMessages.register)
                             ),
                           ),
 

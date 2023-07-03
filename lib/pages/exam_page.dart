@@ -11,6 +11,7 @@ import 'package:app/views/components/exam/examMakeSentenceBuilder.dart';
 import 'package:app/views/components/exam/examOptionBuilder.dart';
 import 'package:app/views/components/exam/examSelectWordBuilder.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/system.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
@@ -76,6 +77,12 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     super.dispose();
 
     requester.dispose();
+
+    if(widget.injector.clearUserAnswerOnExit){
+      for (final exam in widget.injector.examList) {
+        exam.clearUserAnswers();
+      }
+    }
   }
 
   @override
@@ -552,15 +559,19 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
       return;
     }
 
-    AppDialogIris.instance.showYesNoDialog(
-      context,
-      yesFn: (ctx) {
-        Future.delayed(const Duration(milliseconds: 500)).then((value) {
+    if(widget.injector.askConfirmToSend) {
+      AppDialogIris.instance.showYesNoDialog(
+        context,
+        yesFn: (ctx) async {
+          await System.wait(const Duration(milliseconds: 500));
           requestSendExamAnswer();
-        });
-      },
-      desc: 'آیا جواب تمرین ارسال شود؟',
-    );
+        },
+        desc: 'آیا جواب تمرین ارسال شود؟',
+      );
+    }
+    else {
+      requestSendExamAnswer();
+    }
   }
 
   void requestSendExamAnswer(){

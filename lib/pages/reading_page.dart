@@ -33,7 +33,7 @@ import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/components/idiomClickableComponent.dart';
 import 'package:app/views/components/vocabClickableComponent.dart';
-import 'package:app/views/states/backBtn.dart';
+import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';

@@ -57,7 +57,7 @@ class ExamModel extends ExamSuperModel {
 
   void prepare(){
     if(quizType == QuizType.multipleChoice){
-      _getFirst()._generateUserAnswer();
+      _getFirst().userAnswers.clear();
     }
 
     if(quizType == QuizType.recorder){
@@ -76,6 +76,26 @@ class ExamModel extends ExamSuperModel {
     }
 
     isPrepare = true;
+  }
+
+  void clearUserAnswers(){
+    showAnswer = false;
+
+    if(quizType == QuizType.multipleChoice){
+      _getFirst().userAnswers.clear();
+    }
+
+    if(quizType == QuizType.recorder){
+      _getFirst()._doSplitQuestion();
+    }
+
+    if(quizType == QuizType.fillInBlank){
+      _getFirst()._doSplitQuestion();
+    }
+
+    if(quizType == QuizType.makeSentence){
+      sentenceExtra?.clearAnswers();
+    }
   }
 
   @override
@@ -124,10 +144,6 @@ class ExamItem {
     js['userAnswers'] = userAnswers.map((e) => e.toMap()).toList();
 
     return js;
-  }
-
-  void _generateUserAnswer(){
-    userAnswers.clear();
   }
 
   void _doSplitQuestion(){
@@ -399,6 +415,14 @@ class MakeSentenceExtra {
     }
   }
 
+  void clearAnswers(){
+    currentIndex = 0;
+
+    for(final x in items){
+      selectedWords[x.id] = [];
+    }
+  }
+
   List<ExamOptionModel> getShuffleForIndex({int? idx}){
     idx ??= currentIndex;
 
@@ -548,7 +572,7 @@ class MakeSentenceExtra {
     final user = getSelectedWordsForId(id);
     final itm = items.firstWhereSafe((elm) => elm.id == id);
 
-    if(user.isEmpty || itm == null){
+    if(user.isEmpty || itm == null || user.length != itm.teacherOptions.length){
       return false;
     }
 

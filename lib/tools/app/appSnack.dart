@@ -1,3 +1,4 @@
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/tools/app/appBroadcast.dart';
@@ -54,16 +55,12 @@ class AppSnack {
     return getScaffoldMessenger(context).showSnackBar(snackBar);
   }
 
-  static SnackBar buildSnackBar(String message, {SnackBarAction? action, Color? backgroundColor, Widget? replaceContent}){
-    return SnackBar(
-      content: replaceContent?? Text(message),
-      behavior: SnackBarBehavior.floating,
-      duration: Duration(milliseconds: action == null? 3500 : 50000),
-      backgroundColor: backgroundColor,
-      dismissDirection: DismissDirection.horizontal,
-      action: action,
-      width: AppSizes.isBigWidth()? AppSizes.webMaxWidthSize: null,
-    );
+  static SnackBar buildSnackBar(String message, {SnackBarAction? action, Widget? replaceContent}){
+    return AppDecoration.buildSnackBar(message, action: action, replaceContent: replaceContent, margin: const EdgeInsets.fromLTRB(20,0,20,60));
+  }
+
+  static MaterialBanner buildBanner(String message){
+    return AppDecoration.buildBanner(message);
   }
   ///---------------------------------------------------------------------------------------------------------
   static void showError(BuildContext context, String message){

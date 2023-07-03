@@ -24,7 +24,7 @@ import 'package:app/views/components/filteringBuilder/filteringItems/checkboxLis
 import 'package:app/views/components/filteringBuilder/filteringItems/dividerFilteringItem.dart';
 import 'package:app/views/components/filteringBuilder/filteringItems/filteringItem.dart';
 import 'package:app/views/components/filteringBuilder/filteringItems/simpleItem.dart';
-import 'package:app/views/states/backBtn.dart';
+import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';

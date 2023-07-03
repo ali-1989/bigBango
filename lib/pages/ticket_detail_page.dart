@@ -21,7 +21,7 @@ import 'package:app/tools/permissionTools.dart';
 import 'package:app/views/components/ticketDetailBigbangoBubbleComponent.dart';
 import 'package:app/views/components/ticketDetailUserBubbleComponent.dart';
 import 'package:app/views/sheets/replyTicketSheet.dart';
-import 'package:app/views/states/backBtn.dart';
+import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 

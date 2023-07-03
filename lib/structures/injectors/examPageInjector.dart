@@ -7,7 +7,8 @@ class ExamPageInjector {
   final List<AutodidactModel> autodidactList = [];
   String answerUrl = '';
   bool showSendButton = true;
-
+  bool askConfirmToSend = true;
+  bool clearUserAnswerOnExit = true;
 
   ExamPageInjector();
 
