@@ -70,11 +70,11 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
         }
 
         if(assistCtr.hasState(AssistController.state$loading)){
-          return WaitToLoad();
+          return const WaitToLoad();
         }
 
         if(StoreManager.getStoreLessonList().isEmpty){
-          return EmptyData();
+          return const EmptyData();
         }
 
         return Padding(
@@ -82,7 +82,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 80),
+              const SizedBox(height: 80),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,8 +90,8 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
                   Row(
                     children: [
                       Image.asset(AppImages.marketBasket, width: 32, height: 32),
-                      SizedBox(width: 5),
-                      Text('فروشگاه', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+                      const SizedBox(width: 5),
+                      const Text('فروشگاه', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
                     ],
                   ),
 
@@ -101,38 +101,53 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
                       height: 28,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          //backgroundColor: Colors.blue,
                         ),
                           onPressed: prepareBuy,
-                          child: Text('ثبت سفارش')
+                          child: const Text('ثبت سفارش')
                       ),
                     ),
                   )
                 ],
               ),
 
-              SizedBox(height: 20),
-              Text('سطوح:').alpha(),
+              const SizedBox(height: 20),
+              const Text('سطوح:').alpha(),
 
-              TabBar(
-                controller: tabCtr,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  labelPadding: EdgeInsets.symmetric(vertical: 8),
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
-                  labelColor: Colors.red,
-                  unselectedLabelColor: Colors.black,
-                  onTap: onTabClick,
-                  tabs: tabNames.map((e) => Text(e)).toList()
+              Stack(
+                children: [
+                  const Positioned(
+                    left:0,
+                    right:0,
+                    bottom: 0,
+                    child: SizedBox(
+                      height: 1,
+                      child: ColoredBox(color: Colors.grey),
+                    ),
+                  ),
+
+                  TabBar(
+                    controller: tabCtr,
+                      indicatorColor: AppDecoration.red,
+                      labelColor: Colors.red,
+                      unselectedLabelColor: Colors.black54,
+                      labelPadding: const EdgeInsets.symmetric(vertical: 7),
+                      overlayColor: MaterialStateProperty.all(Colors.red),
+                      onTap: onTabClick,
+                      tabs: tabNames.map((e) => Text(e)).toList()
+                  ),
+                ],
               ),
 
+              const SizedBox(height: 10),
               CheckBoxRow(
                   value: selectAllState,
-                  description: Text('  انتخاب همه'),
+                  description: const Text('  انتخاب همه'),
                   checkbox: Checkbox(
                     value: selectAllState,
-                    side: BorderSide(width: 0.5, color: Colors.red),
+                    side: const BorderSide(width: 0.5, color: Colors.red),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                    visualDensity: VisualDensity(horizontal: -4),
+                    visualDensity: const VisualDensity(horizontal: -4),
                     onChanged: onSelectAllValueChange,
                   ),
                   onChanged: (v){
@@ -141,7 +156,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
                   }
               ),
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Expanded(
                 child: ListView.builder(
                     itemCount: lessonList.length,
@@ -180,7 +195,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
                     padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 3),
                     child: Row(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           width: 1.5,
                           height: 20,
                           child: ColoredBox(
@@ -191,9 +206,9 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
                         const SizedBox(width: 12),
                         Checkbox(
                             value: itm.isSelected,
-                            side: BorderSide(width: 0.5, color: Colors.red),
+                            side: const BorderSide(width: 0.5, color: Colors.red),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            visualDensity: VisualDensity(horizontal: -4),
+                            visualDensity: const VisualDensity(horizontal: -4),
                             onChanged: (v){
                               onChangeState(itm);
                             }

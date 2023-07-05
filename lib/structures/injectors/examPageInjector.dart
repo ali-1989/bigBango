@@ -1,21 +1,14 @@
 import 'package:app/structures/enums/quizType.dart';
-import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 
 class ExamPageInjector {
   final List<ExamModel> examList = [];
-  final List<AutodidactModel> autodidactList = [];
   String answerUrl = '';
   bool showSendButton = true;
   bool askConfirmToSend = true;
   bool clearUserAnswerOnExit = true;
 
   ExamPageInjector();
-
-  void setAutodidacts(List<AutodidactModel> list){
-    autodidactList.clear();
-    autodidactList.addAll(list);
-  }
 
   void setExams(List<ExamModel> list){
     examList.clear();

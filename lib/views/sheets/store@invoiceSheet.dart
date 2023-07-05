@@ -20,16 +20,16 @@ class InvoiceSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       child: Padding(
-        padding: EdgeInsets.all(14),
+        padding: const EdgeInsets.all(14),
         child: Column(
           children: [
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('فاکتور خرید').bold().fsR(3),
+                const Text('فاکتور خرید').bold().fsR(3),
 
                 GestureDetector(
                   onTap: (){
@@ -37,15 +37,15 @@ class InvoiceSheet extends StatelessWidget {
                   },
                   child: CustomCard(
                       color: Colors.grey.shade200,
-                      padding: EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
                       radius: 4,
-                      child: Icon(AppIcons.close, size: 10)
+                      child: const Icon(AppIcons.close, size: 10)
                   ),
                 ),
               ],
             ),
 
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             SizedBox(
               height: calcListHeight(),
@@ -56,19 +56,19 @@ class InvoiceSheet extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 10),
-            Divider(color: Colors.black38),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
+            const Divider(color: Colors.black38),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('جمع کل'),
+                const Text('جمع کل'),
                 Text('${CurrencyTools.formatCurrency(calcPrice())} تومان'),
               ],
             ),
 
 
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             SizedBox(
               width: double.infinity,
               child: Padding(
@@ -80,7 +80,7 @@ class InvoiceSheet extends StatelessWidget {
                     onPressed: (){
                       RouteTools.popTopView(context: context, data: true);
                     },
-                    child: Text('پرداخت')
+                    child: const Text('پرداخت')
                 ),
               ),
             ),
@@ -125,7 +125,7 @@ class InvoiceSheet extends StatelessWidget {
             Row(
               children: [
                 Text(CurrencyTools.formatCurrency(itm.amount)),
-                Text('   تومان').alpha(),
+                const Text('   تومان').alpha(),
               ],
             ),
           ],

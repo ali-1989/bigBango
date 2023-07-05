@@ -13,7 +13,7 @@ class FontManager {
 
   static late final FontManager _instance;
   static bool useFlutterFontSize = true;
-  static const double _defaultFontSize = 13;
+  static const double defaultFontSize = 13;
 
   static final List<Font> _fontList = [];
   static late Font _platformDefaultFont;
@@ -310,7 +310,7 @@ class Font {
 
     family = map['family'];
     fileName = map['file_name'];
-    size = map['size']?? FontManager._defaultFontSize;
+    size = map['size']/*?? FontManager._defaultFontSize*/;
     height = map['height'];
     textHeightBehavior = const TextHeightBehavior().fromMap(map['textHeightBehavior']);
     defaultUsage = FontUsage.fromName(map['default_usage']);

@@ -45,29 +45,29 @@ class _WalletWithdrawalListSheetState extends StateBase<WalletWithdrawalListShee
     return SizedBox(
       height: sh * 3/5,
       child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         child: Padding(
-          padding: EdgeInsets.all(14),
+          padding: const EdgeInsets.all(14),
           child: Column(
             children: [
               Align(
                 alignment: Alignment.topLeft,
                 child: IconButton(
                   padding: EdgeInsets.zero,
-                    visualDensity: VisualDensity(vertical: -4),
+                    visualDensity: const VisualDensity(vertical: -4),
                     iconSize: 17,
                     splashRadius: 14,
-                    constraints: BoxConstraints.tightFor(),
+                    constraints: const BoxConstraints.tightFor(),
                     onPressed: (){
                       RouteTools.popTopView(context: context);
                     },
-                    icon: Icon(AppIcons.close, size: 17)
+                    icon: const Icon(AppIcons.close, size: 17)
                 ),
               ),
 
-              SizedBox(height: 2),
-              Text('درخواست های درحال بررسی', textAlign: TextAlign.center, style: TextStyle(height: 1.4)).fsR(1),
-              SizedBox(height: 20),
+              const SizedBox(height: 2),
+              const Text('درخواست های درحال بررسی', textAlign: TextAlign.center, style: TextStyle(height: 1.4)).fsR(1),
+              const SizedBox(height: 20),
 
               Expanded(
                   child: ListView.builder(
@@ -77,7 +77,7 @@ class _WalletWithdrawalListSheetState extends StateBase<WalletWithdrawalListShee
                   ),
               ),
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
             ],
           ),
         ),
@@ -100,14 +100,14 @@ class _WalletWithdrawalListSheetState extends StateBase<WalletWithdrawalListShee
 
             IconButton(
                 padding: EdgeInsets.zero,
-                visualDensity: VisualDensity(vertical: -4),
+                visualDensity: const VisualDensity(vertical: -4),
                 iconSize: 22,
                 splashRadius: 14,
-                constraints: BoxConstraints.tightFor(),
+                constraints: const BoxConstraints.tightFor(),
                 onPressed: (){
                   cancelWithdrawal(wModel);
                 },
-                icon: Icon(AppIcons.remove, color: Colors.red)
+                icon: const Icon(AppIcons.remove, color: Colors.red)
             )
           ],
         ),

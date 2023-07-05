@@ -140,8 +140,6 @@ class AppThemes {
 			brightness: _instance.currentBrightness,
 		);
 
-		th.fontSize = _instance.baseFont.size ?? FontManager.instance.getPlatformFont().size!;
-
 		final raw = FontManager.instance.rawTextTheme;
 
 		th.baseTextStyle = raw.bodyMedium!.copyWith(
@@ -166,7 +164,7 @@ class AppThemes {
 		);
 
 		th.textUnderlineStyle = th.textUnderlineStyle.copyWith(
-			fontSize: th.fontSize,
+			fontSize: _instance.baseFont.size,
 			height: _instance.baseFont.height,
 			color: th.underLineDecorationColor,
 			decorationColor: th.underLineDecorationColor,
@@ -231,7 +229,7 @@ class AppThemes {
 			);
 		}
 		else {
-			final fontSize = th.fontSize;
+			final fontSize = _instance.baseFont.size ?? FontManager.instance.getPlatformFont().size?? FontManager.defaultFontSize;
 
 			primaryTextTheme = TextTheme(
 				bodyLarge: raw.textTheme.bodyLarge!.copyWith(

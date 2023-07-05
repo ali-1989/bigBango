@@ -70,11 +70,11 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(AppImages.selectLevelIco2, width: 18),
-                          SizedBox(width: 8),
-                          Text('خرید زمان', style: TextStyle(fontWeight: FontWeight.w700)),
+                          const SizedBox(width: 8),
+                          const Text('خرید زمان', style: TextStyle(fontWeight: FontWeight.w700)),
                         ],
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
                       SizedBox(
                         height: 60,
@@ -82,22 +82,24 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
                           shape: SwitchTabShape.rectangle,
                           backgroundColour: AppDecoration.red,
                           thumbColor: Colors.white,
+                          selectedTextColor: Colors.black,
+                          unselectedTextColor: Colors.white,
                           onValueChanged: (idx){
-                            pageCtr.animateToPage(idx, duration: Duration(milliseconds: 500), curve: Curves.linear);
-                          }, text: [
+                            pageCtr.animateToPage(idx, duration: const Duration(milliseconds: 500), curve: Curves.linear);
+                          }, text: const [
                           'طرح تشویقی',
                           'زمان دلخواه',
                           ],
                         ),
                       ),
 
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
                       SizedBox(
-                        height: 150,
+                        height: 160,
                           child: PageView(
                             controller: pageCtr,
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             children: [
                               getPage1(),
                               getPage2(),
@@ -105,14 +107,14 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
                           )
                       ),
 
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                               onPressed: onBuyClick,
-                              child: Text('ادامه خرید')
+                              child: const Text('ادامه خرید')
                           ),
                         ),
                       )
@@ -128,23 +130,23 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
 
   Widget getPage1(){
     if(widget.planList.isEmpty){
-      return Center(
+      return const Center(
         child: Text('طرحی یافت نشد'),
       );
     }
 
     return Padding(
-        padding: EdgeInsets.all(2),
+        padding: const EdgeInsets.all(2),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
             child: Text('لطفا یکی از طرح های زیر را انتخاب کنید ',
                 style: TextStyle(fontSize: 12)
             ),
           ),
 
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
 
           Expanded(
             child: ListView.builder(
@@ -161,20 +163,20 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
   Widget getPage2(){
     return KeepAliveWrap(
       child: Padding(
-          padding: EdgeInsets.all(2),
+          padding: const EdgeInsets.all(2),
         child: Column(
           children: [
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    SizedBox(width: 6),
+                    const SizedBox(width: 6),
                     Image.asset(AppImages.watchIco, width: 14),
-                    SizedBox(width: 6),
-                    Text('زمان مورد نظر خود را انتخاب کنید', style: TextStyle(fontSize: 12)),
+                    const SizedBox(width: 6),
+                    const Text('زمان مورد نظر خود را انتخاب کنید', style: TextStyle(fontSize: 12)),
                   ],
                 ),
 
@@ -191,7 +193,7 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
                                   color: AppDecoration.red.withAlpha(50),
                                   borderRadius: BorderRadius.circular(4)
                               ),
-                              child: SizedBox(
+                              child: const SizedBox(
                                 width: 50,
                                 height: 20,
                               ),
@@ -226,23 +228,23 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
                       ),
                     ),
 
-                    SizedBox(width: 4),
-                    Text('دقیقه'),
+                    const SizedBox(width: 4),
+                    const Text('دقیقه'),
 
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                   ],
                 ),
               ],
             ),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             Row(
               textDirection: TextDirection.ltr,
               children: [
                 CustomCard(
                 color: AppDecoration.greenTint,
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                     child: Text('${calcAmount()} تومان')
                 )
               ],
@@ -291,7 +293,7 @@ class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
               Row(
                 children: [
                   Text(CurrencyTools.formatCurrency(itm.amount)),
-                  Text('  تومان').fsR(-4),
+                  const Text('  تومان').fsR(-4),
                 ],
               ),
             ],

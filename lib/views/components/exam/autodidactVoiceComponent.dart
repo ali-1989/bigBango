@@ -643,7 +643,7 @@ class AutodidactVoiceComponentState extends StateBase<AutodidactVoiceComponent> 
   Future<void> prepareQuestionVoice() async {
     questionVoiceIsPrepare = false;
 
-    return questionPlayer.setUrl(autodidactModel.voice!.fileLocation!).then((dur) {
+    return questionPlayer.setUrl('autodidactModel.voice!.fileLocation!').then((dur) {//todo
       questionVoiceIsPrepare = true;
 
       if(dur != null){

@@ -78,7 +78,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     tabCtr = TabController(length: 2, vsync: this);
 
-    tabBarStyle = TextStyle(
+    tabBarStyle = const TextStyle(
       color: AppDecoration.red,
       fontWeight: FontWeight.w900
     );
@@ -118,7 +118,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     return Column(
       children: [
-        Row(
+        const Row(
           textDirection: TextDirection.ltr,
           children: [
             RotatedBox(
@@ -132,7 +132,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
           padding: const EdgeInsets.symmetric(horizontal: 14.0),
           child: Stack(
             children: [
-              Positioned(
+              const Positioned(
                 left:0,
                   right:0,
                   bottom: 0,
@@ -145,17 +145,18 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
               TabBar(
                 controller: tabCtr,
                   indicatorColor: AppDecoration.red,
-                  labelColor: Colors.yellow,
+                  labelColor: Colors.red,
+                  unselectedLabelColor: Colors.grey,
                   overlayColor: MaterialStateProperty.all(Colors.transparent),
-                  tabs: [
+                  tabs: const [
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 6.0),
-                      child: Text('جلسات', style: tabBarStyle),
+                      padding: EdgeInsets.only(bottom: 6.0),
+                      child: Text('جلسات'),
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 6.0),
-                      child: Text('تیکت ها', style: tabBarStyle),
+                      padding: EdgeInsets.only(bottom: 6.0),
+                      child: Text('تیکت ها'),
                     ),
                   ]),
             ],
@@ -167,7 +168,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
             padding: const EdgeInsets.symmetric(horizontal: 14.0),
             child: TabBarView(
                 controller: tabCtr,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   buildSessionPart(),
                   buildTicketPart(),
@@ -185,12 +186,12 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
         id: assistId$Timetable,
         builder: (_, ctr, data){
           if(assistCtr.hasState(AssistController.state$loading, scopeId: assistId$Timetable)){
-            return WaitToLoad();
+            return const WaitToLoad();
           }
 
           return Column(
             children: [
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               DecoratedBox(
                 decoration: BoxDecoration(
                   color: Colors.grey.shade300,
@@ -205,8 +206,8 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                           Row(
                             children: [
                               Image.asset(AppImages.watchIco),
-                              SizedBox(width: 8),
-                              Text(' باقی مانده\u200cی زمان پشتیبانی شما', maxLines: 1, overflow: TextOverflow.clip)
+                              const SizedBox(width: 8),
+                              const Text(' باقی مانده\u200cی زمان پشتیبانی شما', maxLines: 1, overflow: TextOverflow.clip).fsR(-1)
                             ],
                           ),
 
@@ -224,14 +225,14 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                                           child: Text('$userTime')
                                             .wrapBoxBorder(
                                           radius: 2,
-                                          padding: EdgeInsets.symmetric(horizontal:6, vertical: 4),
+                                          padding: const EdgeInsets.symmetric(horizontal:6, vertical: 4),
                                           color: Colors.grey.shade600,
                                         ),
                                       );
                                     }
 
                                     if(assistCtr.hasState(scopeId: assistId$userLeftTime, AssistController.state$loading)){
-                                      return SizedBox(
+                                      return const SizedBox(
                                         width: 14,
                                         height: 14,
                                         child: CircularProgressIndicator(strokeWidth: 2),
@@ -239,23 +240,23 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                                     }
 
                                     return IconButton(
-                                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                        visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
                                         padding: EdgeInsets.zero,
                                         iconSize: 17,
                                         splashRadius: 20,
-                                        constraints: BoxConstraints.tightFor(),
+                                        constraints: const BoxConstraints.tightFor(),
                                         onPressed: (){
                                           assistCtr.clearStates(scopeId: assistId$userLeftTime);
                                           assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$userLeftTime);
                                           assistCtr.updateAssist(assistId$userLeftTime);
                                           requestUserLeftTime();
                                         },
-                                        icon: Icon(AppIcons.refreshCircle, size: 17, color: AppDecoration.red)
+                                        icon: const Icon(AppIcons.refreshCircle, size: 17, color: AppDecoration.red)
                                     );
                                 }
                               ),
-                              SizedBox(width: 4),
-                              Text(' دقیقه'),
+                              const SizedBox(width: 4),
+                              const Text(' دقیقه'),
                               /*SizedBox(
                                 height: 30,
                                 child: FloatingActionButton(
@@ -272,22 +273,22 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                         ],
                       ),
 
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           ActionChip(
-                            label: Text('درخواست پشتیبانی'),
+                            label: const Text('درخواست پشتیبانی'),
                             onPressed: gotoSupportTimeRequestPage,
-                            visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
 
                           ActionChip(
-                            label: Text('خرید زمان'),
+                            label: const Text('خرید زمان'),
                             onPressed: showBuySessionTimeSheet,
-                            visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
 
@@ -302,17 +303,17 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                     padding: EdgeInsets.zero
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               Expanded(
                   child: Builder(
                       builder: (ctx){
                         if(sessionList.isEmpty){
-                          return EmptyData(message: 'موردی ثبت نشده',);
+                          return const EmptyData(message: 'موردی ثبت نشده',);
                         }
 
                         return RefreshConfiguration(
-                          headerBuilder: () => MaterialClassicHeader(),
+                          headerBuilder: () => const MaterialClassicHeader(),
                           footerBuilder: () => AppDecoration.classicFooter,
                           //headerTriggerDistance: 80.0,
                           //maxOverScrollExtent :100,
@@ -348,7 +349,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     final model = sessionList[idx];
 
     return Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
       child: Column(
         children: [
           Row(
@@ -360,7 +361,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
               Row(
                 children: [
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   DecoratedBox(
                     decoration: BoxDecoration(
                         color: Colors.grey.withAlpha(40),
@@ -369,25 +370,25 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
                       child: Text(LocaleHelper.embedLtr('${model.durationMinutes} \u{2032}'),
-                          style: TextStyle(color: AppDecoration.red, fontSize: 10)
+                          style: const TextStyle(color: AppDecoration.red, fontSize: 10)
                       ),
                     ),
                   ),
 
-                  SizedBox(width: 6),
+                  const SizedBox(width: 6),
                   Text(DateTools.hmOnlyRelative(model.reservationAt, isUtc: false)),
-                  SizedBox(width: 6),
+                  const SizedBox(width: 6),
                   Text(DateTools.dateOnlyRelative(model.reservationAt, isUtc: false)).alpha(),
-                  SizedBox(width: 5),
+                  const SizedBox(width: 5),
                   Icon(AppIcons.calendar, size: 14, color: Colors.grey.shade700),
                 ],
               ),
             ],
           ),
 
-          SizedBox(height: 6),
+          const SizedBox(height: 6),
           Divider(color: Colors.grey.shade500),
-          SizedBox(height: 6),
+          const SizedBox(height: 6),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -405,24 +406,24 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
-                      child: Text(model.status.getTypeHuman(), style: TextStyle(color: Colors.white, fontSize: 10)),
+                      child: Text(model.status.getTypeHuman(), style: const TextStyle(color: Colors.white, fontSize: 10)),
                     ),
                   ),
 
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
 
                   Visibility(
                     visible: model.status == SupportSessionStatus.inProgress,
                       child: IconButton(
                         iconSize: 17,
-                        padding: EdgeInsets.symmetric(horizontal: 2),
-                        constraints: BoxConstraints.tightFor(),
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        constraints: const BoxConstraints.tightFor(),
                         splashRadius: 12,
                         style: IconButton.styleFrom(
-                          visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                          visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        icon: Icon(AppIcons.remove, size: 17, color: Colors.red),
+                        icon: const Icon(AppIcons.remove, size: 17, color: Colors.red),
                         onPressed: (){
                           showUnReserveDialog(model);
                         },
@@ -443,7 +444,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
         id: assistId$Ticketing,
         builder: (_, ctr, data){
           if(assistCtr.hasState(AssistController.state$loading, scopeId: assistId$Ticketing)){
-            return WaitToLoad();
+            return const WaitToLoad();
           }
 
           return Column(
@@ -452,11 +453,11 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                   child: Builder(
                     builder: (context) {
                       if(ticketList.isEmpty){
-                        return EmptyData(message: 'موردی ثبت نشده',);
+                        return const EmptyData(message: 'موردی ثبت نشده',);
                       }
 
                       return RefreshConfiguration(
-                        headerBuilder: () => MaterialClassicHeader(),
+                        headerBuilder: () => const MaterialClassicHeader(),
                         footerBuilder: () => AppDecoration.classicFooter,
                         //headerTriggerDistance: 80.0,
                         //maxOverScrollExtent :100,
@@ -484,12 +485,15 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
               ),
 
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: showAddTicketSheet,
-                    child: Text('ایجاد تیکت'),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical:15.0),
+                      child: const Text('ایجاد تیکت').fsR(-1),
+                    ),
                   ),
                 ),
               ),
@@ -509,7 +513,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
         assistCtr.updateHead();
       },
       child: Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.symmetric(horizontal:10, vertical: 15),
         child: Column(
           children: [
             Row(
@@ -526,14 +530,19 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
-                        child: Text(tik.status == 1 ? 'باز' : 'بسته',
-                            style: TextStyle(color: tik.status == 1 ? AppDecoration.green : Colors.red, fontSize: 10)
+                        child: SizedBox(
+                          width: 25,
+                          child: Text(tik.status == 1 ? 'باز' : 'بسته',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: tik.status == 1 ? AppDecoration.green : Colors.red, fontSize: 10)
+                          ),
                         ),
                       ),
                     ),
-                    SizedBox(width: 20),
+
+                    const SizedBox(width: 20),
                     Text(DateTools.dateOnlyRelative(tik.createdAt)),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Icon(AppIcons.calendar, size: 14, color: Colors.grey.shade700),
                   ],
                 ),
@@ -547,9 +556,9 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
                 Text(tik.trackingRoleName).alpha(),
               ],
             ),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
             Divider(color: Colors.grey.shade700),
-            SizedBox(height: 2),
+            const SizedBox(height: 2),
           ],
         ),
       ),
@@ -571,7 +580,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
 
     final mustUpdate = await RouteTools.pushPage(context, page);
 
-    if(mustUpdate){
+    if(mustUpdate is bool && mustUpdate){
       assistCtr.addStateTo(state: AssistController.state$loading, scopeId: assistId$Timetable);
       assistCtr.updateAssist(assistId$Timetable);
 
@@ -767,7 +776,7 @@ class _SupportPageState extends StateBase<SupportPage> with SingleTickerProvider
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
-      await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds: 5));
       if(!mounted){
         return;
       }

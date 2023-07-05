@@ -175,7 +175,6 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
                       ]
                   ),
                 ),
-
               ],
             ),
           ),
@@ -216,8 +215,10 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
       AppBroadcast.homePageKey.currentState?.assistCtr.updateHead();
 
       Future.delayed(const Duration(seconds: 1), (){
-        RouteTools.popTopView(context: context);
         EventNotifierService.notify(AppEvents.languageLevelChanged);
+        if(mounted) {
+          RouteTools.popTopView(context: context);
+        }
       });
     };
 

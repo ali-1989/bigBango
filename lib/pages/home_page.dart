@@ -1,4 +1,5 @@
 import 'package:app/managers/api_manager.dart';
+import 'package:app/pages/autodidact_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
@@ -23,7 +24,6 @@ import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
-import 'package:app/structures/models/examModels/autodidactModel.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
@@ -485,70 +485,93 @@ class HomePageState extends StateBase<HomePage> {
 
                         const SizedBox(width: 7),
 
-                        Visibility(
-                          visible: lesson.hasQuiz || lesson.hasAutodidact,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 7),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                    child: Stack(
-                                      children: [
-                                        CustomCard(
-                                          color: Colors.grey.shade200,
-                                          padding: const EdgeInsets.symmetric(horizontal:5.0, vertical: 10),
-                                          child: Column(
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Visibility(
+                                visible: true,//lesson.hasAutodidact,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 7),
+                                  child: GestureDetector(
+                                    onTap: (){gotoWritingSpeakingPage(lesson);},
+                                    child: CustomCard(
+                                      color: Colors.grey.shade200,
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
                                             children: [
-                                              Row(
+                                              CustomCard(
+                                                  color: Colors.white,
+                                                  padding: const EdgeInsets.all(5),
+                                                  child: Image.asset(AppImages.mic, color: Colors.black)
+                                              ),
+
+                                              const SizedBox(width: 10),
+
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  CustomCard(
-                                                      color: Colors.white,
-                                                      padding: const EdgeInsets.all(5),
-                                                      child: Image.asset(AppImages.examIco)
-                                                  ),
-
-                                                  const SizedBox(width: 10),
-
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      const Text('آزمون'),
-                                                      const SizedBox(height: 5),
-                                                      const Text('Quiz').alpha(alpha: 100),
-                                                    ],
-                                                  ),
-
+                                                  const Text('نوشتن و صحبت کردن').fsR(-.5),
+                                                  const SizedBox(height: 5),
+                                                  const Text('Writing Speaking').alpha(alpha: 100),
                                                 ],
                                               ),
                                             ],
                                           ),
-                                        ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
 
-                                        Positioned(
-                                          bottom: 10,
-                                          left: 5,
-                                          child: GestureDetector(
-                                            onTap: (){
-                                              requestExams(lesson);
-                                            },
-                                            child: CustomCard(
-                                              padding: const EdgeInsets.all(10),
-                                              child: Row(
+                            const SizedBox(width: 8),
+
+                            Expanded(
+                              child: Visibility(
+                                visible: lesson.hasQuiz,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 7),
+                                  child: GestureDetector(
+                                    onTap: (){requestExams(lesson);},
+                                    child: CustomCard(
+                                      color: Colors.grey.shade200,
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              CustomCard(
+                                                  color: Colors.white,
+                                                  padding: const EdgeInsets.all(5),
+                                                  child: Image.asset(AppImages.examIco)
+                                              ),
+
+                                              const SizedBox(width: 10),
+
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Image.asset(AppImages.startExercise),
-                                                  const SizedBox(width: 10),
-                                                  const Text('شروع'),
+                                                  const Text('آزمون'),
+                                                  const SizedBox(height: 5),
+                                                  const Text('Quiz').alpha(alpha: 100),
                                                 ],
                                               ),
-                                            ),
+
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
 
                         SizedBox(
@@ -806,27 +829,17 @@ class HomePageState extends StateBase<HomePage> {
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       final data = res['data'];
 
-      if(data is Map){
-        final List quizzes = data['quizzes']?? [];
-        final List autodidacts = data['autodidacts']?? [];
-
+      if(data is List){
         List<ExamModel> examList = [];
-        List<AutodidactModel> autodidactList = [];
 
-        for (final k in quizzes) {
+        for (final k in data) {
           final exam = ExamModel.fromMap(k);
           examList.add(exam);
         }
 
-        for (final k in autodidacts) {
-          final exam = AutodidactModel.fromMap(k);
-          autodidactList.add(exam);
-        }
-
-        if(quizzes.isNotEmpty || autodidacts.isNotEmpty){
+        if(examList.isNotEmpty){
           final examPageInjector = ExamPageInjector();
           examPageInjector.prepareExamList(examList);
-          examPageInjector.setAutodidacts(autodidactList);
           examPageInjector.answerUrl = '/quiz/solving';
 
           final examPage = ExamPage(injector: examPageInjector);
@@ -843,6 +856,10 @@ class HomePageState extends StateBase<HomePage> {
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/quizzes?LessonId=${lessonModel.id}');
     requester.request(context);
+  }
+
+  void gotoWritingSpeakingPage(LessonModel lessonModel){
+    RouteTools.pushPage(context, AutodidactPage(lesson: lessonModel));
   }
 
   void requesterSupport(LessonModel lesson) async {

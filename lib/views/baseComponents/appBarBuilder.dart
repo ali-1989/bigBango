@@ -119,18 +119,20 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                     padding: const EdgeInsets.fromLTRB(10, 8, 0, 0),
                     child: Row(
                       children: [
-                        Icon(AppIcons.arrowDropDown),
+                        const Icon(AppIcons.arrowDropDown),
 
                         TextButton(
                           onPressed: onLevelClick,
                           style: TextButton.styleFrom(
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              visualDensity: VisualDensity.compact,
-                              padding: EdgeInsets.zero
+                              visualDensity: const VisualDensity(horizontal: -4, vertical: -2),
+                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                            minimumSize: Size.zero,
+                            foregroundColor: Colors.black,
                           ),
                           child: Text(SettingsManager.getCourseLevelById(SessionService.getLastLoginUser()?.courseLevel?.id?? 1)?.name?? '-'),
                         ),
-                        const SizedBox(width: 5),
+
                         Image.asset(AppImages.levelBadgeIco),
                       ],
                     ),
@@ -156,7 +158,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                             height: 40,
                             width: 40,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                            beforeLoadWidget: CircularProgressIndicator(),
+                            beforeLoadWidget: const CircularProgressIndicator(),
                             bytes: user.avatarModel?.bytes,
                             url: user.avatarModel?.fileLocation,
                             onDownloadFn: (bytes, path){
@@ -166,7 +168,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                         );
                       }
 
-                      return CircleAvatar(
+                      return const CircleAvatar(
                         radius: 20,
                         backgroundColor: Colors.transparent,
                         backgroundImage: AssetImage(AppImages.profile),
@@ -175,7 +177,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                     },
                   ),
 
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 //SizedBox(height: 8),
                 //Text('علی باقری'),
               ],

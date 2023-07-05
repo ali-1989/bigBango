@@ -20,9 +20,6 @@ class AppSizes {
   double? pixelRatio;
   double appWidth = 0;    //Tecno: 360.0  Web: 1200
   double appHeight = 0;  //Tecno: 640.0  Web: 620
-  double textMultiplier = 6; // Tecno: ~6.4
-  double imageMultiplier = 1;
-  double heightMultiplier = 1;
   ViewPadding? rootPadding;
   List<Function> onMetricListeners = [];
   Function? _systemMetricFunc;
@@ -48,16 +45,10 @@ class AppSizes {
     if(kIsWeb) {
       appWidth = realPixelWidth! / pixelRatio!;
       appHeight = realPixelHeight! / pixelRatio!;
-      imageMultiplier = 3.6;
-      textMultiplier = 6.2;
-      heightMultiplier = 6.2;
     }
     else {
       appWidth = (isLandscape ? realPixelHeight : realPixelWidth)! / pixelRatio!;
       appHeight = (isLandscape ? realPixelWidth : realPixelHeight)! / pixelRatio!;
-      imageMultiplier = appWidth / 100;
-      textMultiplier = appHeight / 100; // ~6.3
-      heightMultiplier = appHeight / 100;
     }
   }
 

@@ -1,3 +1,4 @@
+import 'package:app/structures/structure/messageStateManager.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -32,8 +33,7 @@ Future<void> _fbMessagingBackgroundHandler(RemoteMessage message) async {
 Future<void> _onNewNotification(RemoteMessage message) async {
   try{
     if(AppBroadcast.messagePageIsOpen){
-      AppBroadcast.messageNotifier.states.receivedNewFirebaseMessage = true;
-      AppBroadcast.messageNotifier.notify();
+      AppBroadcast.messageNotifier.notify(event: MessageStates.receivedNewFirebaseMessage);
     }
     else {
       if(message.notification != null && message.notification!.body != null) {

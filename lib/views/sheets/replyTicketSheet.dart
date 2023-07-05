@@ -21,6 +21,7 @@ import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/attachmentFileTicketComponent.dart';
+import 'package:iris_tools/widgets/icon/circularIcon.dart';
 
 class ReplyTicketSheet extends StatefulWidget {
   final TicketDetailModel ticketDetailModel;
@@ -86,9 +87,9 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
                           },
                           child: CustomCard(
                               color: Colors.grey.shade200,
-                              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
-                              radius: 4,
-                              child: const Icon(AppIcons.close, size: 10)
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+                              radius: 5,
+                              child: const Icon(AppIcons.close, size: 14)
                           ),
                         ),
                       ],
@@ -98,8 +99,8 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
 
                     TextField(
                       controller: descriptionCtr,
-                      minLines: 5,
-                      maxLines: 5,
+                      minLines: 8,
+                      maxLines: 8,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
                         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
@@ -117,21 +118,43 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
                     ),
 
                     const SizedBox(height: 15),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('تعداد فایل ها: ${attachmentFiles.length}').thinFont().fsR(-2),
+
+                        GestureDetector(
+                          onTap: showAttachmentDialog,
+                          child: const CircularIcon(
+                            icon: AppIcons.add,
+                            backColor: AppDecoration.mainColor,
+                            size: 30,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 15),
                     Row(
                       children: [
-                        ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                          icon: const Icon(AppIcons.attach),
+                        /*ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14)
+                          ),
+                          icon: const Icon(AppIcons.attach, size: 16),
                             onPressed: showAttachmentDialog,
-                            label: const Text('فایل ها')
-                        ),
-
-                        const SizedBox(width: 10),
+                            label: const Text('فایل ها').bold(weight: FontWeight.normal)
+                        ),*/
 
                         Expanded(
                           child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 14)
+                              ),
                               onPressed: sendClick,
-                              child: const Text('ارسال')
+                              child: const Text('ارسال').bold(weight: FontWeight.normal)
                           ),
                         ),
                       ],
@@ -145,16 +168,18 @@ class _ReplyTicketSheetState extends StateBase<ReplyTicketSheet> {
     );
   }
 
-  void showAttachmentDialog(){
+  void showAttachmentDialog() async {
     attachmentIdsList.clear();
 
-    AppSheet.showSheetCustom(
+    await AppSheet.showSheetCustom(
       context,
       builder: (ctx) => AttachmentFileTicketComponent(files: attachmentFiles),
       routeName: 'openNewReply',
       contentColor: Colors.transparent,
       isScrollControlled: true,
     );
+
+    assistCtr.updateHead();
   }
 
   void sendClick() async {

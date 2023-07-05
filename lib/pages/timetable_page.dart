@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app/managers/api_manager.dart';
+import 'package:app/tools/app/appIcons.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_notifier/iris_notifier.dart';
@@ -118,15 +119,16 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                 UnconstrainedBox(
                   alignment: Alignment.topLeft,
                   child: SizedBox(
-                    height: 20,
-                    width: 70,
-                    child: ElevatedButton(
+                    height: 36,
+                    //width: 70,
+                    child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.zero,
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
                             visualDensity: const VisualDensity(vertical: -2)
                         ),
                         onPressed: onChargeTime,
-                        child: const Text('شارژ زمان')
+                        label: const Text('شارژ زمان'),
+                      icon: const Icon(AppIcons.add),
                     ),
                   ),
                 ),
@@ -210,8 +212,8 @@ class _TimetablePageState extends StateBase<TimetablePage> {
                     const SizedBox(width: 10),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        visualDensity: const VisualDensity(vertical: -2)
+                        //padding: EdgeInsets.zero,
+                        //visualDensity: const VisualDensity(vertical: -2)
                       ),
                         onPressed: requestFreeTimes,
                         child: const Text('بررسی')
@@ -447,18 +449,20 @@ class _TimetablePageState extends StateBase<TimetablePage> {
       pList.add(p);
     }
 
-    final res = await AppSheet.showSheetCustom(
-      context,
-      builder: (_) => SupportPlanSheet(planList: pList),
-      routeName: 'buySessionTimeSheet',
-      isDismissible: true,
-      isScrollControlled: true,
-      contentColor: Colors.transparent,
-      backgroundColor: Colors.transparent,
-    );
+    if(context.mounted){
+      final res = await AppSheet.showSheetCustom(
+        context,
+        builder: (_) => SupportPlanSheet(planList: pList),
+        routeName: 'buySessionTimeSheet',
+        isDismissible: true,
+        isScrollControlled: true,
+        contentColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
+      );
 
-    if(res is Map){
-      showSelectPaymentMethodSheet(res['amount'], res['minutes'], res['planId']);
+      if(res is Map){
+        showSelectPaymentMethodSheet(res['amount'], res['minutes'], res['planId']);
+      }
     }
   }
 

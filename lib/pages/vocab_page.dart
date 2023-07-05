@@ -314,7 +314,7 @@ class _VocabPageState extends StateBase<VocabPage> {
                                   DecoratedBox(
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(color: Colors.black, width: 1, style: BorderStyle.solid)
+                                        border: Border.all(color: Colors.black45, width: 1, style: BorderStyle.solid)
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),

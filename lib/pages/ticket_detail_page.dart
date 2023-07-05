@@ -1,3 +1,4 @@
+import 'package:app/tools/app/appIcons.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -69,12 +70,14 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
       builder: (_, ctr, data){
         return Scaffold(
           body: buildBody(),
-          floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           floatingActionButton: assistCtr.existAnyStates([AssistController.state$error, AssistController.state$loading])
               ? null
-              : ElevatedButton(
+              : FloatingActionButton(
+                backgroundColor: Colors.red,
                 onPressed: openNewResponse,
-                child: const Text('پاسخ دادن'),
+                //child: const Text('پاسخ دادن'),
+                child: const Icon(AppIcons.add, color: Colors.white, size: 35),
           ),
         );
       },
@@ -136,13 +139,13 @@ class _TicketDetailPageState extends StateBase<TicketDetailPage> {
                     visible: ticketDetailModel.status == 1,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          //padding: EdgeInsets.zero,
+                          visualDensity: const VisualDensity(horizontal: -4, vertical: -1),
                         ),
                         onPressed: closeTicket,
                         child: const Text('بستن',
                             textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: true, applyHeightToLastDescent: true)
-                        ).thinFont().color(Colors.white)
+                        ).color(Colors.white).fsR(-1)
                     ),
                   ),
 

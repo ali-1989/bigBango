@@ -55,8 +55,9 @@ class AppSnack {
     return getScaffoldMessenger(context).showSnackBar(snackBar);
   }
 
-  static SnackBar buildSnackBar(String message, {SnackBarAction? action, Widget? replaceContent}){
-    return AppDecoration.buildSnackBar(message, action: action, replaceContent: replaceContent, margin: const EdgeInsets.fromLTRB(20,0,20,60));
+  static SnackBar buildSnackBar(String message, {SnackBarAction? action, Widget? replaceContent, int? millis}){
+    return AppDecoration.buildSnackBar(message, action: action, replaceContent: replaceContent,
+        margin: const EdgeInsets.fromLTRB(20,0,20,60), durationMillis: millis);
   }
 
   static MaterialBanner buildBanner(String message){
@@ -89,7 +90,7 @@ class AppSnack {
     showFlutterSnackBar(snack);
   }
 
-  static void showInfo(BuildContext context, String message){
+  static void showInfo(BuildContext context, String message, {int millis = 3500}){
     final v = Row(
       children: [
         Icon(AppIcons.lightBulb, size: 30, color: AppThemes.instance.currentTheme.infoColor),
@@ -98,7 +99,7 @@ class AppSnack {
       ],
     );
 
-    final snack = buildSnackBar('', replaceContent: v);
+    final snack = buildSnackBar('', replaceContent: v, millis: millis);
     showFlutterSnackBar(snack);
   }
 

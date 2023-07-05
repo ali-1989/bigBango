@@ -7,9 +7,10 @@ class AutodidactModel extends ExamSuperModel {
   String? text;
   String? question;
   String? correctAnswer;
-  String? lastAnswer;
+  MediaModel? correctAnswerVoice;
+  LastAnswer? lastAnswer;
+  //----------- local
   AutodidactReplyType replyType = AutodidactReplyType.unKnow;
-  MediaModel? voice;
 
   AutodidactModel();
 
@@ -18,15 +19,16 @@ class AutodidactModel extends ExamSuperModel {
     question = js['question'];
     text = js['text'];
     correctAnswer = js['correctAnswer'];
-    replyType = AutodidactReplyType.fromType(js['replyType']);
 
     if(js['lastAnswer'] is Map){
-      lastAnswer = js['lastAnswer']['text'];
+      lastAnswer = LastAnswer.fromMap(js['lastAnswer']);
     }
 
-    if(js['voice'] is Map){
-      voice = MediaModel.fromMap(js['voice']);
+    if(js['correctAnswerVoice'] is Map){
+      correctAnswerVoice = MediaModel.fromMap(js['correctAnswerVoice']);
     }
+    //-------- local
+    replyType = correctAnswerVoice != null ? AutodidactReplyType.voice : AutodidactReplyType.text;
   }
 
   Map<String, dynamic> toMap(){
@@ -36,10 +38,32 @@ class AutodidactModel extends ExamSuperModel {
     js['question'] = question;
     js['text'] = text;
     js['correctAnswer'] = correctAnswer;
+    js['correctAnswerVoice'] = correctAnswerVoice?.toMap();
+    js['lastAnswer'] = lastAnswer?.toMap();
+
     js['replyType'] = replyType.number;
-    js['lastAnswer'] = {'text': lastAnswer};
-    js['voice'] = voice?.toMap();
 
     return js;
+  }
+}
+///=============================================================================
+class LastAnswer {
+  String? userAnswer;
+  MediaModel? userAnswerVoice;
+
+  LastAnswer.fromMap(Map map){
+    userAnswer = map['userAnswer'];
+
+    if(map['userAnswerVoice'] is Map) {
+      userAnswerVoice = MediaModel.fromMap(map['userAnswerVoice']);
+    }
+  }
+
+  Map<String, dynamic> toMap(){
+    final map = <String, dynamic>{};
+    map['userAnswer'] = userAnswer;
+    map['userAnswerVoice'] = userAnswerVoice?.toMap();
+
+    return map;
   }
 }

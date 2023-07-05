@@ -14,18 +14,18 @@ class RouteTools {
   RouteTools._();
 
   static prepareWebRoute(){
-    final aboutPage = WebRoute.by((AboutPage).toString(), AboutPage());
-    final homePage = WebRoute.by((HomePage).toString(), HomePage());
-    final supportPage = WebRoute.by((SupportPage).toString(), SupportPage());
-    final walletPage = WebRoute.by((WalletPage).toString(), WalletPage());
+    final aboutPage = IrisPageRoute.by((AboutPage).toString(), AboutPage());
+    final homePage = IrisPageRoute.by((HomePage).toString(), HomePage());
+    final supportPage = IrisPageRoute.by((SupportPage).toString(), SupportPage());
+    final walletPage = IrisPageRoute.by((WalletPage).toString(), WalletPage());
 
     //final registerFormPage = WebRoute.by((RegisterFormPage).toString(), RegisterFormPage());
     //final profilePage = WebRoute.by((ProfilePage).toString(), ProfilePage());
 
-    IrisNavigatorObserver.webRoutes.add(aboutPage);
-    IrisNavigatorObserver.webRoutes.add(homePage);
-    IrisNavigatorObserver.webRoutes.add(supportPage);
-    IrisNavigatorObserver.webRoutes.add(walletPage);
+    IrisNavigatorObserver.allAppRoutes.add(aboutPage);
+    IrisNavigatorObserver.allAppRoutes.add(homePage);
+    IrisNavigatorObserver.allAppRoutes.add(supportPage);
+    IrisNavigatorObserver.allAppRoutes.add(walletPage);
     IrisNavigatorObserver.homeName = homePage.routeName;
   }
 

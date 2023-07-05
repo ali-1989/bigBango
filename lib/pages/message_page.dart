@@ -1,4 +1,6 @@
+import 'package:app/structures/structure/messageStateManager.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_notifier/iris_notifier.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -39,10 +41,10 @@ class _NotificationPageState extends StateBase<NotificationPage> {
     AppBroadcast.messagePageIsOpen = true;
     AppBroadcast.messageNotifier.addListener(notifierListener);
 
-    if(AppBroadcast.messageNotifier.states.isInRequest){
+    if(AppBroadcast.messageNotifier.stateManager.isInRequest){
       assistCtr.addStateWithClear(AssistController.state$loading);
     }
-    else if(!AppBroadcast.messageNotifier.states.isRequested){
+    else if(!AppBroadcast.messageNotifier.stateManager.isRequested){
       assistCtr.addStateWithClear(AssistController.state$loading);
       MessageManager.requestMessages();
     }
@@ -75,7 +77,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
         }
 
         if(assistCtr.hasState(AssistController.state$loading)){
-          return WaitToLoad();
+          return const WaitToLoad();
         }
 
         if(MessageManager.messageList.isEmpty){
@@ -84,27 +86,27 @@ class _NotificationPageState extends StateBase<NotificationPage> {
 
         return Column(
           children: [
-            SizedBox(height: 80),
+            const SizedBox(height: 80),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
                 children: [
                   Image.asset(AppImages.drawerSendIco, width: 32, height: 32, color: AppDecoration.red),
-                  SizedBox(width: 5),
-                  Text('اعلانات', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w200)),
+                  const SizedBox(width: 5),
+                  const Text('اعلانات', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w200)),
                 ],
               ),
             ),
 
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             /// list
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: RefreshConfiguration(
-                  headerBuilder: () => MaterialClassicHeader(),
+                  headerBuilder: () => const MaterialClassicHeader(),
                   footerBuilder: () => AppDecoration.classicFooter,
                   enableScrollWhenRefreshCompleted: true,
                   enableLoadingWhenFailed : true,
@@ -121,7 +123,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
                       itemCount: MessageManager.messageList.length,
                       itemBuilder: buildListItem,
                       separatorBuilder: (BuildContext context, int index) {
-                        return Divider();
+                        return const Divider();
                       },
                     ),
                   ),
@@ -134,9 +136,8 @@ class _NotificationPageState extends StateBase<NotificationPage> {
     );
   }
 
-  void notifierListener(notifier, {dynamic data}){
-    if(AppBroadcast.messageNotifier.states.receivedNewFirebaseMessage){
-      AppBroadcast.messageNotifier.states.receivedNewFirebaseMessage = false;
+  void notifierListener(notifier, EventNotifyImplement? state){
+    if(state == MessageStates.receivedNewFirebaseMessage){
       MessageManager.reset();
 
       assistCtr.addStateWithClear(AssistController.state$loading);
@@ -148,11 +149,11 @@ class _NotificationPageState extends StateBase<NotificationPage> {
       refreshController.loadComplete();
     }
 
-    if(!AppBroadcast.messageNotifier.states.hasNextPage){
+    if(!AppBroadcast.messageNotifier.stateManager.hasNextPage){
       refreshController.loadNoData();
     }
 
-    if(AppBroadcast.messageNotifier.states.isOk()){
+    if(AppBroadcast.messageNotifier.stateManager.isOk()){
       assistCtr.clearStates();
     }
     else {
@@ -193,7 +194,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 2,
                   height: double.infinity,
                   child: ColoredBox(color: AppDecoration.red)
@@ -201,7 +202,7 @@ class _NotificationPageState extends StateBase<NotificationPage> {
 
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -215,26 +216,26 @@ class _NotificationPageState extends StateBase<NotificationPage> {
                           Row(
                             children: [
                               Text(DateTools.dateAndHmRelative(notify.createAt)).alpha(alpha: 220),
-                              SizedBox(width: 5),
-                              Icon(AppIcons.calendar, size: 12).alpha(alpha: 220)
+                              const SizedBox(width: 5),
+                              const Icon(AppIcons.calendar, size: 12).alpha(alpha: 220)
                             ],
                           ),
                         ],
                       ),
 
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(notify.body).fsR(-1).alpha(),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
 
                       Visibility(
                         visible: notify.hasContent(),
                           child: InputChip(
-                            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
                             backgroundColor: Colors.black26,
                             elevation: 0,
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: -2),
-                            label: Text('نمایش محتوا').fsR(-3).color(Colors.white),
+                            labelPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: -2),
+                            label: const Text('نمایش محتوا').fsR(-3).color(Colors.white),
                             onPressed: (){
                               if(notify.image?.fileLocation != null){
                                 final view = FullScreenImage(

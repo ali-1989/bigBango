@@ -15,6 +15,8 @@ class LessonModel {
   int quizProgress = 0;
   bool hasQuiz = false;
   bool hasAutodidact = false;
+  bool hasWriting = false;
+  bool hasSpeaking = false;
   VocabularySegmentModel? vocabSegmentModel;
   GrammarSegmentModel? grammarModel;
   ReadingSegmentModel? readingModel;
@@ -28,7 +30,10 @@ class LessonModel {
     isLock = map['isLock']?? false;
     number = map['number']?? 0;
     hasQuiz = map['hasQuiz']?? false;
-    hasAutodidact = map['hasAutodidact']?? false;
+    hasSpeaking = map['hasSpeaking']?? false;
+    hasWriting = map['hasWriting']?? false;
+
+    hasAutodidact = hasWriting || hasSpeaking;
 
     improvementPercentage = MathHelper.clearToDouble(map['progress']);
     improvementPercentage = MathHelper.fixPrecision(improvementPercentage, 1);

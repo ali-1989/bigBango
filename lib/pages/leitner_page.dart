@@ -153,7 +153,7 @@ class _LightnerPageState extends StateBase<LightnerPage> {
                         RichText(
                           text: TextSpan(
                             children: [
-                              TextSpan(text: 'جعبه ی ', style: AppThemes.baseTextStyle()),
+                              TextSpan(text: 'جعبه  ', style: AppThemes.baseTextStyle()),
                               TextSpan(text: itm.getNumText(idx+1),
                                   style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
                               ),

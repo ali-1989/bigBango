@@ -9,7 +9,7 @@ import 'package:iris_tools/modules/stateManagers/refresh.dart';
 import 'package:app/managers/messageManager.dart';
 import 'package:app/pages/home_page.dart';
 import 'package:app/pages/layout_page.dart';
-import 'package:app/structures/structure/messageStateStructure.dart';
+import 'package:app/structures/structure/messageStateManager.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/baseComponents/splashPage.dart';
 
@@ -18,7 +18,7 @@ class AppBroadcast {
 
   static final StreamController<bool> viewUpdaterStream = StreamController<bool>();
   static final RefreshController drawerMenuRefresher = RefreshController();
-  static final StateNotifier<MessageStateStructure> messageNotifier = StateNotifier(MessageManager.messageStateStructure);
+  static final EventStateNotifier<MessageStateManager> messageNotifier = EventStateNotifier(MessageManager.messageStateManager);
   //---------------------- keys
   static LocalKey materialAppKey = UniqueKey();
   static final rootScaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();

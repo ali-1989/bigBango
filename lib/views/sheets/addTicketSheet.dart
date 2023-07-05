@@ -28,6 +28,7 @@ import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/attachmentFileTicketComponent.dart';
+import 'package:iris_tools/widgets/icon/circularIcon.dart';
 
 class AddTicketSheet extends StatefulWidget {
   final List<TicketRole> ticketRoles;
@@ -88,11 +89,11 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
     return Assist(
         controller: assistCtr,
         builder: (_, ctr, data) {
-          final x = MediaQuery.of(context).viewInsets;
+          final viewInsets = MediaQuery.of(context).viewInsets;
 
           return SizedBox(
             width: double.infinity,
-            height: x.collapsedSize.height < 10 ? sh *3/4 : sh - x.collapsedSize.height,
+            height: viewInsets.collapsedSize.height < 10 ? sh *3/3.8 : sh - viewInsets.collapsedSize.height,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 14),
               child: DecoratedBox(
@@ -101,7 +102,7 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -122,9 +123,9 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                             },
                             child: CustomCard(
                                 color: Colors.grey.shade200,
-                                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                 radius: 4,
-                                child: const Icon(AppIcons.close, size: 10)
+                                child: const Icon(AppIcons.close, size: 12)
                             ),
                           ),
                         ],
@@ -143,7 +144,7 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                                 decoration: inputDecoration,
                               ),
 
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 14),
                               Text('بخش مربوطه', style: boldStyle),
                               const SizedBox(height: 5),
 
@@ -183,7 +184,7 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                                 ),
                               ),
 
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 14),
                               Text('توضیحات', style: boldStyle),
                               const SizedBox(height: 5),
 
@@ -194,35 +195,49 @@ class _AddTicketSheetState extends StateBase<AddTicketSheet> {
                                 decoration: inputDecoration,
                               ),
 
-                              const SizedBox(height: 15),
-                              Visibility(
-                                visible: attachmentFiles.isNotEmpty,
-                                  child: Text('تعداد فایل ها: ${attachmentFiles.length}').thinFont().fsR(-2),
-                              ),
-                              const SizedBox(height: 15),
-
+                              const SizedBox(height: 20),
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  ElevatedButton.icon(
-                                      style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                                      icon: const Icon(AppIcons.attach),
-                                      onPressed: showAttachmentDialog,
-                                      label: const Text('فایل ها')
-                                  ),
+                                  Text('تعداد فایل ها: ${attachmentFiles.length}').thinFont().fsR(-2),
 
-                                  const SizedBox(width: 10),
-
-                                  Expanded(
-                                    child: ElevatedButton(
-                                        onPressed: sendClick,
-                                        child: const Text('ارسال')
+                                  GestureDetector(
+                                    onTap: showAttachmentDialog,
+                                    child: const CircularIcon(
+                                      icon: AppIcons.add,
+                                      backColor: AppDecoration.mainColor,
+                                      size: 30,
                                     ),
                                   ),
                                 ],
                               ),
                             ],
                           )
-                      )
+                      ),
+
+                      Row(
+                        children: [
+                          /*ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                  //backgroundColor: Colors.blue,
+                                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10)
+                              ),
+                              icon: const Icon(AppIcons.attach, size: 18),
+                              onPressed: showAttachmentDialog,
+                              label: const Text('فایل ها').bold(weight: FontWeight.normal)
+                          ),*/
+
+                          Expanded(
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 14)
+                                ),
+                                onPressed: sendClick,
+                                child: const Text('ارسال').bold(weight: FontWeight.normal)
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

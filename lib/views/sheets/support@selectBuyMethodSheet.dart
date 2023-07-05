@@ -61,11 +61,11 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
     return Assist(
         controller: assistCtr,
         builder: (_, ctr, data) {
-          final x = MediaQuery.of(context).viewInsets;
+          final viewInsets = MediaQuery.of(context).viewInsets;
 
           return SizedBox(
             width: double.infinity,
-            height: x.collapsedSize.height < 10 ? sh *3/7 : sh - x.collapsedSize.height,
+            height: viewInsets.collapsedSize.height < 10 ? sh *3/7 : sh - viewInsets.collapsedSize.height,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 14),
               child: DecoratedBox(
@@ -124,8 +124,10 @@ class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
                         },
                       ),
 
+                      const Expanded(child: SizedBox()),
+
                       SizedBox(
-                        width: 200,
+                        width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,

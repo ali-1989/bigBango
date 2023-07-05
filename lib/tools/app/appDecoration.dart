@@ -85,6 +85,38 @@ class AppDecoration {
     return AppThemes.instance.themeData.appBarTheme.toolbarTextStyle!;
   }
   ///------------------------------------------------------------------
+  static InputDecoration noneBordersInputDecoration = const InputDecoration(
+    border: InputBorder.none,
+    enabledBorder: InputBorder.none,
+    focusedBorder: InputBorder.none,
+    focusedErrorBorder: InputBorder.none,
+    disabledBorder: InputBorder.none,
+    errorBorder: InputBorder.none,
+  );
+
+  static InputDecoration outlineBordersInputDecoration = const InputDecoration(
+    border: OutlineInputBorder(),
+    enabledBorder: OutlineInputBorder(),
+    focusedBorder: OutlineInputBorder(),
+    focusedErrorBorder: OutlineInputBorder(),
+    disabledBorder: OutlineInputBorder(),
+    errorBorder: OutlineInputBorder(),
+  );
+
+  static InputDecoration textFieldInputDecoration({int alpha = 255}) {
+    final border = OutlineInputBorder(
+        borderSide: BorderSide(color: AppThemes.instance.currentTheme.textColor.withAlpha(alpha))
+    );
+
+    return InputDecoration(
+      border: border,
+      disabledBorder: border,
+      enabledBorder: border,
+      focusedBorder: border,
+      errorBorder: border,
+    );
+  }
+
   static Color chipColor() {
     return checkPrimaryByWB(AppThemes.instance.currentTheme.primaryColor, AppThemes.instance.currentTheme.buttonBackColor);
   }
@@ -117,7 +149,7 @@ class AppDecoration {
     SnackBarAction? action,
     Color? backgroundColor,
     Widget? replaceContent,
-    Duration? duration,
+    int? durationMillis,
     double? width,
     SnackBarBehavior? behavior = SnackBarBehavior.floating,
     double? elevation,
@@ -130,14 +162,14 @@ class AppDecoration {
     return SnackBar(
       content: replaceContent?? Text(message),
       behavior: behavior,
-      duration: duration?? Duration(milliseconds: action == null? 3500 : 50000),
+      duration: Duration(milliseconds: durationMillis ?? 4000 /*default: 4000*/),
       backgroundColor: backgroundColor,
       dismissDirection: DismissDirection.horizontal,
       action: action,
       width: width?? (AppSizes.isBigWidth()? AppSizes.webMaxWidthSize: null),
       elevation: elevation,
       padding: padding,
-      margin: margin,
+      margin: margin, /*default: fromLTRB(15.0, 5.0, 15.0, 10.0)*/
       clipBehavior: clip,
       shape: shape,
     );
@@ -195,20 +227,6 @@ class AppDecoration {
 
   static BorderSide relativeBorderSide$outButton({bool onColored = false}) {
     return BorderSide(width: 1.0, color: relativeBorderColor$outButton(onColored: onColored).withAlpha(140));
-  }
-
-  static InputDecoration textFieldInputDecoration({int alpha = 255}) {
-    final border = OutlineInputBorder(
-        borderSide: BorderSide(color: AppThemes.instance.currentTheme.textColor.withAlpha(alpha))
-    );
-
-    return InputDecoration(
-      border: border,
-      disabledBorder: border,
-      enabledBorder: border,
-      focusedBorder: border,
-      errorBorder: border,
-    );
   }
 
   static bool isDarkPrimary(){

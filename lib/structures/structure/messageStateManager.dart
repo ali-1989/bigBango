@@ -1,11 +1,10 @@
 import 'package:iris_notifier/iris_notifier.dart';
 
-class MessageStateStructure<String> extends StateHolder<String> {
+class MessageStateManager<String> extends StatesManager<String> {
   bool isRequested = false;
   bool isInRequest = false;
   bool hasErrorInReceiveData = false;
   bool hasNextPage = true;
-  bool receivedNewFirebaseMessage = false;
 
   void errorOccur(){
     isRequested = true;
@@ -22,4 +21,8 @@ class MessageStateStructure<String> extends StateHolder<String> {
   bool isOk(){
     return isRequested && !isInRequest && !hasErrorInReceiveData;
   }
+}
+///=============================================================================
+enum MessageStates implements EventNotifyImplement {
+  receivedNewFirebaseMessage,
 }

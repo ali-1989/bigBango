@@ -10,7 +10,7 @@ import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/structures/enums/messageStatus.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/messageModel.dart';
-import 'package:app/structures/structure/messageStateStructure.dart';
+import 'package:app/structures/structure/messageStateManager.dart';
 import 'package:app/tools/app/appBadge.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appCache.dart';
@@ -21,7 +21,7 @@ class MessageManager {
   
   static final List<MessageModel> _messageList = [];
   static List<MessageModel> get messageList => _messageList;
-  static MessageStateStructure messageStateStructure = MessageStateStructure();
+  static MessageStateManager messageStateManager = MessageStateManager();
   static int pageIndex = 1;
   ///-----------------------------------------------------------------------------------------
   static DateTime? _lastUpdateTime;
@@ -52,7 +52,7 @@ class MessageManager {
   }
 
   static void check() async {
-    if(_lastUpdateTime == null || DateHelper.isPastOf(_lastUpdateTime, Duration(minutes: 29))){
+    if(_lastUpdateTime == null || DateHelper.isPastOf(_lastUpdateTime, const Duration(minutes: 29))){
       requestMessages();
     }
   }
@@ -127,11 +127,11 @@ class MessageManager {
   }
 
   static void requestMessages() async {
-    if(AppBroadcast.messageNotifier.states.isInRequest){
+    if(AppBroadcast.messageNotifier.stateManager.isInRequest){
       return;
     }
 
-    AppBroadcast.messageNotifier.states.isInRequest = true;
+    AppBroadcast.messageNotifier.stateManager.isInRequest = true;
     final requester = Requester();
 
     requester.httpRequestEvents.onAnyState = (req) async {
@@ -139,7 +139,7 @@ class MessageManager {
     };
 
     requester.httpRequestEvents.onFailState = (req, res) async {
-      AppBroadcast.messageNotifier.states.errorOccur();
+      AppBroadcast.messageNotifier.stateManager.errorOccur();
     };
 
     requester.httpRequestEvents.onStatusOk = (req, dataJs) async {
@@ -153,12 +153,12 @@ class MessageManager {
         pageIndex++;
       }
 
-      AppBroadcast.messageNotifier.states.hasNextPage = hasNextPage;
+      AppBroadcast.messageNotifier.stateManager.hasNextPage = hasNextPage;
 
       addItemsFromMap(data);
-      sortList(true);
+      sortList(false);
 
-      AppBroadcast.messageNotifier.states.dataIsOk();
+      AppBroadcast.messageNotifier.stateManager.dataIsOk();
       AppBroadcast.messageNotifier.notify();
     };
 
@@ -210,7 +210,7 @@ class MessageManager {
     };
 
     requester.httpRequestEvents.onFailState = (req, dataJs) async {
-      if(AppCache.timeoutCache.addTimeout('requestUnReadCount', Duration(minutes: 1))){
+      if(AppCache.timeoutCache.addTimeout('requestUnReadCount', const Duration(minutes: 1))){
         requestUnReadCount();
       }
     };
@@ -245,7 +245,7 @@ class MessageManager {
     };
 
     requester.httpRequestEvents.onFailState = (req, dataJs) async {
-      if(AppCache.timeoutCache.addTimeout('requestSetFirebaseToken', Duration(minutes: 1))){
+      if(AppCache.timeoutCache.addTimeout('requestSetFirebaseToken', const Duration(minutes: 1))){
         requestSetFirebaseToken();
       }
     };

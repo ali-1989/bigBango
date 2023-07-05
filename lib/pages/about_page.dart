@@ -21,6 +21,7 @@ class AboutPage extends StatefulWidget {
 }
 ///==============================================================================================
 class _AboutPageState extends StateBase<AboutPage> {
+  Color backColor = const Color(0xFFFFDFD0);
 
   @override
   void initState(){
@@ -46,17 +47,17 @@ class _AboutPageState extends StateBase<AboutPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$loading)){
-      return WaitToLoad();
+      return const WaitToLoad();
     }
 
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(backButton: BackBtn());
+      return ErrorOccur(backButton: const BackBtn());
     }
 
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppDecoration.orange, AppDecoration.orange.withAlpha(100)],
+          colors: [backColor, backColor.withAlpha(100)],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter
         )
@@ -65,7 +66,7 @@ class _AboutPageState extends StateBase<AboutPage> {
         children: [
           const SizedBox(height: 10),
 
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
@@ -83,7 +84,7 @@ class _AboutPageState extends StateBase<AboutPage> {
 
           //const SizedBox(height: 10),
           Image.asset(AppImages.bigbangoSmallText2, height: 40,),
-          const SizedBox(height: 20),
+          const SizedBox(height: 40),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -92,15 +93,15 @@ class _AboutPageState extends StateBase<AboutPage> {
               children: [
                 CustomCard(
                     color: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                     radius: 0,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Text('آشنایی بیشتر با ما').color(Colors.red),
+                      child: const Text('آشنایی بیشتر با ما').color(Colors.red),
                     )
                 ),
 
-                Text('A B O U T   U S').alpha(alpha: 100),
+                const Text('A  B  O  U  T   U  S').englishFont().alpha(alpha: 100).bold(weight: FontWeight.w400),
               ],
             ),
           ),
@@ -109,7 +110,7 @@ class _AboutPageState extends StateBase<AboutPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: CustomCard(
               color: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               radius: 0,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
@@ -128,22 +129,23 @@ class _AboutPageState extends StateBase<AboutPage> {
                 Row(
                   children: [
                     CustomCard(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                         radius: 0,
                         child: Image.asset(AppImages.callUsIco)
                     ),
 
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('شماره تماس'),
+                        const Text('شماره تماس'),
                         //SizedBox(height: 2),
                         TextButton(
                           style: TextButton.styleFrom(
-                            visualDensity: VisualDensity(horizontal: -4),
+                            visualDensity: const VisualDensity(horizontal: -4),
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             padding: EdgeInsets.zero,
+                            foregroundColor: Colors.blueAccent.shade700,
                           ),
                             onPressed: (){
                              UrlHelper.launchLink('tel://${SettingsManager.globalSettings.contact['supportPhoneNumber']}');
@@ -158,17 +160,20 @@ class _AboutPageState extends StateBase<AboutPage> {
                 Row(
                   children: [
                     CustomCard(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                     radius: 0,
                         child: Image.asset(AppImages.rulesIco)
                     ),
 
-                    SizedBox(width: 2),
+                    const SizedBox(width: 2),
                     TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.blueAccent.shade700,
+                      ),
                         onPressed: (){
                           UrlHelper.launchLink('${SettingsManager.globalSettings.contact['conditionTermsLink']}');//http://
                         },
-                        child: Text('مشاهده قوانین')
+                        child: const Text('مشاهده قوانین')
                     ),
                   ],
                 ),
