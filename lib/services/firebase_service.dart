@@ -108,7 +108,7 @@ class FireBaseService {
 
       setListening();
 
-      Future.delayed(Duration(seconds: 3), (){
+      Future.delayed(const Duration(seconds: 3), (){
         getToken();
       });
     }
@@ -166,7 +166,7 @@ class FireBaseService {
       return getTokenForce();
     }
 
-    if(DateHelper.isPastOf(lastUpdateToken, Duration(hours: 2))){
+    if(DateHelper.isPastOf(lastUpdateToken, const Duration(hours: 2))){
       return getTokenForce();
     }
 

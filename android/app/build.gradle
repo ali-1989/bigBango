@@ -63,14 +63,14 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file('E:\\Programming\\Projects\\FlutterProjects\\BigBango\\android\\key.jks')
+            storeFile file('E:\\FlutterProjects\\BigBango\\android\\key.jks')
             keyAlias 'app_alias'
             keyPassword '123456@aA'
             storePassword '123456@aA'
         }
 
         release {
-            storeFile file('E:\\Programming\\Projects\\FlutterProjects\\BigBango\\android\\key.jks')
+            storeFile file('E:\\FlutterProjects\\BigBango\\android\\key.jks')
             keyAlias 'app_alias'
             keyPassword '123456@aA'
             storePassword '123456@aA'

@@ -91,7 +91,7 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
                     ),
                   );
                 },
-              ).wrapBackground(backColor: Colors.grey.shade100)
+              ).wrapBackground(backColor: Colors.grey.shade100, padding: const EdgeInsets.all(12))
           ),
 
           const SizedBox(height: 20),
@@ -113,7 +113,8 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
                       );
                     },
                   ).wrapBackground(
-                      backColor: widget.examModel.showAnswer? (sentenceExtra.isCorrectAll()? Colors.green.shade400: Colors.red.shade400): Colors.grey.shade100
+                      backColor: widget.examModel.showAnswer? (sentenceExtra.isCorrectAll()? Colors.green.shade400: Colors.red.shade400): Colors.grey.shade100,
+                    padding: const EdgeInsets.all(12),
                   );
                 }
 
@@ -233,11 +234,16 @@ class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> w
       );
     }
 
-    return SingleChildScrollView(
+    /*return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: widgetList.toList(),
       ),
+    );*/
+
+    return Wrap(
+      runSpacing: 10,
+      children: widgetList.toList(),
     );
   }
 

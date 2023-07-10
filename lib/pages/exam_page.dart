@@ -92,8 +92,15 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
 
           /// body view
           Expanded(
-            child: buildPage1(),
+            child: buildExamView(),
           ),
+
+          const SizedBox(height: 10),
+
+          /// bottom, send button
+          buildBottomSection(),
+
+          const SizedBox(height: 10),
         ],
       ),
     );
@@ -118,7 +125,7 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
                 ),
 
                 const SizedBox(width: 7),
-                const Text('تمرین').bold().fsR(4),
+                const Text('آزمون').bold().fsR(4),
               ],
             ),
 
@@ -141,29 +148,6 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
           ],
         ),
       ),
-    );
-  }
-
-  Widget buildPage1(){
-    if(widget.injector.examList.isEmpty){
-      return const SizedBox();
-    }
-    
-    return Column(
-      children: [
-        const SizedBox(height: 10),
-
-        /// exams
-        /*Expanded(child: ExamBuilder(builder: widget.builder, groupSameTypes: widget.groupSameTypes)),*/
-        Expanded(
-            child: buildExamView(),
-        ),
-
-        /// send button
-        buildBottomSectionPage1(),
-
-        const SizedBox(height: 10),
-      ],
     );
   }
 
@@ -252,8 +236,8 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildBottomSectionPage1() {
-    if(answeredExamList.length == widget.injector.examList.length || !widget.injector.showSendButton){
+  Widget buildBottomSection() {
+    if(!widget.injector.showSendButton){//answeredExamList.length == widget.injector.examList.length ||
       return const SizedBox();
     }
 
@@ -263,70 +247,97 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
           return ElevatedButton(
             style: TextButton.styleFrom(
               padding: EdgeInsets.zero,
-              minimumSize: const Size(200, 40),
+              minimumSize: const Size(200, 50),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               visualDensity: const VisualDensity(
                   horizontal: 0, vertical: -2),
               //shape: StadiumBorder()
             ),
-            onPressed: onSendExamAnswerClick,
-            child: const Text('ثبت و بررسی')
-                .englishFont().color(Colors.white),
+            onPressed:  answeredExamList.contains(currentExam.id)? null : onSendExamAnswerClick,
+            child: const Text('ثبت و بررسی').color(Colors.white).fsR(-2),
           );
         }
 
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return Column(
           children: [
-
-            Expanded(
-              child: ElevatedButton(
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: const Size(100, 40),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
-                  //shape: StadiumBorder()
-                ),
-                onPressed: onSendExamAnswerClick,
-                child: Text(answeredExamList.contains(currentExam.id) ? AppMessages.next : 'ثبت و بررسی')
-                    .englishFont().color(Colors.white),
-              ),
-            ),
-
-            Expanded(
-                child: Center(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      textDirection: TextDirection.ltr,
-                      children: [
-                        CustomCard(
-                            color: Colors.grey.shade200,
-                            padding: const EdgeInsets.symmetric(horizontal:6, vertical: 2),
-                            radius: 4,
-                            child: Text('${currentExamIndex+1}').bold().ltr()
-                        ),
-
-                        Text('  /  ${widget.injector.examList.length}').ltr(),
-                      ],
-                    )
-                )
-            ),
-
-            Expanded(
-              child: Visibility(
-                visible: hasNextExam(),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.black87,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Visibility(
+                    visible: hasNextExam(),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton.icon(
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.black87,
+                          ),
+                          onPressed: onNextClick,
+                          icon: RotatedBox(
+                            quarterTurns: 2,
+                            child: Image.asset(AppImages.arrowLeftIco)
+                          ),
+                          label: const Text('Next').fsR(-1)
+                      ),
                     ),
-                      onPressed: onExamSkipClick,
-                      child: const Text('skip')
                   ),
                 ),
-              ),
+
+                Expanded(
+                    child: Center(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          textDirection: TextDirection.ltr,
+                          children: [
+                            CustomCard(
+                                color: Colors.grey.shade200,
+                                padding: const EdgeInsets.symmetric(horizontal:6, vertical: 2),
+                                radius: 4,
+                                child: Text('${currentExamIndex+1}').bold().ltr()
+                            ),
+
+                            Text('  /  ${widget.injector.examList.length}').ltr(),
+                          ],
+                        )
+                    )
+                ),
+
+                Expanded(
+                  child: Visibility(
+                    visible: hasPrevExam(),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.black87,
+                        ),
+                          onPressed: onPrevClick,
+                          icon: const Text('Prev').fsR(-1),
+                        label: Image.asset(AppImages.arrowLeftIco,),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: const Size(100, 50),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
+                    ),
+                    onPressed: answeredExamList.contains(currentExam.id)? null : onSendExamAnswerClick,
+                    child: const Text('ثبت و بررسی')
+                        .color(Colors.white).fsR(-2),
+                  ),
+                ),
+              ],
             ),
           ],
         );
@@ -338,10 +349,12 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     return currentExamIndex < widget.injector.examList.length-1;
   }
 
-  void onExamSkipClick() {
-    if(hasNextExam()){
-      answeredExamList.add(currentExam.id);
+  bool hasPrevExam(){
+    return currentExamIndex > 0;
+  }
 
+  void onNextClick() {
+    if(hasNextExam()){
       currentExamIndex++;
       currentExam = widget.injector.examList[currentExamIndex];
 
@@ -351,13 +364,24 @@ class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
     }
   }
 
-  void onSendExamAnswerClick(){
-    if(answeredExamList.contains(currentExam.id)){
-      onExamSkipClick();
-      return;
-    }
+  void onPrevClick() {
+    if(hasPrevExam()){
+      currentExamIndex--;
+      currentExam = widget.injector.examList[currentExamIndex];
 
-    if(widget.injector.askConfirmToSend) {
+      examAnimController.reset();
+      assistCtr.updateHead();
+      examAnimController.forward();
+    }
+  }
+
+  void onSendExamAnswerClick(){
+    /*if(answeredExamList.contains(currentExam.id)){
+      onNextClick();
+      return;
+    }*/
+
+    if(widget.injector.askConfirmToSend && !answeredExamList.contains(currentExam.id)) {
       AppDialogIris.instance.showYesNoDialog(
         context,
         yesFn: (ctx) async {

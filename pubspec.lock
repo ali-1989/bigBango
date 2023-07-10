@@ -173,10 +173,10 @@ packages:
     dependency: "direct main"
     description:
       name: chewie
-      sha256: "43a120d5cbe664fbd8350712decbbd4e3475704a74d0bb4c84ede9787a12c983"
+      sha256: "60701da1f22ed20cd2d40e856fd1f2249dacf5b629d9fa50676443a18a4857b8"
       url: "https://pub.dev"
     source: hosted
-    version: "1.6.0+1"
+    version: "1.7.0"
   cli_util:
     dependency: transitive
     description:
@@ -795,7 +795,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "67008e75423b985cba60635ae7b88c3323f6bc30"
+      resolved-ref: "268473967d81aa340946013d64da0c60860238ae"
       url: "https://github.com/ali-1989/irisNotifier.git"
     source: git
     version: "0.0.7"
@@ -813,10 +813,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "04acaed6c12ff64b0187f3c9de4779a14c3256dc"
+      resolved-ref: "06dee9a8bd1fff74a36fb7ffb3072710434bda07"
       url: "https://github.com/ali-1989/iris_route.git"
     source: git
-    version: "0.0.27"
+    version: "0.0.30"
   iris_runtime_cache:
     dependency: "direct main"
     description:
@@ -831,10 +831,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "8b51ce307b857ed3d32dd7f7954914dc87b849d3"
+      resolved-ref: "54a09bc9fcce6600701148f070510653bb229bf1"
       url: "https://github.com/ali-1989/IrisTools.git"
     source: git
-    version: "0.1.11"
+    version: "0.1.22"
   jiffy:
     dependency: transitive
     description:
@@ -1079,10 +1079,10 @@ packages:
     dependency: "direct main"
     description:
       name: permission_handler
-      sha256: "37fcc3c3182ac0bf8856f3e973e11c7bef5556d69f1a0d8fb908f51019c2912d"
+      sha256: "415af30ba76a84faccfe1eb251fe1e4fdc790f876924c65ad7d6ed7a1404bcd6"
       url: "https://pub.dev"
     source: hosted
-    version: "10.4.1"
+    version: "10.4.2"
   permission_handler_android:
     dependency: transitive
     description:
@@ -1095,18 +1095,18 @@ packages:
     dependency: transitive
     description:
       name: permission_handler_apple
-      sha256: "0d1f8007b17573ff1fbeae0f04b6c8e83e1d2f6c4fe8e8226d4d2456aa8ecffe"
+      sha256: "7a187b671a39919462af2b5e813148365b71a615979165a119868d667fe90c03"
       url: "https://pub.dev"
     source: hosted
-    version: "9.1.2"
+    version: "9.1.3"
   permission_handler_platform_interface:
     dependency: transitive
     description:
       name: permission_handler_platform_interface
-      sha256: "79b36d93a41a4aecfd0d635d77552f327cb84227c718ce5e68b5f7b85546fe7e"
+      sha256: "463a07cb7cc6c758a7a1c7da36ce666bb80a0b4b5e92df0fa36872e0ed456993"
       url: "https://pub.dev"
     source: hosted
-    version: "3.11.0+1"
+    version: "3.11.1"
   permission_handler_windows:
     dependency: transitive
     description:
@@ -1324,10 +1324,10 @@ packages:
     dependency: "direct main"
     description:
       name: stop_watch_timer
-      sha256: eb690e4f6d983ba12ddfbf51a5d489fdba8b64982b9651cb538650888cec2886
+      sha256: "7d06b0cc6608987c4b627a957325261d83181ebd81a3036519590dd51b94ad68"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "3.0.0"
   stream_channel:
     dependency: transitive
     description:
@@ -1412,10 +1412,10 @@ packages:
     dependency: "direct main"
     description:
       name: url_launcher
-      sha256: eb1e00ab44303d50dd487aab67ebc575456c146c6af44422f9c13889984c00f3
+      sha256: "781bd58a1eb16069412365c98597726cd8810ae27435f04b3b4d3a470bacd61e"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.11"
+    version: "6.1.12"
   url_launcher_android:
     dependency: transitive
     description:
@@ -1460,18 +1460,18 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_web
-      sha256: "6bb1e5d7fe53daf02a8fee85352432a40b1f868a81880e99ec7440113d5cfcab"
+      sha256: cc26720eefe98c1b71d85f9dc7ef0cada5132617046369d9dc296b3ecaa5cbb4
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.17"
+    version: "2.0.18"
   url_launcher_windows:
     dependency: transitive
     description:
       name: url_launcher_windows
-      sha256: "254708f17f7c20a9c8c471f67d86d76d4a3f9c1591aad1e15292008aceb82771"
+      sha256: "7967065dd2b5fccc18c653b97958fdf839c5478c28e767c61ee879f4e7882422"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.6"
+    version: "3.0.7"
   uuid:
     dependency: transitive
     description:
@@ -1540,18 +1540,18 @@ packages:
     dependency: transitive
     description:
       name: wakelock_plus
-      sha256: "50abe3fe07527dca0da637571bb85307ece3e4edc2e8a0735841d1fac3d06783"
+      sha256: aac3f3258f01781ec9212df94eecef1eb9ba9350e106728def405baa096ba413
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+3"
+    version: "1.1.1"
   wakelock_plus_platform_interface:
     dependency: transitive
     description:
       name: wakelock_plus_platform_interface
-      sha256: d88828393731055df62a4a725881d2e2a79013ac8e8c9ae86f4094340c60055e
+      sha256: "40fabed5da06caff0796dc638e1f07ee395fb18801fbff3255a2372db2d80385"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   win32:
     dependency: "direct overridden"
     description:

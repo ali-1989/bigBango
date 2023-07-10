@@ -576,6 +576,7 @@ class HomePageState extends StateBase<HomePage> {
 
                         SizedBox(
                           width: double.infinity,
+                          height: 46,
                           child: ElevatedButton(
                               onPressed: (){
                                 requesterSupport(lesson);
@@ -588,7 +589,9 @@ class HomePageState extends StateBase<HomePage> {
                                 ],
                               )
                           ),
-                        )
+                        ),
+
+                        const SizedBox(height: 8),
                       ],
                     ),
                   )

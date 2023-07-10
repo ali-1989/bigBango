@@ -34,7 +34,6 @@ class Keys {
   static const message = 'message';
   //----- common settings key -----------------------------------------------------------------
   static const setting$lastLoginDate = 'last_login_date';
-  //static const setting$toBackgroundTs = 'to_background_ts';
   static const setting$appSettings = 'app_settings';
   static const setting$fontThemeData = 'font_theme_data';
   static const setting$colorThemeName = 'color_theme_name';
@@ -49,7 +48,4 @@ class Keys {
   static const setting$registerPhoneNumber = 'register_phone_number';
   static const setting$registerPhoneNumberTs = 'register_phone_number_ts';
 
-  static String genDownloadKey_userAvatar(int userId) {
-    return 'downloadUserAvatar_$userId';
-  }
 }
