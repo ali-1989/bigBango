@@ -160,7 +160,7 @@ class SplashPageState extends StateBase<SplashPage> {
       }
 
       if(context != null && context.mounted){
-        RouteTools.prepareWebRoute();
+        RouteTools.prepareRoutes();
       }
 
       isInitialOk = true;
