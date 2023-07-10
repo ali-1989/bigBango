@@ -33,6 +33,7 @@ class AppThemes {
 	ThemeMode currentThemeMode = ThemeMode.light;
 	Brightness currentBrightness = Brightness.light;
 	TextDirection textDirection = TextDirection.rtl;
+	/// sets minimum vertical layout metrics
 	StrutStyle strutStyle = const StrutStyle(forceStrutHeight: true, height: 1.08, leading: 0.36);
 
 	static AppThemes get instance {
@@ -585,6 +586,14 @@ class AppThemes {
 		}
 
 		return TextDirection.rtl;
+	}
+
+	static TextAlign getTextAlign() {
+		if (AppThemes._instance.textDirection == TextDirection.rtl) {
+		  return TextAlign.left;
+		}
+
+		return TextAlign.right;
 	}
 
 	static bool isLtrDirection() {

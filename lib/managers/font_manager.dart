@@ -310,7 +310,7 @@ class Font {
 
     family = map['family'];
     fileName = map['file_name'];
-    size = map['size']/*?? FontManager._defaultFontSize*/;
+    size = map['size'];
     height = map['height'];
     textHeightBehavior = const TextHeightBehavior().fromMap(map['textHeightBehavior']);
     defaultUsage = FontUsage.fromName(map['default_usage']);

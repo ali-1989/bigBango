@@ -1,5 +1,3 @@
-// ignore_for_file: empty_catches
-
 import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appLocale.dart';
 import 'package:flutter/material.dart';
@@ -132,7 +130,7 @@ extension ContextExtension on BuildContext {
         return element.key == subKey;
       });
     }
-    catch (e){}
+    catch (e){/**/}
 
     if(find != null) {
       return find.value;
@@ -711,6 +709,76 @@ extension TextExtension on Text {
       textHeightBehavior: textHeightBehavior,
       textScaleFactor: textScaleFactor,
       textWidthBasis: textWidthBasis,
+    );
+  }
+
+  Widget fitWidthOverflow({double? maxWidth}) {
+    return LayoutBuilder(
+      builder: (context, size){
+        final defaultTextStyle = DefaultTextStyle.of(context);
+
+        var myStyle = style;
+        if (style == null || style!.inherit) {
+          myStyle = defaultTextStyle.style.merge(style);
+        }
+
+        if (myStyle!.fontSize == null) {
+          myStyle = myStyle.copyWith(fontSize: FontManager.defaultFontSize);
+        }
+
+        var tp = TextPainter(
+          maxLines: maxLines,
+          textAlign: textAlign?? AppThemes.getTextAlign(),
+          textDirection: textDirection?? AppThemes.instance.textDirection,
+          textHeightBehavior: textHeightBehavior,
+          strutStyle: strutStyle,
+          locale: locale,
+          textScaleFactor: textScaleFactor?? MediaQuery.of(context).textScaleFactor,
+          textWidthBasis: textWidthBasis?? TextWidthBasis.parent,
+          text: TextSpan(text: data, style: myStyle),
+        );
+
+        tp.layout(maxWidth: double.infinity);
+        bool exceeded = tp.didExceedMaxLines || tp.width > (maxWidth?? size.maxWidth);
+        double fontSize = myStyle.fontSize!;
+
+        while(exceeded){
+          fontSize = fontSize -.5;
+          myStyle = myStyle!.copyWith(fontSize: fontSize);
+
+          tp = TextPainter(
+            maxLines: maxLines,
+            textAlign: textAlign?? AppThemes.getTextAlign(),
+            textDirection: textDirection?? AppThemes.instance.textDirection,
+            textHeightBehavior: textHeightBehavior,
+            strutStyle: strutStyle,
+            locale: locale,
+            textScaleFactor: textScaleFactor?? MediaQuery.of(context).textScaleFactor,
+            textWidthBasis: textWidthBasis?? TextWidthBasis.parent,
+            text: TextSpan(text: data, style: myStyle),
+          );
+
+          tp.layout(maxWidth: double.infinity);
+          exceeded = tp.didExceedMaxLines || tp.width > (maxWidth?? size.maxWidth);
+        }
+
+        return Text(
+          data!,
+          key: key,
+          style: myStyle,
+          strutStyle: strutStyle,
+          textAlign: textAlign,
+          locale: locale,
+          maxLines: maxLines,
+          overflow: overflow,
+          semanticsLabel: semanticsLabel,
+          softWrap: softWrap,
+          textDirection: textDirection,
+          textHeightBehavior: textHeightBehavior,
+          textScaleFactor: textScaleFactor,
+          textWidthBasis: textWidthBasis,
+        );
+      },
     );
   }
 

@@ -230,7 +230,7 @@ class AppDialog {
 	Future showDialog$NetDisconnected(BuildContext context) {
 		return showErrorDialog(
 			context,
-			'ارتباط اینترنت قطع است',
+			AppMessages.netConnectionIsDisconnect,
 			'',
 		);
 	}

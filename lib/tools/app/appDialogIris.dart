@@ -213,7 +213,7 @@ class AppDialogIris {
 		return showErrorDialog(
 			context,
 			null,
-			'ارتباط اینترنت قطع است',
+			AppMessages.netConnectionIsDisconnect,
 		);
 	}
 

@@ -1,4 +1,4 @@
-import 'package:app/tools/app/appLocale.dart';
+import 'package:app/tools/routeTools.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +7,7 @@ import 'package:iris_tools/modules/irisLocalizations.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/tools/app/appLoading.dart';
+import 'package:app/tools/app/appLocale.dart';
 import 'package:app/tools/app/appSizes.dart';
 import '/managers/settings_manager.dart';
 
@@ -27,6 +28,8 @@ abstract class StateBase<W extends StatefulWidget> extends State<W> {
 	void initState() {
 		super.initState();
 
+		RouteTools.addWidgetState(this);
+
 		if(kIsWeb){
 			AppSizes.instance.addMetricListener(onResize);
 		}
@@ -42,6 +45,8 @@ abstract class StateBase<W extends StatefulWidget> extends State<W> {
 
 	@override
 	void dispose() {
+		RouteTools.removeWidgetState();
+
 		if(kIsWeb){
 			AppSizes.instance.removeMetricListener(onResize);
 		}

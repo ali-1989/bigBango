@@ -10,10 +10,11 @@ import 'package:app/tools/app/appNavigator.dart';
 
 class RouteTools {
   static BuildContext? materialContext;
+  static final StackList<State> widgetStateStack = StackList();
 
   RouteTools._();
 
-  static prepareWebRoute(){
+  static prepareRoutes(){
     final aboutPage = IrisPageRoute.by((AboutPage).toString(), AboutPage());
     final homePage = IrisPageRoute.by((HomePage).toString(), HomePage());
     final supportPage = IrisPageRoute.by((SupportPage).toString(), SupportPage());
@@ -27,6 +28,18 @@ class RouteTools {
     IrisNavigatorObserver.allAppRoutes.add(supportPage);
     IrisNavigatorObserver.allAppRoutes.add(walletPage);
     IrisNavigatorObserver.homeName = homePage.routeName;
+  }
+
+  static void addWidgetState(State state){
+    return widgetStateStack.push(state);
+  }
+
+  static State removeWidgetState(){
+    return widgetStateStack.pop();
+  }
+
+  static State getTopWidgetState(){
+    return widgetStateStack.top();
   }
 
   static BuildContext? getTopContext() {
