@@ -11,7 +11,7 @@ class ReadingPageInjector implements SegmentInjector {
 
   int? index;
 
-  ReadingPageInjector(this.lessonModel, {this.index}) : segment = lessonModel.readingModel!;
+  ReadingPageInjector(this.lessonModel, {this.index}) : segment = lessonModel.readingSegment!;
 
   ReadingPageInjector.from(SegmentInjector parent){
     lessonModel = parent.lessonModel;

@@ -33,21 +33,21 @@ class AppTools {
   static Widget? getNextPartOfLesson(LessonModel lessonModel){
     Widget? page;
 
-    if((lessonModel.vocabSegmentModel?.hasIdioms?? false) && IrisNavigatorObserver.lastRoute() != (IdiomsPage).toString()){
+    /*todo if((lessonModel.vocabSegmentModel?.hasIdioms?? false) && IrisNavigatorObserver.lastRoute() != (IdiomsPage).toString()){
       page = IdiomsPage(injector: VocabIdiomsPageInjector(lessonModel));
     }
-    else if (lessonModel.grammarModel != null){
+    else*/ if (lessonModel.grammarSegment != null){
       page = GrammarPage(injector: GrammarPageInjector(lessonModel));
     }
-    else if (lessonModel.readingModel != null){
+    else if (lessonModel.readingSegment != null){
       page = ReadingPage(injector: ReadingPageInjector(lessonModel));
     }
-    else if (lessonModel.listeningModel != null && lessonModel.listeningModel!.listeningList.isNotEmpty){
-      if (lessonModel.listeningModel!.listeningList.length == 1) {
-        page = ListeningPage(injector: ListeningPageInjector(lessonModel, lessonModel.listeningModel!.listeningList[0].id));
+    else if (lessonModel.listeningSegment != null && lessonModel.listeningSegment!.listeningList.isNotEmpty){
+      if (lessonModel.listeningSegment!.listeningList.length == 1) {
+        page = ListeningPage(injector: ListeningPageInjector(lessonModel, lessonModel.listeningSegment!.listeningList[0].id));
       }
       else {
-        page = ListeningPage(injector: ListeningPageInjector(lessonModel, lessonModel.listeningModel!.listeningList[0].id));
+        page = ListeningPage(injector: ListeningPageInjector(lessonModel, lessonModel.listeningSegment!.listeningList[0].id));
       }
     }
 

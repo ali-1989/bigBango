@@ -1,9 +1,12 @@
+import 'package:app/structures/models/lessonModels/speakingSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/writingSegmentModel.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/listeningSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
+import 'package:app/structures/models/lessonModels/quizSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/vocabSegmentModel.dart';
 import 'package:app/system/keys.dart';
 
 class LessonModel {
@@ -12,18 +15,17 @@ class LessonModel {
   bool isLock = false;
   int number = 0;
   double improvementPercentage = 0;
-  List quizCategory = [];
-  VocabularySegmentModel? vocabSegmentModel;
-  GrammarSegmentModel? grammarModel;
-  ReadingSegmentModel? readingModel;
-  ListeningSegmentModel? listeningModel;
+  QuizSegmentModel? quizSegment;
+  VocabularySegmentModel? vocabSegment;
+  GrammarSegmentModel? grammarSegment;
+  ReadingSegmentModel? readingSegment;
+  ListeningSegmentModel? listeningSegment;
+  WritingSegmentModel? writingSegment;
+  SpeakingSegmentModel? speakingSegment;
 
   LessonModel();
 
   LessonModel.fromMap(Map map) {
-    print('-----------------------');
-    print(map);
-    print('-----------------------');
     id = map[Keys.id];
     title = map[Keys.title];
     isLock = map['isLock']?? false;
@@ -35,23 +37,31 @@ class LessonModel {
     }
 
     if(map['vocabulary'] is Map) {
-      vocabSegmentModel = VocabularySegmentModel.fromMap(map['vocabulary']);
+      vocabSegment = VocabularySegmentModel.fromMap(map['vocabulary']);
     }
 
     if(map['grammar'] is Map) {
-      grammarModel = GrammarSegmentModel.fromMap(map['grammar']);
+      grammarSegment = GrammarSegmentModel.fromMap(map['grammar']);
     }
 
     if(map['reading'] is Map) {
-      readingModel = ReadingSegmentModel.fromMap(map['reading']);
+      readingSegment = ReadingSegmentModel.fromMap(map['reading']);
     }
 
     if(map['listeningCategory'] is Map) {
-      listeningModel = ListeningSegmentModel.fromMap(map['listeningCategory']);
+      listeningSegment = ListeningSegmentModel.fromMap(map['listeningCategory']);
     }
 
     if(map['quizCategory'] is Map) {
-      quizCategory = map['quizCategory'];
+      quizSegment = QuizSegmentModel.fromMap(map['quizCategory']);
+    }
+
+    if(map['writingCategories'] is List) {
+      writingSegment = WritingSegmentModel.fromMap(map['writingCategories']);
+    }
+
+    if(map['speakingCategories'] is List) {
+      speakingSegment = SpeakingSegmentModel.fromMap(map['speakingCategories']);
     }
   }
 
@@ -63,41 +73,56 @@ class LessonModel {
     map['number'] = number;
     map['isLock'] = isLock;
     map['progress'] = improvementPercentage;
-    map['vocabulary'] = vocabSegmentModel?.toMap();
-    map['grammar'] = grammarModel?.toMap();
-    map['reading'] = readingModel?.toMap();
-    map['listeningCategory'] = listeningModel?.toMap();
+    map['vocabulary'] = vocabSegment?.toMap();
+    map['grammar'] = grammarSegment?.toMap();
+    map['reading'] = readingSegment?.toMap();
+    map['listeningCategory'] = listeningSegment?.toMap();
+    map['quizCategory'] = quizSegment?.toMap();
+    map['writingCategories'] = writingSegment?.toMap();
+    map['speakingCategories'] = speakingSegment?.toMap();
 
     return map;
   }
 
   void matchBy(LessonModel others){
     id = others.id;
-    quizCategory = others.quizCategory;
+    quizSegment = others.quizSegment;
     number = others.number;
     title = others.title;
     improvementPercentage = others.improvementPercentage;
     isLock = others.isLock;
 
-    if(others.vocabSegmentModel != null) {
-      vocabSegmentModel?.matchBy(others.vocabSegmentModel!);
+    if(others.vocabSegment != null) {
+      vocabSegment?.matchBy(others.vocabSegment!);
     }
 
-    if(others.grammarModel != null) {
-      grammarModel?.matchBy(others.grammarModel!);
+    if(others.grammarSegment != null) {
+      grammarSegment?.matchBy(others.grammarSegment!);
     }
 
-    if(others.readingModel != null) {
-      readingModel?.matchBy(others.readingModel!);
+    if(others.readingSegment != null) {
+      readingSegment?.matchBy(others.readingSegment!);
     }
 
-    if(others.listeningModel != null) {
-      listeningModel?.matchBy(others.listeningModel!);
+    if(others.listeningSegment != null) {
+      listeningSegment?.matchBy(others.listeningSegment!);
+    }
+
+    if(others.quizSegment != null) {
+      quizSegment?.matchBy(others.quizSegment!);
+    }
+
+    if(others.writingSegment != null) {
+      writingSegment?.matchBy(others.writingSegment!);
+    }
+
+    if(others.listeningSegment != null) {
+      listeningSegment?.matchBy(others.listeningSegment!);
     }
   }
 
   @override
   String toString() {
-    return 'id:$id | title:$title | number:$number | isLock:$isLock | reading:[${readingModel.toString()}]';
+    return 'id:$id | title:$title | number:$number | isLock:$isLock | reading:[${readingSegment.toString()}]';
   }
 }

@@ -11,7 +11,7 @@ class GrammarPageInjector implements SegmentInjector {
   @override
   late LessonModel lessonModel;
 
-  GrammarPageInjector(this.lessonModel, {this.id}) : segment = lessonModel.grammarModel!;
+  GrammarPageInjector(this.lessonModel, {this.id}) : segment = lessonModel.grammarSegment!;
 
   GrammarPageInjector.from(SegmentInjector parent, {this.id}){
     lessonModel = parent.lessonModel;

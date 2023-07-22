@@ -16,9 +16,6 @@ class ListeningSegmentModel extends ISegmentModel {
   }
 
   ListeningSegmentModel.fromMap(Map map):super.fromMap(map) {
-    print('@@@@@@@@@@@@lis@@@@@@@@@@@@@@@@@@@');
-    print(map);
-    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     _init();
 
     if(map['items'] is List){
@@ -35,7 +32,6 @@ class ListeningSegmentModel extends ISegmentModel {
   }
 
   void matchBy(ListeningSegmentModel others){
-    id = others.id;
     title = others.title;
     progress = others.progress;
     listeningList.clear();

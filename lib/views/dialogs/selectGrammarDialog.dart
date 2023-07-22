@@ -71,7 +71,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectGrammarDialog> {
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
-                          itemCount: widget.lessonModel.listeningModel!.listeningList.length,
+                          itemCount: widget.lessonModel.listeningSegment!.listeningList.length,
                             itemBuilder: buildList
                         ),
                       ),
@@ -89,7 +89,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectGrammarDialog> {
   }
 
   Widget buildList(_, int idx){
-    final itm = widget.lessonModel.grammarModel!.grammarList[idx];
+    final itm = widget.lessonModel.grammarSegment!.categories[idx];
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,

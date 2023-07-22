@@ -740,9 +740,9 @@ class _VocabPageState extends StateBase<VocabPage> {
       currentVocab = vocabList[currentVocabIdx];
       showTranslate = currentVocab.showTranslation;
 
-      if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentVocab.id)) {
+      /*if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentVocab.id)) {
         sendReview(currentVocab.id);
-      }
+      }todo*/
     }
     else {
       showGreeting = true;
@@ -800,9 +800,9 @@ class _VocabPageState extends StateBase<VocabPage> {
         currentVocab = vocabList[currentVocabIdx];
         showTranslate = currentVocab.showTranslation;
 
-        if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentVocab.id)) {
+        /*if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentVocab.id)) {
           sendReview(currentVocab.id);
-        }
+        }todo*/
       }
 
       assistCtr.clearStates();
@@ -856,8 +856,8 @@ class _VocabPageState extends StateBase<VocabPage> {
 
     if(status){
       reviewIds.removeAll(ids);
-      widget.injector.lessonModel.vocabSegmentModel!.reviewIds.addAll(ids);
-      widget.injector.lessonModel.vocabSegmentModel!.reviewCount++;
+      //todo.widget.injector.lessonModel.vocabSegmentModel!.reviewIds.addAll(ids);
+      //widget.injector.lessonModel.vocabSegmentModel!.reviewCount++;
 
       ReviewService.requestUpdateReviews(widget.injector.lessonModel);
     }

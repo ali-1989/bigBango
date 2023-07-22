@@ -3,7 +3,7 @@ import 'package:app/structures/models/readingModel.dart';
 import 'package:app/tools/app/appImages.dart';
 
 class ReadingSegmentModel extends ISegmentModel {
-  List<ReadingModel> readingList = [];
+  List<ReadingModel> categories = [];
 
   ReadingSegmentModel(){
     _init();
@@ -16,9 +16,6 @@ class ReadingSegmentModel extends ISegmentModel {
   }
 
   ReadingSegmentModel.fromMap(Map map):super.fromMap(map) {
-    print('@@@@@@@@@@@@read@@@@@@@@@@@@@@@@@@@');
-    print(map);
-    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     _init();
 
     if(map['title'] is String){
@@ -26,34 +23,27 @@ class ReadingSegmentModel extends ISegmentModel {
     }
 
     if(map['items'] is List){
-      readingList = map['items'].map<ReadingModel>((e) => ReadingModel.fromMap(e)).toList();
+      categories = map['items'].map<ReadingModel>((e) => ReadingModel.fromMap(e)).toList();
     }
   }
 
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
-    map['items'] = readingList.map((e) => e.toMap()).toList();
+    map['items'] = categories.map((e) => e.toMap()).toList();
 
     return map;
   }
 
   void matchBy(ReadingSegmentModel others){
-    id = others.id;
     title = others.title;
     progress = others.progress;
-    readingList.clear();
-    readingList.addAll(others.readingList);
+    categories.clear();
+    categories.addAll(others.categories);
   }
 
   @override
   String toString() {
-    String models = '';
-
-    for(final x in readingList){
-      models +=  '${x.segments}';
-    }
-
-    return 'id:$id | title:$title | models:{$models}';
+    return ' title:$title ';
   }
 }

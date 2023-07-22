@@ -30,7 +30,7 @@ import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/lessonModels/listeningSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/vocabularySegmentModel.dart';
+import 'package:app/structures/models/lessonModels/vocabSegmentModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appDecoration.dart';
@@ -138,15 +138,16 @@ class HomePageState extends StateBase<HomePage> {
                             ),
 
                             Positioned(
-                              bottom: 62,
+                              bottom: 60,
                               left: 0,
                               right: 0,
                               child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 30),
                               child: Center(
-                                  child: Chip(
-                                      backgroundColor: Colors.white,
-                                      label: RichText(
+                                  child: CustomCard(
+                                      color: Colors.white,
+                                      padding: const EdgeInsets.fromLTRB(5, 3, 5, 1),
+                                      child: RichText(
                                         text: const TextSpan(
                                             children: [
                                               TextSpan(text: 'آکادمی آنلاین آموزش انگلیسی ', style: TextStyle(color: Colors.black)),
@@ -337,7 +338,43 @@ class HomePageState extends StateBase<HomePage> {
     );
   }
 
+  List<Widget> genLessonItems(LessonModel lesson){
+    final res = <Widget>[];
+
+    bool hasVocab1 = lesson.vocabSegment?.vocabularyCategories.isNotEmpty ?? false;
+    bool hasVocab2 = lesson.vocabSegment?.idiomCategories.isNotEmpty ?? false;
+    bool hasVocab = hasVocab1 || hasVocab2;
+
+    if(hasVocab){
+      res.add(buildSegmentView(lesson, lesson.vocabSegment));
+    }
+
+    if(lesson.grammarSegment?.categories.isNotEmpty?? false){
+      res.add(buildSegmentView(lesson, lesson.grammarSegment));
+    }
+
+    if(lesson.readingSegment?.categories.isNotEmpty?? false){
+      res.add(buildSegmentView(lesson, lesson.readingSegment));
+    }
+
+    if(lesson.listeningSegment?.listeningList.isNotEmpty?? false){
+      res.add(buildSegmentView(lesson, lesson.listeningSegment));
+    }
+
+   if(lesson.writingSegment?.categories.isNotEmpty?? false){
+      res.add(buildSegmentView(lesson, lesson.writingSegment));
+    }
+
+    if(lesson.speakingSegment?.categories.isNotEmpty?? false){
+      res.add(buildSegmentView(lesson, lesson.speakingSegment));
+    }
+
+    return res;
+  }
+
   Widget buildSecondStateOfLesson(LessonModel lesson){
+    List<Widget> lessonItems = genLessonItems(lesson);
+
     return ColoredBox(
       color: AppDecoration.red,
       child: Padding(
@@ -429,151 +466,84 @@ class HomePageState extends StateBase<HomePage> {
                           ),
                         ),
 
-                        Builder(
-                            builder: (_){
-                              bool hasVocab = lesson.vocabSegmentModel?.idiomCategories.isNotEmpty ?? false;
-                              bool hasGrammar = lesson.vocabSegmentModel?.vocabularyCategories.isNotEmpty ?? false;
+                        const SizedBox(height: 10),
 
-                              bool hasAny = hasVocab || hasGrammar;
-
-                              if(!hasAny){
-                                return const SizedBox();
-                              }
-
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 7),
-                                child: Row(
-                                  children: [
-                                    buildSegment(lesson, hasVocab? lesson.vocabSegmentModel : lesson.grammarModel),
-
-                                    const SizedBox(width: 8),
-
-                                    buildSegment(lesson, !hasVocab ? null : lesson.grammarModel),
-                                  ],
-                                ),
-                              );
-                            }
+                        SizedBox(
+                          width: double.infinity,
+                          child: Wrap(
+                            spacing: 7,
+                            runSpacing: 7,
+                            alignment: WrapAlignment.start,
+                            runAlignment: WrapAlignment.start,
+                            crossAxisAlignment: WrapCrossAlignment.start,
+                            direction: Axis.horizontal,
+                            children: lessonItems,
+                          ),
                         ),
 
-                        const SizedBox(width: 7),
+                        const SizedBox(height: 8),
 
-                        Builder(
-                            builder: (_){
-                              bool hasReading = lesson.readingModel != null && lesson.readingModel!.readingList.isNotEmpty;
-                              bool hasListening = lesson.listeningModel != null && lesson.listeningModel!.listeningList.isNotEmpty;
-
-                              bool hasAny = hasReading || hasListening;
-
-                              if(!hasAny){
-                                return const SizedBox();
-                              }
-
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 7),
-                                child: Row(
-                                  children: [
-                                    buildSegment(lesson, hasReading? lesson.readingModel : lesson.listeningModel),
-
-                                    const SizedBox(width: 8),
-
-                                    buildSegment(lesson, !hasReading ? null : lesson.listeningModel),
-                                  ],
-                                ),
-                              );
-                            }
-                        ),
-
-                        const SizedBox(width: 7),
-
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Visibility(
-                                visible: true,//lesson.hasAutodidact,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 7),
-                                  child: GestureDetector(
-                                    onTap: (){gotoWritingSpeakingPage(lesson);},
-                                    child: CustomCard(
-                                      color: Colors.grey.shade200,
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                        /// quiz button section
+                        Visibility(
+                          visible: lesson.quizSegment?.categories.isNotEmpty?? false,
+                          child: Column(
+                            children: [
+                              GestureDetector(
+                                onTap: (){requestExams(lesson);},
+                                child: CustomCard(
+                                  color: Colors.grey.shade200,
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
                                         children: [
-                                          Row(
+                                          CustomCard(
+                                              color: Colors.white,
+                                              padding: const EdgeInsets.all(5),
+                                              child: Image.asset(AppImages.examIco)
+                                          ),
+
+                                          const SizedBox(width: 10),
+
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              CustomCard(
-                                                  color: Colors.white,
-                                                  padding: const EdgeInsets.all(5),
-                                                  child: Image.asset(AppImages.mic, color: Colors.black)
-                                              ),
-
-                                              const SizedBox(width: 10),
-
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  const Text('نوشتن و صحبت کردن').fsR(-.5),
-                                                  const SizedBox(height: 5),
-                                                  const Text('Writing Speaking').alpha(alpha: 100),
-                                                ],
-                                              ),
+                                              const Text('آزمون'),
+                                              const SizedBox(height: 5),
+                                              const Text('Quiz').alpha(alpha: 100),
                                             ],
                                           ),
+
                                         ],
                                       ),
-                                    ),
+
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8.0),
+                                        child: CustomCard(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                            child: Row(
+                                              children: [
+                                                Image.asset(AppImages.startExercise, height: 18),
+                                                const SizedBox(width: 6),
+
+                                                const Text('شروع').fsR(-1),
+                                              ],
+                                            )
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            ),
 
-                            const SizedBox(width: 8),
-
-                            Expanded(
-                              child: Visibility(
-                                visible: lesson.quizCategory.isNotEmpty,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 7),
-                                  child: GestureDetector(
-                                    onTap: (){requestExams(lesson);},
-                                    child: CustomCard(
-                                      color: Colors.grey.shade200,
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              CustomCard(
-                                                  color: Colors.white,
-                                                  padding: const EdgeInsets.all(5),
-                                                  child: Image.asset(AppImages.examIco)
-                                              ),
-
-                                              const SizedBox(width: 10),
-
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  const Text('آزمون'),
-                                                  const SizedBox(height: 5),
-                                                  const Text('Quiz').alpha(alpha: 100),
-                                                ],
-                                              ),
-
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                              const SizedBox(height: 8),
+                            ],
+                          ),
                         ),
 
+                        /// support button section
                         SizedBox(
                           width: double.infinity,
                           height: 46,
@@ -604,7 +574,7 @@ class HomePageState extends StateBase<HomePage> {
     );
   }
 
-  Widget buildSegment(LessonModel lesson, ISegmentModel? segmentModel){
+  Widget buildSegmentView(LessonModel lesson, ISegmentModel? segmentModel){
 
     if(segmentModel == null){
       return const Flexible(
@@ -614,73 +584,70 @@ class HomePageState extends StateBase<HomePage> {
       );
     }
 
-    if(segmentModel is ListeningSegmentModel && segmentModel.listeningList.isEmpty){
-      return const Flexible(
-        fit: FlexFit.tight,
-        flex: 1,
-        child: SizedBox(),
-      );
-    }
+    return SizedBox(
+      width: 180,
+      child: GestureDetector(
+        onTap: (){
+          onLessonSegmentClick(lesson, segmentModel);
+        },
+        child: Stack(
+          children: [
+            CustomCard(
+              color: Colors.grey.shade200,
+              padding: const EdgeInsets.all(5.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      CustomCard(
+                          color: Colors.white,
+                          padding: const EdgeInsets.all(5),
+                          child: Image.asset(segmentModel.icon)
+                      ),
 
-    return Flexible(
-        fit: FlexFit.tight,
-        flex: 1,
-        child: GestureDetector(
-          onTap: (){
-            onLessonSegmentClick(lesson, segmentModel);
-          },
-          child: Stack(
-            children: [
-              CustomCard(
-                color: Colors.grey.shade200,
-                padding: const EdgeInsets.all(5.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        CustomCard(
-                            color: Colors.white,
-                            padding: const EdgeInsets.all(5),
-                            child: Image.asset(segmentModel.icon)
-                        ),
+                      const SizedBox(width: 10),
 
-                        const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(segmentModel.title),
+                          const SizedBox(height: 5),
+                          Text(segmentModel.engTitle).alpha(alpha: 100),
+                        ],
+                      ),
 
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(segmentModel.title),
-                            const SizedBox(height: 5),
-                            Text(segmentModel.engTitle).alpha(alpha: 100),
-                          ],
-                        ),
+                    ],
+                  ),
 
-                      ],
-                    ),
+                  const SizedBox(height: 8),
 
-                    const SizedBox(height: 8),
-
-                    Directionality(
+                  Visibility(
+                    visible: segmentModel.progress != null,
+                    child: Directionality(
                       textDirection: TextDirection.ltr,
                       child: LinearProgressIndicator(
                         backgroundColor: Colors.greenAccent.withAlpha(40),
                         color: Colors.greenAccent,
-                        value: segmentModel.progress /100,
+                        value: (segmentModel.progress?? 100) /100,
                         minHeight: 3,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
 
-              Positioned(
-                bottom: 10,
-                left: 5,
-                child: Text('${segmentModel.progress} %'),
+            Positioned(
+              bottom: 10,
+              left: 5,
+              child: Visibility(
+                visible: segmentModel.progress != null,
+                  child: Text('${segmentModel.progress} %')
               ),
-            ],
-          ),
-        )
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -694,13 +661,13 @@ class HomePageState extends StateBase<HomePage> {
     }
 
     if(segment is GrammarSegmentModel){
-      if(segment.grammarList.length > 1){
+      if(segment.categories.length > 1){
         dialog = SelectGrammarDialog(lessonModel: lessonModel);
       }
     }
 
     if(segment is ReadingSegmentModel){
-      if(segment.readingList.length > 1){
+      if(segment.categories.length > 1){
         dialog = SelectReadingDialog(lessonModel: lessonModel);
       }
     }
@@ -743,8 +710,8 @@ class HomePageState extends StateBase<HomePage> {
     else if (segment is ReadingSegmentModel){
       page = ReadingPage(injector: ReadingPageInjector(lessonModel));
     }
-    else if (lessonModel.listeningModel != null && lessonModel.listeningModel!.listeningList.isNotEmpty){
-      page = ListeningPage(injector: ListeningPageInjector(lessonModel, lessonModel.listeningModel!.listeningList[0].id));
+    else if (lessonModel.listeningSegment != null && lessonModel.listeningSegment!.listeningList.isNotEmpty){
+      page = ListeningPage(injector: ListeningPageInjector(lessonModel, lessonModel.listeningSegment!.listeningList[0].id));
     }
 
     if(page != null) {

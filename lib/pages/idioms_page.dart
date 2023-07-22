@@ -63,7 +63,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
   void initState(){
     super.initState();
 
-    currentIdiomIdx = widget.injector.lessonModel.vocabSegmentModel?.idiomReviewCount?? 0;
+    currentIdiomIdx = 0;//todo. widget.injector.lessonModel.vocabSegmentModel?.idiomReviewCount?? 0;
 
     if(currentIdiomIdx > 0){
       currentIdiomIdx--;
@@ -119,15 +119,15 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onTryAgain: onRefresh, backButton: BackBtn());
+      return ErrorOccur(onTryAgain: onRefresh, backButton: const BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
-      return WaitToLoad();
+      return const WaitToLoad();
     }
 
     if(assistCtr.hasState(AssistController.state$noData)){
-      return EmptyData(backButton: BackBtn());
+      return const EmptyData(backButton: BackBtn());
     }
 
     Color preColor = Colors.black;
@@ -153,11 +153,11 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                   controller: atrCtr2,
                   child: Column(
                     children: [
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       AppbarLesson(title: widget.injector.lessonModel.title),
 
-                      SizedBox(height: 14),
+                      const SizedBox(height: 14),
 
                       /// 7/20
                       Visibility(
@@ -168,12 +168,12 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                             Row(
                               children: [
                                 Chip(
-                                  label: Text('اصطلاحات').bold().color(Colors.white),//widget.injection.segment.title
-                                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                                  label: const Text('اصطلاحات').bold().color(Colors.white),//widget.injection.segment.title
+                                  padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
                                   visualDensity: VisualDensity.compact,
                                 ),
 
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                               ],
                             ),
 
@@ -181,13 +181,13 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                               children: [
                                 Text('${idiomsList.length}').englishFont().fsR(4),
 
-                                SizedBox(width: 10),
-                                Text('/').englishFont().fsR(5),
+                                const SizedBox(width: 10),
+                                const Text('/').englishFont().fsR(5),
 
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 CustomCard(
                                   color: Colors.grey.shade200,
-                                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                                     child: Text('${currentIdiomIdx+1}').englishFont().bold().fsR(4)
                                 )
                               ],
@@ -196,7 +196,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                         ),
                       ),
 
-                      SizedBox(height: 14),
+                      const SizedBox(height: 14),
 
                       /// progressbar
                       Visibility(
@@ -210,7 +210,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                         ),
                       ),
 
-                      SizedBox(height: 14),
+                      const SizedBox(height: 14),
 
                      Builder(
                          builder: (ctx){
@@ -231,24 +231,24 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                                        mainAxisSize: MainAxisSize.min,
                                        children: [
                                          buildGreetingView(),
-                                         SizedBox(height: 20),
+                                         const SizedBox(height: 20),
 
                                          Row(
                                            children: [
                                              ElevatedButton.icon(
                                                  onPressed: gotoNextPart,
                                                  label: Image.asset(AppImages.arrowRight2),
-                                                 icon: Text('بخش بعدی')
+                                                 icon: const Text('بخش بعدی')
                                              ),
 
-                                             SizedBox(width: 30),
+                                             const SizedBox(width: 30),
                                              OutlinedButton.icon(
                                                  style: OutlinedButton.styleFrom(
-                                                     side: BorderSide(color: AppDecoration.red)
+                                                     side: const BorderSide(color: AppDecoration.red)
                                                  ),
                                                  onPressed: resetVocab,
                                                  label: Image.asset(AppImages.returnArrow),
-                                                 icon: Text('شروع مجدد')
+                                                 icon: const Text('شروع مجدد')
                                              ),
                                            ],
                                          )
@@ -272,8 +272,8 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                                            return Column(
                                              children: [
                                                Image.asset(AppImages.falseCheckIco, width: 100, height: 100,),
-                                               SizedBox(height: 20),
-                                               Text('متاسفانه فایل قابل پخش نیست'),
+                                               const SizedBox(height: 20),
+                                               const Text('متاسفانه فایل قابل پخش نیست'),
                                              ],
                                            );
                                          }
@@ -288,7 +288,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                                    ),
                                  ),
 
-                                 SizedBox(height: 14),
+                                 const SizedBox(height: 14),
                                  DecoratedBox(
                                    decoration: BoxDecoration(
                                        borderRadius: BorderRadius.circular(20),
@@ -315,17 +315,17 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                                                  showTranslate = !showTranslate;
                                                  assistCtr.updateHead();
                                                },
-                                               label: Text('مشاهده ترجمه'),
+                                               label: const Text('مشاهده ترجمه'),
                                              ),
                                              secondChild: Padding(
                                                padding: const EdgeInsets.symmetric(vertical: 8.0),
                                                child: Text(currentIdiom.translation),
                                              ),
                                              crossFadeState: showTranslate? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                                             duration: Duration(milliseconds: 300)
+                                             duration: const Duration(milliseconds: 300)
                                          ),
 
-                                         SizedBox(height: 10),
+                                         const SizedBox(height: 10),
                                        ],
                                      ),
                                    ),
@@ -336,7 +336,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                          }
                      ),
 
-                      SizedBox(height: 14),
+                      const SizedBox(height: 14),
                     ],
                   ),
                 ),
@@ -354,13 +354,13 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
                     quarterTurns: 2,
                     child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
                 ),
-                label: Text('next').englishFont().color(nextColor)
+                label: const Text('next').englishFont().color(nextColor)
             ),
 
             TextButton.icon(
                 style: TextButton.styleFrom(),
                 onPressed: onPreClick,
-                icon: Text('prev').englishFont().color(preColor),
+                icon: const Text('prev').englishFont().color(preColor),
                 label: Image.asset(AppImages.arrowLeftIco, color: preColor)
             ),
           ],
@@ -370,7 +370,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
   }
 
   Widget buildGreetingView(){
-    return GreetingView();
+    return const GreetingView();
   }
 
   void gotoNextPart(){
@@ -406,9 +406,9 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
       currentIdiom = idiomsList[currentIdiomIdx];
       showTranslate = currentIdiom.showTranslation;
 
-      if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentIdiom.id)) {
+      /*if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentIdiom.id)) {
         sendReview(currentIdiom.id);
-      }
+      }todo. */
     }
     else {
       showGreeting = true;
@@ -442,7 +442,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
     }
 
     isVideoInit = false;
-    playerController = VideoPlayerController.network(currentIdiom.video!.fileLocation!);
+    playerController = VideoPlayerController.networkUrl(Uri.parse(currentIdiom.video!.fileLocation!));
 
     await playerController!.initialize().catchError((e){
       isVideoError = true;
@@ -526,9 +526,9 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
         assistCtr.updateHead();
         initVideo();
 
-        if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentIdiom.id)) {
+        /*if(!widget.injector.lessonModel.vocabSegmentModel!.reviewIds.contains(currentIdiom.id)) {
           sendReview(currentIdiom.id);
-        }
+        }*/
       }
     };
 
@@ -541,7 +541,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
     reviewIds.add(id);
 
     if(reviewSendTimer == null || !reviewSendTimer!.isActive){
-      reviewSendTimer = Timer(Duration(seconds: 5), (){
+      reviewSendTimer = Timer(const Duration(seconds: 5), (){
         reviewTaskQue.addObject({...reviewIds});
       });
     }
@@ -552,8 +552,8 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
 
     if(status){
       reviewIds.removeAll(ids);
-      widget.injector.lessonModel.vocabSegmentModel!.reviewIds.addAll(ids);
-      widget.injector.lessonModel.vocabSegmentModel!.reviewCount++;
+      //widget.injector.lessonModel.vocabSegmentModel!.reviewIds.addAll(ids);
+      //widget.injector.lessonModel.vocabSegmentModel!.reviewCount++;
 
       ReviewService.requestUpdateReviews(widget.injector.lessonModel);
     }

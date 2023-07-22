@@ -97,7 +97,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectVocabIdiomsDialog> {
                                           child: LinearProgressIndicator(
                                             backgroundColor: Colors.greenAccent.withAlpha(40),
                                             color: Colors.greenAccent,
-                                            value: widget.injector.segment?.progressOfVocab(),
+                                            value: 0,//todo.widget.injector.segment?.progressOfVocab(),
                                             minHeight: 3,
                                           ),
                                         ),
@@ -140,7 +140,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectVocabIdiomsDialog> {
                                           child: LinearProgressIndicator(
                                             backgroundColor: Colors.greenAccent.withAlpha(40),
                                             color: Colors.greenAccent,
-                                            value: widget.injector.segment?.progressOfIdioms(),
+                                            value: 0, //todo. widget.injector.segment?.progressOfIdioms(),
                                             minHeight: 3,
                                           ),
                                         ),

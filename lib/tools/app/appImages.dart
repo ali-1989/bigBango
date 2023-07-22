@@ -94,6 +94,7 @@ class AppImages {
   static const callUsIco = 'assets/images/call-us.png';
   static const doubleArrow = 'assets/images/doubleArrow.png';
   static const mic = 'assets/images/mic.png';
+  static const micBlack = 'assets/images/micBlack.png';
   static const bigbangoTicket = 'assets/images/bigbangoTicket.png';
   static const transactionIco = 'assets/images/transactionIco.png';
   static const transactionMenuIco = 'assets/images/transactionMenuIco.png';
@@ -104,6 +105,7 @@ class AppImages {
   static const lessonPurchaseIc = 'assets/images/lessonPurchaseIc.png';
   static const supportPurchaseIco = 'assets/images/supportPurchaseIco.png';
   static const chargeWallet = 'assets/images/chargeWallet.png';
+  static const writingIco = 'assets/images/writing.png';
 }
 
 

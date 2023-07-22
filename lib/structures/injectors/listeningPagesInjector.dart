@@ -11,7 +11,7 @@ class ListeningPageInjector implements SegmentInjector {
   @override
   late LessonModel lessonModel;
 
-  ListeningPageInjector(this.lessonModel, this.categoryId) : segment = lessonModel.listeningModel!;
+  ListeningPageInjector(this.lessonModel, this.categoryId) : segment = lessonModel.listeningSegment!;
 
   ListeningPageInjector.from(SegmentInjector parent, this.categoryId){
     lessonModel = parent.lessonModel;

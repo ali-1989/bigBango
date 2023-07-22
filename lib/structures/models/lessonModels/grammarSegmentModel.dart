@@ -3,7 +3,7 @@ import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/tools/app/appImages.dart';
 
 class GrammarSegmentModel extends ISegmentModel {
-  List<GrammarModel> grammarList = [];
+  List<GrammarModel> categories = [];
 
   GrammarSegmentModel(){
     _init();
@@ -15,10 +15,7 @@ class GrammarSegmentModel extends ISegmentModel {
     icon = AppImages.grammarIco;
   }
 
-  GrammarSegmentModel.fromMap(Map map):super.fromMap(map) {
-    print('@@@@@@@@@@@@gram@@@@@@@@@@@@@@@@@@@');
-    print(map);
-    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+  GrammarSegmentModel.fromMap(Map map) :super.fromMap(map) {
     _init();
 
     if(map['title'] is String){
@@ -26,23 +23,22 @@ class GrammarSegmentModel extends ISegmentModel {
     }
 
     if(map['items'] is List){
-      grammarList = map['items'].map<GrammarModel>((e) => GrammarModel.fromMap(e)).toList();
+      categories = map['items'].map<GrammarModel>((e) => GrammarModel.fromMap(e)).toList();
     }
   }
 
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
-    map['items'] = grammarList.map((e) => e.toMap()).toList();
+    map['items'] = categories.map((e) => e.toMap()).toList();
 
     return map;
   }
 
   void matchBy(GrammarSegmentModel others){
-    id = others.id;
     title = others.title;
     progress = others.progress;
-    grammarList.clear();
-    grammarList.addAll(others.grammarList);
+    categories.clear();
+    categories.addAll(others.categories);
   }
 }

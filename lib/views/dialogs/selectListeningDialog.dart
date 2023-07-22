@@ -71,7 +71,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectListeningDialog> {
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
-                          itemCount: widget.lessonModel.listeningModel!.listeningList.length,
+                          itemCount: widget.lessonModel.listeningSegment!.listeningList.length,
                             itemBuilder: buildList
                         ),
                       ),
@@ -89,7 +89,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectListeningDialog> {
   }
 
   Widget buildList(_, int idx){
-    final itm = widget.lessonModel.listeningModel!.listeningList[idx];
+    final itm = widget.lessonModel.listeningSegment!.listeningList[idx];
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
