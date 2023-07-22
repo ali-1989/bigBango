@@ -14,6 +14,8 @@ class FontManager {
   static late final FontManager _instance;
   static bool useFlutterFontSize = true;
   static const double defaultFontSize = 13;
+  static const double maxDeviceFontSize = 14.5;
+  static double deviceFontSize = 13;
 
   static final List<Font> _fontList = [];
   static late Font _platformDefaultFont;
@@ -39,6 +41,25 @@ class FontManager {
 
   ThemeData get rawThemeData => _rawThemeData;
   TextTheme get rawTextTheme => _rawTextTheme;
+
+  List<Font> fontList(){
+    return _fontList;
+  }
+
+  void detectDeviceFontSize(BuildContext context){
+    final theme = Theme.of(context);
+    deviceFontSize = theme.textTheme.bodyMedium?.fontSize?? defaultFontSize;
+  }
+
+  Font? fontByFamily(String family){
+    for (final font in _fontList) {
+      if(font.family == family){
+        return font;
+      }
+    }
+
+    return null;
+  }
 
   String getPlatformFontFamily(){
     BuildContext? context;
@@ -130,7 +151,8 @@ class FontManager {
       return;
     }
 
-    /// family: any-name   fileName: font name in [pubspec.yaml]
+    /// family: family name in [pubspec.yaml]   *** family match is important, case insensitive
+    /// fileName: asset in [pubspec.yaml]       not important
 
     /*final atlanta = Font.bySize()
         ..family = 'Atlanta'
@@ -348,7 +370,8 @@ class Font {
       final appHeight = (isLandscape ? realPixelWidth : realPixelHeight) / pixelRatio;
       final fSize = appHeight / 52;
 
-      return max(10.0, fSize);
+      final minNum =  max(10.0, fSize);
+      return min(14.5, minNum);
     }
   }
 }

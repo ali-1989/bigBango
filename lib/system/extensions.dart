@@ -533,6 +533,33 @@ extension TextExtension on Text {
     );
   }
 
+  Text font(String family, {bool baseStyle = false}) {
+    var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
+    final font = FontManager.instance.fontByFamily(family) ?? FontManager.instance.getPlatformFont();
+
+    ts = ts.copyWith(
+      fontFamily: font.family,
+      height: style?.height ?? font.height,
+    );
+
+    return Text(
+      data!,
+      key: key,
+      style: ts,
+      strutStyle: strutStyle,
+      textAlign: textAlign,
+      locale: locale,
+      maxLines: maxLines,
+      overflow: overflow,
+      semanticsLabel: semanticsLabel,
+      softWrap: softWrap,
+      textDirection: textDirection,
+      textHeightBehavior: textHeightBehavior,
+      textScaleFactor: textScaleFactor,
+      textWidthBasis: textWidthBasis,
+    );
+  }
+
   Text thinFont({bool baseStyle = false}) {
     var ts = style ?? (baseStyle ? AppThemes.instance.currentTheme.baseTextStyle : const TextStyle());
 
@@ -583,7 +610,7 @@ extension TextExtension on Text {
     );
   }
 
-  Text defFont() {
+  Text platformFont() {
     var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
 
     ts = ts.copyWith(
@@ -657,7 +684,7 @@ extension TextExtension on Text {
 
   Text fsR(double size, {double? max /*20*/}) {
     var siz = style?.fontSize?? AppThemes.instance.currentTheme.baseTextStyle.fontSize;
-    siz = (siz?? 13) + size;
+    siz = (siz?? FontManager.deviceFontSize) + size;
 
     if (max != null) {
       siz = MathHelper.minDouble(siz, max);
@@ -951,7 +978,7 @@ extension SelectableTextExtension on SelectableText {
     );
   }
 
-  SelectableText defFont() {
+  SelectableText platformFont() {
     var ts = style ?? AppThemes.instance.currentTheme.baseTextStyle;
 
     ts = ts.copyWith(
@@ -1019,7 +1046,7 @@ extension SelectableTextExtension on SelectableText {
     var siz = style?.fontSize;
     siz ??= AppThemes.instance.currentTheme.baseTextStyle.fontSize;
 
-    siz = (siz?? 13) + size;
+    siz = (siz?? FontManager.deviceFontSize) + size;
 
     if (max != null) {
       siz = MathHelper.minDouble(siz, max);

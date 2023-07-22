@@ -1,6 +1,7 @@
 import 'package:app/tools/routeTools.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 import 'package:iris_tools/api/managers/orientationManager.dart';
 import 'package:iris_tools/modules/irisLocalizations.dart';
@@ -18,6 +19,7 @@ abstract class StateBase<W extends StatefulWidget> extends State<W> {
 	final AssistController assistCtr = AssistController();
 	late double sw;
 	late double sh;
+	late double pw;
 
 	@override
   void didUpdateWidget(W oldWidget) {
@@ -36,6 +38,7 @@ abstract class StateBase<W extends StatefulWidget> extends State<W> {
 
 		sw = AppSizes.instance.appWidth;
 		sh = AppSizes.instance.appHeight;
+		pw = MathHelper.between(1.0, 750, 0.85, 550, sh);
 	}
 
 	@override

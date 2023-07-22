@@ -116,7 +116,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
       filled: true,
       fillColor: Colors.grey.shade100,
       hintStyle: const TextStyle(color: Colors.grey),
-      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       isDense: true,
     );
 
@@ -147,7 +147,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
             child: SizedBox.expand(
               child: Scaffold(
                 body: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     //const SizedBox(height: 30),
 
@@ -160,11 +160,11 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                             const SizedBox(width: 10),
                             Image.asset(AppImages.changeImage, color: AppDecoration.red),
                             const SizedBox(width: 8),
-                            Text('پروفایل و اطلاعات', style: const TextStyle(fontSize: 17)),
+                            const Text('پروفایل و اطلاعات', style: TextStyle(fontSize: 17)),
                           ],
                         ),
 
-                        RotatedBox(
+                        const RotatedBox(
                           quarterTurns: 2,
                             child: BackButton()
                         ),
@@ -184,7 +184,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                             height: 70,
                             width: 70,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                            beforeLoadWidget: SizedBox(
+                            beforeLoadWidget: const SizedBox(
                               height: 70,
                                 width: 70,
                                 child: UnconstrainedBox(
@@ -209,8 +209,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                       child: IntrinsicWidth(
                         child: Column(
                           children: [
-                            Divider(color: Colors.black54),
-                            SizedBox(height: 5),
+                            const Divider(color: Colors.black54),
+                            const SizedBox(height: 5),
 
                             GestureDetector(
                               onTap: changeAvatarClick,
@@ -218,14 +218,14 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Image.asset(AppImages.changeImage, width: 20),
-                                  SizedBox(width: 10),
-                                  Text('تغییر تصویر پروفایل')
+                                  const SizedBox(width: 10),
+                                  const Text('تغییر تصویر پروفایل')
                                 ],
                               ),
                             ),
 
-                            SizedBox(height: 5),
-                            Divider(color: Colors.black54),
+                            const SizedBox(height: 5),
+                            const Divider(color: Colors.black54),
                           ],
                         ),
                       ),
@@ -238,7 +238,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('نام').color(Colors.grey),
+                              const Text('نام').color(Colors.grey),
                               const SizedBox(height: 6),
 
                               TextField(
@@ -254,12 +254,12 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                           ),
                         ),
 
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('نام خانوادگی').color(Colors.grey),
+                              const Text('نام خانوادگی').color(Colors.grey),
                               const SizedBox(height: 6),
 
                               TextField(
@@ -281,7 +281,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('شماره موبایل').color(Colors.grey),
+                        const Text('شماره موبایل').color(Colors.grey),
                         const SizedBox(height: 6),
 
                         TextField(
@@ -296,7 +296,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('ایمیل').color(Colors.grey),
+                        const Text('ایمیل').color(Colors.grey),
                         const SizedBox(height: 6),
 
                         TextField(
@@ -312,7 +312,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                     ),
 
                     const SizedBox(height: 20),
-                    Text('محل سکونت', style: TextStyle(color: Colors.grey)),
+                    const Text('محل سکونت', style: TextStyle(color: Colors.grey)),
                     const SizedBox(height: 6),
 
                     Assist(
@@ -345,17 +345,17 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                             borderRadius: BorderRadius.circular(10),
                                           ),
                                         ),
-                                        hint: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                          child: const SizedBox(
+                                        hint: const Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                          child: SizedBox(
                                             width: 12,
                                             height: 12,
                                             child: CircularProgressIndicator(strokeWidth: 2),
                                           ),
                                         ),
-                                        menuItemStyleData: MenuItemStyleData(
+                                        menuItemStyleData: const MenuItemStyleData(
                                           height: 40,
-                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                          padding: EdgeInsets.symmetric(horizontal: 5),
                                         ),
                                         buttonStyleData: ButtonStyleData(
                                           height: 40,
@@ -407,9 +407,9 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                           padding: EdgeInsets.symmetric(horizontal: 10),
                                           child: Text('شهر', style: TextStyle(color: Colors.grey)),
                                         ),
-                                        menuItemStyleData: MenuItemStyleData(
+                                        menuItemStyleData: const MenuItemStyleData(
                                           height: 40,
-                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                          padding: EdgeInsets.symmetric(horizontal: 5),
                                         ),
                                         buttonStyleData: ButtonStyleData(
                                           height: 40,
@@ -441,7 +441,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('جنسیت', style: TextStyle(color: Colors.grey)),
+                                const Text('جنسیت', style: TextStyle(color: Colors.grey)),
                                 const SizedBox(height: 6),
 
                                 SizedBox(
@@ -473,9 +473,9 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                               thickness: MaterialStateProperty.all<double>(5)
                                           ),
                                         ),
-                                        menuItemStyleData: MenuItemStyleData(
+                                        menuItemStyleData: const MenuItemStyleData(
                                           height: 40,
-                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                          padding: EdgeInsets.symmetric(horizontal: 5),
                                         ),
                                         hint: const Padding(
                                           padding: EdgeInsets.symmetric(horizontal: 10),
@@ -501,7 +501,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('تاریخ تولد', style: const TextStyle(color: Colors.grey)),
+                                const Text('تاریخ تولد', style: TextStyle(color: Colors.grey)),
                                 const SizedBox(height: 6),
 
                                 InkWell(
@@ -535,12 +535,12 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                       children: [
                         Row(
                           children: [
-                            Text('شماره شبا').color(Colors.grey),
-                            SizedBox(width: 5),
+                            const Text('شماره شبا').color(Colors.grey),
+                            const SizedBox(width: 5),
 
                             GestureDetector(
                               onTap: onIbanQuestionMarkClick,
-                              child: CircularIcon(
+                              child: const CircularIcon(
                                 size: 15,
                                 icon: AppIcons.questionMark,
                               ),
@@ -559,22 +559,22 @@ class _ProfilePageState extends StateBase<ProfilePage> {
                                 compareChanges();
                               },
                               decoration: inputDecoration.copyWith(
-                                prefixIcon: Text('  IR ').alpha(),
-                                prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
+                                prefixIcon: const Text('  IR ').alpha(),
+                                prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
                               )
                           ),
                         ),
                       ],
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     ElevatedButton(
                         onPressed: hasChanges? sendChanges : null,
-                        child: Text('ثبت تغییرات')
+                        child: const Text('ثبت تغییرات')
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -595,8 +595,8 @@ class _ProfilePageState extends StateBase<ProfilePage> {
     ibanTextCtr.text = ibanTextCtr.text.replaceAll('IR', '');
 
     if(ibanTextCtr.text.isNotEmpty) {
-      final old = InputFormatter.getTextEditingValue('');
-      final te = InputFormatter.getTextEditingValue(ibanTextCtr.text);
+      final old = InputFormatter.genTextEditingValue('');
+      final te = InputFormatter.genTextEditingValue(ibanTextCtr.text);
       ibanTextCtr.text = ibanFormatter.formatEditUpdate(old, te).text;
     }
 
@@ -638,7 +638,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
 
     await showPersianDatePicker(
       context,
-       margin: EdgeInsets.only(bottom: 50),
+       margin: const EdgeInsets.only(bottom: 50),
       (context, Date date) async {
         birthDate = date.toDateTime();
         birthDateText = DateTools.dateOnlyRelative(birthDate!);
@@ -675,9 +675,9 @@ class _ProfilePageState extends StateBase<ProfilePage> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               children: [
-                Icon(AppIcons.camera, size: 20),
-                SizedBox(width: 12),
-                Text('دوربین').bold(),
+                const Icon(AppIcons.camera, size: 20),
+                const SizedBox(width: 12),
+                const Text('دوربین').bold(),
               ],
             ),
           ),
@@ -693,9 +693,9 @@ class _ProfilePageState extends StateBase<ProfilePage> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               children: [
-                Icon(AppIcons.picture, size:20),
-                SizedBox(width: 12),
-                Text('گالری').bold(),
+                const Icon(AppIcons.picture, size:20),
+                const SizedBox(width: 12),
+                const Text('گالری').bold(),
               ],
             ),
           ),
@@ -710,9 +710,9 @@ class _ProfilePageState extends StateBase<ProfilePage> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Row(
                 children: [
-                  Icon(AppIcons.delete, size: 20),
-                  SizedBox(width: 12),
-                  Text('حذف').bold(),
+                  const Icon(AppIcons.delete, size: 20),
+                  const SizedBox(width: 12),
+                  const Text('حذف').bold(),
                 ],
               ),
             ),
@@ -893,7 +893,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
   void onIbanQuestionMarkClick(){
     OverlayDialog.showMiniInfo(
         context,
-        child: Text('شماره شبا برای برگرداندن اعتبار کیف پول به شما (در صورت نیاز) استفاده می شود'),
+        child: const Text('شماره شبا برای برگرداندن اعتبار کیف پول به شما (در صورت نیاز) استفاده می شود'),
         builder :(_, c){
           return Bounce(child: c);
         }

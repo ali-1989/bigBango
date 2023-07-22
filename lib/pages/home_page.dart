@@ -431,8 +431,8 @@ class HomePageState extends StateBase<HomePage> {
 
                         Builder(
                             builder: (_){
-                              bool hasVocab = lesson.vocabSegmentModel != null && (lesson.vocabSegmentModel!.count > 0 || lesson.vocabSegmentModel!.idiomCount > 0);
-                              bool hasGrammar = lesson.grammarModel != null && lesson.grammarModel!.grammarList.isNotEmpty;
+                              bool hasVocab = lesson.vocabSegmentModel?.idiomCategories.isNotEmpty ?? false;
+                              bool hasGrammar = lesson.vocabSegmentModel?.vocabularyCategories.isNotEmpty ?? false;
 
                               bool hasAny = hasVocab || hasGrammar;
 
@@ -532,7 +532,7 @@ class HomePageState extends StateBase<HomePage> {
 
                             Expanded(
                               child: Visibility(
-                                visible: lesson.hasQuiz,
+                                visible: lesson.quizCategory.isNotEmpty,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 7),
                                   child: GestureDetector(
@@ -688,7 +688,7 @@ class HomePageState extends StateBase<HomePage> {
     Widget? dialog;
 
     if(segment is VocabularySegmentModel){
-      if(segment.hasIdioms){
+      if(segment.idiomCategories.isNotEmpty){
         dialog = SelectVocabIdiomsDialog(injector: VocabIdiomsPageInjector(lessonModel));
       }
     }

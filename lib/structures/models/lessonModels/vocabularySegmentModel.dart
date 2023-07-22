@@ -2,13 +2,8 @@ import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/tools/app/appImages.dart';
 
 class VocabularySegmentModel extends ISegmentModel {
-  bool hasIdioms = false;
-  int count = 0;
-  int reviewCount = 0;
-  int idiomCount = 0;
-  int idiomReviewCount = 0;
-  List<String> reviewIds = [];
-  List<String> idiomsReviewIds = [];
+  List<String> vocabularyCategories = [];
+  List<String> idiomCategories = [];
 
   VocabularySegmentModel(){
     _init();
@@ -21,33 +16,16 @@ class VocabularySegmentModel extends ISegmentModel {
   }
 
   VocabularySegmentModel.fromMap(Map map):super.fromMap(map) {
-    _init();
-    hasIdioms = map['hasIdioms'];
-    count = map['count']?? 1;
-    reviewCount = map['reviewedCount']?? 0;
+    print('@@@@@@@@@@@@@@vocab@@@@@@@@@@@@@@@@@');
+    print(map);
+    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
 
-    if(map['idiom'] is Map){
-      idiomCount = map['idiom']['count']?? 1;
-      idiomReviewCount = map['idiom']['reviewedCount']?? 0;
-
-      if(map['idiom']['reviewIds'] is List) {
-        reviewIds.addAll((map['idiom']['reviewIds'] as List).map((e) => e.toString()));
-      }
+    if(map['vocabularyCategories'] is List) {
+      vocabularyCategories.addAll((map['vocabularyCategories'] as List).map((e) => e.toString()));
     }
 
-    if(map['reviewIds'] is List) {
-      reviewIds.addAll((map['reviewIds'] as List).map((e) => e.toString()));
-    }
-
-    if(count > 0) {
-      final p = map['progress'];
-
-      if(p != null){
-        progress = double.tryParse(p.toString())!;
-      }
-      else {
-        progress = ((reviewCount * 100 / count) + (idiomReviewCount * 100 / idiomCount)) / 2;
-      }
+    if(map['idiomCategories'] is List) {
+      idiomCategories.addAll((map['idiomCategories'] as List).map((e) => e.toString()));
     }
   }
 
@@ -56,11 +34,8 @@ class VocabularySegmentModel extends ISegmentModel {
     final map = super.toMap();
 
     map['title'] = title;
-    map['hasIdioms'] = hasIdioms;
-    map['count'] = count;
-    map['reviewedCount'] = reviewCount;
-    map['reviewIds'] = reviewIds;
-    map['idiom'] = {'count': idiomCount, 'reviewedCount': idiomReviewCount, 'reviewIds': idiomsReviewIds};
+    map['vocabularyCategories'] = vocabularyCategories;
+    map['idiomCategories'] = idiomCategories;
 
     return map;
   }
@@ -69,20 +44,7 @@ class VocabularySegmentModel extends ISegmentModel {
     id = others.id;
     title = others.title;
     progress = others.progress;
-    hasIdioms = others.hasIdioms;
-    count = others.count;
-    reviewCount = others.reviewCount;
-    idiomReviewCount = others.idiomReviewCount;
-    idiomCount = others.idiomCount;
-    reviewIds = others.reviewIds;
-    idiomsReviewIds = others.idiomsReviewIds;
-  }
-
-  double progressOfVocab(){
-    return (reviewCount * 100 / count);
-  }
-
-  double progressOfIdioms(){
-    return idiomReviewCount * 100 / idiomCount;
+    vocabularyCategories = others.vocabularyCategories;
+    idiomCategories = others.idiomCategories;
   }
 }

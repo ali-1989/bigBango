@@ -12,11 +12,7 @@ class LessonModel {
   bool isLock = false;
   int number = 0;
   double improvementPercentage = 0;
-  int quizProgress = 0;
-  bool hasQuiz = false;
-  bool hasAutodidact = false;
-  bool hasWriting = false;
-  bool hasSpeaking = false;
+  List quizCategory = [];
   VocabularySegmentModel? vocabSegmentModel;
   GrammarSegmentModel? grammarModel;
   ReadingSegmentModel? readingModel;
@@ -25,18 +21,18 @@ class LessonModel {
   LessonModel();
 
   LessonModel.fromMap(Map map) {
+    print('-----------------------');
+    print(map);
+    print('-----------------------');
     id = map[Keys.id];
     title = map[Keys.title];
     isLock = map['isLock']?? false;
     number = map['number']?? 0;
-    hasQuiz = map['hasQuiz']?? false;
-    hasSpeaking = map['hasSpeaking']?? false;
-    hasWriting = map['hasWriting']?? false;
 
-    hasAutodidact = hasWriting || hasSpeaking;
-
-    improvementPercentage = MathHelper.clearToDouble(map['progress']);
-    improvementPercentage = MathHelper.fixPrecision(improvementPercentage, 1);
+    {///progress
+      improvementPercentage = MathHelper.clearToDouble(map['progress']);
+      improvementPercentage = MathHelper.fixPrecision(improvementPercentage, 1);
+    }
 
     if(map['vocabulary'] is Map) {
       vocabSegmentModel = VocabularySegmentModel.fromMap(map['vocabulary']);
@@ -54,8 +50,8 @@ class LessonModel {
       listeningModel = ListeningSegmentModel.fromMap(map['listeningCategory']);
     }
 
-    if(map['quiz'] is Map) {
-      quizProgress = map['quiz']['progress'];
+    if(map['quizCategory'] is Map) {
+      quizCategory = map['quizCategory'];
     }
   }
 
@@ -77,7 +73,7 @@ class LessonModel {
 
   void matchBy(LessonModel others){
     id = others.id;
-    quizProgress = others.quizProgress;
+    quizCategory = others.quizCategory;
     number = others.number;
     title = others.title;
     improvementPercentage = others.improvementPercentage;

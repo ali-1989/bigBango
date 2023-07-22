@@ -237,7 +237,7 @@ class AppThemes {
 					fontFamily: baseFamily, color: th.textColor, fontSize: fontSize +2, height: height,
 				),
 				bodyMedium: raw.textTheme.bodyMedium!.copyWith(
-					fontFamily: baseFamily, color: th.textColor, fontSize: fontSize +1, height: height,
+					fontFamily: baseFamily, color: th.textColor, fontSize: fontSize +2, height: height,
 				),
 				bodySmall: raw.textTheme.bodySmall!.copyWith(
 					fontFamily: subFamily, color: th.textColor, fontSize: fontSize, height: height,
@@ -389,7 +389,8 @@ class AppThemes {
 		final elevatedButtonTheme = ElevatedButtonThemeData(
 			style: ButtonStyle(
 				shape: buttonBorder,
-					tapTargetSize: MaterialTapTargetSize.padded,
+				//padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 14, horizontal: 8)),
+				tapTargetSize: MaterialTapTargetSize.padded,
 				//backgroundColor: MaterialStateProperty.all(th.buttonBackColor),
 				foregroundColor: MaterialStateProperty.all(th.buttonTextColor),
 				backgroundColor: MaterialStateProperty.resolveWith<Color>(

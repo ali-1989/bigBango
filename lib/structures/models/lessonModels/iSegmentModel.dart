@@ -1,12 +1,10 @@
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 
-import 'package:app/system/keys.dart';
-
 abstract class ISegmentModel {
-  int? id;
   double progress = 0;
 
   //-------------- local
+  int? id;//todo.
   String title = '';
   String engTitle = '';
   String icon = '';
@@ -14,7 +12,6 @@ abstract class ISegmentModel {
   ISegmentModel();
 
   ISegmentModel.fromMap(Map map) {
-    id = map[Keys.id];
     progress = MathHelper.clearToDouble(map['progress']);
     progress = MathHelper.fixPrecision(progress, 1);
   }
@@ -22,7 +19,6 @@ abstract class ISegmentModel {
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{};
 
-    map[Keys.id] = id;
     map['progress'] = progress;
 
     return map;

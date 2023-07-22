@@ -6,9 +6,9 @@ class Constants {
   static const appName = 'BigBango';
   /// used for (app title)
   static String appTitle = 'Big Bango';
-  static final _major = 1;
-  static final _minor = 0;
-  static final _patch = 3;
+  static const _major = 1;
+  static const _minor = 0;
+  static const _patch = 0;
 
   static String appVersionName = '$_major.$_minor.$_patch';
   static int appVersionCode = _major *10000 + _minor *100 + _patch;

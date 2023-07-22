@@ -16,6 +16,9 @@ class ReadingSegmentModel extends ISegmentModel {
   }
 
   ReadingSegmentModel.fromMap(Map map):super.fromMap(map) {
+    print('@@@@@@@@@@@@read@@@@@@@@@@@@@@@@@@@');
+    print(map);
+    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     _init();
 
     if(map['title'] is String){

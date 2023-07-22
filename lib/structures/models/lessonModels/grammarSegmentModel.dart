@@ -16,6 +16,9 @@ class GrammarSegmentModel extends ISegmentModel {
   }
 
   GrammarSegmentModel.fromMap(Map map):super.fromMap(map) {
+    print('@@@@@@@@@@@@gram@@@@@@@@@@@@@@@@@@@');
+    print(map);
+    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     _init();
 
     if(map['title'] is String){

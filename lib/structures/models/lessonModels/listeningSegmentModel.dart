@@ -16,6 +16,9 @@ class ListeningSegmentModel extends ISegmentModel {
   }
 
   ListeningSegmentModel.fromMap(Map map):super.fromMap(map) {
+    print('@@@@@@@@@@@@lis@@@@@@@@@@@@@@@@@@@');
+    print(map);
+    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     _init();
 
     if(map['items'] is List){

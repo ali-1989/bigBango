@@ -1,6 +1,10 @@
 import 'dart:io';
 
+import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appDecoration.dart';
+import 'package:app/tools/app/appNavigator.dart';
+import 'package:app/views/sheets/appSheetCustomView.dart';
+import 'package:app/views/sheets/appSheetView.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -14,8 +18,7 @@ import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/routeTools.dart';
-import '/system/extensions.dart';
-import '/tools/app/appNavigator.dart';
+
 
 /* flutter:
 >> showModalSheet()
@@ -103,6 +106,7 @@ class AppSheet {
         builder: builder,
         elevation: elevation,
         shape: shape,
+        enableDrag: true,
         constraints: AppSizes.isBigWidth()? BoxConstraints.tightFor(width: AppSizes.webMaxWidthSize) : null,
         isDismissible: isDismissible,
         clipBehavior: shape != null ? Clip.antiAlias : Clip.none,
@@ -141,7 +145,6 @@ class AppSheet {
         onPressed: dismissOnAction ? close : onButton,
         child: Text(buttonText, style: txtStyle)
     );
-    //TextButton.icon(onPressed: fn, label: Text(btnText,), icon: Icon(icon, color: textColor,),);
 
     final content = Text(message, style: txtStyle);
 
@@ -153,11 +156,15 @@ class AppSheet {
 
     var body = _buildBody(
       ctx :context,
-      builder: (ctx) => content,
+      builder: (ctx) {
+        return AppSheetCustomView(
+          description: content,
+          contentColor: theme.contentColor,
+          title: titleView,
+          positiveButton: posBtn,
+        );
+      },
       contentColor: theme.contentColor,
-      posButton: posBtn,
-      title: titleView,
-      buttonBarColor: theme.buttonbarColor,
       padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18.0),
     );
 
@@ -220,12 +227,16 @@ class AppSheet {
 
     final body = _buildBody(
       ctx: context,
-      builder: (ctx) => msg,
+      builder: (ctx) {
+        return AppSheetCustomView(
+          description: msg,
+          contentColor: theme.contentColor,
+          title: title,
+          positiveButton: posBtn,
+          negativeButton: negBtn,
+        );
+      },
       contentColor: theme.contentColor,
-      posButton: posBtn,
-      negButton: negBtn,
-      title: title,
-      buttonBarColor: theme.buttonbarColor,
       padding: const EdgeInsets.fromLTRB(16, 22, 16, 12),
     );
 
@@ -243,11 +254,8 @@ class AppSheet {
       BuildContext context, {
         required Widget Function(BuildContext context) builder,
         required String routeName,
-        Widget? positiveButton,
-        Widget? negativeButton,
         Color? backgroundColor,
         Color? contentColor,
-        Color? buttonBarColor,
         Color? barrierColor,
         bool isDismissible = true,
         /// isScrollControlled: true if need TextField or Big height view
@@ -266,10 +274,6 @@ class AppSheet {
           ctx: sheetCtx,
           builder: builder,
           contentColor: contentColor?? theme.contentColor,
-          posButton: positiveButton,
-          title: title,
-          negButton: negativeButton,
-          buttonBarColor: buttonBarColor ?? contentColor
       );
     }
 
@@ -290,76 +294,10 @@ class AppSheet {
     required BuildContext ctx,
     required Widget Function(BuildContext context) builder,
     required Color contentColor,
-    Widget? title,
-    Widget? posButton,
-    Widget? negButton,
-    Color? buttonBarColor,
     EdgeInsets padding = EdgeInsets.zero,
       }) {
-    final theme = Theme.of(ctx);
-
-    return ColoredBox(
-      color: contentColor,
-      child: Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          //mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: padding,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Visibility(
-                    visible: title != null,
-                    child: DefaultTextStyle(
-                        style: theme.textTheme.titleLarge!.copyWith(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.start,
-                        child: title?? const SizedBox(),
-                    ),
-                  ),
-
-                  if (title != null)
-                    const SizedBox(height: 15),
-
-                  Flexible(
-                    child: DefaultTextStyle(
-                      style: theme.textTheme.titleLarge!.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
-                      child: builder(ctx),
-                    ),
-                  )
-                ],
-              ),
-            ),
-
-            ///------- buttons
-            Visibility(
-              visible: posButton != null || negButton != null,
-              child: ColoredBox(
-                color: buttonBarColor ?? contentColor,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 18),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      posButton ?? const SizedBox(),
-                      negButton ?? const SizedBox(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    
+    return AppSheetView(childBuilder: builder, contentColor: contentColor,);
   }
 
   ///=======================================================================================================
