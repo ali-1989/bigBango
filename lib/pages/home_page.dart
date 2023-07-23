@@ -1,5 +1,10 @@
 import 'package:app/managers/api_manager.dart';
 import 'package:app/pages/autodidact_page.dart';
+import 'package:app/pages/writing_page.dart';
+import 'package:app/structures/models/lessonModels/speakingSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/writingSegmentModel.dart';
+import 'package:app/views/dialogs/selectSpeakingDialog.dart';
+import 'package:app/views/dialogs/selectWritingDialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
@@ -343,9 +348,8 @@ class HomePageState extends StateBase<HomePage> {
 
     bool hasVocab1 = lesson.vocabSegment?.vocabularyCategories.isNotEmpty ?? false;
     bool hasVocab2 = lesson.vocabSegment?.idiomCategories.isNotEmpty ?? false;
-    bool hasVocab = hasVocab1 || hasVocab2;
 
-    if(hasVocab){
+    if( hasVocab1 || hasVocab2){
       res.add(buildSegmentView(lesson, lesson.vocabSegment));
     }
 
@@ -681,6 +685,18 @@ class HomePageState extends StateBase<HomePage> {
       }
     }
 
+    if(segment is WritingSegmentModel){
+      if(segment.categories.length > 1){
+        dialog = SelectWritingDialog(lessonModel: lessonModel);
+      }
+    }
+
+    if(segment is SpeakingSegmentModel){
+      if(segment.categories.length > 1){
+        dialog = SelectSpeakingDialog(lessonModel: lessonModel);
+      }
+    }
+
     if(dialog != null){
       final view = OverlayScreenView(
         content: GestureDetector(
@@ -716,6 +732,13 @@ class HomePageState extends StateBase<HomePage> {
     else if (lessonModel.listeningSegment != null && lessonModel.listeningSegment!.listeningList.isNotEmpty){
       page = ListeningPage(injector: ListeningPageInjector(lessonModel, lessonModel.listeningSegment!.listeningList[0].id));
     }
+    else if (segment is WritingSegmentModel){
+      page = WritingPage(lesson: lessonModel);
+    }
+    else if (segment is SpeakingSegmentModel){
+      page = WritingPage(lesson: lessonModel);
+    }
+
 
     if(page != null) {
       RouteTools.pushPage(context, page);
