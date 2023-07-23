@@ -7,6 +7,7 @@ import 'package:app/structures/models/vocabModels/vocabModel.dart';
 class VocabIdiomsPageInjector implements SegmentInjector {
   VocabModel? vocabModel;
   IdiomModel? idiomModel;
+  String? categoryId;
 
   @override
   covariant late VocabularySegmentModel? segment;

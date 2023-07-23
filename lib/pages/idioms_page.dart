@@ -533,7 +533,7 @@ class _IdiomsPageState extends StateBase<IdiomsPage> {
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/idioms?LessonId=${widget.injector.lessonModel.id}');
+    requester.prepareUrl(pathUrl: '/idioms?CategoryId=${widget.injector.categoryId}');
     requester.request(context);
   }
 

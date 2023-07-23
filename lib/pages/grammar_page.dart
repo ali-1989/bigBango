@@ -239,7 +239,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                         left: 0,
                         right: 0,
                         child: Center(
-                          child: const Chip(
+                          child: Chip(
                             backgroundColor: AppDecoration.red,
                               elevation: 0,
                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -355,7 +355,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       return;
     }
 
-    playerController = VideoPlayerController.network(currentItem!.media!.fileLocation!);
+    playerController = VideoPlayerController.networkUrl(Uri.parse(currentItem!.media!.fileLocation!));
 
     await playerController!.initialize().catchError((e){
       isVideoError = true;
@@ -433,6 +433,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       final List? data = res['data'];
+
       assistCtr.clearStates();
 
       if(data is List){

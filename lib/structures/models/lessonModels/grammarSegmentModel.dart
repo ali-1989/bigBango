@@ -1,9 +1,9 @@
-import 'package:app/structures/models/grammarModel.dart';
+import 'package:app/structures/models/lessonModels/grammarCategoryModel.dart';
 import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/tools/app/appImages.dart';
 
 class GrammarSegmentModel extends ISegmentModel {
-  List<GrammarModel> categories = [];
+  List<GrammarCategoryModel> categories = [];
 
   GrammarSegmentModel(){
     _init();
@@ -18,12 +18,10 @@ class GrammarSegmentModel extends ISegmentModel {
   GrammarSegmentModel.fromMap(Map map) :super.fromMap(map) {
     _init();
 
-    if(map['title'] is String){
-      title = map['title'];
-    }
-
     if(map['items'] is List){
-      categories = map['items'].map<GrammarModel>((e) => GrammarModel.fromMap(e)).toList();
+      for(final i in map['items']){
+        categories.add(GrammarCategoryModel.fromMap(i));
+      }
     }
   }
 

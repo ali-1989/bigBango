@@ -1,33 +1,31 @@
-import 'package:iris_tools/api/helpers/mathHelper.dart';
-
+import 'package:app/structures/models/grammarExerciseModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
 
 class GrammarModel {
   String id = '';
   String title = '';
+  int order = 0;
   MediaModel? media;
-  double reviewProgress = 0;
-  double exerciseProgress = 0;
-  double progress = 0;
+  List<GrammarExerciseModel> exerciseCategories = [];
 
   GrammarModel();
 
   GrammarModel.fromMap(Map map) {
     id = map['id'];
     title = map['title'];
+    order = map['order'];
 
     if(map['video'] is Map) {
       media = MediaModel.fromMap(map['video']);
     }
 
-    progress = MathHelper.clearToDouble(map['progress']);
-    progress = MathHelper.fixPrecision(progress, 1);
-
-    reviewProgress = MathHelper.clearToDouble(map['reviewProgress']);
-    reviewProgress = MathHelper.fixPrecision(reviewProgress, 1);
-
-    exerciseProgress = MathHelper.clearToDouble(map['exerciseProgress']);
-    exerciseProgress = MathHelper.fixPrecision(exerciseProgress, 1);
+    if(map['exerciseCategories'] is List){
+      for(final l in map['exerciseCategories']){
+        exerciseCategories.add(GrammarExerciseModel.fromMap(l));
+      }
+    }
+    //progress = MathHelper.clearToDouble(map['progress']);
+    //progress = MathHelper.fixPrecision(progress, 1);
   }
 
   Map<String, dynamic> toMap() {
@@ -35,10 +33,9 @@ class GrammarModel {
 
     map['id'] = id;
     map['title'] = title;
+    map['order'] = order;
     map['video'] = media?.toMap();
-    map['progress'] = progress;
-    map['reviewProgress'] = reviewProgress;
-    map['exerciseProgress'] = exerciseProgress;
+    map['exerciseCategories'] = exerciseCategories.map((e) => e.toMap()).toList();
 
     return map;
   }

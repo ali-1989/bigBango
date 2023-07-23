@@ -810,7 +810,7 @@ class _VocabPageState extends StateBase<VocabPage> {
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/vocabularies?LessonId=${widget.injector.lessonModel.id}');
+    requester.prepareUrl(pathUrl: '/vocabularies?CategoryId=${widget.injector.categoryId}');
     requester.request(context);
   }
 

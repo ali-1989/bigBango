@@ -575,7 +575,6 @@ class HomePageState extends StateBase<HomePage> {
   }
 
   Widget buildSegmentView(LessonModel lesson, ISegmentModel? segmentModel){
-
     if(segmentModel == null){
       return const Flexible(
         fit: FlexFit.tight,
@@ -584,70 +583,74 @@ class HomePageState extends StateBase<HomePage> {
       );
     }
 
-    return SizedBox(
-      width: 180,
-      child: GestureDetector(
-        onTap: (){
-          onLessonSegmentClick(lesson, segmentModel);
-        },
-        child: Stack(
-          children: [
-            CustomCard(
-              color: Colors.grey.shade200,
-              padding: const EdgeInsets.all(5.0),
-              child: Column(
-                children: [
-                  Row(
+    return LayoutBuilder(
+      builder: (_, siz) {
+        return SizedBox(
+          width: (siz.maxWidth/2)-4,
+          child: GestureDetector(
+            onTap: (){
+              onLessonSegmentClick(lesson, segmentModel);
+            },
+            child: Stack(
+              children: [
+                CustomCard(
+                  color: Colors.grey.shade200,
+                  padding: const EdgeInsets.all(5.0),
+                  child: Column(
                     children: [
-                      CustomCard(
-                          color: Colors.white,
-                          padding: const EdgeInsets.all(5),
-                          child: Image.asset(segmentModel.icon)
-                      ),
-
-                      const SizedBox(width: 10),
-
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: [
-                          Text(segmentModel.title),
-                          const SizedBox(height: 5),
-                          Text(segmentModel.engTitle).alpha(alpha: 100),
+                          CustomCard(
+                              color: Colors.white,
+                              padding: const EdgeInsets.all(5),
+                              child: Image.asset(segmentModel.icon)
+                          ),
+
+                          const SizedBox(width: 10),
+
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(segmentModel.title),
+                              const SizedBox(height: 5),
+                              Text(segmentModel.engTitle).alpha(alpha: 100),
+                            ],
+                          ),
+
                         ],
                       ),
 
+                      const SizedBox(height: 8),
+
+                      Visibility(
+                        visible: segmentModel.progress != null,
+                        child: Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: LinearProgressIndicator(
+                            backgroundColor: Colors.greenAccent.withAlpha(40),
+                            color: Colors.greenAccent,
+                            value: (segmentModel.progress?? 100) /100,
+                            minHeight: 3,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
+                ),
 
-                  const SizedBox(height: 8),
-
-                  Visibility(
+                Positioned(
+                  bottom: 10,
+                  left: 5,
+                  child: Visibility(
                     visible: segmentModel.progress != null,
-                    child: Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: LinearProgressIndicator(
-                        backgroundColor: Colors.greenAccent.withAlpha(40),
-                        color: Colors.greenAccent,
-                        value: (segmentModel.progress?? 100) /100,
-                        minHeight: 3,
-                      ),
-                    ),
+                      child: Text('${segmentModel.progress} %')
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-
-            Positioned(
-              bottom: 10,
-              left: 5,
-              child: Visibility(
-                visible: segmentModel.progress != null,
-                  child: Text('${segmentModel.progress} %')
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      }
     );
   }
 

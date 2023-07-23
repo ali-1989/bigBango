@@ -36,13 +36,13 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectGrammarDialog> {
         return Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(25)),
+              borderRadius: const BorderRadius.all(Radius.circular(25)),
               child: ColoredBox(
                 color: Colors.white,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -50,21 +50,21 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectGrammarDialog> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(AppImages.lessonListIco),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Text(widget.lessonModel.title).bold().fsR(3),
                         ],
                       ),
 
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Chip(
-                          label: Text('گرامر').bold().color(Colors.white),
-                          labelPadding: EdgeInsets.symmetric(horizontal: 10),
+                          label: const Text('گرامر').bold().color(Colors.white),
+                          labelPadding: const EdgeInsets.symmetric(horizontal: 10),
                           visualDensity: VisualDensity.compact
                       ),
 
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Image.asset(AppImages.doutar),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
                       SizedBox(
                         height: 120,
@@ -76,7 +76,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectGrammarDialog> {
                         ),
                       ),
 
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                     ],
                   ),
                 ),
@@ -106,16 +106,16 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectGrammarDialog> {
               width: 92,
               child: Column(
                 children: [
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   CustomCard(
-                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 11),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 11),
                       radius: 14,
                       child: Image.asset(AppImages.speakerIco, width: 25, color: AppDecoration.red,)
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text('« ${itm.title} »'),
 
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -124,12 +124,12 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectGrammarDialog> {
                       child: LinearProgressIndicator(
                         backgroundColor: Colors.greenAccent.withAlpha(40),
                         color: Colors.greenAccent,
-                        value: itm.progress/100,
+                        value: 0/* todo. itm.progress/100*/,
                         minHeight: 3,
                       ),
                     )
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                 ],
               ),
             ),
