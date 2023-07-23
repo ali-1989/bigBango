@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app/managers/api_manager.dart';
+import 'package:app/structures/models/readingExerciseModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/callAction/taskQueueCaller.dart';
@@ -8,7 +9,6 @@ import 'package:iris_tools/api/duration/durationFormatter.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
-import 'package:iris_tools/widgets/maxHeight.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:app/pages/exam_page.dart';
@@ -54,9 +54,9 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
   Requester requester = Requester();
   Requester reviewRequester = Requester();
   AudioPlayer player = AudioPlayer();
-  Duration totalTime = Duration();
-  Duration currentTime = Duration();
-  Duration lastPos = Duration();
+  Duration totalTime = const Duration();
+  Duration currentTime = const Duration();
+  Duration lastPos = const Duration();
   List<ExamModel> examList = [];
   int currentItemIdx = 0;
   int currentSegmentIdx = 0;
@@ -68,9 +68,9 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
   List<ReadingModel> itemList = [];
   ReadingModel? currentItem;
   String id$playerViewId = 'playerViewId';
-  TextStyle normalStyle = TextStyle(height: 1.7, color: Colors.black);
-  TextStyle readStyle = TextStyle(height: 1.7, color: Colors.deepOrange);
-  TextStyle clickableStyle = TextStyle(
+  TextStyle normalStyle = const TextStyle(height: 1.7, color: Colors.black);
+  TextStyle readStyle = const TextStyle(height: 1.7, color: Colors.deepOrange);
+  TextStyle clickableStyle = const TextStyle(
     height: 1.7,
     color: Colors.blue,
     decorationStyle: TextDecorationStyle.solid,
@@ -85,8 +85,8 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
     anim1Ctr = AnimationController(vsync: this, lowerBound: 0, upperBound: 30.0);
     anim2Ctr = AnimationController(vsync: this, lowerBound: 0, upperBound: 30.0);
-    anim1Ctr.duration = Duration(milliseconds: 400);
-    anim2Ctr.duration = Duration(milliseconds: 400);
+    anim1Ctr.duration = const Duration(milliseconds: 400);
+    anim2Ctr.duration = const Duration(milliseconds: 400);
     anim2Ctr.animateTo(30);
 
     assistCtr.addState(AssistController.state$loading);
@@ -130,15 +130,15 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
   Widget buildBody(){
     if(assistCtr.hasState(AssistController.state$error)){
-      return ErrorOccur(onTryAgain: onRefresh, backButton: BackBtn());
+      return ErrorOccur(onTryAgain: onRefresh, backButton: const BackBtn());
     }
 
     if(assistCtr.hasState(AssistController.state$loading)){
-      return WaitToLoad();
+      return const WaitToLoad();
     }
 
     if(itemList.isEmpty){
-      return EmptyData(backButton: BackBtn());
+      return const EmptyData(backButton: BackBtn());
     }
 
     Color preColor = Colors.black;
@@ -158,9 +158,9 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             children: [
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               AppbarLesson(title: widget.injector.segment.title),
-              SizedBox(height: 14),
+              const SizedBox(height: 14),
 
               DecoratedBox(
                   decoration: BoxDecoration(
@@ -168,12 +168,12 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                     borderRadius: BorderRadius.circular(15)
                   ),
                 child: Center(
-                  child: Text('Reading').color(Colors.white),
+                  child: const Text('Reading').color(Colors.white),
                 ),
               ),
 
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Visibility(
                 visible: currentItem?.title != null,
                 child: Row(
@@ -182,13 +182,13 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                     /// title
                     Chip(
                       label: Text('${showTranslate? currentItem?.titleTranslation: currentItem?.title}',
-                          style:TextStyle(color: Colors.black)
+                          style:const TextStyle(color: Colors.black)
                       ),
                       backgroundColor: Colors.grey.shade400,
                       elevation: 0,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                      visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                      labelPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                      visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
                     ),
 
                     /// translate button
@@ -213,14 +213,14 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
                         assistCtr.updateHead();
                       },
-                        child: Icon(AppIcons.translate, color: Colors.red, size: 20)
+                        child: const Icon(AppIcons.translate, color: Colors.red, size: 20)
                     )
                   ],
                 ),
               ),
 
               /// content
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               SizedBox(
                 width: sw,
                 child: DecoratedBox(
@@ -301,7 +301,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               /// buttons
               DecoratedBox(
@@ -328,11 +328,11 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                         CustomCard(
                                             color: Colors.pinkAccent,
                                             radius: 4,
-                                            padding: EdgeInsets.symmetric(horizontal: 14, vertical:4),
+                                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical:4),
                                             child: Column(
                                               children: [
-                                                Text(DurationFormatter.duration(currentTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
-                                                Text(DurationFormatter.duration(totalTime, showSuffix: false), style: TextStyle(fontSize: 10, color: Colors.white)),
+                                                Text(DurationFormatter.duration(currentTime, showSuffix: false), style: const TextStyle(fontSize: 10, color: Colors.white)),
+                                                Text(DurationFormatter.duration(totalTime, showSuffix: false), style: const TextStyle(fontSize: 10, color: Colors.white)),
                                               ],
                                             )
                                         )
@@ -347,11 +347,11 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                   textDirection: TextDirection.ltr,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    SizedBox(width: 14),
+                                    const SizedBox(width: 14),
 
                                     GestureDetector(
                                       onTap: onPreSegmentClick,
-                                      child: CustomCard(
+                                      child: const CustomCard(
                                           color: Colors.white,
                                           radius: 25,
                                           padding: EdgeInsets.all(5),
@@ -362,24 +362,24 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                       ),
                                     ),
 
-                                    SizedBox(width: 10),
+                                    const SizedBox(width: 10),
 
                                     GestureDetector(
                                       onTap: playSound,
                                       child: CustomCard(
                                           color: Colors.white,
                                           radius: 25,
-                                          padding: EdgeInsets.all(5),
+                                          padding: const EdgeInsets.all(5),
                                           child: isPlaying() ?
-                                          Icon(AppIcons.pause, size: 35)
-                                              : Icon(AppIcons.playArrow, size: 35)
+                                          const Icon(AppIcons.pause, size: 35)
+                                              : const Icon(AppIcons.playArrow, size: 35)
                                       ),
                                     ),
 
-                                    SizedBox(width: 10),
+                                    const SizedBox(width: 10),
                                     GestureDetector(
                                       onTap: onNextSegmentClick,
-                                      child: CustomCard(
+                                      child: const CustomCard(
                                           color: Colors.white,
                                           radius: 25,
                                           padding: EdgeInsets.all(5),
@@ -398,10 +398,10 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                   child: CustomCard(
                                       color: Colors.deepOrange,
                                       radius: 4,
-                                      padding: EdgeInsets.all(2),
+                                      padding: const EdgeInsets.all(2),
                                       child: Text(
                                           '${currentSegmentIdx+1}/${currentItem?.segments.length}',
-                                          style: TextStyle(fontSize: 11, color: Colors.white)
+                                          style: const TextStyle(fontSize: 11, color: Colors.white)
                                       )
                                   ),
                                 ),
@@ -415,38 +415,24 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
               ),
 
               /// exam
-              SizedBox(height: 20,),
-              Stack(
+              const SizedBox(height: 20,),
+              const Divider(indent: 20, endIndent: 20, color: Colors.grey),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  MaxHeight(
-                      maxHeight: 150,
-                      child: AspectRatio(
-                          aspectRatio: 2/1,
-                          child: Image.asset(AppImages.examManMen)
-                      )
+                  const SizedBox(height: 8),
+                  const Text('تمرین', style: TextStyle(fontSize: 16)),
+                  const SizedBox(height: 4),
+                  Text('بعد از خواندن متن ، شروع به تمرین کنید و خودتون را محک بزنید',
+                      style: TextStyle(fontSize: 10, color: Colors.grey.shade600)
                   ),
 
-                  Positioned(
-                    bottom: 16,
-                    left: 0,
-                    right: 0,
-                    child: Center(
-                      child: GestureDetector(
-                        onTap: startExercise,
-                        child: Chip(
-                            backgroundColor: AppDecoration.red,
-                            elevation: 0,
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                            visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                            label: Text('شروع تمرین', style: TextStyle(fontSize: 14))
-                        ),
-                      ),
-                    ),
-                  )
+                  const SizedBox(height: 14),
+
+                  ...buildExerciseList()
                 ],
               ),
-              SizedBox(height: 20,),
             ],
           ),
         ),
@@ -463,13 +449,13 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                       quarterTurns: 2,
                       child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
                   ),
-                  label: Text('next').englishFont().color(nextColor)
+                  label: const Text('next').englishFont().color(nextColor)
               ),
 
               TextButton.icon(
                   style: TextButton.styleFrom(),
                   onPressed: onPreClick,
-                  icon: Text('prev').englishFont().color(preColor),
+                  icon: const Text('prev').englishFont().color(preColor),
                   label: Image.asset(AppImages.arrowLeftIco, color: preColor)
               ),
             ],
@@ -477,6 +463,90 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
         ),
       ],
     );
+  }
+
+  List<Widget> buildExerciseList(){
+    final res = <Widget>[];
+
+    for(int i = 0; i < currentItem!.exerciseList.length; i++){
+      final itm = currentItem!.exerciseList[i];
+
+      final w = GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: (){
+          onStartExerciseClick(itm);
+        },
+        child: Card(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const SizedBox(
+                  height: 22,
+                  child: VerticalDivider(color: AppDecoration.red, width: 3, thickness: 3)
+              ),
+
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Row(
+                            children: [
+                              const SizedBox(width: 10),
+
+                              CustomCard(
+                                  color: Colors.grey.shade200,
+                                  radius: 3,
+                                  padding: const EdgeInsets.symmetric(horizontal:10 , vertical: 3),
+                                  child: Text('$i')
+                              ),
+
+                              const SizedBox(width: 10),
+                              Text(itm.title).fsR(-2),
+                            ],
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Row(
+                              children: [
+                                Text('${itm.count * itm.progress ~/100} / ${itm.count}', textDirection: TextDirection.ltr,)
+                                    .alpha().fsR(-2),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: LinearProgressIndicator(
+                          backgroundColor: Colors.greenAccent.withAlpha(40),
+                          color: Colors.greenAccent,
+                          value: itm.progress.toDouble(),
+                          minHeight: 3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+
+      res.add(w);
+    }
+
+    return res;
   }
 
   void playSound() async {
@@ -494,7 +564,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
       }
       else {
         await player.pause();
-        await player.seek(Duration());
+        await player.seek(const Duration());
         await player.play();
       }
     }
@@ -596,7 +666,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
   Future<void> prepareVoice() async {
     voiceIsOk = false;
-    lastPos = Duration();
+    lastPos = const Duration();
 
     if(currentItem?.media?.fileLocation == null){
       return;
@@ -627,12 +697,10 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     requestReading();
   }
 
-  void startExercise() async {
-    if(examList.isEmpty){
-      showLoading();
-      await requestExercise();
-      await hideLoading();
-    }
+  void onStartExerciseClick(ReadingExerciseModel model) async {
+    showLoading();
+    await requestExercise(model);
+    await hideLoading();
 
     if(examList.isNotEmpty){
       gotoExamPage();
@@ -702,7 +770,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     reviewRequester.request();
   }
 
-  Future<void> requestExercise() async {
+  Future<void> requestExercise(ReadingExerciseModel model) async {
     Completer c = Completer();
     examList.clear();
 
@@ -727,7 +795,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/reading/exercises?ReadingId=${currentItem!.id}');
+    requester.prepareUrl(pathUrl: '/reading/exercises?ReadingExerciseCategoryId=${model.id}');
     requester.request(context);
 
     return c.future;

@@ -658,7 +658,7 @@ class HomePageState extends StateBase<HomePage> {
     Widget? dialog;
 
     if(segment is VocabularySegmentModel){
-      if(segment.idiomCategories.isNotEmpty){
+      if(segment.idiomCategories.isNotEmpty || segment.vocabularyCategories.length > 1){
         dialog = SelectVocabIdiomsDialog(injector: VocabIdiomsPageInjector(lessonModel));
       }
     }

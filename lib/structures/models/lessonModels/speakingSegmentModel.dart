@@ -10,7 +10,7 @@ class SpeakingSegmentModel extends ISegmentModel {
   }
 
   void _init(){
-    title = 'صحبت کردن';
+    title = 'گفتن';
     engTitle = 'Speaking';
     icon = AppImages.micBlack;
   }

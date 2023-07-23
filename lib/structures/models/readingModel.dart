@@ -1,8 +1,8 @@
+import 'package:app/structures/models/readingExerciseModel.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/generator.dart';
-import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 import 'package:app/structures/models/mediaModel.dart';
 import 'package:app/structures/models/vocabModels/idiomInReadingModel.dart';
@@ -18,9 +18,8 @@ class ReadingModel {
   List<SegmentOfReadingModel> segments = [];
   List<IdiomInReadingModel> clickableIdioms = [];
   List<VocabInReadingModel> clickableVocabsOrg = [];
-  double reviewProgress = 0;
-  double exerciseProgress = 0;
-  double progress = 0;
+  List<ReadingExerciseModel> exerciseList = [];
+
   ///----------------- local
   List<VocabInReadingModel> clickableVocabsScope = [];
   List<ReadingTextSplitHolder> textSplits = [];
@@ -33,15 +32,6 @@ class ReadingModel {
     title = map['title'];
     titleTranslation = map['translation']?? '';
     order = map['order']?? 0;
-
-    progress = MathHelper.clearToDouble(map['progress']);
-    progress = MathHelper.fixPrecision(progress, 1);
-
-    reviewProgress = MathHelper.clearToDouble(map['reviewProgress']);
-    reviewProgress = MathHelper.fixPrecision(reviewProgress, 1);
-
-    exerciseProgress = MathHelper.clearToDouble(map['exerciseProgress']);
-    exerciseProgress = MathHelper.fixPrecision(exerciseProgress, 1);
 
     if(map['voice'] is Map) {
       media = MediaModel.fromMap(map['voice']);
@@ -70,6 +60,13 @@ class ReadingModel {
       }
     }
 
+    if(map['exerciseCategories'] is List) {
+      for(final itm in map['exerciseCategories']){
+        final s = ReadingExerciseModel.fromMap(itm);
+        exerciseList.add(s);
+      }
+    }
+
     _splits();
   }
 
@@ -83,9 +80,7 @@ class ReadingModel {
     map['segments'] = segments.map((e) => e.toMap()).toList();
     map['vocabularies'] = clickableVocabsOrg.map((e) => e.toMap()).toList();
     map['idioms'] = clickableIdioms.map((e) => e.toMap()).toList();
-    map['progress'] = progress;
-    map['reviewProgress'] = reviewProgress;
-    map['exerciseProgress'] = exerciseProgress;
+    map['exerciseCategories'] = exerciseList.map((e) => e.toMap()).toList();
 
     return map;
   }

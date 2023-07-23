@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:app/managers/api_manager.dart';
+import 'package:app/structures/models/grammarExerciseModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/maxHeight.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:app/pages/exam_page.dart';
@@ -188,7 +189,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
               const SizedBox(height: 30),
 
-              ColoredBox(
+              /*ColoredBox(
                 color: Colors.grey.shade200,
                 child: Row(
                   children: [
@@ -218,42 +219,54 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                     ),
                   ],
                 ),
-              ),
+              ),*/
 
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: onStartExerciseClick,
-                behavior: HitTestBehavior.translucent,
-                child: Stack(
-                  children: [
-                    MaxHeight(
-                      maxHeight: 150,
-                        child: AspectRatio(
-                          aspectRatio: 2/1,
-                            child: Image.asset(AppImages.examManMen)
-                        )
-                    ),
+              /*const SizedBox(height: 20),
+              Stack(
+                children: [
+                  MaxHeight(
+                    maxHeight: 140,
+                      child: AspectRatio(
+                        aspectRatio: 2/1,
+                          child: Image.asset(AppImages.examManMen)
+                      )
+                  ),
 
-                    const Positioned(
-                      bottom: 16,
-                        left: 0,
-                        right: 0,
-                        child: Center(
-                          child: Chip(
-                            backgroundColor: AppDecoration.red,
-                              elevation: 0,
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                              visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                              label: Text('شروع تمرین', style: TextStyle(fontSize: 14))
-                          ),
+                  const Positioned(
+                    bottom: 13,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: Chip(
+                          backgroundColor: AppDecoration.red,
+                            elevation: 0,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            labelPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                            visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                            label: Text(' تمرینها', style: TextStyle(fontSize: 14))
                         ),
-                    )
-                  ],
-                ),
+                      ),
+                  )
+                ],
+              ),*/
+
+              const Divider(indent: 20, endIndent: 20, color: Colors.grey),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 8),
+                  const Text('تمرین', style: TextStyle(fontSize: 16)),
+                  const SizedBox(height: 4),
+                  Text('بعد از تماشای ویدیو ، شروع به تمرین کنید و خودتون را محک بزنید',
+                      style: TextStyle(fontSize: 10, color: Colors.grey.shade600)
+                  ),
+                ],
               ),
 
               const SizedBox(height: 14),
+
+              ...buildExerciseList()
             ],
           ),
         ),
@@ -283,6 +296,90 @@ class _GrammarPageState extends StateBase<GrammarPage> {
         ),
       ],
     );
+  }
+
+  List<Widget> buildExerciseList(){
+    final res = <Widget>[];
+
+    for(int i = 0; i < currentItem!.exerciseList.length; i++){
+      final itm = currentItem!.exerciseList[i];
+
+      final w = GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: (){
+          onStartExerciseClick(itm);
+        },
+        child: Card(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const SizedBox(
+                height: 22,
+                  child: VerticalDivider(color: AppDecoration.red, width: 3, thickness: 3)
+              ),
+
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Row(
+                            children: [
+                              const SizedBox(width: 10),
+
+                              CustomCard(
+                                color: Colors.grey.shade200,
+                                  radius: 3,
+                                  padding: const EdgeInsets.symmetric(horizontal:10 , vertical: 3),
+                                  child: Text('$i')
+                              ),
+
+                              const SizedBox(width: 10),
+                              Text(itm.title).fsR(-2),
+                            ],
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Row(
+                              children: [
+                                Text('${itm.count * itm.progress ~/100} / ${itm.count}', textDirection: TextDirection.ltr,)
+                                    .alpha().fsR(-2),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: LinearProgressIndicator(
+                          backgroundColor: Colors.greenAccent.withAlpha(40),
+                          color: Colors.greenAccent,
+                          value: itm.progress.toDouble(),
+                          minHeight: 3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+
+      res.add(w);
+    }
+
+    return res;
   }
 
   void onNextClick(){
@@ -331,12 +428,10 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     }
   }
 
-  void onStartExerciseClick() async{
-    if(examList.isEmpty){
-      showLoading();
-      await requestExercise();
-      await hideLoading();
-    }
+  void onStartExerciseClick(GrammarExerciseModel model) async {
+    showLoading();
+    await requestExercise(model);
+    await hideLoading();
 
     if(examList.isNotEmpty){
       gotoExamPage();
@@ -387,7 +482,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       isLive: false,
       zoomAndPan: false,
       showControls: true,
-      showControlsOnInitialize: true,
+      showControlsOnInitialize: false,
       showOptions: true,
       playbackSpeeds: [1, 1.5, 2],
       placeholder: const Center(child: CircularProgressIndicator()),
@@ -478,7 +573,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     requester.request(context);
   }
 
-  Future<void> requestExercise() async {
+  Future<void> requestExercise(GrammarExerciseModel model) async {
     Completer c = Completer();
     examList.clear();
 
@@ -503,7 +598,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/grammars/exercises?GrammarId=${currentItem!.id}');
+    requester.prepareUrl(pathUrl: '/grammars/exercises?GrammarExerciseCategoryId=${model.id}');
     requester.request(context);
 
     return c.future;

@@ -15,7 +15,9 @@ class QuizSegmentModel extends ISegmentModel {
     icon = AppImages.abc2Ico;
   }
 
-  QuizSegmentModel.fromMap(Map map):super.fromMap(map) {
+  QuizSegmentModel.fromMap(Map map) :super.fromMap(map) {
+    _init();
+
     if(map['items'] is List) {
       categories.addAll((map['items'] as List).map((e) => QuizCategoryModel.fromMap(e)));
     }

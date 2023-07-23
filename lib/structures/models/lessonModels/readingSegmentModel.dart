@@ -1,9 +1,9 @@
 import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
-import 'package:app/structures/models/readingModel.dart';
+import 'package:app/structures/models/lessonModels/readingCategoryModel.dart';
 import 'package:app/tools/app/appImages.dart';
 
 class ReadingSegmentModel extends ISegmentModel {
-  List<ReadingModel> categories = [];
+  List<ReadingCategoryModel> categories = [];
 
   ReadingSegmentModel(){
     _init();
@@ -18,12 +18,8 @@ class ReadingSegmentModel extends ISegmentModel {
   ReadingSegmentModel.fromMap(Map map):super.fromMap(map) {
     _init();
 
-    if(map['title'] is String){
-      title = map['title'];
-    }
-
     if(map['items'] is List){
-      categories = map['items'].map<ReadingModel>((e) => ReadingModel.fromMap(e)).toList();
+      categories = map['items'].map<ReadingCategoryModel>((e) => ReadingCategoryModel.fromMap(e)).toList();
     }
   }
 

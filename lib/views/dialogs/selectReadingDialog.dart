@@ -94,7 +94,9 @@ class _SelectReadingDialog extends StateBase<SelectReadingDialog> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        RouteTools.pushPage(context, ReadingPage(injector: ReadingPageInjector(widget.lessonModel, index: idx)));
+        final page = ReadingPage(injector: ReadingPageInjector(widget.lessonModel, index: idx));
+
+        RouteTools.pushPage(context, page);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -105,17 +107,18 @@ class _SelectReadingDialog extends StateBase<SelectReadingDialog> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: SizedBox(
-                width: 92,
+                width: 100,
                 child: Column(
                   children: [
                     const SizedBox(height: 10),
                     CustomCard(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 11),
-                        radius: 14,
-                        child: Image.asset(AppImages.speakerIco, width: 25, color: AppDecoration.red,)
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                        radius: 12,
+                        child: Image.asset(AppImages.readingIco, width: 24, height: 24, color: AppDecoration.red,)
                     ),
+
                     const SizedBox(height: 15),
-                    Text('« ${itm.title} »', maxLines: 2,),
+                    Text('« ${itm.title} »', maxLines: 1),
 
                     const SizedBox(height: 8),
                     Padding(
@@ -125,7 +128,7 @@ class _SelectReadingDialog extends StateBase<SelectReadingDialog> {
                           child: LinearProgressIndicator(
                             backgroundColor: Colors.greenAccent.withAlpha(40),
                             color: Colors.greenAccent,
-                            value: 1,//itm.progress/100,
+                            value: itm.progress /100,
                             minHeight: 3,
                           ),
                         )

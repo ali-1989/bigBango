@@ -71,7 +71,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectGrammarDialog> {
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
-                          itemCount: widget.lessonModel.listeningSegment!.listeningList.length,
+                          itemCount: widget.lessonModel.grammarSegment!.categories.length,
                             itemBuilder: buildList
                         ),
                       ),
@@ -94,7 +94,8 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectGrammarDialog> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: (){
-        RouteTools.pushPage(context, GrammarPage(injector: GrammarPageInjector(widget.lessonModel, id: itm.id)));
+        final page = GrammarPage(injector: GrammarPageInjector(widget.lessonModel, id: itm.id));
+        RouteTools.pushPage(context, page);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -103,17 +104,18 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectGrammarDialog> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: SizedBox(
-              width: 92,
+              width: 120,
               child: Column(
                 children: [
                   const SizedBox(height: 10),
                   CustomCard(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 11),
-                      radius: 14,
-                      child: Image.asset(AppImages.speakerIco, width: 25, color: AppDecoration.red,)
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                      radius: 12,
+                      child: Image.asset(AppImages.grammarIco, width: 24, height: 24, color: AppDecoration.red,)
                   ),
+
                   const SizedBox(height: 15),
-                  Text('« ${itm.title} »'),
+                  Text('« ${itm.title} »', maxLines: 1,).fsR(-2),
 
                   const SizedBox(height: 8),
 
@@ -124,7 +126,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectGrammarDialog> {
                       child: LinearProgressIndicator(
                         backgroundColor: Colors.greenAccent.withAlpha(40),
                         color: Colors.greenAccent,
-                        value: 0/* todo. itm.progress/100*/,
+                        value: itm.progress / 100,
                         minHeight: 3,
                       ),
                     )
