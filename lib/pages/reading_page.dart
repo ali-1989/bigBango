@@ -757,7 +757,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     };
 
     reviewRequester.httpRequestEvents.onStatusOk = (req, res) async {
-      ReviewService.requestUpdateReviews(widget.injector.lessonModel);
+      ReviewService.requestUpdateLesson(widget.injector.lessonModel);
     };
 
     final js = <String, dynamic>{};

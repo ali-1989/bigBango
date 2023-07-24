@@ -1,3 +1,6 @@
+import 'package:app/structures/injectors/vocabPagesInjector.dart';
+import 'package:app/structures/models/lessonModels/lessonModel.dart';
+import 'package:app/structures/models/lessonModels/vocabSegmentModel.dart';
 import 'package:app/tools/app/appDecoration.dart';
 import 'package:flutter/material.dart';
 
@@ -8,17 +11,18 @@ import 'package:app/pages/idioms_page.dart';
 import 'package:app/pages/vocab_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appAssistKeys.dart';
-import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:slide_switcher/slide_switcher.dart';
 
 class SelectVocabIdiomsDialog extends StatefulWidget {
-  final VocabIdiomsPageInjector injector;
+  final LessonModel lessonModel;
+  final VocabularySegmentModel segmentModel;
 
   const SelectVocabIdiomsDialog({
-    required this.injector,
+    required this.lessonModel,
+    required this.segmentModel,
     Key? key
   }) : super(key: key);
 
@@ -28,7 +32,7 @@ class SelectVocabIdiomsDialog extends StatefulWidget {
 ///=================================================================================================
 class _SelectVocabIdiomsDialog extends StateBase<SelectVocabIdiomsDialog> {
   List<Widget> items = [];
-  int currentIndex = 0;
+  int currentTabIndex = 0;
 
   @override
   void initState(){
@@ -62,7 +66,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectVocabIdiomsDialog> {
                         children: [
                           Image.asset(AppImages.lessonListIco),
                           const SizedBox(width: 10),
-                          Text(widget.injector.lessonModel.title).bold().fsR(3),
+                          Text(widget.lessonModel.title).bold().fsR(3),
                         ],
                       ),
 
@@ -78,7 +82,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectVocabIdiomsDialog> {
                       SizedBox(
                         height: 110,
                         child: ListView(
-                          key: ValueKey('$currentIndex'),
+                          key: ValueKey('$currentTabIndex'),
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
                           children: items,
@@ -98,15 +102,15 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectVocabIdiomsDialog> {
   }
 
   Widget buildSelectorTab() {
-    if(widget.injector.segment?.idiomCategories.isEmpty?? true){
+    if(widget.segmentModel.idiomCategories.isEmpty){
       return Chip(
-          label: Text(widget.injector.segment!.title).bold().color(Colors.white),
+          label: Text(widget.segmentModel.title).bold().color(Colors.white),
           labelPadding: const EdgeInsets.symmetric(horizontal: 10),
           visualDensity: VisualDensity.compact
       );
     }
 
-    if(widget.injector.segment?.vocabularyCategories.isEmpty?? true){
+    if(widget.segmentModel.vocabularyCategories.isEmpty){
       return Chip(
           label: const Text('اصطلاحات').bold().color(Colors.white),
           labelPadding: const EdgeInsets.symmetric(horizontal: 10),
@@ -118,7 +122,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectVocabIdiomsDialog> {
       width: 200,
       child: SlideSwitcher(
         onSelect: (index) {
-          currentIndex = index;
+          currentTabIndex = index;
           genListItems();
           assistCtr.updateHead();
         },
@@ -138,16 +142,20 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectVocabIdiomsDialog> {
 
   void genListItems(){
     items.clear();
-    List list = currentIndex == 0? widget.injector.segment!.vocabularyCategories : widget.injector.segment!.idiomCategories;
+    List list = currentTabIndex == 0? widget.segmentModel.vocabularyCategories : widget.segmentModel.idiomCategories;
 
     for(final itm in list){
       final w = GestureDetector(
         onTap: (){
-          widget.injector.categoryId = itm.id;
-          Widget page = VocabPage(injector: widget.injector);
+          final injector = VocabIdiomsPageInjector(widget.lessonModel, itm.id);
 
-          if(currentIndex == 1){
-            page = IdiomsPage(injector: widget.injector);
+          Widget page;
+
+          if(currentTabIndex == 1){
+            page = IdiomsPage(injector: injector);
+          }
+          else {
+            page = VocabPage(injector: injector);
           }
 
           RouteTools.pushPage(context, page);
@@ -167,11 +175,11 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectVocabIdiomsDialog> {
                     child: CustomCard(
                         padding: const EdgeInsets.all(6),
                         radius: 12,
-                        child: Image.asset(currentIndex == 0? AppImages.abcIco : AppImages.messageIco)
+                        child: Image.asset(currentTabIndex == 0? AppImages.abcIco : AppImages.messageIco)
                     ),
                   ),
                   const SizedBox(height: 15),
-                  Text('«${itm.title}»', maxLines: 1,),
+                  Text('« ${itm.title} »', maxLines: 1,),
                   /*const SizedBox(height: 10),
                   const Text('اصطلاحات').bold(),*/
 

@@ -5,7 +5,6 @@ import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/widgets/sliders.dart';
 import 'package:flutter/material.dart';
 
-import 'package:animator/animator.dart';
 import 'package:iris_tools/api/duration/durationFormatter.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 

@@ -1,9 +1,9 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:app/structures/models/examModels/writingModel.dart';
+import 'package:app/structures/models/examModels/speakingModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
-import 'package:app/views/components/exam/writingComponent.dart';
+import 'package:app/views/components/exam/speakingComponent.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
@@ -19,24 +19,24 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appNavigator.dart';
 
-class WritingPage extends StatefulWidget {
+class SpeakingPage extends StatefulWidget {
   final LessonModel lesson;
   final String categoryId;
 
-  const WritingPage({
+  const SpeakingPage({
     required this.lesson,
     required this.categoryId,
     Key? key
   }) : super(key: key);
 
   @override
-  State<WritingPage> createState() => _WritingPageState();
+  State<SpeakingPage> createState() => _SpeakingPageState();
 }
 ///======================================================================================================================
-class _WritingPageState extends StateBase<WritingPage> with TickerProviderStateMixin {
+class _SpeakingPageState extends StateBase<SpeakingPage> with TickerProviderStateMixin {
   Requester requester = Requester();
-  List<WritingModel> examList = [];
-  late WritingModel currentItem;
+  List<SpeakingModel> examList = [];
+  late SpeakingModel currentItem;
   int currentIndex = 0;
   late AnimationController animController;
 
@@ -45,7 +45,7 @@ class _WritingPageState extends StateBase<WritingPage> with TickerProviderStateM
     super.initState();
 
     assistCtr.addStateAndUpdateHead(AssistController.state$loading);
-    requestWriting();
+    requestSpeaking();
   }
 
   @override
@@ -108,7 +108,7 @@ class _WritingPageState extends StateBase<WritingPage> with TickerProviderStateM
                 ),
 
                 const SizedBox(width: 7),
-                const Text('نوشتن').bold().fsR(1),
+                const Text('گفتن').bold().fsR(1),
               ],
             ),
 
@@ -160,7 +160,7 @@ class _WritingPageState extends StateBase<WritingPage> with TickerProviderStateM
                   animController = animCtr;
                 },
                 duration: const Duration(milliseconds: 500),
-                child: WritingComponent(writingModel: currentItem, onSendAnswer: onSendAnswerClick)
+                child: SpeakingComponent(speakingModel: currentItem, onSendAnswer: onSendAnswerClick)
             ),
         ),
 
@@ -243,7 +243,7 @@ class _WritingPageState extends StateBase<WritingPage> with TickerProviderStateM
   void onRefresh(){
     assistCtr.clearStates();
     assistCtr.addStateAndUpdateHead(AssistController.state$loading);
-    requestWriting();
+    requestSpeaking();
   }
 
   bool hasNext(){
@@ -280,7 +280,7 @@ class _WritingPageState extends StateBase<WritingPage> with TickerProviderStateM
     assistCtr.updateHead();
   }
 
-  void requestWriting(){
+  void requestSpeaking(){
     final requester = Requester();
 
     requester.httpRequestEvents.onAnyState = (req) async {
@@ -296,10 +296,10 @@ class _WritingPageState extends StateBase<WritingPage> with TickerProviderStateM
       final data = res['data'];
 
       if(data is List){
-        List<WritingModel> itemList = [];
+        List<SpeakingModel> itemList = [];
 
         for (final k in data) {
-          final exam = WritingModel.fromMap(k);
+          final exam = SpeakingModel.fromMap(k);
           itemList.add(exam);
         }
 
@@ -312,7 +312,7 @@ class _WritingPageState extends StateBase<WritingPage> with TickerProviderStateM
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/writing?CategoryId=${widget.categoryId}');
+    requester.prepareUrl(pathUrl: '/speaking?CategoryId=${widget.categoryId}');
     requester.request(context);
   }
 }

@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/enums/appEvents.dart';
+import 'package:app/tools/app/appBroadcast.dart';
 import 'package:iris_db/iris_db.dart';
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -95,7 +97,7 @@ class ReviewService {
     return completer.future;
   }
 
-  static Future<bool> requestUpdateReviews(LessonModel lessonModel) async {
+  static Future<bool> requestUpdateLesson(LessonModel lessonModel) async {
     final reviewRequester = Requester();
     final completer = Completer<bool>();
 
@@ -109,7 +111,8 @@ class ReviewService {
       final lesson = LessonModel.fromMap(data);
       lessonModel.matchBy(lesson);
 
-      AssistController.updateAssistGlobal(HomePage.id$homePageHead);
+      //AssistController.updateAssistGlobal(HomePage.id$homePageHead);
+      AssistController.updateGroupGlobal(AppAssistKeys.updateOnLessonChange);
       completer.complete(true);
     };
 

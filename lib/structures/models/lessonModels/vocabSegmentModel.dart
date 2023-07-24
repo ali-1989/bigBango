@@ -47,7 +47,9 @@ class VocabularySegmentModel extends ISegmentModel {
     vocabularyCategories.clear();
     vocabularyCategories.addAll(others.vocabularyCategories);
 
-    idiomCategories.clear();
-    idiomCategories.addAll(others.idiomCategories);
+    if(hashCode != others.hashCode) {
+      idiomCategories.clear();
+      idiomCategories.addAll(others.idiomCategories);
+    }
   }
 }

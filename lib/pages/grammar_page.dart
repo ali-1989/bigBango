@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:app/managers/api_manager.dart';
+import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/models/grammarExerciseModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
+import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 import 'package:video_player/video_player.dart';
@@ -81,6 +83,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   Widget build(BuildContext context) {
     return Assist(
       controller: assistCtr,
+        groupIds: const [AppAssistKeys.updateOnLessonChange],//for update exercise progress
         builder: (ctx, ctr, data){
           return Scaffold(
             body: SafeArea(
@@ -119,6 +122,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       children: [
         Expanded(
           child: ListView(
+            key: ValueKey(Generator.generateName(5)),
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -321,7 +325,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
                   child: Column(
                     children: [
                       Row(
@@ -336,11 +340,11 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                                 color: Colors.grey.shade200,
                                   radius: 3,
                                   padding: const EdgeInsets.symmetric(horizontal:10 , vertical: 3),
-                                  child: Text('$i')
+                                  child: Text('${i+1}')
                               ),
 
                               const SizedBox(width: 10),
-                              Text(itm.title).fsR(-2),
+                              Text(itm.title).fsR(-2).bold(),
                             ],
                           ),
 
@@ -356,15 +360,18 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                         ],
                       ),
 
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
 
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: LinearProgressIndicator(
-                          backgroundColor: Colors.greenAccent.withAlpha(40),
-                          color: Colors.greenAccent,
-                          value: itm.progress.toDouble(),
-                          minHeight: 3,
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: LinearProgressIndicator(
+                            backgroundColor: Colors.greenAccent.withAlpha(40),
+                            color: Colors.greenAccent,
+                            value: itm.progress.toDouble() / 100,
+                            minHeight: 3,
+                          ),
                         ),
                       ),
                     ],
@@ -512,6 +519,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
     final examPage = ExamPage(injector: examPageInjector);
     await RouteTools.pushPage(context, examPage);
+    ReviewService.requestUpdateLesson(widget.injector.lessonModel);
   }
 
   void onRefresh(){
@@ -609,7 +617,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
     };
 
     reviewRequester.httpRequestEvents.onStatusOk = (req, res) async {
-      ReviewService.requestUpdateReviews(widget.injector.lessonModel);
+      ReviewService.requestUpdateLesson(widget.injector.lessonModel);
     };
 
     final js = <String, dynamic>{};

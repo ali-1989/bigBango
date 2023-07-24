@@ -42,6 +42,7 @@ class _AppSheetCustomViewState extends State<AppSheetCustomView> {
     return ColoredBox(
       color: widget.contentColor,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
 

@@ -1,4 +1,9 @@
-import 'package:app/pages/writing_page.dart';
+import 'package:app/pages/exam_page.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
+import 'package:app/structures/middleWares/requester.dart';
+import 'package:app/structures/models/examModels/examModel.dart';
+import 'package:app/tools/app/appMessages.dart';
+import 'package:app/tools/app/appSheet.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -12,10 +17,10 @@ import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/routeTools.dart';
 
-class SelectWritingDialog extends StatefulWidget {
+class SelectQuizDialog extends StatefulWidget {
   final LessonModel lessonModel;
 
-  const SelectWritingDialog({
+  const SelectQuizDialog({
     required this.lessonModel,
     Key? key
   }) : super(key: key);
@@ -24,7 +29,14 @@ class SelectWritingDialog extends StatefulWidget {
   State createState() => _SelectReadingDialog();
 }
 ///=================================================================================================
-class _SelectReadingDialog extends StateBase<SelectWritingDialog> {
+class _SelectReadingDialog extends StateBase<SelectQuizDialog> {
+  Requester requester = Requester();
+
+  @override
+  void dispose(){
+    requester.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +68,7 @@ class _SelectReadingDialog extends StateBase<SelectWritingDialog> {
 
                       const SizedBox(height: 10),
                       Chip(
-                          label: const Text('نوشتن').bold().color(Colors.white),
+                          label: const Text('آزمون').bold().color(Colors.white),
                           labelPadding: const EdgeInsets.symmetric(horizontal: 10),
                           visualDensity: VisualDensity.compact
                       ),
@@ -70,7 +82,7 @@ class _SelectReadingDialog extends StateBase<SelectWritingDialog> {
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
-                          itemCount: widget.lessonModel.writingSegment!.categories.length,
+                          itemCount: widget.lessonModel.quizSegment!.categories.length,
                             itemBuilder: buildList
                         ),
                       ),
@@ -88,14 +100,12 @@ class _SelectReadingDialog extends StateBase<SelectWritingDialog> {
   }
 
   Widget buildList(_, int idx){
-    final itm = widget.lessonModel.writingSegment!.categories[idx];
+    final itm = widget.lessonModel.quizSegment!.categories[idx];
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        final page = WritingPage(lesson: widget.lessonModel, categoryId: itm.id);
-
-        RouteTools.pushPage(context, page);
+        requestExam(itm.id);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -113,13 +123,13 @@ class _SelectReadingDialog extends StateBase<SelectWritingDialog> {
                     CustomCard(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
                         radius: 12,
-                        child: Image.asset(AppImages.writingIco, width: 24, height: 24, color: AppDecoration.red,)
+                        child: Image.asset(AppImages.micBlack, width: 24, height: 24, color: AppDecoration.red)
                     ),
 
                     const SizedBox(height: 15),
                     Text('« ${itm.title} »', maxLines: 1),
 
-                    /*const SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: Directionality(
@@ -131,7 +141,7 @@ class _SelectReadingDialog extends StateBase<SelectWritingDialog> {
                             minHeight: 3,
                           ),
                         )
-                    ),*/
+                    ),
                     const SizedBox(height: 15),
                   ],
                 ),
@@ -141,5 +151,46 @@ class _SelectReadingDialog extends StateBase<SelectWritingDialog> {
         ),
       ),
     );
+  }
+
+  void requestExam(String categoryId){
+    requester.httpRequestEvents.onAnyState = (req) async {
+      await hideLoading();
+    };
+
+    requester.httpRequestEvents.onFailState = (req, res) async {
+      AppSheet.showSheetNotice(context, AppMessages.errorCommunicatingServer);
+    };
+
+    requester.httpRequestEvents.onStatusOk = (req, res) async {
+      final data = res['data'];
+
+      if(data is List){
+        List<ExamModel> examList = [];
+
+        for (final k in data) {
+          final exam = ExamModel.fromMap(k);
+          examList.add(exam);
+        }
+
+        if(examList.isNotEmpty){
+          final examPageInjector = ExamPageInjector();
+          examPageInjector.prepareExamList(examList);
+          examPageInjector.answerUrl = '/quiz/solving';
+
+          final examPage = ExamPage(injector: examPageInjector);
+
+          RouteTools.pushPage(context, examPage);
+        }
+        else {
+          AppSheet.showSheetNotice(context, 'آزمونی ثبت نشده است');
+        }
+      }
+    };
+
+    showLoading();
+    requester.methodType = MethodType.get;
+    requester.prepareUrl(pathUrl: '/quizzes?CategoryId=$categoryId');
+    requester.request(context);
   }
 }

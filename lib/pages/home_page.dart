@@ -1,8 +1,10 @@
 import 'package:app/managers/api_manager.dart';
-import 'package:app/pages/autodidact_page.dart';
+import 'package:app/pages/idioms_page.dart';
+import 'package:app/pages/speaking_page.dart';
 import 'package:app/pages/writing_page.dart';
 import 'package:app/structures/models/lessonModels/speakingSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/writingSegmentModel.dart';
+import 'package:app/views/dialogs/selectQuizDialog.dart';
 import 'package:app/views/dialogs/selectSpeakingDialog.dart';
 import 'package:app/views/dialogs/selectWritingDialog.dart';
 import 'package:flutter/material.dart';
@@ -493,7 +495,9 @@ class HomePageState extends StateBase<HomePage> {
                           child: Column(
                             children: [
                               GestureDetector(
-                                onTap: (){requestExams(lesson);},
+                                onTap: (){
+                                    onExamClick(lesson);
+                                  },
                                 child: CustomCard(
                                   color: Colors.grey.shade200,
                                   padding: const EdgeInsets.all(5.0),
@@ -662,8 +666,16 @@ class HomePageState extends StateBase<HomePage> {
     Widget? dialog;
 
     if(segment is VocabularySegmentModel){
-      if(segment.idiomCategories.isNotEmpty || segment.vocabularyCategories.length > 1){
-        dialog = SelectVocabIdiomsDialog(injector: VocabIdiomsPageInjector(lessonModel));
+      if(segment.idiomCategories.isNotEmpty && segment.vocabularyCategories.isNotEmpty){
+        dialog = SelectVocabIdiomsDialog(lessonModel :lessonModel, segmentModel: segment);
+      }
+
+      if(segment.vocabularyCategories.length > 1){
+        dialog = SelectVocabIdiomsDialog(lessonModel :lessonModel, segmentModel: segment);
+      }
+
+      if(segment.idiomCategories.length > 1){
+        dialog = SelectVocabIdiomsDialog(lessonModel :lessonModel, segmentModel: segment);
       }
     }
 
@@ -721,7 +733,11 @@ class HomePageState extends StateBase<HomePage> {
     Widget? page;
 
     if(segment is VocabularySegmentModel){
-      page = VocabPage(injector: VocabIdiomsPageInjector(lessonModel));
+     if(segment.vocabularyCategories.isNotEmpty){
+       page = VocabPage(injector: VocabIdiomsPageInjector(lessonModel, segment.vocabularyCategories.first.id));
+     }
+
+     page = IdiomsPage(injector: VocabIdiomsPageInjector(lessonModel, segment.idiomCategories.first.id));
     }
     else if (segment is GrammarSegmentModel){
       page = GrammarPage(injector: GrammarPageInjector(lessonModel));
@@ -729,14 +745,14 @@ class HomePageState extends StateBase<HomePage> {
     else if (segment is ReadingSegmentModel){
       page = ReadingPage(injector: ReadingPageInjector(lessonModel));
     }
-    else if (lessonModel.listeningSegment != null && lessonModel.listeningSegment!.listeningList.isNotEmpty){
+    else if (segment is ListeningSegmentModel && lessonModel.listeningSegment != null && lessonModel.listeningSegment!.listeningList.isNotEmpty){
       page = ListeningPage(injector: ListeningPageInjector(lessonModel, lessonModel.listeningSegment!.listeningList[0].id));
     }
     else if (segment is WritingSegmentModel){
-      page = WritingPage(lesson: lessonModel);
+      page = WritingPage(lesson: lessonModel, categoryId: segment.categories.first.id);
     }
     else if (segment is SpeakingSegmentModel){
-      page = WritingPage(lesson: lessonModel);
+      page = SpeakingPage(lesson: lessonModel, categoryId: segment.categories.first.id);
     }
 
 
@@ -813,7 +829,35 @@ class HomePageState extends StateBase<HomePage> {
     requester.request(context);
   }
 
-  void requestExams(LessonModel lessonModel){
+  void onExamClick(LessonModel lessonModel){
+    if(lessonModel.quizSegment!.categories.isEmpty){
+      return;
+    }
+
+    if(lessonModel.quizSegment!.categories.length < 2){
+      requestExam(lessonModel.quizSegment!.categories.first.id);
+    }
+
+    final view = OverlayScreenView(
+      content: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: (){
+          AppOverlay.hideDialog(context);
+        },
+        child: GestureDetector(
+          onTap: (){},
+          child: SizedBox.expand(
+              child: SelectQuizDialog(lessonModel: lessonModel),
+          ),
+        ),
+      ),
+      backgroundColor: Colors.black26,
+    );
+
+    AppOverlay.showDialogScreen(context, view, canBack: true);
+  }
+
+  void requestExam(String categoryId){
     requester.httpRequestEvents.onAnyState = (req) async {
       await hideLoading();
     };
@@ -850,12 +894,8 @@ class HomePageState extends StateBase<HomePage> {
 
     showLoading();
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/quizzes?LessonId=${lessonModel.id}');
+    requester.prepareUrl(pathUrl: '/quizzes?CategoryId=$categoryId');
     requester.request(context);
-  }
-
-  void gotoWritingSpeakingPage(LessonModel lessonModel){
-    RouteTools.pushPage(context, AutodidactPage(lesson: lessonModel));
   }
 
   void requesterSupport(LessonModel lesson) async {

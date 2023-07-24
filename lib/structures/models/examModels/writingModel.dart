@@ -1,34 +1,24 @@
-import 'package:app/structures/enums/autodidactReplyType.dart';
 import 'package:app/structures/models/examModels/examSuperModel.dart';
-import 'package:app/structures/models/mediaModel.dart';
+import 'package:iris_tools/dateSection/dateHelper.dart';
 
-class AutodidactModel extends ExamSuperModel {
+class WritingModel extends ExamSuperModel {
   late String id;
   String? text;
   String? question;
   String? correctAnswer;
-  MediaModel? correctAnswerVoice;
   LastAnswer? lastAnswer;
-  //----------- local
-  AutodidactReplyType replyType = AutodidactReplyType.unKnow;
 
-  AutodidactModel();
+  WritingModel();
 
-  AutodidactModel.fromMap(Map js){
+  WritingModel.fromMap(Map js){
     id = js['id']?? '';
     question = js['question'];
     text = js['text'];
     correctAnswer = js['correctAnswer'];
 
-    if(js['lastAnswer'] is Map){
+    if(js['lastAnswer'] is Map) {
       lastAnswer = LastAnswer.fromMap(js['lastAnswer']);
     }
-
-    if(js['correctAnswerVoice'] is Map){
-      correctAnswerVoice = MediaModel.fromMap(js['correctAnswerVoice']);
-    }
-    //-------- local
-    replyType = correctAnswerVoice != null ? AutodidactReplyType.voice : AutodidactReplyType.text;
   }
 
   Map<String, dynamic> toMap(){
@@ -38,31 +28,26 @@ class AutodidactModel extends ExamSuperModel {
     js['question'] = question;
     js['text'] = text;
     js['correctAnswer'] = correctAnswer;
-    js['correctAnswerVoice'] = correctAnswerVoice?.toMap();
     js['lastAnswer'] = lastAnswer?.toMap();
-
-    js['replyType'] = replyType.number;
 
     return js;
   }
 }
+
 ///=============================================================================
 class LastAnswer {
   String? userAnswer;
-  MediaModel? userAnswerVoice;
+  DateTime? createdAt;
 
   LastAnswer.fromMap(Map map){
     userAnswer = map['userAnswer'];
-
-    if(map['userAnswerVoice'] is Map) {
-      userAnswerVoice = MediaModel.fromMap(map['userAnswerVoice']);
-    }
+    createdAt = DateHelper.tsToSystemDate(map['createdAt']);
   }
 
   Map<String, dynamic> toMap(){
     final map = <String, dynamic>{};
     map['userAnswer'] = userAnswer;
-    map['userAnswerVoice'] = userAnswerVoice?.toMap();
+    map['createdAt'] = DateHelper.toTimestampNullable(createdAt);
 
     return map;
   }

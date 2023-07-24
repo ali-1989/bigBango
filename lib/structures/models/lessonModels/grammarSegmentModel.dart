@@ -36,7 +36,10 @@ class GrammarSegmentModel extends ISegmentModel {
   void matchBy(GrammarSegmentModel others){
     title = others.title;
     progress = others.progress;
-    categories.clear();
-    categories.addAll(others.categories);
+
+    if(hashCode != others.hashCode) {
+      categories.clear();
+      categories.addAll(others.categories);
+    }
   }
 }

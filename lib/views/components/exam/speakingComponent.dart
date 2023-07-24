@@ -1,5 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:app/structures/models/examModels/speakingModel.dart';
+import 'package:app/views/components/playVoiceView.dart';
+import 'package:app/views/sheets/speakingCorrectAnswerSheet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +12,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart' as rec;
 import 'package:im_animations/im_animations.dart';
 import 'package:iris_tools/api/duration/durationFormatter.dart';
+import 'package:iris_tools/api/helpers/fileHelper.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/localeHelper.dart';
@@ -18,11 +23,13 @@ import 'package:just_audio/just_audio.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:app/services/file_upload_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/autodidactReplyType.dart';
+import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/middleWares/requester.dart';
-import 'package:app/structures/models/examModels/autodidactModel.dart';
+import 'package:app/structures/models/mediaModel.dart';
 import 'package:app/system/extensions.dart';
+import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appDialogIris.dart';
 import 'package:app/tools/app/appDirectories.dart';
@@ -30,65 +37,52 @@ import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/permissionTools.dart';
-import 'package:app/tools/routeTools.dart';
 
-class AutodidactTextComponent extends StatefulWidget {
-  final AutodidactModel model;
+class SpeakingComponent extends StatefulWidget {
+  final SpeakingModel speakingModel;
   final VoidCallback onSendAnswer;
 
-  const AutodidactTextComponent({
-    required this.model,
+  const SpeakingComponent({
+    required this.speakingModel,
     required this.onSendAnswer,
     Key? key
   }) : super(key: key);
 
   @override
-  State<AutodidactTextComponent> createState() => AutodidactTextComponentState();
+  State<SpeakingComponent> createState() => SpeakingComponentState();
 }
 ///=================================================================================================================
-class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
-  late AutodidactModel autodidactModel;
+class SpeakingComponentState extends StateBase<SpeakingComponent> {
+  late SpeakingModel speakingModel;
   Requester requester = Requester();
   FlutterSoundRecorder voiceRecorder = FlutterSoundRecorder();
-  TextEditingController answerCtr = TextEditingController();
   Codec recorderCodec = Codec.aacMP4;
-  bool voiceRecorderIsInit = false;
-  bool isVoiceFileOK = false;
+  bool recorderIsInit = false;
+  bool isVoiceRecorded = false;
   StreamSubscription? _recorderSubscription;
   late String savePath;
-  AudioPlayer answerPlayer = AudioPlayer();
-  Duration recordTotalTime = const Duration();
-  Duration recordPlayCurrentTime = const Duration();
-  Duration recordDuration = const Duration();
-  bool answerVoiceIsPrepare = false;
+  Duration currentRecordDuration = const Duration();
+  PlayVoiceController answerPlayController = PlayVoiceController();
 
   @override
   void initState(){
     super.initState();
 
-    autodidactModel = widget.model;
+    speakingModel = widget.speakingModel;
 
     final p = AppDirectories.getAppFolderInInternalStorage();
     savePath = PathHelper.resolvePath('$p/record.mp4')!;
 
-    answerPlayer.playbackEventStream.listen(eventListener);
-    answerPlayer.positionStream.listen(answerDurationListener);
+    answerPlayController.onPrepareEvent = onPrepareError;
   }
 
   @override
   void dispose(){
     requester.dispose();
-    answerCtr.dispose();
     cancelRecorderSubscriptions();
     voiceRecorder.closeRecorder();
-
-    try {
-      answerPlayer.dispose();
-    }
-    catch (e){/**/}
 
     super.dispose();
   }
@@ -111,13 +105,13 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
             children: [
               Image.asset(AppImages.doubleArrow),
               const SizedBox(width: 4),
-              Text(autodidactModel.question?? ''),
+              Text(speakingModel.question?? ''),
             ],
           ),
           const SizedBox(height: 20),
 
           Directionality(
-            textDirection: LocaleHelper.autoDirection(autodidactModel.text!),
+            textDirection: LocaleHelper.autoDirection(speakingModel.text!),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 15),
               child: ConstrainedBox(
@@ -125,7 +119,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
                     minWidth: double.infinity,
                     minHeight: 50,
                   ),
-                  child: Text(autodidactModel.text!).englishFont().fsR(-1)),
+                  child: Text(speakingModel.text!).englishFont().fsR(-1)),
             ).wrapDotBorder(
                 color: Colors.black12,
                 alpha: 100,
@@ -137,7 +131,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
           const SizedBox(height: 15),
 
           const Align(
-            alignment: Alignment.topRight,
+              alignment: Alignment.topRight,
               child: Row(
                 children: [
                   SizedBox(
@@ -153,7 +147,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
           ),
           const SizedBox(height: 15),
 
-          buildReply(),
+          buildMicReply(),
 
           const SizedBox(height: 20),
           buildCorrectAnswerView(),
@@ -163,101 +157,17 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
     );
   }
 
-  Widget buildReply(){
-    if(autodidactModel.replyType == AutodidactReplyType.text){
-      return buildTextReply();
-    }
-
-    return buildMicReply();
-  }
-
-  Widget buildTextReply(){
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextField(
-          controller: answerCtr,
-          minLines: 4,
-          maxLines: 6,
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-          ),
-        ),
-      ).wrapDotBorder(
-          color: Colors.black,
-          alpha: 100,
-          dashPattern: [4,8]
-      ),
-    );
-  }
-
-  Widget buildCorrectAnswerView(){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: showAnswer,
-            child: const Text('مشاهده پاسخ استاد'),
-          ),
-        ),
-
-        const SizedBox(width: 10),
-
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green
-            ),
-            onPressed: sendAnswer,
-            child: const Text('ارسال پاسخ'),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget buildMicReply(){
-    if(isVoiceFileOK){
+    if(isVoiceRecorded){
       return Directionality(
         textDirection: TextDirection.ltr,
         child: CustomCard(
           padding: const EdgeInsets.all(5),
-          color: Colors.grey.shade300,
+          color: Colors.grey.shade200,
           child: Row(
             children: [
-              GestureDetector(
-                onTap: playPauseAnswerVoice,
-                child: CustomCard(
-                  radius: 50,
-                  padding: const EdgeInsets.all(14),
-                  child: Image.asset(answerPlayer.playing? AppImages.pauseIco : AppImages.playIco, width: 16, height: 16),
-                ),
-              ),
-
               Expanded(
-                child: SliderTheme(
-                  data: SliderThemeData.fromPrimaryColors(
-                    primaryColor: AppThemes.instance.currentTheme.primaryColor,
-                    primaryColorDark: AppThemes.instance.currentTheme.primaryColor,
-                    primaryColorLight: AppThemes.instance.currentTheme.primaryColor,
-                    valueIndicatorTextStyle: const TextStyle(),
-                  ).copyWith(),
-                  child: Slider(
-                    value: percentOfRecordVoice(),
-                    onChanged: (v){
-                      var x = v * 100;
-                      x = x * recordTotalTime.inMilliseconds / 100;
-
-                      answerPlayer.seek(Duration(milliseconds: x.toInt()));
-                    },
-                  ),
-                ),
+                  child: PlayVoiceView(address: savePath, controller: answerPlayController)
               ),
 
               IconButton(
@@ -281,7 +191,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
             child: SizedBox(
                 width: 60,
-                child: Center(child: Text(DurationFormatter.duration(recordDuration, showSuffix: false)).color(Colors.white))
+                child: Center(child: Text(DurationFormatter.duration(currentRecordDuration, showSuffix: false)).color(Colors.white))
             ),
           ),
         ),
@@ -311,6 +221,37 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
     );
   }
 
+  Widget buildCorrectAnswerView(){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: showAnswer,
+            child: const Text('شنیدن پاسخ صحیح'),
+          ),
+        ),
+
+        const SizedBox(width: 10),
+
+        Visibility(
+          visible: isVoiceRecorded,
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green
+              ),
+              onPressed: sendAnswer,
+              child: const Text('ارسال پاسخ'),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Future<void> initRecorder() async {
     if (!kIsWeb) {
       final status = await PermissionTools.requestMicPermission();
@@ -327,7 +268,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
 
     _recorderSubscription = voiceRecorder.onProgress!.listen((e) {
       if( e.duration.inMilliseconds > 100) {
-        recordDuration = e.duration;
+        currentRecordDuration = e.duration;
         assistCtr.updateHead();
       }
 
@@ -348,7 +289,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
       }
     }
 
-    voiceRecorderIsInit = true;
+    recorderIsInit = true;
 
     if(!kIsWeb){
       final sessionConfiguration = AudioSessionConfiguration(
@@ -383,12 +324,12 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
   }
 
   Future<void> startRecord() async {
-    if(!voiceRecorderIsInit){
+    if(!recorderIsInit){
       await initRecorder();
     }
 
     try {
-      isVoiceFileOK = false;
+      isVoiceRecorded = false;
       await voiceRecorder.startRecorder(codec: recorderCodec, toFile: savePath, audioSource: rec.AudioSource.microphone);
     }
     catch (e){
@@ -398,18 +339,20 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
 
   Future<void> stopRecorder() async {
     await voiceRecorder.stopRecorder();
-    isVoiceFileOK = true;
+    isVoiceRecorded = true;
+    assistCtr.updateHead();
 
-    await prepareAnswerVoice();
+    /*await System.wait250();
+    await answerPlayController.prepare();*/
   }
 
  void deleteVoice() {
     Future<bool> delFn(ctx) async {
-      isVoiceFileOK = false;
-      recordDuration = const Duration();
+      isVoiceRecorded = false;
+      currentRecordDuration = const Duration();
 
-      if(answerPlayer.playing){
-        await answerPlayer.stop();
+      if(answerPlayController.isPlay){
+        await answerPlayController.stop();
       }
 
       assistCtr.updateHead();
@@ -431,47 +374,7 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
   }
 
   void showAnswer(){
-    final w = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      child: CustomCard(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: Column(
-            children: [
-              const Text('پاسخ صحیح').bold().fsR(4),
-              const SizedBox(height: 25),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      autodidactModel.correctAnswer?? '',
-                    ).englishFont(),
-                  ),
-                ),
-              ).wrapDotBorder(
-                  color: Colors.black,
-                  alpha: 100,
-                  dashPattern: [4,8]
-              ),
-
-              const SizedBox(height: 15),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                    onPressed: (){
-                      RouteTools.popTopView(context: context);
-                    },
-                    child: const Text('بستن')
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    final w = SpeakingCorrectAnswerSheet(speakingModel: widget.speakingModel);
 
     AppSheet.showSheetCustom(
         context,
@@ -484,88 +387,52 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
     );
   }
 
-  void playPauseAnswerVoice() async {
-    if(!answerVoiceIsPrepare){
+  void onPrepareError(bool? isPrepare, Object? error) async {
+
+    if(isPrepare == null && error == null){
       AppToast.showToast(context, 'در حال آماده سازی صوت');
-      await prepareAnswerVoice();
+      return;
     }
 
-    if(isAnswerPlaying()){
-      await answerPlayer.pause();
-    }
-    else {
-      if(answerPlayer.position.inMilliseconds < recordTotalTime.inMilliseconds) {
-        await answerPlayer.play();
-      }
-      else {
-        await answerPlayer.pause();
-        await answerPlayer.seek(const Duration());
-        await answerPlayer.play();
-      }
-    }
-  }
-
-  double percentOfRecordVoice() {
-    if(recordPlayCurrentTime.inMilliseconds <= 0 || recordTotalTime.inMilliseconds <= 0){
-      return 0;
-    }
-
-    var x = recordPlayCurrentTime.inMilliseconds * 100 / recordTotalTime.inMilliseconds;
-
-    if(x > 100){
-      x = 100;
-    }
-
-    return x/100;
-  }
-
-  bool isAnswerPlaying() {
-    return answerPlayer.playing && answerPlayer.position.inMilliseconds < recordTotalTime.inMilliseconds;
-  }
-
-  void answerDurationListener(Duration pos) async {
-    recordPlayCurrentTime = pos;
-
-    if(recordPlayCurrentTime.inMilliseconds >= recordTotalTime.inMilliseconds){
-      await answerPlayer.stop();
-    }
-
-    assistCtr.updateHead();
-  }
-
-  void eventListener(PlaybackEvent event){
-    assistCtr.updateHead();
-  }
-
-  Future<void> prepareAnswerVoice() async {
-    answerVoiceIsPrepare = false;
-
-    return answerPlayer.setFilePath(savePath).then((dur) {
-      answerVoiceIsPrepare = true;
-
-      if(dur != null){
-        recordTotalTime = dur;
-      }
-
-    }).onError((error, stackTrace) {
-      if(error is PlayerException){
-        if(error.toString().contains('Source error')){
-          AppToast.showToast(context, 'آماده سازی صوت انجام نشد');
-          return;
-        }
-      }
-    });
-  }
-
-  void sendAnswer() async {
-    if(autodidactModel.replyType == AutodidactReplyType.text){
-      if(answerCtr.text.trim().isEmpty){
-        AppSheet.showSheetOk(context, 'لطفا پاسخ خود را بنویسید');
+    if(error is PlayerException){
+      if(error.toString().contains('Source error')){
+        AppToast.showToast(context, 'آماده سازی صوت انجام نشد');
         return;
       }
     }
+    else {
+      assistCtr.updateHead();
+    }
+  }
 
-    await FocusHelper.hideKeyboardByUnFocusRootWait();
+  void sendAnswer() async {
+    String? audioId;
+
+    if(!isVoiceRecorded){
+      AppSheet.showSheetOk(context, 'لطفا پاسخ خود را ضبط کنید');
+      return;
+    }
+
+    showLoading();
+    var newFile = '${File(savePath).parent.path}/record.mp3';
+    FileHelper.renameSync(savePath, newFile);
+    final twoResponse = await FileUploadService.uploadFiles([File(newFile)], FileUploadType.autodidact);
+
+    if(twoResponse.hasResult2()){
+      await hideLoading();
+      AppSheet.showSheet$OperationFailedTryAgain(context);
+      return;
+    }
+    else {
+      final data = twoResponse.result1![Keys.data];
+
+      if(data is List) {
+        final media = MediaModel.fromMap(data[0]['file']);
+        audioId = media.id;
+      }
+    }
+
+    FocusHelper.hideKeyboardByUnFocusRoot();
 
     requester.httpRequestEvents.onAnyState = (req) async {
       await hideLoading();
@@ -594,22 +461,104 @@ class AutodidactTextComponentState extends StateBase<AutodidactTextComponent> {
     };
 
     final js = <String, dynamic>{};
-    js['autodidactId'] = autodidactModel.id;
-
-    if(autodidactModel.replyType == AutodidactReplyType.text){
-      js['text'] = answerCtr.text.trim();
-    }
-    else {
-      js['voiceId'] = '';
-    }
+    js['speakingId'] = speakingModel.id;
+    js['userAnswerVoiceId'] = audioId;
 
     requester.methodType = MethodType.post;
-    requester.prepareUrl(pathUrl: '/autodidact/solving');
+    requester.prepareUrl(pathUrl: '/speaking/solving');
     requester.bodyJson = js;
 
-    showLoading();
     requester.request(context);
   }
 }
 
+/*
 
+Directionality(
+            textDirection: TextDirection.ltr,
+            child: CustomCard(
+              padding: const EdgeInsets.all(5),
+              color: Colors.grey.shade200,
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: playPauseQuestionVoice,
+                    child: CustomCard(
+                      radius: 50,
+                      padding: const EdgeInsets.all(14),
+                      child: Image.asset(questionPlayer.playing? AppImages.pauseIco : AppImages.playIco, width: 16, height: 16),
+                    ),
+                  ),
+
+                  Expanded(
+                    child: SliderTheme(
+                      data: SliderThemeData.fromPrimaryColors(
+                          primaryColor: AppThemes.instance.currentTheme.primaryColor,
+                          primaryColorDark: AppThemes.instance.currentTheme.primaryColor,
+                          primaryColorLight: AppThemes.instance.currentTheme.primaryColor,
+                          valueIndicatorTextStyle: const TextStyle(),
+                      ).copyWith(),
+                      child: Slider(
+                        value: percentOfPlayer(),
+                        onChanged: (v){
+                          var x = v * 100;
+                          x = x * questionTotalTime.inMilliseconds / 100;
+
+                          questionPlayer.seek(Duration(milliseconds: x.toInt()));
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+   --------------------------------------------
+
+void playPauseQuestionVoice() async {
+    if(!questionVoiceIsPrepare){
+      AppToast.showToast(context, 'در حال آماده سازی صوت');
+      await prepareQuestionVoice();
+    }
+
+    if(isAnswerPlaying()){
+      answerPlayer.pause();
+    }
+
+    if(isQuestionPlaying()){
+      await questionPlayer.pause();
+    }
+    else {
+      if(questionPlayer.position.inMilliseconds < questionTotalTime.inMilliseconds) {
+        await questionPlayer.play();
+      }
+      else {
+        await questionPlayer.pause();
+        await questionPlayer.seek(const Duration());
+        await questionPlayer.play();
+      }
+    }
+  }
+
+
+
+ Future<void> prepareQuestionVoice() async {
+    questionVoiceIsPrepare = false;
+
+    return questionPlayer.setUrl('autodidactModel.voice!.fileLocation!').then((dur) {//todo
+      questionVoiceIsPrepare = true;
+
+      if(dur != null){
+        questionTotalTime = dur;
+      }
+
+    }).onError((error, stackTrace) {
+      if(error is PlayerException){
+        if(error.toString().contains('Source error')){
+          AppToast.showToast(context, 'آماده سازی صوت انجام نشد');
+          return;
+        }
+      }
+    });
+  }
+ */

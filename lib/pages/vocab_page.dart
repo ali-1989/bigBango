@@ -859,7 +859,7 @@ class _VocabPageState extends StateBase<VocabPage> {
       //todo.widget.injector.lessonModel.vocabSegmentModel!.reviewIds.addAll(ids);
       //widget.injector.lessonModel.vocabSegmentModel!.reviewCount++;
 
-      ReviewService.requestUpdateReviews(widget.injector.lessonModel);
+      ReviewService.requestUpdateLesson(widget.injector.lessonModel);
     }
 
     reviewTaskQue.callNext(null);

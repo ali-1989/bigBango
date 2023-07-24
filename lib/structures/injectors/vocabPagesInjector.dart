@@ -7,7 +7,7 @@ import 'package:app/structures/models/vocabModels/vocabModel.dart';
 class VocabIdiomsPageInjector implements SegmentInjector {
   VocabModel? vocabModel;
   IdiomModel? idiomModel;
-  String? categoryId;
+  String categoryId;
 
   @override
   covariant late VocabularySegmentModel? segment;
@@ -15,10 +15,11 @@ class VocabIdiomsPageInjector implements SegmentInjector {
   @override
   late LessonModel lessonModel;
 
-  VocabIdiomsPageInjector(this.lessonModel) : segment = lessonModel.vocabSegment;
+  VocabIdiomsPageInjector(this.lessonModel, this.categoryId) : segment = lessonModel.vocabSegment;
 
-  VocabIdiomsPageInjector.from(SegmentInjector parent){
+  VocabIdiomsPageInjector.from(SegmentInjector parent) : categoryId = ''{
     lessonModel = parent.lessonModel;
     segment = parent.segment as VocabularySegmentModel;
+    categoryId = segment!.vocabularyCategories.first.id;
   }
 }

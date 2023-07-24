@@ -1,4 +1,4 @@
-import 'package:app/pages/writing_page.dart';
+import 'package:app/pages/speaking_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -93,7 +93,7 @@ class _SelectReadingDialog extends StateBase<SelectSpeakingDialog> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        final page = WritingPage(lesson: widget.lessonModel, index: idx);
+        final page = SpeakingPage(lesson: widget.lessonModel, categoryId: itm.id);
 
         RouteTools.pushPage(context, page);
       },
