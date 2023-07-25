@@ -45,6 +45,7 @@ class _AppSheetCustomViewState extends State<AppSheetCustomView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          const SizedBox(height: 5),
 
           Visibility(
             visible: widget.title != null,

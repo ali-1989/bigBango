@@ -55,7 +55,7 @@ dependencies:
   im_animations: ^0.1.2                          # ColorSonar
   animate_do: ^3.0.2
   animator: ^3.3.0
-  pinput: ^2.2.31
+  pinput: ^2.3.0
   dropdown_button2: 2.1.0
   persian_modal_date_picker: ^0.0.3              # add: useRootNavigator: true, to source code
   extended_sliver: ^2.1.3
