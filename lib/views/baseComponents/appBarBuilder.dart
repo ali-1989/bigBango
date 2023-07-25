@@ -78,7 +78,7 @@ class AppBarCustom extends StatefulWidget implements PreferredSizeWidget {
     return Size.fromHeight((kToolbarHeight + 40) * AppSizes.instance.powerHeight);
   }
 }
-///=====================================================================================================================
+///---------------------------------------------------------------------------------------------------------------
 class AppBarCustomState extends StateBase<AppBarCustom> {
 
   @override
