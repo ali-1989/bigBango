@@ -1,9 +1,9 @@
-import 'package:app/pages/writing_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
+import 'package:app/pages/writing_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';

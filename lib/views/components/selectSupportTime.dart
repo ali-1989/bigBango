@@ -1,5 +1,3 @@
-import 'package:app/managers/api_manager.dart';
-import 'package:app/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/focusHelper.dart';
@@ -8,6 +6,8 @@ import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/dateSection/ADateStructure.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
+import 'package:app/managers/api_manager.dart';
+import 'package:app/managers/settings_manager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/hoursOfSupportModel.dart';

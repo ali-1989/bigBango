@@ -1,4 +1,3 @@
-import 'package:app/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -6,6 +5,7 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:iris_tools/widgets/keepAliveWrap.dart';
 import 'package:switch_tab/switch_tab.dart';
 
+import 'package:app/managers/settings_manager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/models/supportModels/supportPlanModel.dart';
 import 'package:app/system/extensions.dart';

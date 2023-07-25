@@ -1,4 +1,3 @@
-
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 class GrammarCategoryModel {

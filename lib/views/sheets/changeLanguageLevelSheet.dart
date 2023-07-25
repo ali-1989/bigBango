@@ -1,16 +1,16 @@
-import 'package:app/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
+import 'package:app/managers/settings_manager.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:app/structures/models/userModel.dart';
-import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';

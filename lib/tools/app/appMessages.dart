@@ -233,6 +233,14 @@ class AppMessages {
   static String get operationCanceled {
     return 'عملیات لغو شد';
   }
+  
+  static String get sorryYouDoNotHaveAccess {
+    return 'متاسفانه شما اجازه ی دسترسی ندارید';
+  }
+
+  static String get thereAreNoResults {
+    return 'نتیجه ای یافت نشد';
+  }
   //---------------------------------------------------------
   static String get loginDescription {
     return 'ورود به حساب کاربری';

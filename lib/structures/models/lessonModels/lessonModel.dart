@@ -1,12 +1,12 @@
-import 'package:app/structures/models/lessonModels/speakingSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/writingSegmentModel.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 import 'package:app/structures/models/lessonModels/grammarSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/listeningSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/quizSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/speakingSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/vocabSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/writingSegmentModel.dart';
 import 'package:app/system/keys.dart';
 
 class LessonModel {

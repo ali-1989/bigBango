@@ -1,4 +1,3 @@
-import 'package:app/managers/settings_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +10,7 @@ import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/attribute.dart';
 
+import 'package:app/managers/settings_manager.dart';
 import 'package:app/pages/otp_page.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';

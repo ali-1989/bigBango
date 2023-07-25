@@ -1,10 +1,5 @@
 import 'dart:io';
 
-import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appNavigator.dart';
-import 'package:app/views/sheets/appSheetCustomView.dart';
-import 'package:app/views/sheets/appSheetView.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,12 +8,16 @@ import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/api/helpers/focusHelper.dart';
 import 'package:material_dialogs/widgets/dialogs/dialog_widget.dart';
 
+import 'package:app/system/extensions.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appMessages.dart';
+import 'package:app/tools/app/appNavigator.dart';
 import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/routeTools.dart';
-
+import 'package:app/views/sheets/appSheetCustomView.dart';
+import 'package:app/views/sheets/appSheetView.dart';
 
 /* flutter:
 >> showModalSheet()
@@ -428,13 +427,13 @@ class AppSheet {
     return showSheetOneAction<T>(context, AppMessages.accountIsBlock);
   }
 
-  /*static Future<T?> showSheet$YouDoNotHaveAccess<T>(BuildContext context) {
+  static Future<T?> showSheet$YouDoNotHaveAccess<T>(BuildContext context) {
     return showSheetOneAction<T>(context, AppMessages.sorryYouDoNotHaveAccess);
   }
 
   static Future<T?> showSheet$ThereAreNoResults<T>(BuildContext context) {
     return showSheetOneAction<T>(context, AppMessages.thereAreNoResults);
-  }*/
+  }
   ///======== third party package ===============================================================================
   static void showSheetDialog(
       BuildContext context, {

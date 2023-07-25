@@ -1,7 +1,6 @@
-import 'package:app/structures/structure/messageStateManager.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_notifier/iris_notifier.dart';
 
+import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -11,6 +10,7 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/enums/notificationType.dart';
 import 'package:app/structures/models/messageModel.dart';
+import 'package:app/structures/structure/messageStateManager.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appBadge.dart';
 import 'package:app/tools/app/appBroadcast.dart';

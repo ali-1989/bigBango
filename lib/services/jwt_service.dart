@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:app/managers/api_manager.dart';
-import 'package:app/managers/settings_manager.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-import 'package:app/structures/models/userModel.dart';
+import 'package:app/managers/api_manager.dart';
+import 'package:app/managers/settings_manager.dart';
 import 'package:app/services/session_service.dart';
+import 'package:app/structures/models/userModel.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/app/appToast.dart';

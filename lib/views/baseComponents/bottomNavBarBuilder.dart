@@ -1,7 +1,7 @@
-import 'package:app/tools/app/appDecoration.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/tools/app/appBadge.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 
 class BottomNavBar extends StatefulWidget {

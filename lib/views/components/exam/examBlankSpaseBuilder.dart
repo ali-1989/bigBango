@@ -1,4 +1,3 @@
-import 'package:app/tools/app/appDecoration.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +7,7 @@ import 'package:app/structures/abstract/examStateMethods.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/views/widgets/animationPositionScale.dart';
 

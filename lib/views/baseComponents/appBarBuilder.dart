@@ -1,16 +1,17 @@
-import 'package:app/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
 
+import 'package:app/managers/settings_manager.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appEvents.dart';
-import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appSheet.dart';
+import 'package:app/tools/app/appSizes.dart';
 import 'package:app/views/baseComponents/layoutComponent.dart';
 import 'package:app/views/sheets/changeLanguageLevelSheet.dart';
 
@@ -58,7 +59,6 @@ import 'package:app/views/sheets/changeLanguageLevelSheet.dart';
     return const Size.fromHeight(kToolbarHeight);
   }
 
-
   bool isWeb(){
     return kIsWeb;
   }
@@ -75,7 +75,7 @@ class AppBarCustom extends StatefulWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    return const Size.fromHeight(kToolbarHeight + 40);
+    return Size.fromHeight((kToolbarHeight + 40) * AppSizes.instance.powerHeight);
   }
 }
 ///=====================================================================================================================
@@ -98,7 +98,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 14/*22*/, 15, 0),
+                  padding: EdgeInsets.fromLTRB(0, 14 *pw/*22*/, 15, 0),
                   child: GestureDetector(
                     onTap: () async {
                       LayoutComponentState.toggleDrawer();
@@ -116,7 +116,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                 GestureDetector(
                   onTap: onLevelClick,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 8, 0, 0),
+                    padding: EdgeInsets.fromLTRB(10, 8*pw, 0, 0),
                     child: Row(
                       children: [
                         const Icon(AppIcons.arrowDropDown),
@@ -155,8 +155,8 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                           radius: 20,
                           backgroundColor: Colors.transparent,
                           child: IrisImageView(
-                            height: 40,
-                            width: 40,
+                            height: 40*pw,
+                            width: 40*pw,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                             beforeLoadWidget: const CircularProgressIndicator(),
                             bytes: user.avatarModel?.bytes,
@@ -177,7 +177,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                     },
                   ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 20*pw),
                 //SizedBox(height: 8),
                 //Text('علی باقری'),
               ],
@@ -197,7 +197,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
             child: const ChangeLanguageLevelSheet(),
           );
         },
-        routeName: 'random',
+        routeName: 'ChangeLanguageLevelSheet',
       contentColor: Colors.white,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(

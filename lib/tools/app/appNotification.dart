@@ -7,8 +7,8 @@ import 'package:app/constants.dart';
 import 'package:app/structures/models/statusBarNotificationModel.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appDb.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/routeTools.dart';
 
 // icon generator:

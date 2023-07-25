@@ -1,7 +1,9 @@
-import 'package:app/tools/app/appImages.dart';
 import 'package:flutter/material.dart';
+
 import 'package:iris_tools/widgets/customCard.dart';
 import 'package:just_audio/just_audio.dart';
+
+import 'package:app/tools/app/appImages.dart';
 
 typedef OnPlayState = void Function(bool isPlaying);
 typedef OnDurationChange = void Function(Duration duration);

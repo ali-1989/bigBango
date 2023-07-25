@@ -1,23 +1,23 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+
+import 'package:dio/dio.dart';
+import 'package:iris_notifier/iris_notifier.dart';
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
+import 'package:iris_tools/api/system.dart';
+
 import 'package:app/constants.dart';
 import 'package:app/managers/api_manager.dart';
 import 'package:app/managers/version_manager.dart';
+import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:app/structures/models/globalSettingsModel.dart';
+import 'package:app/structures/models/settingsModel.dart';
 import 'package:app/structures/models/versionModel.dart';
+import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appHttpDio.dart';
 import 'package:app/tools/routeTools.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-
-import 'package:iris_notifier/iris_notifier.dart';
-
-import 'package:app/structures/enums/appEvents.dart';
-import 'package:app/structures/models/settingsModel.dart';
-import 'package:app/tools/app/appDb.dart';
-import 'package:iris_tools/api/helpers/jsonHelper.dart';
-import 'package:iris_tools/api/system.dart';
 import '/system/keys.dart';
 
 class SettingsManager {

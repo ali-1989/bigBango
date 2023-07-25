@@ -1,8 +1,5 @@
 import 'dart:async';
 
-import 'package:app/managers/api_manager.dart';
-import 'package:app/structures/enums/appAssistKeys.dart';
-import 'package:app/structures/models/grammarExerciseModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
@@ -11,13 +8,16 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 import 'package:video_player/video_player.dart';
 
+import 'package:app/managers/api_manager.dart';
 import 'package:app/pages/exam_page.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
+import 'package:app/structures/models/grammarExerciseModel.dart';
 import 'package:app/structures/models/grammarModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appDecoration.dart';
@@ -511,6 +511,8 @@ class _GrammarPageState extends StateBase<GrammarPage> {
   }
 
   void gotoExamPage() async {
+    playerController?.pause();
+
     final examPageInjector = ExamPageInjector();
     examPageInjector.prepareExamList(examList);
     examPageInjector.answerUrl = '/grammars/exercises/solving';
@@ -519,7 +521,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
     final examPage = ExamPage(injector: examPageInjector);
     await RouteTools.pushPage(context, examPage);
-    ReviewService.requestUpdateLesson(widget.injector.lessonModel);
+    requestGrammars();
   }
 
   void onRefresh(){
@@ -540,6 +542,8 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       assistCtr.clearStates();
 
       if(data is List){
+        itemList.clear();
+
         for(final m in data){
           final g = GrammarModel.fromMap(m);
           itemList.add(g);
@@ -594,6 +598,8 @@ class _GrammarPageState extends StateBase<GrammarPage> {
 
       try{
         if(data is List){
+          examList.clear();
+
           for(final m in data){
             final g = ExamModel.fromMap(m);
             examList.add(g);

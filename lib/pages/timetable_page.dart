@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:app/managers/api_manager.dart';
-import 'package:app/tools/app/appIcons.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_notifier/iris_notifier.dart';
@@ -13,6 +11,8 @@ import 'package:iris_tools/api/helpers/textHelper.dart';
 import 'package:iris_tools/dateSection/ADateStructure.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
+import 'package:app/managers/api_manager.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appEvents.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
@@ -23,8 +23,8 @@ import 'package:app/structures/models/supportModels/dayWeekModel.dart';
 import 'package:app/structures/models/supportModels/supportPlanModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appDecoration.dart';
+import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appSheet.dart';
 import 'package:app/tools/app/appSnack.dart';

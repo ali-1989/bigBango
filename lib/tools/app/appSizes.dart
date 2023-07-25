@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:iris_tools/api/helpers/mathHelper.dart';
+
 /// realWidth: 1080.0, realHeight: 2274.0, pixelRatio: 2.625, Padding(left: 0, top: 83, right: 0, bottom: 0)
 /// realWidth: 720, realHeight: 1280.0, pixelRatio: 2.0, Padding(left: 0, top: 48, right: 0, bottom: 0)
 
@@ -92,6 +94,8 @@ class AppSizes {
   }
 
   double get appWidthRelateWeb => webMaxWidthSize;
+
+  double get powerHeight => MathHelper.between(1.0, 750, 0.86, 570, appHeight);
   ///●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●
   static FlutterView? getWindow(){
     return PlatformDispatcher.instance.implicitView;

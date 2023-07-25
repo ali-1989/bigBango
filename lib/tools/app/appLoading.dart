@@ -149,7 +149,7 @@ class AppLoading {
     return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
         child: const DecoratedBox(
-            decoration:  BoxDecoration(
+            decoration: BoxDecoration(
               gradient: RadialGradient(
                 colors: [
                   Colors.transparent,

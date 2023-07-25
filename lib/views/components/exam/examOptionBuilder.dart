@@ -1,20 +1,20 @@
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/views/widgets/sliders.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormatter.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
+import 'package:iris_tools/widgets/customCard.dart';
+import 'package:just_audio/just_audio.dart';
 
 import 'package:app/structures/abstract/examStateMethods.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:iris_tools/widgets/customCard.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:app/tools/app/appDecoration.dart';
+import 'package:app/tools/app/appIcons.dart';
+import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/appToast.dart';
+import 'package:app/views/widgets/sliders.dart';
 
 class ExamOptionBuilder extends StatefulWidget {
   static const questionTitle = 'با توجه به سوال گزینه ی مناسب را انتخاب کنید';
@@ -326,7 +326,7 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
             const falseColor = AppDecoration.red;
             //final borderColor = isSelected? (exam.showAnswer? (isCorrect? trueColor: falseColor) : Colors.black): Colors.black;
             final borderColor = exam.showAnswer? (isSelected? (isCorrect? trueColor: falseColor): (isCorrect? trueColor:Colors.black)) : Colors.black;
-            final checkboxColor = exam.showAnswer? (isSelected? (isCorrect? trueColor: falseColor): (isCorrect? trueColor:Colors.black)) : Colors.black;
+            //final checkboxColor = exam.showAnswer? (isSelected? (isCorrect? trueColor: falseColor): (isCorrect? trueColor:Colors.black)) : Colors.black;
 
             TextStyle selectStl = const TextStyle(color: Colors.black, fontWeight: FontWeight.w700);
             TextStyle unSelectStl = const TextStyle(color: Colors.black87);

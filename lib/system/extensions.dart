@@ -1,5 +1,3 @@
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appLocale.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/focusHelper.dart';
@@ -7,6 +5,8 @@ import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/widgets/border/dottedBorder.dart';
 
 import 'package:app/managers/font_manager.dart';
+import 'package:app/tools/app/appDecoration.dart';
+import 'package:app/tools/app/appLocale.dart';
 import 'package:app/tools/app/appThemes.dart';
 
 ///==========================================================================================================

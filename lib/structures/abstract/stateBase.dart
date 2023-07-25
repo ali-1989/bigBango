@@ -1,7 +1,5 @@
-import 'package:app/tools/routeTools.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 import 'package:iris_tools/api/managers/orientationManager.dart';
 import 'package:iris_tools/modules/irisLocalizations.dart';
@@ -10,6 +8,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:app/tools/app/appLoading.dart';
 import 'package:app/tools/app/appLocale.dart';
 import 'package:app/tools/app/appSizes.dart';
+import 'package:app/tools/routeTools.dart';
 import '/managers/settings_manager.dart';
 
 /// with SingleTickerProviderStateMixin
@@ -38,7 +37,7 @@ abstract class StateBase<W extends StatefulWidget> extends State<W> {
 
 		sw = AppSizes.instance.appWidth;
 		sh = AppSizes.instance.appHeight;
-		pw = MathHelper.between(1.0, 750, 0.85, 550, sh);
+		pw = AppSizes.instance.powerHeight;
 	}
 
 	@override

@@ -1,12 +1,3 @@
-import 'package:app/managers/api_manager.dart';
-import 'package:app/pages/idioms_page.dart';
-import 'package:app/pages/speaking_page.dart';
-import 'package:app/pages/writing_page.dart';
-import 'package:app/structures/models/lessonModels/speakingSegmentModel.dart';
-import 'package:app/structures/models/lessonModels/writingSegmentModel.dart';
-import 'package:app/views/dialogs/selectQuizDialog.dart';
-import 'package:app/views/dialogs/selectSpeakingDialog.dart';
-import 'package:app/views/dialogs/selectWritingDialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
@@ -16,16 +7,21 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 import 'package:iris_tools/widgets/irisSearchBar.dart';
 
+import 'package:app/managers/api_manager.dart';
 import 'package:app/pages/exam_page.dart';
 import 'package:app/pages/grammar_page.dart';
+import 'package:app/pages/idioms_page.dart';
 import 'package:app/pages/listening_page.dart';
 import 'package:app/pages/reading_page.dart';
+import 'package:app/pages/speaking_page.dart';
 import 'package:app/pages/timetable_page.dart';
 import 'package:app/pages/vocab_page.dart';
+import 'package:app/pages/writing_page.dart';
+import 'package:app/services/session_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
+import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
@@ -37,9 +33,10 @@ import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/lessonModels/listeningSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/readingSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/speakingSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/vocabSegmentModel.dart';
+import 'package:app/structures/models/lessonModels/writingSegmentModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/services/session_service.dart';
 import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
@@ -50,8 +47,11 @@ import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/dialogs/selectGrammarDialog.dart';
 import 'package:app/views/dialogs/selectListeningDialog.dart';
+import 'package:app/views/dialogs/selectQuizDialog.dart';
 import 'package:app/views/dialogs/selectReadingDialog.dart';
+import 'package:app/views/dialogs/selectSpeakingDialog.dart';
 import 'package:app/views/dialogs/selectVocabIdiomsDialog.dart';
+import 'package:app/views/dialogs/selectWritingDialog.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 
@@ -106,25 +106,25 @@ class HomePageState extends StateBase<HomePage> {
 
         return Column(
           children: [
-            const SizedBox(height: 60),
+            SizedBox(height: 60 * pw),
 
             Expanded(
                 child: CustomScrollView(
                   slivers: [
                     ExtendedSliverAppbar(
-                      toolbarHeight: 70,
+                      toolbarHeight: 70*pw,
                       toolBarColor: Colors.transparent,
                       isOpacityFadeWithTitle: true,
                       isOpacityFadeWithToolbar: false,
                       actions: const SizedBox(),
                       leading: const SizedBox(),
                       background: SizedBox(
-                        height: 210,
+                        height: 210 * pw,
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
                             Positioned(
-                              bottom: 30,
+                              bottom: 30*pw,
                               left: 0,
                               right: 0,
                               child: Image.asset(AppImages.homeBackground,
@@ -133,19 +133,19 @@ class HomePageState extends StateBase<HomePage> {
                             ),
 
                             Positioned(
-                              top: 20,
-                              left: 0,
-                              right: 0,
+                              top: 14 * pw,
+                              left: 25 *pw,
+                              right: 25 *pw,
                               child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 30),
-                              child: Image.asset(AppImages.homeBackIcons,
+                              padding: EdgeInsets.symmetric(horizontal: 30 * pw),
+                              child: Image.asset(AppImages.homeBackIcons, height: 90 *pw,
                                 fit: BoxFit.contain,
                               ),
                             ),
                             ),
 
                             Positioned(
-                              bottom: 60,
+                              bottom: 68 * pw,
                               left: 0,
                               right: 0,
                               child: Padding(
@@ -168,11 +168,11 @@ class HomePageState extends StateBase<HomePage> {
                             ),
 
                             Positioned(
-                              bottom: 5,
+                              bottom: 5 *pw,
                               left: 0,
                               right: 0,
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                padding: EdgeInsets.symmetric(horizontal: 20 *pw),
                                 child: IrisSearchBar(
                                   hint: 'جستجو در دروس',
                                   onChangeEvent: onSearch,
