@@ -202,7 +202,7 @@ packages:
     source: hosted
     version: "1.17.2"
   community_material_icon:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: community_material_icon
       sha256: bb389689f6278158d7b9d9b0c9433e603933283104fea226594590f61503fd08
@@ -258,7 +258,7 @@ packages:
     source: hosted
     version: "1.0.0"
   cupertino_icons:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cupertino_icons
       sha256: e35129dc44c9118cee2a5603506d823bab99c68393879edb440e0090d07586be

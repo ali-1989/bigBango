@@ -29,8 +29,8 @@ dependencies:
     sdk: flutter
 
   #device_preview: ^1.1.0
-  cupertino_icons: ^1.0.5
-  #community_material_icon: ^5.9.55      # https://materialdesignicons.com/
+  #cupertino_icons: ^1.0.5
+  community_material_icon: ^5.9.55      # https://materialdesignicons.com/  https://www.fluttericon.com/
   device_info_plus: ^9.0.2
   platform_device_id: ^1.0.1
   permission_handler: ^10.4.3            # NoWeb
