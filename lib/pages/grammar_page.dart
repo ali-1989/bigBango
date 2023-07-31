@@ -369,7 +369,7 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                           child: LinearProgressIndicator(
                             backgroundColor: Colors.greenAccent.withAlpha(40),
                             color: Colors.greenAccent,
-                            value: itm.progress.toDouble() / 100,
+                            value: itm.progress / 100,
                             minHeight: 3,
                           ),
                         ),

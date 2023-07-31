@@ -35,7 +35,7 @@ class _IncreaseAmountSheetState extends StateBase<IncreaseAmountSheet> {
     }
 
     style = ElevatedButton.styleFrom(
-      visualDensity: VisualDensity(vertical: -2, horizontal: -4),
+      visualDensity: const VisualDensity(vertical: -2, horizontal: -4),
     );
   }
 
@@ -47,12 +47,12 @@ class _IncreaseAmountSheetState extends StateBase<IncreaseAmountSheet> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 18),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 18),
         child: Column(
           children: [
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(AppIcons.addCircle, color: Colors.red, size: 17),
@@ -61,45 +61,14 @@ class _IncreaseAmountSheetState extends StateBase<IncreaseAmountSheet> {
               ],
             ),
 
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
 
             Image.asset(AppImages.examManMen, height: 150,),
 
-            SizedBox(height: 10),
-            Text('میزان اعتبار خود را وارد کنید'),
+            const SizedBox(height: 10),
+            const Text('میزان اعتبار خود را وارد کنید'),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  style: style,
-                    onPressed: clickOnOne,
-                    child: Text('1,000')
-                ),
-
-                SizedBox(width: 4,),
-                ElevatedButton(
-                    style: style,
-                    onPressed: clickOnFive,
-                    child: Text('5,000')
-                ),
-
-                SizedBox(width: 4,),
-                ElevatedButton(
-                    style: style,
-                    onPressed: clickOnTwenty,
-                    child: Text('20,000')
-                ),
-
-                SizedBox(width: 4,),
-                ElevatedButton(
-                    style: style,
-                    onPressed: clickOnFifty,
-                    child: Text('50,000')
-                ),
-              ],
-            ),
-
+            const SizedBox(height: 15),
             Directionality(
               textDirection: TextDirection.ltr,
               child: SizedBox(
@@ -107,7 +76,7 @@ class _IncreaseAmountSheetState extends StateBase<IncreaseAmountSheet> {
                 child: ToggleSwitch(
                   initialLabelIndex: selectedKeyIndex,
                   totalSwitches: 2,
-                  customIcons: [Icon(Icons.remove, color: Colors.white,), Icon(Icons.add, color: Colors.white)],
+                  customIcons: [const Icon(Icons.remove, color: Colors.white,), const Icon(Icons.add, color: Colors.white)],
                   labels: ['', ''],
                   onToggle: (index) {
                     selectedKeyIndex = index?? 0;
@@ -115,10 +84,44 @@ class _IncreaseAmountSheetState extends StateBase<IncreaseAmountSheet> {
                 ),
               ),
             ),
+            const SizedBox(height: 15),
 
-            SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  style: style,
+                    onPressed: clickOnOne,
+                    child: const Text('1,000')
+                ),
+
+                const SizedBox(width: 4,),
+                ElevatedButton(
+                    style: style,
+                    onPressed: clickOnFive,
+                    child: const Text('5,000')
+                ),
+
+                const SizedBox(width: 4,),
+                ElevatedButton(
+                    style: style,
+                    onPressed: clickOnTwenty,
+                    child: const Text('20,000')
+                ),
+
+                const SizedBox(width: 4,),
+                ElevatedButton(
+                    style: style,
+                    onPressed: clickOnFifty,
+                    child: const Text('50,000')
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 15),
             SizedBox(
               width: double.infinity,
+              height: 44,
               child: DecoratedBox(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -129,9 +132,9 @@ class _IncreaseAmountSheetState extends StateBase<IncreaseAmountSheet> {
                   child: Row(
                     //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(child: SizedBox()),
+                      const Expanded(child: SizedBox()),
                       Expanded(child: Center(child: Text(CurrencyTools.formatCurrency(amount)).bold())),
-                      Expanded(child: Align(alignment: Alignment.centerLeft, child: Text('تومان').fsR(-1))),
+                      Expanded(child: Align(alignment: Alignment.centerLeft, child: const Text('تومان').fsR(-1))),
                     ],
                   ),
                 ),
@@ -139,16 +142,18 @@ class _IncreaseAmountSheetState extends StateBase<IncreaseAmountSheet> {
             ),
 
 
+            const SizedBox(height: 15),
             /// button
             SizedBox(
               width: double.infinity,
+              height: 44,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  visualDensity: VisualDensity(vertical: -2),
+                  visualDensity: const VisualDensity(vertical: -2),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
                 ),
                   onPressed: onPayClick,
-                  child: Text('پرداخت')
+                  child: const Text('پرداخت')
               ),
             ),
           ],

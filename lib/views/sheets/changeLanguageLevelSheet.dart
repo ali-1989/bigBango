@@ -64,67 +64,75 @@ class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet>
                     children: [
                       Image.asset(AppImages.selectLevelIco2),
                       const SizedBox(width: 8),
-                      Text(AppMessages.selectLevelTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
+                      Text('تغییر سطح', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
                     ],
                   ),
 
-                  const SizedBox(height: 20),
-                  Padding(
+                  //const SizedBox(height: 20),
+                  /*Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Text(AppMessages.selectLanguageLevelDescription1, textAlign: TextAlign.center,
                         style: const TextStyle(height: 1.4)
                     ),
-                  ),
+                  ),*/
 
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 20),
 
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 17),
-                      child: ListView(
-                        children: [
-                          SizedBox(
-                            width: double.infinity,
-                            child: Card(
-                              color: ColorHelper.getColorFromHex('#FEEFE9'),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 13),
-                                child: Row(
-                                  children: [
-                                    Image.asset(AppImages.atentionIco),
-                                    const SizedBox(width: 12),
-                                    Text(AppMessages.selectLevelTerm1, style: const TextStyle(color: AppDecoration.red)),
-                                  ],
-                                ),
-                              ),
-                            ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Card(
+                        color: ColorHelper.getColorFromHex('#FEEFE9'),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 13),
+                          child: Row(
+                            children: [
+                              Image.asset(AppImages.atentionIco),
+                              const SizedBox(width: 12),
+                              Text(AppMessages.selectLevelTerm1, style: const TextStyle(color: AppDecoration.red)),
+                            ],
                           ),
-
-                          const SizedBox(height: 25),
-
-                          ...buildChoice(),
-
-                          const SizedBox(height: 30),
-
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                                onPressed: sendClick,
-                                child: Text(AppMessages.register)
-                            ),
-                          ),
-
-                          const SizedBox(height: 10),
-                        ],
+                        ),
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 17),
+                      child: Scrollbar(
+                        thumbVisibility: true,
+                        child: ListView(
+                          children: [
+
+                            const SizedBox(height: 25),
+
+                            ...buildChoice(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                          onPressed: sendClick,
+                          child: Text(AppMessages.register)
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
                 ],
               )
           ),

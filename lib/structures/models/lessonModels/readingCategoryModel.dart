@@ -3,8 +3,8 @@ import 'package:iris_tools/api/helpers/mathHelper.dart';
 class ReadingCategoryModel {
   String id = '';
   String title = '';
-  int reviewProgress = 0;
-  int exerciseProgress = 0;
+  double reviewProgress = 0;
+  double exerciseProgress = 0;
   double progress = 0;
 
   ReadingCategoryModel();
@@ -12,8 +12,8 @@ class ReadingCategoryModel {
   ReadingCategoryModel.fromMap(Map map) {
     id = map['id'];
     title = map['title'];
-    reviewProgress = map['reviewProgress'];
-    exerciseProgress = map['exerciseProgress'];
+    reviewProgress =  MathHelper.clearToDouble(map['reviewProgress']);
+    exerciseProgress =  MathHelper.clearToDouble(map['exerciseProgress']);
 
     progress = MathHelper.clearToDouble(map['progress']);
     progress = MathHelper.fixPrecision(progress, 1);

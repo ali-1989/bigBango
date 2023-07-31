@@ -503,7 +503,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                                   color: Colors.grey.shade200,
                                   radius: 3,
                                   padding: const EdgeInsets.symmetric(horizontal:10 , vertical: 3),
-                                  child: Text('$i')
+                                  child: Text('${i+1}')
                               ),
 
                               const SizedBox(width: 10),
@@ -525,13 +525,16 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
                       const SizedBox(height: 12),
 
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: LinearProgressIndicator(
-                          backgroundColor: Colors.greenAccent.withAlpha(40),
-                          color: Colors.greenAccent,
-                          value: itm.progress.toDouble(),
-                          minHeight: 3,
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: LinearProgressIndicator(
+                            backgroundColor: Colors.greenAccent.withAlpha(40),
+                            color: Colors.greenAccent,
+                            value: itm.progress / 100,
+                            minHeight: 3,
+                          ),
                         ),
                       ),
                     ],
@@ -711,12 +714,15 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
   }
 
   void gotoExamPage() async {
-    final content = ExamPageInjector();
-    content.prepareExamList(examList);
-    content.answerUrl = '/reading/exercises/solving';
+    final examPageInjector = ExamPageInjector();
+    examPageInjector.prepareExamList(examList);
+    examPageInjector.answerUrl = '/reading/exercises/solving';
+    examPageInjector.showSendButton = true;
+    examPageInjector.askConfirmToSend = false;
 
-    final examPage = ExamPage(injector: content);
+    final examPage = ExamPage(injector: examPageInjector);
     await RouteTools.pushPage(context, examPage);
+    requestReading();
   }
 
   void requestReading(){

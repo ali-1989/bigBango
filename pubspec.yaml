@@ -29,7 +29,6 @@ dependencies:
     sdk: flutter
 
   #device_preview: ^1.1.0
-  #cupertino_icons: ^1.0.5
   community_material_icon: ^5.9.55      # https://materialdesignicons.com/  https://www.fluttericon.com/
   device_info_plus: ^9.0.2
   platform_device_id: ^1.0.1
@@ -91,9 +90,6 @@ dependencies:
 dependency_overrides:
   intl: 0.18.1    # awesome_notifications, flutter_localizations
   shamsi_date: 1.0.1
-  collection: ^1.17.2
-  http: 1.1.0
-  file: 7.0.0
 
 
 dev_dependencies:

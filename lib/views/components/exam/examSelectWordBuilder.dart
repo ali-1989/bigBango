@@ -260,11 +260,10 @@ class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with 
       );
     });
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: list.toList(),
-      ),
+    return Wrap(
+      runSpacing: 3,
+      spacing: 4,
+      children: list.toList(),
     );
   }
 
