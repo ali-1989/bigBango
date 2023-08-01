@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:iris_route/iris_route.dart';
 import 'package:iris_tools/api/system.dart';
+import 'package:iris_tools/plugins/javaBridge.dart';
 import 'package:iris_tools/widgets/maxWidth.dart';
 
 import 'package:app/constants.dart';
@@ -26,6 +27,9 @@ import 'package:app/views/baseComponents/splashPage.dart';
 
 ///================ call on any hot restart
 Future<void> main() async {
+  PlatformDispatcher.instance.onError = mainIsolateError;
+  FlutterError.onError = onErrorCatch;
+
   if (defaultTargetPlatform != TargetPlatform.linux && defaultTargetPlatform != TargetPlatform.windows) {
     WidgetsFlutterBinding.ensureInitialized();
   }
@@ -75,14 +79,14 @@ Future<void> main() async {
 }
 
 Future<void> mainInitialize() async {
-  PlatformDispatcher.instance.onError = mainIsolateError;
-  FlutterError.onError = onErrorCatch;
   await FireBaseService.initializeApp();
 
   usePathUrlStrategy();
 
   if(System.isAndroid()) {
   }
+
+  Future.delayed(Duration(seconds: 8), (){brig();});
 }
 
 Future<(bool, String?)> prepareDirectoriesAndLogger() async {
@@ -147,7 +151,7 @@ class MyApp extends StatelessWidget {
   }
 
   Widget materialHomeBuilder(){
-    double factor = PlatformDispatcher.instance.textScaleFactor.clamp(0.85, 2.0);
+    double factor = PlatformDispatcher.instance.textScaleFactor.clamp(0.85, 1.7);
 
     return Builder(
       builder: (context) {
@@ -246,4 +250,25 @@ void zonedGuardedCatch(error, sTrace) {
   if(kDebugMode) {
     throw error;
   }
+}
+
+
+void brig(){
+  print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+  JavaBridge jb = JavaBridge();
+  jb.init('error_handler', (call) async {
+    print('@@@@@@@@@@@@@@@ ${call.method}  ,  ${call.arguments}');
+
+    return null;
+  });
+  print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 2');
+  jb.invokeMethod('echo').then((value) {
+    print('@@@@@@@@@@@@@@@@@@> ${value.$1} , ${value.$2}');
+  });
+
+  jb.invokeMethod('throw_error').then((value) {
+    print('@@@@@@@@@@@@@@@@@@> ${value.$1} , ${value.$2}');
+  });
+
+  print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 3');
 }

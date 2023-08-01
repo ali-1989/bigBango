@@ -14,7 +14,7 @@ class FontManager {
   static late final FontManager _instance;
   static bool useFlutterFontSize = true;
   static const double defaultFontSize = 13;
-  static const double maxDeviceFontSize = 14.5;
+  static const double maxDeviceFontSize = 14.2;
   static double deviceFontSize = 13;
 
   static final List<Font> _fontList = [];
@@ -370,8 +370,8 @@ class Font {
       final appHeight = (isLandscape ? realPixelWidth : realPixelHeight) / pixelRatio;
       final fSize = appHeight / 52;
 
-      final minNum =  max(10.0, fSize);
-      return min(14.5, minNum);
+      final minNum =  max(10.5, fSize);
+      return min(FontManager.maxDeviceFontSize, minNum);
     }
   }
 }
