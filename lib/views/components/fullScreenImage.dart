@@ -11,7 +11,6 @@ import 'package:app/structures/enums/enums.dart';
 
 ///===============================================================================================================
 class FullScreenImage extends StatefulWidget {
-  static const screenName = 'FullScreenImage';
   late final ImageType imageType;
   late final dynamic imageObj;
   final String? heroTag;
@@ -111,7 +110,7 @@ class FullScreenImageState extends State<FullScreenImage> {
               child: Builder(
                 builder: (ctx){
                   if(widget.info == null){
-                    return SizedBox();
+                    return const SizedBox();
                   }
 
                   return DecoratedBox(
