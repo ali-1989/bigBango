@@ -24,6 +24,7 @@ class RouteTools {
     //final registerFormPage = WebRoute.by((RegisterFormPage).toString(), RegisterFormPage());
     //final profilePage = WebRoute.by((ProfilePage).toString(), ProfilePage());
 
+    IrisNavigatorObserver.notFoundHandler = (settings) => null;
     IrisNavigatorObserver.allAppRoutes.add(aboutPage);
     IrisNavigatorObserver.allAppRoutes.add(homePage);
     IrisNavigatorObserver.allAppRoutes.add(supportPage);

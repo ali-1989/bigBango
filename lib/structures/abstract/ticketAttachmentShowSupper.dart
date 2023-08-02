@@ -28,7 +28,7 @@ mixin  TicketAttachmentShowSupper {
   Widget attachmentView(BuildContext context, TicketReplyModel ticketReply){
 
     return Card(
-      margin: EdgeInsets.fromLTRB(12, 0, 12, 10),
+      margin: const EdgeInsets.fromLTRB(12, 0, 12, 10),
       child: SizedBox(
         height: AppSizes.getScreenHeight(context) * 3/4,
         child: Padding(
@@ -42,7 +42,7 @@ mixin  TicketAttachmentShowSupper {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('پیوست ها').bold().fsR(2),
+                        const Text('پیوست ها').bold().fsR(2),
                       ],
                     ),
                   ),
@@ -55,18 +55,18 @@ mixin  TicketAttachmentShowSupper {
                       },
                       child: CustomCard(
                           color: Colors.grey.shade200,
-                          padding: EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
                           radius: 4,
-                          child: Icon(AppIcons.close, size: 10)
+                          child: const Icon(AppIcons.close, size: 10)
                       ),
                     ),
                   ),
                 ],
               ),
 
-              SizedBox(height: 14),
-              Divider(),
-              SizedBox(height: 10),
+              const SizedBox(height: 14),
+              const Divider(),
+              const SizedBox(height: 10),
 
 
               Expanded(
@@ -116,8 +116,8 @@ mixin  TicketAttachmentShowSupper {
                                   //imagePath: ,
                                   fit: BoxFit.contain,
                                   beforeLoadWidget: ConstrainedBox(
-                                    constraints: BoxConstraints(minHeight: 120),
-                                    child: Center(
+                                    constraints: const BoxConstraints(minHeight: 120),
+                                    child: const Center(
                                       child: SizedBox(
                                           width: 50,
                                           height: 50,
@@ -134,7 +134,7 @@ mixin  TicketAttachmentShowSupper {
                     );
                   }
 
-                  return Icon(Icons.broken_image);
+                  return const Icon(Icons.broken_image);
                 }
             ),
           ),
@@ -151,6 +151,6 @@ mixin  TicketAttachmentShowSupper {
       appBarColor: Colors.black,
     );
 
-    AppNavigator.pushNextPageExtra(RouteTools.getTopContext()!, view, name: FullScreenImage.screenName);
+    AppNavigator.pushNextPageExtra(RouteTools.getTopContext()!, view, name: 'FullScreenImage');
   }
 }

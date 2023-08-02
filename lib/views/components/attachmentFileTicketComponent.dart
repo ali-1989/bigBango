@@ -49,7 +49,7 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
         builder: (_, ctr, data) {
 
           return Card(
-            margin: EdgeInsets.fromLTRB(12, 0, 12, 10),
+            margin: const EdgeInsets.fromLTRB(12, 0, 12, 10),
             child: Stack(
               children: [
                 SizedBox(
@@ -59,10 +59,10 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Stack(
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               height: 22,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -80,24 +80,24 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
                                   },
                                   child: CustomCard(
                                       color: Colors.grey.shade200,
-                                      padding: EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+                                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
                                       radius: 4,
-                                      child: Icon(AppIcons.close, size: 10)
+                                      child: const Icon(AppIcons.close, size: 10)
                                   ),
                                 ),
                             ),
                           ],
                         ),
 
-                        SizedBox(height: 15),
-                        Divider(color: Colors.grey, indent: 20, endIndent: 20),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 15),
+                        const Divider(color: Colors.grey, indent: 20, endIndent: 20),
+                        const SizedBox(height: 10),
 
                         Expanded(
                           child: Builder(
                             builder: (_){
                               if(widget.files.isEmpty){
-                                return EmptyData(message: 'فایلی انتخاب نشده است',);
+                                return const EmptyData(message: 'فایلی انتخاب نشده است',);
                               }
 
                               return ListView.builder(
@@ -120,7 +120,7 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
                       backgroundColor: AppDecoration.red,
                       onPressed: addFileDialog,
                       mini: true,
-                      child: Icon(AppIcons.add, color: Colors.white),
+                      child: const Icon(AppIcons.add, color: Colors.white),
                     )
                 ),
               ],
@@ -141,7 +141,7 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
         child: ColoredBox(
           color: Colors.grey.shade200,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: AspectRatio(
               aspectRatio: 3/2,
               child: Center(
@@ -156,7 +156,7 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
                         child: Hero(
                           tag: 'heroTag',
                           child: IrisImageView(
-                            beforeLoadWidget: Icon(AppIcons.media),
+                            beforeLoadWidget: const Icon(AppIcons.media),
                             imagePath: itm.path,
                             fit: BoxFit.contain,
                           ),
@@ -200,9 +200,9 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               children: [
-                Icon(AppIcons.camera, size: 20),
-                SizedBox(width: 12),
-                Text('دوربین').bold(),
+                const Icon(AppIcons.camera, size: 20),
+                const SizedBox(width: 12),
+                const Text('دوربین').bold(),
               ],
             ),
           ),
@@ -218,9 +218,9 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               children: [
-                Icon(AppIcons.picture, size:20),
-                SizedBox(width: 12),
-                Text('گالری').bold(),
+                const Icon(AppIcons.picture, size:20),
+                const SizedBox(width: 12),
+                const Text('گالری').bold(),
               ],
             ),
           ),
@@ -254,8 +254,8 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
     if(path != null){
       widget.files.add(File(path));
       assistCtr.updateHead();
-      Future.delayed(Duration(milliseconds: 700), (){
-        srlCtr.animateTo(srlCtr.position.maxScrollExtent, curve: Curves.linear, duration: Duration(milliseconds: 600));
+      Future.delayed(const Duration(milliseconds: 700), (){
+        srlCtr.animateTo(srlCtr.position.maxScrollExtent, curve: Curves.linear, duration: const Duration(milliseconds: 600));
       });
     }
   }
@@ -340,6 +340,6 @@ class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicket
       appBarColor: Colors.black,
     );
 
-    AppNavigator.pushNextPageExtra(context, view, name: FullScreenImage.screenName);
+    AppNavigator.pushNextPageExtra(context, view, name: 'FullScreenImage');
   }
 }

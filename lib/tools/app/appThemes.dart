@@ -234,13 +234,13 @@ class AppThemes {
 
 			primaryTextTheme = TextTheme(
 				bodyLarge: raw.textTheme.bodyLarge!.copyWith(
-					fontFamily: baseFamily, color: th.textColor, fontSize: fontSize +2, height: height,
+					fontFamily: baseFamily, color: th.textColor, fontSize: fontSize +1, height: height,
 				),
 				bodyMedium: raw.textTheme.bodyMedium!.copyWith(
-					fontFamily: baseFamily, color: th.textColor, fontSize: fontSize +2, height: height,
+					fontFamily: baseFamily, color: th.textColor, fontSize: fontSize, height: height,
 				),
 				bodySmall: raw.textTheme.bodySmall!.copyWith(
-					fontFamily: subFamily, color: th.textColor, fontSize: fontSize, height: height,
+					fontFamily: subFamily, color: th.textColor, fontSize: fontSize-1, height: height,
 				),
 				titleLarge: raw.textTheme.titleLarge!.copyWith(
 					fontFamily: baseFamily, color: th.appBarItemColor, fontSize: fontSize +3, height: height,
