@@ -30,20 +30,20 @@ Future<void> main() async {
   PlatformDispatcher.instance.onError = mainIsolateError;
   FlutterError.onError = onErrorCatch;
 
-  if (defaultTargetPlatform != TargetPlatform.linux && defaultTargetPlatform != TargetPlatform.windows) {
-    WidgetsFlutterBinding.ensureInitialized();
-  }
+  void zoneFn() async {
+    if (defaultTargetPlatform != TargetPlatform.linux && defaultTargetPlatform != TargetPlatform.windows) {
+      WidgetsFlutterBinding.ensureInitialized();
+    }
 
-  final initOk = await prepareDirectoriesAndLogger();
+    final initOk = await prepareDirectoriesAndLogger();
 
-  if(!initOk.$1){
-    runApp(MyErrorApp(errorLog: initOk.$2));
-    return;
-  }
+    if(!initOk.$1){
+      runApp(MyErrorApp(errorLog: initOk.$2));
+      return;
+    }
 
-  await mainInitialize();
+    await mainInitialize();
 
-  void zoneFn() {
     runApp(
         StreamBuilder<bool>(
             initialData: true,
@@ -74,8 +74,8 @@ Future<void> main() async {
     );
   }
 
-  //runZonedGuarded(zone, zonedGuardedCatch);
-  zoneFn();
+  runZonedGuarded(zoneFn, zonedGuardedCatch);
+  //zoneFn();
 }
 
 Future<void> mainInitialize() async {
@@ -86,7 +86,7 @@ Future<void> mainInitialize() async {
   if(System.isAndroid()) {
   }
 
-  Future.delayed(Duration(seconds: 8), (){brig();});
+  Future.delayed(Duration(seconds: 4), (){brig();});
 }
 
 Future<(bool, String?)> prepareDirectoriesAndLogger() async {
@@ -252,23 +252,18 @@ void zonedGuardedCatch(error, sTrace) {
   }
 }
 
-
 void brig(){
-  print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
   JavaBridge jb = JavaBridge();
+
   jb.init('error_handler', (call) async {
-    print('@@@@@@@@@@@@@@@ ${call.method}  ,  ${call.arguments}');
+    if(call.method == 'report_error') {
+      print('@@@@ error_handler: ${call.method}  ,  ${call.arguments}');
+    }
 
     return null;
   });
-  print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 2');
-  jb.invokeMethod('echo').then((value) {
-    print('@@@@@@@@@@@@@@@@@@> ${value.$1} , ${value.$2}');
-  });
 
-  jb.invokeMethod('throw_error').then((value) {
-    print('@@@@@@@@@@@@@@@@@@> ${value.$1} , ${value.$2}');
-  });
 
-  print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 3');
+
+
 }

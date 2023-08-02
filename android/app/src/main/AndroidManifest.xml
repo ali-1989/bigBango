@@ -126,14 +126,14 @@
             android:required="false"/>
 
     <!-- 
-          android:name="io.flutter.app.FlutterApplication"
-
-           android:appCategory="productivity"
+            android:name="io.flutter.app.FlutterApplication"
+            android:name="${applicationName}"
+            android:appCategory="productivity"
            -->
 
     <application
         android:label="BigBango"
-        android:name="${applicationName}"
+        android:name=".MyApplication"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
         android:hardwareAccelerated="false"
@@ -149,7 +149,8 @@
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:exported="true"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:replace="android:name">
 
 
         <activity

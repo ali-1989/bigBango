@@ -36,7 +36,7 @@ dependencies:
   video_player: ^2.7.0
   chewie: ^1.7.0
   http: ^1.1.0
-  dio: ^5.3.0
+  dio: ^5.3.1
   connectivity_plus: ^4.0.1
   url_launcher: ^6.1.12
   material_dialogs: ^1.1.4
@@ -44,7 +44,7 @@ dependencies:
   popover: ^0.2.8+2
   flutter_spinkit: ^5.2.0
   stop_watch_timer: 3.0.0
-  #iris_notifier: ^0.0.4
+  iris_notifier: ^0.0.7
   numberpicker: ^2.1.2
   pull_to_refresh: ^2.0.0
   image_picker: ^1.0.1
@@ -83,8 +83,6 @@ dependencies:
     git: https://github.com/ali-1989/irisRuntimeCache.git
   iris_route:
     git: https://github.com/ali-1989/iris_route.git
-  iris_notifier:
-    git: https://github.com/ali-1989/irisNotifier.git
 
 
 dependency_overrides:
