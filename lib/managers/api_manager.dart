@@ -19,6 +19,7 @@ class ApiManager {
   ApiManager._();
 
   static String serverApi = SettingsManager.localSettings.httpAddress;
+  static String errorReportApi = SettingsManager.localSettings.httpAddress;
 
   static Future<TwoStateReturn<Map, Response>> publicApiCaller(String url, MethodType methodType, Map<String, dynamic>? body){
     Requester requester = Requester();

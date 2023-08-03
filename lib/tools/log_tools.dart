@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:developer';
 
+import 'package:app/managers/api_manager.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:iris_tools/api/logger/logger.dart';
@@ -7,6 +9,7 @@ import 'package:iris_tools/api/logger/reporter.dart';
 
 import 'package:app/tools/app/appDirectories.dart';
 import 'package:http/http.dart' as http;
+import 'package:iris_tools/plugins/javaBridge.dart';
 
 
 class LogTools {
@@ -14,6 +17,7 @@ class LogTools {
 
   static late Logger logger;
   static late Reporter reporter;
+  static JavaBridge? _errorBridge;
 
   static Future<bool> init() async {
     try {
@@ -23,6 +27,7 @@ class LogTools {
 
       LogTools.logger = Logger('${AppDirectories.getExternalTempDir()}/logs');
 
+      initErrorReport();
       return true;
     }
     catch (e){
@@ -31,13 +36,36 @@ class LogTools {
     }
   }
 
-  static void reportError(Map<String, String> map) async {
-    final url = Uri.parse('');
+  static void initErrorReport(){
+    if(_errorBridge != null){
+      return;
+    }
 
-    final body = {
-    'data': map,
-    };
+    _errorBridge = JavaBridge();
 
-    http.post(url, body: body);
+    _errorBridge!.init('error_handler', (call) async {
+      if(call.method == 'report_error') {
+        print('@@@@ error_handler:  ${call.arguments}');
+        reportError(call.arguments);
+      }
+
+      return null;
+    });
+  }
+
+  static void reportError(Map<String, dynamic> map) async {
+    void fn(){
+      final url = Uri.parse(ApiManager.errorReportApi);
+
+      final body = {
+        'data': map,
+      };
+
+      http.post(url, body: body);
+    }
+
+    runZonedGuarded(fn, (error, stack) {
+      LogTools.logger.logToAll(error.toString());
+    });
   }
 }

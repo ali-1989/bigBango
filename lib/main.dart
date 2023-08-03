@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/tools/deviceInfoTools.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:iris_route/iris_route.dart';
 import 'package:iris_tools/api/system.dart';
-import 'package:iris_tools/plugins/javaBridge.dart';
 import 'package:iris_tools/widgets/maxWidth.dart';
 
 import 'package:app/constants.dart';
@@ -85,8 +85,6 @@ Future<void> mainInitialize() async {
 
   if(System.isAndroid()) {
   }
-
-  Future.delayed(Duration(seconds: 4), (){brig();});
 }
 
 Future<(bool, String?)> prepareDirectoriesAndLogger() async {
@@ -218,17 +216,29 @@ void onErrorCatch(FlutterErrorDetails errorDetails) {
   txt += '\n**************************************** [END CATCH]';
 
   LogTools.logger.logToAll(txt);
+
+  final eMap = DeviceInfoTools.mapDeviceInfo();
+  eMap['catcher'] = 'mainIsolateError';
+  eMap['error'] = txt;
+
+  LogTools.reportError(eMap);
 }
 ///==============================================================================================
 bool mainIsolateError(error, sTrace) {
   var txt = 'main-isolate CAUGHT AN ERROR:: ${error.toString()}';
 
-  if(!kDebugMode/* && !kIsWeb*/) {
+  if(!(kDebugMode || kIsWeb)) {
     txt += '\n STACK TRACE:: $sTrace';
   }
 
   txt += '\n**************************************** [END MAIN-ISOLATE]';
   LogTools.logger.logToAll(txt);
+
+  final eMap = DeviceInfoTools.mapDeviceInfo();
+  eMap['catcher'] = 'mainIsolateError';
+  eMap['error'] = txt;
+
+  LogTools.reportError(eMap);
 
   if(kDebugMode) {
     return false;
@@ -240,30 +250,20 @@ bool mainIsolateError(error, sTrace) {
 void zonedGuardedCatch(error, sTrace) {
   var txt = 'ZONED-GUARDED CAUGHT AN ERROR:: ${error.toString()}';
 
-  if(!kDebugMode/* && !kIsWeb*/) {
+  if(!(kDebugMode || kIsWeb)) {
     txt += '\n STACK TRACE:: $sTrace';
   }
 
   txt += '\n**************************************** [END ZONED-GUARDED]';
   LogTools.logger.logToAll(txt);
 
+  final eMap = DeviceInfoTools.mapDeviceInfo();
+  eMap['catcher'] = 'zonedGuardedCatch';
+  eMap['error'] = txt;
+
+  LogTools.reportError(eMap);
+
   if(kDebugMode) {
     throw error;
   }
-}
-
-void brig(){
-  JavaBridge jb = JavaBridge();
-
-  jb.init('error_handler', (call) async {
-    if(call.method == 'report_error') {
-      print('@@@@ error_handler: ${call.method}  ,  ${call.arguments}');
-    }
-
-    return null;
-  });
-
-
-
-
 }

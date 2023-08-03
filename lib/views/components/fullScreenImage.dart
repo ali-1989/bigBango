@@ -6,7 +6,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:app/structures/enums/enums.dart';
 
 /// Usage:
-/// final view = FullScreenImageComponent();
+/// final view = FullScreenImage();
 /// AppRoute.pushPage(context, view);
 
 ///===============================================================================================================

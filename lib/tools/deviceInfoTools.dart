@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:app/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -95,7 +96,7 @@ class DeviceInfoTools {
       js['device_type'] = 'Web';
       js['model'] = webDeviceInfo?.appName;
       js['brand'] = uAgent?.substring(0, min(50, uAgent.length));
-      js['api'] = webDeviceInfo?.platform;
+      js['sdk'] = webDeviceInfo?.platform;
 
       return js;
     }
@@ -104,17 +105,20 @@ class DeviceInfoTools {
       js['device_type'] = 'Android';
       js['model'] = androidDeviceInfo?.model;
       js['brand'] = androidDeviceInfo?.brand;
-      js['api'] = androidDeviceInfo?.version.sdkInt.toString();
+      js['sdk'] = androidDeviceInfo?.version.sdkInt.toString();
     }
     else if (System.isIOS()) {
       js['device_type'] = 'iOS';
       js['model'] = iosDeviceInfo?.model; //utsname.machine
       js['brand'] = iosDeviceInfo?.systemName;
-      js['api'] = iosDeviceInfo?.utsname.version.toString();
+      js['sdk'] = iosDeviceInfo?.utsname.version.toString();
     }
     else {
       js['device_type'] = 'unKnow';
     }
+
+    js['app_name'] = Constants.appName;
+    js['version'] = Constants.appVersionName;
 
     return js;
   }
