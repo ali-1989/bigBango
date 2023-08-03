@@ -5,6 +5,7 @@ class Keys {
 
   static const ok = 'ok';
   static const error = 'error';
+  static const deviceId = 'device_id';
   static const password = 'password';
   static const token = 'token';
   static const expire = 'expire';

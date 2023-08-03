@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:app/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -10,6 +9,9 @@ import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/api/system.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 
+import 'package:app/constants.dart';
+import 'package:app/services/session_service.dart';
+import 'package:app/structures/models/userModel.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/appDb.dart';
 
@@ -118,8 +120,21 @@ class DeviceInfoTools {
     }
 
     js['app_name'] = Constants.appName;
-    js['version'] = Constants.appVersionName;
+    js['app_version_name'] = Constants.appVersionName;
+    js['app_version_code'] = Constants.appVersionCode;
+    js[Keys.deviceId] = deviceId;
 
     return js;
+  }
+  static Map attachDeviceInfo(Map src, {UserModel? curUser}) {
+    src.addAll(mapDeviceInfo());
+
+    final token = curUser?.token ?? SessionService.getLastLoginUser()?.token;
+
+    if (token?.token != null) {
+      src[Keys.token] = token?.token;
+    }
+
+    return src;
   }
 }
