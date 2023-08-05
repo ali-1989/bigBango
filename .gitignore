@@ -31,9 +31,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-/android/app/build/
 /pubspec.lock
-
 /android/app/build.gradle
 /android/gradle.properties
 
@@ -50,3 +48,4 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/build/
