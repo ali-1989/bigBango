@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:app/tools/deviceInfoTools.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +20,7 @@ import 'package:app/tools/app/appLocale.dart';
 import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/app/appToast.dart';
+import 'package:app/tools/deviceInfoTools.dart';
 import 'package:app/tools/log_tools.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/baseComponents/splashPage.dart';

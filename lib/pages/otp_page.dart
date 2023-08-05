@@ -1,3 +1,4 @@
+import 'package:app/tools/log_tools.dart';
 import 'package:flutter/material.dart';
 
 import 'package:android_sms_retriever/android_sms_retriever.dart';
@@ -54,6 +55,7 @@ class _OtpPageState extends StateBase<OtpPage> {
       },
     );
 
+    LogTools.assistanceBridge!.invokeMethodByArgs('throw_error', [{'delay': 5000}]).then((value) {print('------------>>------------$value');});
     addPostOrCall(fn: () {
       stopWatchTimer.onStartTimer();
       //stopWatchTimer.onExecute.add(StopWatchExecute.start);

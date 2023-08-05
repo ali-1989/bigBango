@@ -1,4 +1,4 @@
-package ir.iris.android_tools;
+package ir.nicode.bigbango;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
