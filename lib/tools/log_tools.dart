@@ -6,6 +6,7 @@ import 'package:app/tools/deviceInfoTools.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
 import 'package:iris_tools/plugins/javaBridge.dart';
@@ -48,7 +49,7 @@ class LogTools {
 
     _errorBridge!.init('error_handler', (call) async {
       if(call.method == 'report_error') {
-        print('@@@@ error_handler:  ${call.arguments}');
+        print('::::::::::::::::::: error_report recive:  ${call.arguments}');
         reportError(call.arguments);
       }
 
@@ -75,11 +76,11 @@ class LogTools {
         body['user_id'] = SessionService.getLastLoginUser()?.userId;
       }
 
-      http.post(url, body: body);
+      http.post(url, body: JsonHelper.mapToJson(body));
     }
 
     runZonedGuarded(fn, (error, stack) {
-      LogTools.logger.logToAll(error.toString());
+      LogTools.logger.logToAll('::::::::::::: report ::::::::::: ${error.toString()}');
     });
   }
 }
