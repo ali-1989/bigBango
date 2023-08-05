@@ -38,14 +38,14 @@ class Keys {
   static const setting$appSettings = 'app_settings';
   static const setting$fontThemeData = 'font_theme_data';
   static const setting$colorThemeName = 'color_theme_name';
-  static const setting$lastForegroundTs = 'last_foreground_ts';
+  static const setting$toBackgroundTs = 'to_background_ts';
   static const setting$confirmOnExit = 'confirm_on_exit';
   static const setting$notificationChanelKey = 'notification_chanel_key';
   static const setting$notificationChanelGroup = 'notification_chanel_group';
   static const setting$notificationModel = 'notification_model';
   static const setting$currentVersion = 'current_version';
   static const setting$webDeviceId = 'web_device_id';
-  //----- app settings key -----------------------------------------------------------------
+  //----- app key -----------------------------------------------------------------
   static const setting$registerPhoneNumber = 'register_phone_number';
   static const setting$registerPhoneNumberTs = 'register_phone_number_ts';
 

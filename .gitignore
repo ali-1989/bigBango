@@ -32,6 +32,10 @@ migrate_working_dir/
 .pub/
 /build/
 /android/app/build/
+/pubspec.lock
+
+/android/app/build.gradle
+/android/gradle.properties
 
 # Web related
 lib/generated_plugin_registrant.dart

@@ -98,7 +98,7 @@ class DeviceInfoTools {
       js['device_type'] = 'Web';
       js['model'] = webDeviceInfo?.appName;
       js['brand'] = uAgent?.substring(0, min(50, uAgent.length));
-      js['sdk'] = webDeviceInfo?.platform;
+      js['SDK'] = webDeviceInfo?.platform;
 
       return js;
     }
@@ -107,13 +107,13 @@ class DeviceInfoTools {
       js['device_type'] = 'Android';
       js['model'] = androidDeviceInfo?.model;
       js['brand'] = androidDeviceInfo?.brand;
-      js['sdk'] = androidDeviceInfo?.version.sdkInt.toString();
+      js['SDK'] = androidDeviceInfo?.version.sdkInt.toString();
     }
     else if (System.isIOS()) {
       js['device_type'] = 'iOS';
       js['model'] = iosDeviceInfo?.model; //utsname.machine
       js['brand'] = iosDeviceInfo?.systemName;
-      js['sdk'] = iosDeviceInfo?.utsname.version.toString();
+      js['SDK'] = iosDeviceInfo?.utsname.version.toString();
     }
     else {
       js['device_type'] = 'unKnow';

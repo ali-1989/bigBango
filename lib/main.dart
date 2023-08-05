@@ -84,6 +84,7 @@ Future<void> mainInitialize() async {
   usePathUrlStrategy();
 
   if(System.isAndroid()) {
+    LogTools.assistanceBridge!.invokeMethod('setAppIsRun');
   }
 }
 
