@@ -15,6 +15,7 @@ class PlayVoiceView extends StatefulWidget {
   final double buttonSize;
   final EdgeInsets buttonPadding;
   final bool isUrl;
+  final bool autoPrepare;
 
   const PlayVoiceView({
     required this.address,
@@ -22,6 +23,7 @@ class PlayVoiceView extends StatefulWidget {
     this.buttonPadding = const EdgeInsets.all(14),
     this.buttonSize = 12,
     this.isUrl = false,
+    this.autoPrepare = false,
     Key? key,
   }) : super(key: key);
 
@@ -61,8 +63,13 @@ class _PlayVoiceViewState extends State<PlayVoiceView> {
         setState(() {});
       }
     });
-  }
 
+    if(widget.autoPrepare){
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        Future.delayed(const Duration(milliseconds: 500), (){prepareVoice();});
+      });
+    }
+  }
 
   @override
   void dispose(){
@@ -72,6 +79,25 @@ class _PlayVoiceViewState extends State<PlayVoiceView> {
     catch (e){/**/}
 
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant PlayVoiceView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if(oldWidget.address != widget.address){
+      player.stop().then((value) {
+        totalTime = Duration.zero;
+        currentTime = Duration.zero;
+        voiceIsPrepare = false;
+
+        if(widget.autoPrepare){
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            Future.delayed(const Duration(milliseconds: 500), (){prepareVoice();});
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -96,7 +122,7 @@ class _PlayVoiceViewState extends State<PlayVoiceView> {
               overlayColor: Colors.transparent,
             ),
             child: Slider(
-              value: percentOfVoiceForSlider(),
+              value: _percentOfVoiceForSlider(),
               onChanged: (v){
                 var x = v * 100;
                 x = x * totalTime.inMilliseconds / 100;
@@ -162,7 +188,7 @@ class _PlayVoiceViewState extends State<PlayVoiceView> {
     });
   }
 
-  double percentOfVoiceForSlider() {
+  double _percentOfVoiceForSlider() {
     if(currentTime.inMilliseconds <= 0 || totalTime.inMilliseconds <= 0){
       return 0;
     }

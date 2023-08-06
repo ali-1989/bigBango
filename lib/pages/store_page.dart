@@ -347,7 +347,7 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
   void prepareBuy() async {
     final ok = await showInvoiceSheet();
 
-    if(ok is bool && ok){
+    if(ok == true){
       showLoading();
       final balance = await ApiManager.requestUserBalance();
       await hideLoading();
@@ -374,8 +374,8 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
     );
   }
 
-  Future showSelectMethodSheet(int balance) {
-    return AppSheet.showSheetCustom(
+  Future showSelectMethodSheet(int balance) async {
+    final res = await AppSheet.showSheetCustom(
         context,
         contentColor: Colors.transparent,
         isScrollControlled: true,
@@ -388,6 +388,11 @@ class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin
         },
         routeName: 'showSelectMethodSheet'
     );
+
+    if(res == true) {
+      StoreManager.setUnUpdate();
+      AppBroadcast.layoutPageKey.currentState!.gotoPage(0);
+    }
   }
 
   void onBackOfBankGetWay({data}) {

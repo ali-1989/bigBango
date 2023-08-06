@@ -105,7 +105,8 @@ class SpeakingComponentState extends StateBase<SpeakingComponent> {
             children: [
               Image.asset(AppImages.doubleArrow),
               const SizedBox(width: 4),
-              Text(speakingModel.question?? ''),
+
+              Expanded(child: Text(speakingModel.question?? '', maxLines: 2)),
             ],
           ),
           const SizedBox(height: 20),
@@ -127,7 +128,7 @@ class SpeakingComponentState extends StateBase<SpeakingComponent> {
           ),
 
           const SizedBox(height: 30),
-          const Divider(color: Colors.black,),
+          const Divider(color: Colors.black26),
           const SizedBox(height: 15),
 
           const Align(
@@ -471,94 +472,3 @@ class SpeakingComponentState extends StateBase<SpeakingComponent> {
     requester.request(context);
   }
 }
-
-/*
-
-Directionality(
-            textDirection: TextDirection.ltr,
-            child: CustomCard(
-              padding: const EdgeInsets.all(5),
-              color: Colors.grey.shade200,
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: playPauseQuestionVoice,
-                    child: CustomCard(
-                      radius: 50,
-                      padding: const EdgeInsets.all(14),
-                      child: Image.asset(questionPlayer.playing? AppImages.pauseIco : AppImages.playIco, width: 16, height: 16),
-                    ),
-                  ),
-
-                  Expanded(
-                    child: SliderTheme(
-                      data: SliderThemeData.fromPrimaryColors(
-                          primaryColor: AppThemes.instance.currentTheme.primaryColor,
-                          primaryColorDark: AppThemes.instance.currentTheme.primaryColor,
-                          primaryColorLight: AppThemes.instance.currentTheme.primaryColor,
-                          valueIndicatorTextStyle: const TextStyle(),
-                      ).copyWith(),
-                      child: Slider(
-                        value: percentOfPlayer(),
-                        onChanged: (v){
-                          var x = v * 100;
-                          x = x * questionTotalTime.inMilliseconds / 100;
-
-                          questionPlayer.seek(Duration(milliseconds: x.toInt()));
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-   --------------------------------------------
-
-void playPauseQuestionVoice() async {
-    if(!questionVoiceIsPrepare){
-      AppToast.showToast(context, 'در حال آماده سازی صوت');
-      await prepareQuestionVoice();
-    }
-
-    if(isAnswerPlaying()){
-      answerPlayer.pause();
-    }
-
-    if(isQuestionPlaying()){
-      await questionPlayer.pause();
-    }
-    else {
-      if(questionPlayer.position.inMilliseconds < questionTotalTime.inMilliseconds) {
-        await questionPlayer.play();
-      }
-      else {
-        await questionPlayer.pause();
-        await questionPlayer.seek(const Duration());
-        await questionPlayer.play();
-      }
-    }
-  }
-
-
-
- Future<void> prepareQuestionVoice() async {
-    questionVoiceIsPrepare = false;
-
-    return questionPlayer.setUrl('autodidactModel.voice!.fileLocation!').then((dur) {//todo
-      questionVoiceIsPrepare = true;
-
-      if(dur != null){
-        questionTotalTime = dur;
-      }
-
-    }).onError((error, stackTrace) {
-      if(error is PlayerException){
-        if(error.toString().contains('Source error')){
-          AppToast.showToast(context, 'آماده سازی صوت انجام نشد');
-          return;
-        }
-      }
-    });
-  }
- */

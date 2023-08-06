@@ -1,31 +1,25 @@
+import 'package:app/views/components/listening_exam_builder.dart';
+import 'package:app/views/components/playVoiceView.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormatter.dart';
+import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
-import 'package:just_audio/just_audio.dart';
 
 import 'package:app/managers/api_manager.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/controllers/examController.dart';
-import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/listeningModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/components/backBtn.dart';
-import 'package:app/views/components/exam/examBlankSpaseBuilder.dart';
-import 'package:app/views/components/exam/examOptionBuilder.dart';
-import 'package:app/views/components/exam/examSelectWordBuilder.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
-import 'package:app/views/widgets/sliders.dart';
 
 class ListeningPage extends StatefulWidget {
   final ListeningPageInjector injector;
@@ -41,19 +35,15 @@ class ListeningPage extends StatefulWidget {
 ///======================================================================================================================
 class _ListeningPageState extends StateBase<ListeningPage> {
   Requester requester = Requester();
-  AudioPlayer player = AudioPlayer();
   Duration totalTime = const Duration();
   Duration currentTime = const Duration();
-  Widget examComponent = const SizedBox();
   ExamController? examController;
-  int currentItemIdx = 0;
   List<ListeningModel> itemList = [];
+  int currentItemIdx = 0;
   ListeningModel? currentItem;
   String? description;
   String id$playViewId = 'playViewId';
-  bool voiceIsOk = false;
-  bool isInPlaying = false;
-  double playerSliderValue = 0;
+  PlayVoiceController voiceController = PlayVoiceController();
 
   @override
   void initState(){
@@ -61,8 +51,8 @@ class _ListeningPageState extends StateBase<ListeningPage> {
 
     assistCtr.addState(AssistController.state$loading);
 
-    player.playbackEventStream.listen(eventListener);
-    player.positionStream.listen(durationListener);
+    voiceController.onPrepareEvent = eventListener;
+    voiceController.onDurationChange = durationListener;
 
     requestListening();
   }
@@ -70,7 +60,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
   @override
   void dispose(){
     requester.dispose();
-    player.stop();
+    voiceController.stop();
 
     ApiManager.requestGetLessonProgress(widget.injector.lessonModel);
     super.dispose();
@@ -136,7 +126,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
               Visibility(
                 visible: currentItem?.title != null,
                 child: Directionality(
-                  textDirection: TextDirection.ltr,
+                  textDirection: LocaleHelper.autoDirection(currentItem?.title?? ''),
                   child: SizedBox(
                     width: sw,
                     child: DecoratedBox(
@@ -148,11 +138,11 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text('${currentItem?.title}'),
                       ).wrapDotBorder(
-                        padding: EdgeInsets.zero,
-                        color: Colors.black12,
-                        alpha: 120,
-                        radius: 6,
-                        dashPattern: [5, 7]
+                          padding: EdgeInsets.zero,
+                          color: Colors.black12,
+                          alpha: 120,
+                          radius: 6,
+                          dashPattern: [5, 7]
                       ),
                     ),
                   ),
@@ -197,52 +187,14 @@ class _ListeningPageState extends StateBase<ListeningPage> {
                               Expanded(
                                 child: Directionality(
                                   textDirection: TextDirection.ltr,
-                                  child: SliderTheme(
-                                    data: SliderTheme.of(context).copyWith(
-                                      thumbShape: CustomThumb(),
-                                      valueIndicatorShape: CustomThumb(),
-                                      valueIndicatorColor: Colors.transparent,
-                                      overlayColor: Colors.transparent,
-                                    ),
-                                    child: Slider(
-                                      value: playerSliderValue,
-                                      max: 100,
-                                      min: 0,
-                                      onChanged: (double value) {
-                                        if(totalTime.inMilliseconds < 2){
-                                          return;
-                                        }
-
-                                        int sec = totalTime.inSeconds * value ~/100;
-                                        player.seek(Duration(seconds: sec));
-                                        playerSliderValue = value;
-                                        assistCtr.updateAssist(id$playViewId);
-                                      },
-                                    ),
+                                  child: PlayVoiceView(
+                                    controller: voiceController,
+                                    address: currentItem?.voice?.fileLocation?? '',
+                                    isUrl: true,
+                                    autoPrepare: true,
+                                    buttonPadding: const EdgeInsets.all(8),
                                   ),
                                 )
-                              ),
-
-                              Row(
-                                textDirection: TextDirection.ltr,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const SizedBox(width: 14),
-
-                                  GestureDetector(
-                                    onTap: playSound,
-                                    child: CustomCard(
-                                        color: Colors.white,
-                                        radius: 20,
-                                        padding: const EdgeInsets.all(5),
-                                        child: isPlaying() ?
-                                        const Icon(AppIcons.pause, size: 20)
-                                            : const Icon(AppIcons.playArrow, size: 20)
-                                    ),
-                                  ),
-
-                                  const SizedBox(width: 10),
-                                ],
                               ),
                             ],
                           ),
@@ -260,28 +212,15 @@ class _ListeningPageState extends StateBase<ListeningPage> {
               ),
 
               const SizedBox(height: 10),
-              examComponent,
+              ListeningExamBuilder(examModelList: currentItem!.exams),
 
-              const SizedBox(height: 20,),
-              Visibility(
-                visible: !currentItem!.quiz.showAnswer,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 22.0),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
-                      ),
-                      onPressed: onRegisterExamClick,
-                      child: const Text('ثبت')
-                  ),
-                ),
-              )
+              const SizedBox(height: 20),
             ],
           ),
         ),
 
         Visibility(
-          visible: itemList.length > 1,
+          visible: true,//itemList.length > 1,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -307,47 +246,12 @@ class _ListeningPageState extends StateBase<ListeningPage> {
     );
   }
 
-  void buildExamView() {
-    currentItem!.quiz.prepare();
-
-    if (currentItem!.quiz.quizType == QuizType.fillInBlank) {
-      examComponent = ExamBlankSpaceBuilder(
-        key: ValueKey(currentItem?.id),
-        examModel: currentItem!.quiz,
-      );
-      description = 'با توجه به صوت جای خالی را پر کنید';
-    }
-    else if (currentItem!.quiz.quizType == QuizType.recorder) {
-      examComponent = ExamSelectWordBuilder(
-        key: ValueKey(currentItem?.id),
-        exam: currentItem!.quiz,
-      );
-      description = 'با توجه به صوت کلمه ی مناسب را انتخاب کنید';
-    }
-    else if (currentItem!.quiz.quizType == QuizType.multipleChoice) {
-      examComponent = ExamOptionBuilder(
-        key: ValueKey(currentItem?.id),
-        examModel: currentItem!.quiz,
-      );
-      description = 'با توجه به صوت گزینه ی مناسب را انتخاب کنید';
-    }
-    else {
-      examComponent = const Text('تمرین ثبت نشده است')
-          .bold().wrapDotBorder(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5));
-      description = '';
-    }
-  }
-
   void onNextClick() async {
     if(currentItemIdx < itemList.length-1) {
       currentItemIdx++;
       currentItem = itemList[currentItemIdx];
 
-      await player.stop();
-      await prepareVoice();
-      playerSliderValue = 0;
-
-      buildExamView();
+      await voiceController.stop();
 
       assistCtr.updateHead();
     }
@@ -358,82 +262,28 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       currentItemIdx--;
       currentItem = itemList[currentItemIdx];
 
-      await player.stop();
-      await prepareVoice();
-      playerSliderValue = 0;
-
-      buildExamView();
+      await voiceController.stop();
 
       assistCtr.updateHead();
     }
   }
 
-  void playSound() async {
-    if(!voiceIsOk){
-      AppToast.showToast(context, 'در حال آماده سازی صوت');
-      await prepareVoice();
-    }
-
-    if(isPlaying()){
-      await player.pause();
-    }
-    else {
-      if(player.position.inMilliseconds < totalTime.inMilliseconds) {
-        await player.play();
-      }
-      else {
-        await player.pause();
-        await player.seek(const Duration());
-        await player.play();
-      }
-    }
-  }
-
-  bool isPlaying() {
-    return player.playing && player.position.inMilliseconds < totalTime.inMilliseconds;
-  }
-
   void durationListener(Duration dur) {
     currentTime = dur;
-
-    if(totalTime.inMilliseconds > 100 && dur.inMilliseconds > 100) {
-      playerSliderValue = dur.inSeconds * 100 / totalTime.inSeconds;
-    }
-
     assistCtr.updateAssist(id$playViewId);
   }
 
-  void eventListener(PlaybackEvent event){
-    assistCtr.updateAssist(id$playViewId);
-  }
-
-  Future<void> prepareVoice() async {
-    voiceIsOk = false;
-
-    if(currentItem?.voice?.fileLocation == null){
-      return;
+  void eventListener(bool? prepare, Object? event){
+    if(prepare == true) {
+      totalTime = voiceController.totalTime;
+      assistCtr.updateAssist(id$playViewId);
     }
-
-    return player.setUrl(currentItem?.voice?.fileLocation?? '').then((dur) {
-      voiceIsOk = true;
-
-      if(dur != null){
-        totalTime = dur;
-        //assistCtr.update(timerViewId);
-      }
-
-    }).onError((error, stackTrace) {
-      if(error is PlayerException){
-        if(error.toString().contains('Source error')){
-          AppToast.showToast(context, 'آماده سازی صوت انجام نشد');
-          return;
-        }
-      }
-    });
+    else {
+      totalTime = Duration.zero;
+    }
   }
 
   void onTryAgain(){
-    voiceIsOk = false;
     assistCtr.clearStates();
     assistCtr.addStateAndUpdateHead(AssistController.state$loading);
     requestListening();
@@ -462,74 +312,13 @@ class _ListeningPageState extends StateBase<ListeningPage> {
       }
       else {
         currentItem = itemList[0];
-        prepareVoice();
-        buildExamView();
+
         assistCtr.updateHead();
       }
     };
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/listening?CategoryId=${widget.injector.categoryId}');
-    requester.request(context);
-  }
-
-  void onRegisterExamClick() {
-    examController = ExamController.getControllerFor(currentItem!.quiz);
-
-    if(examController != null){
-      if(!examController!.isAnswer()){
-        AppToast.showToast(context, 'لطفا تمرین را انجام دهید ');
-        return;
-      }
-
-      requestSendAnswer();
-    }
-  }
-
-  void requestSendAnswer(){
-    requester.httpRequestEvents.onAnyState = (req) async {
-      await hideLoading();
-    };
-
-    requester.httpRequestEvents.onFailState = (req, res) async {
-      AppSnack.showSnack$errorCommunicatingServer(context);
-    };
-
-    requester.httpRequestEvents.onStatusOk = (req, res) async {
-      examController?.showAnswer(true);
-
-      final message = res['message']?? 'پاسخ شما ثبت شد';
-      AppSnack.showInfo(context, message);
-      assistCtr.updateHead();
-    };
-
-    final js = <String, dynamic>{};
-    final tempList = [];
-
-    if(currentItem!.quiz.items.length < 2) {
-      tempList.add({
-        'exerciseId': currentItem!.quiz.getExamItem().id,
-        'answer': currentItem!.quiz.getExamItem().getUserAnswerText(),
-        'isCorrect': currentItem!.quiz.getExamItem().isUserAnswerCorrect(),
-      });
-    }
-    else {
-      for (final itm in currentItem!.quiz.items){
-        tempList.add({
-          'exerciseId': itm.id,
-          'answer': currentItem!.quiz.sentenceExtra!.joinUserAnswerById(itm.id),
-          'isCorrect': currentItem!.quiz.sentenceExtra!.isCorrectById(itm.id),
-        });
-      }
-    }
-
-    js['items'] = tempList;
-
-    requester.methodType = MethodType.post;
-    requester.prepareUrl(pathUrl: '/listening/exercises/solving');
-    requester.bodyJson = js;
-
-    showLoading();
     requester.request(context);
   }
 }

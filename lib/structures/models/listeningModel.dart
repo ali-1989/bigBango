@@ -7,7 +7,7 @@ class ListeningModel {
   String id = '';
   String title = '';
   MediaModel? voice;
-  late ExamModel quiz;
+  List<ExamModel> exams = [];
   double progress = 0;
 
   ListeningModel();
@@ -22,8 +22,11 @@ class ListeningModel {
       voice = MediaModel.fromMap(map['voice']);
     }
 
-    if(map['exercise'] != null) {
-      quiz = ExamModel.fromMap(map['exercise']);
+    if(map['exercises'] is List) {
+      for(final x in map['exercises']){
+        final e = ExamModel.fromMap(x);
+        exams.add(e);
+      }
     }
   }
 
@@ -33,8 +36,9 @@ class ListeningModel {
     map['id'] = id;
     map['title'] = title;
     map['voice'] = voice?.toMap();
-    map['quiz'] = quiz.toMap();
     map['progress'] = progress;
+
+    map['exercises'] = exams.map((e) => e.toMap()).toList();
 
     return map;
   }

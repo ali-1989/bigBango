@@ -160,7 +160,11 @@ class _SpeakingPageState extends StateBase<SpeakingPage> with TickerProviderStat
                   animController = animCtr;
                 },
                 duration: const Duration(milliseconds: 500),
-                child: SpeakingComponent(speakingModel: currentItem, onSendAnswer: onSendAnswerClick)
+                child: SpeakingComponent(
+                    key: ValueKey(currentIndex),
+                    speakingModel: currentItem,
+                    onSendAnswer: onSendAnswerClick
+                )
             ),
         ),
 
@@ -304,7 +308,10 @@ class _SpeakingPageState extends StateBase<SpeakingPage> with TickerProviderStat
         }
 
         examList.addAll(itemList);
-        currentItem = examList[currentIndex];
+
+        if(examList.isNotEmpty) {
+          currentItem = examList[currentIndex];
+        }
 
         assistCtr.clearStates();
         assistCtr.updateHead();

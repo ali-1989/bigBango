@@ -160,7 +160,11 @@ class _WritingPageState extends StateBase<WritingPage> with TickerProviderStateM
                   animController = animCtr;
                 },
                 duration: const Duration(milliseconds: 500),
-                child: WritingComponent(writingModel: currentItem, onSendAnswer: onSendAnswerClick)
+                child: WritingComponent(
+                  key: ValueKey(currentIndex),
+                    writingModel: currentItem,
+                    onSendAnswer: onSendAnswerClick
+                )
             ),
         ),
 
@@ -304,7 +308,10 @@ class _WritingPageState extends StateBase<WritingPage> with TickerProviderStateM
         }
 
         examList.addAll(itemList);
-        currentItem = examList[currentIndex];
+
+        if(examList.isNotEmpty) {
+          currentItem = examList[currentIndex];
+        }
 
         assistCtr.clearStates();
         assistCtr.updateHead();

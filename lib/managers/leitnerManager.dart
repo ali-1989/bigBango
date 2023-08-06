@@ -55,7 +55,7 @@ class LeitnerManager {
     };
 
     requester.httpRequestEvents.onFailState = (req, dataJs) async {
-      if(AppCache.timeoutCache.addTimeout('requestLeitnerCount', Duration(minutes: 1))){
+      if(AppCache.timeoutCache.addTimeout('requestLeitnerCount', const Duration(minutes: 1))){
         requestLeitnerCount();
       }
     };

@@ -65,10 +65,12 @@ class WritingComponentState extends StateBase<WritingComponent> {
       child: Column(
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image.asset(AppImages.doubleArrow),
               const SizedBox(width: 4),
-              Text(writingModel.question?? ''),
+
+              Expanded(child: Text(writingModel.question?? '', maxLines: 2)),
             ],
           ),
           const SizedBox(height: 20),
@@ -82,7 +84,7 @@ class WritingComponentState extends StateBase<WritingComponent> {
                     minWidth: double.infinity,
                     minHeight: 50,
                   ),
-                  child: Text(writingModel.text!).englishFont().fsR(-1)),
+                  child: Text(writingModel.text!).englishFont()),
             ).wrapDotBorder(
                 color: Colors.black12,
                 alpha: 100,
@@ -90,7 +92,7 @@ class WritingComponentState extends StateBase<WritingComponent> {
           ),
 
           const SizedBox(height: 30),
-          const Divider(color: Colors.black,),
+          const Divider(color: Colors.black26),
           const SizedBox(height: 15),
 
           const Align(
