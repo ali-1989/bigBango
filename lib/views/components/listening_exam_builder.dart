@@ -4,15 +4,17 @@ import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
-import 'package:app/structures/models/listeningModel.dart';
+import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/views/components/exam/examBlankSpaseBuilder.dart';
 import 'package:app/views/components/exam/examMakeSentenceBuilder.dart';
 import 'package:app/views/components/exam/examOptionBuilder.dart';
 import 'package:app/views/components/exam/examSelectWordBuilder.dart';
+import 'package:app/views/page_number_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/widgets/circle.dart';
+import 'package:iris_tools/api/generator.dart';
+import 'package:iris_tools/widgets/customCard.dart';
 
 class ListeningExamBuilder extends StatefulWidget {
   final List<ExamModel> examModelList;
@@ -29,7 +31,6 @@ class ListeningExamBuilder extends StatefulWidget {
 class _ListeningExamBuilderState extends StateBase<ListeningExamBuilder> {
   Requester requester = Requester();
   late ExamModel currentExam;
-  String description = '';
   ExamController? examController;
   int currentIndex = 0;
   late AnimationController examAnimController;
@@ -43,38 +44,46 @@ class _ListeningExamBuilderState extends StateBase<ListeningExamBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
+    return CustomCard(
       color: Colors.grey.shade100,
-      child: Column(
-        children: [
-          buildExamView(),
+      radius: 12,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            buildExamView(),
 
-          Visibility(
-            visible: !currentExam.showAnswer,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22.0),
-              child: SizedBox(
-                width: 200,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
-                    ),
-                    onPressed: onRegisterExamClick,
-                    child: const Text('ثبت')
+            Visibility(
+              visible: widget.examModelList.length > 1,
+              child: PageNumberSelector(
+                numbers: List.generate(widget.examModelList.length, (index) => index+1),
+                defaultColor: Colors.grey.shade300,
+                selectColor: AppDecoration.red,
+                selectIndex: currentIndex,
+                onChange: onExamChange,
+              ),
+            ),
+
+            const SizedBox(height: 8,),
+
+            Visibility(
+              visible: !currentExam.showAnswer,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
+                      ),
+                      onPressed: onRegisterExamClick,
+                      child: const Text('ثبت')
+                  ),
                 ),
               ),
             ),
-          ),
-
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Circle(size: 10, color: Colors.cyan),
-              Circle(size: 10, color: Colors.cyan),
-              Circle(size: 10, color: Colors.cyan),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -222,5 +231,12 @@ class _ListeningExamBuilderState extends StateBase<ListeningExamBuilder> {
 
     showLoading();
     requester.request(context);
+  }
+
+  void onExamChange(int index) {
+    currentIndex = index;
+    currentExam = widget.examModelList[currentIndex];
+
+    setState(() {});
   }
 }

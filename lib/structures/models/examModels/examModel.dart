@@ -90,6 +90,7 @@ class ExamModel extends ExamSuperModel {
     }
 
     if(quizType == QuizType.fillInBlank){
+      print('-------- fillInBlank ---- ');
       _getFirst()._doSplitQuestion();
     }
 

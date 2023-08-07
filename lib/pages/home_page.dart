@@ -594,7 +594,7 @@ class HomePageState extends StateBase<HomePage> {
     return LayoutBuilder(
       builder: (_, siz) {
         return SizedBox(
-          width: (siz.maxWidth/2)-4,
+          width: (siz.maxWidth/2) -4,
           child: GestureDetector(
             onTap: (){
               onLessonSegmentClick(lesson, segmentModel);
@@ -624,7 +624,6 @@ class HomePageState extends StateBase<HomePage> {
                               Text(segmentModel.engTitle).alpha(alpha: 100),
                             ],
                           ),
-
                         ],
                       ),
 

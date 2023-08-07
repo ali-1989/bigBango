@@ -210,6 +210,10 @@ class MyErrorApp extends StatelessWidget {
 void onErrorCatch(FlutterErrorDetails errorDetails) {
   var txt = 'AN ERROR HAS OCCURRED:: ${errorDetails.exception.toString()}';
 
+  if(txt.contains('\'hasSize\': RenderBox')){
+    return;
+  }
+
   if(!kIsWeb) {
     txt += '\n STACK TRACE:: ${errorDetails.stack}';
   }
