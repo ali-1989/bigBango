@@ -27,6 +27,8 @@ class ExamModel extends ExamSuperModel {
       items = js['items'].map<ExamItem>((e) => ExamItem.fromMap(e, quizType)).toList();
     }
 
+    //prepare();
+
     id = items[0].id;
 
     if(js['voice'] is Map) {
@@ -90,7 +92,6 @@ class ExamModel extends ExamSuperModel {
     }
 
     if(quizType == QuizType.fillInBlank){
-      print('-------- fillInBlank ---- ');
       _getFirst()._doSplitQuestion();
     }
 

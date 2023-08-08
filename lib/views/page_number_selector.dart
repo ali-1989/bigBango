@@ -5,22 +5,22 @@ import 'package:flutter/material.dart';
 typedef OnChange = void Function(int index);
 ///==================================================================================
 class PageNumberSelector extends StatefulWidget {
-  final Color defaultColor;
-  final Color selectColor;
+  final Color defaultBackColor;
+  final Color selectedBackColor;
   final Color selectedTextColor;
-  final Color unselectedTextColor;
-  final Color? disableColor;
+  final Color defaultTextColor;
+  final Color? arrowDisableColor;
   final OnChange? onChange;
-  final int selectIndex;
+  final int selectedIndex;
   final List<int> numbers;
 
   const PageNumberSelector({
-    required this.defaultColor,
-    required this.selectColor,
+    required this.defaultBackColor,
+    required this.selectedBackColor,
     this.selectedTextColor = Colors.white,
-    this.unselectedTextColor = Colors.black,
-    this.selectIndex = 0,
-    this.disableColor,
+    this.defaultTextColor = Colors.black,
+    this.selectedIndex = 0,
+    this.arrowDisableColor,
     this.onChange,
     required this.numbers,
     Key? key,
@@ -30,17 +30,24 @@ class PageNumberSelector extends StatefulWidget {
   State createState() => _PageNumberSelectorState();
 }
 ///=========================================================================================
-class _PageNumberSelectorState extends State<PageNumberSelector> {
+class _PageNumberSelectorState extends State<PageNumberSelector> with TickerProviderStateMixin {
   int currentIndex = 0;
+  int startIndex = 0;
   List<int> showNumbers = [];
-  late Color disableColor;
+  late Color arrowDisableColor;
+  late AnimationController animController;
+  late Animation<int> alphaAnim;
+  Tween<int> alphaTween = IntTween(begin: 10, end:255);
 
   @override
   void initState(){
     super.initState();
 
-    disableColor = widget.disableColor?? Colors.grey.shade300;
-    currentIndex = widget.selectIndex;
+    animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    alphaAnim = alphaTween.animate(animController);
+
+    arrowDisableColor = widget.arrowDisableColor?? Colors.grey.shade300;
+    currentIndex = widget.selectedIndex;
     init();
   }
 
@@ -51,26 +58,20 @@ class _PageNumberSelectorState extends State<PageNumberSelector> {
       showNumbers.addAll(widget.numbers);
     }
     else {
-      final dif = widget.numbers.length - currentIndex;
-
-      if(dif > 5){
-        var start = currentIndex;
-
-        if(currentIndex > 0){
-          start--;
-        }
-
-        for(int i = start; i < start +5; i++){
-          showNumbers.add(widget.numbers[i]);
-        }
+      if(startIndex + 3 < currentIndex){
+        startIndex++;
       }
-      else {
-        final temp = <int>[];
-        for(int i = widget.numbers.length-1; i > widget.numbers.length -6; i--){
-          temp.add(widget.numbers[i]);
-        }
 
-        showNumbers.addAll(temp.reversed.toList());
+      if(startIndex > 0 && startIndex >= currentIndex){
+        startIndex--;
+      }
+
+      if(startIndex + 5 > widget.numbers.length){
+        startIndex = widget.numbers.length -5;
+      }
+
+      for(int i = startIndex; i < startIndex +5; i++){
+        showNumbers.add(widget.numbers[i]);
       }
     }
   }
@@ -82,7 +83,7 @@ class _PageNumberSelectorState extends State<PageNumberSelector> {
     /*if(oldWidget.selectIndex != widget.selectIndex || oldWidget.numbers.length != widget.numbers.length){
 
     }*/
-    currentIndex = widget.selectIndex;
+    currentIndex = widget.selectedIndex;
     init();
     setState(() {});
   }
@@ -96,40 +97,45 @@ class _PageNumberSelectorState extends State<PageNumberSelector> {
         IconButton(
           icon: RotatedBox(
               quarterTurns: 2,
-              child: Icon(Icons.arrow_back_ios, color: _canPrev()? Colors.black87 : disableColor)
+              child: Icon(Icons.arrow_back_ios, color: _canPrev()? Colors.black54 : arrowDisableColor)
           ),
           onPressed: onPrevClick,
         ),
 
-        /*Visibility(
-            visible: _canPrev(),
-            child: Circle(size: 7, color: widget.defaultColor)
-        ),*/
-
         ...List.generate(showNumbers.length, (index) {
           final num = showNumbers[index];
-          bool isSelected = widget.numbers[currentIndex] == num;
+          //bool isSelected = widget.numbers[currentIndex] == num;
+          bool isSelected = currentIndex == startIndex + index;
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 3.0),
             child: GestureDetector(
               onTap: (){
-                onNumberClick(num);
+                if(startIndex + index == currentIndex){
+                  return;
+                }
+
+                onNumberClick(startIndex + index);
               },
-              child: CircleContainer(
-                backColor: isSelected? widget.selectColor: widget.defaultColor,
-                border: Border.all(style: BorderStyle.none),
-                child: Center(
-                    child: Text('$num')
-                        .fsR(-2).color(isSelected? widget.selectedTextColor : widget.unselectedTextColor)
-                ),
+              child: AnimatedBuilder(
+                animation: animController,
+                builder: (_, child) {
+                  return CircleContainer(
+                    backColor: isSelected? widget.selectedBackColor.withAlpha(alphaAnim.value): widget.defaultBackColor,
+                    border: Border.all(style: BorderStyle.none),
+                    child: Center(
+                        child: Text('$num')
+                            .fsR(-2).color(isSelected? widget.selectedTextColor : widget.defaultTextColor)
+                    ),
+                  );
+                },
               ),
             ),
           );
         }),
 
         IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: _canNext()? Colors.black87 : disableColor),
+            icon: Icon(Icons.arrow_back_ios, color: _canNext()? Colors.black54 : arrowDisableColor),
           onPressed: onNextClick,
         ),
       ],
@@ -150,9 +156,7 @@ class _PageNumberSelectorState extends State<PageNumberSelector> {
     }
 
     currentIndex++;
-    init();
-    setState(() {});
-    widget.onChange?.call(currentIndex);
+    rebuild();
   }
 
   void onPrevClick() {
@@ -161,16 +165,26 @@ class _PageNumberSelectorState extends State<PageNumberSelector> {
     }
 
     currentIndex--;
-    init();
-    setState(() {});
-    widget.onChange?.call(currentIndex);
+    rebuild();
   }
 
-  void onNumberClick(int num) {
-    currentIndex = widget.numbers.indexOf(num);
+  void onNumberClick(int index) {
+    //currentIndex = widget.numbers.indexOf(index);
+    currentIndex = index;
+    rebuild();
+  }
 
+  void rebuild(){
     init();
     setState(() {});
+
+    animController.reset();
+    animController.forward();
     widget.onChange?.call(currentIndex);
   }
 }
+
+/*Visibility(
+    visible: _canPrev(),
+    child: Circle(size: 7, color: widget.defaultColor)
+),*/

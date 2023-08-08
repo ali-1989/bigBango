@@ -4,6 +4,7 @@ import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
+import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
@@ -13,7 +14,6 @@ import 'package:app/views/components/exam/examOptionBuilder.dart';
 import 'package:app/views/components/exam/examSelectWordBuilder.dart';
 import 'package:app/views/page_number_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 class ListeningExamBuilder extends StatefulWidget {
@@ -39,13 +39,31 @@ class _ListeningExamBuilderState extends StateBase<ListeningExamBuilder> {
   void initState(){
     super.initState();
 
+    prepare();
+  }
+
+  @override
+  void didUpdateWidget(ListeningExamBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if(oldWidget.examModelList != widget.examModelList ||
+        oldWidget.examModelList.length != widget.examModelList.length){
+      prepare();
+    }
+  }
+
+  void prepare(){
     currentExam = widget.examModelList[0];
+
+    for(final e in widget.examModelList) {
+      e.prepare();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      color: Colors.grey.shade100,
+      color: Colors.white,//red.shade50,
       radius: 12,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -57,9 +75,9 @@ class _ListeningExamBuilderState extends StateBase<ListeningExamBuilder> {
               visible: widget.examModelList.length > 1,
               child: PageNumberSelector(
                 numbers: List.generate(widget.examModelList.length, (index) => index+1),
-                defaultColor: Colors.grey.shade300,
-                selectColor: AppDecoration.red,
-                selectIndex: currentIndex,
+                defaultBackColor: Colors.grey.shade300,
+                selectedBackColor: AppDecoration.red,
+                selectedIndex: currentIndex,
                 onChange: onExamChange,
               ),
             ),
@@ -85,11 +103,15 @@ class _ListeningExamBuilderState extends StateBase<ListeningExamBuilder> {
           ],
         ),
       ),
+    )
+        .wrapDotBorder(
+      color: Colors.grey
     );
   }
 
   Widget buildExamView(){
     return FadeIn(
+      //key: ValueKey(Generator.generateKey(8)),
       animate: true,
       manualTrigger: true,
       controller: (animCtr){
@@ -238,5 +260,8 @@ class _ListeningExamBuilderState extends StateBase<ListeningExamBuilder> {
     currentExam = widget.examModelList[currentIndex];
 
     setState(() {});
+
+    examAnimController.reset();
+    examAnimController.forward();
   }
 }

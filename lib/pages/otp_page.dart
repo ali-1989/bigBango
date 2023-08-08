@@ -371,9 +371,7 @@ class _OtpPageState extends StateBase<OtpPage> {
     double percent = 100 * (num - minResultFor) / difRange;
     double wPer = difResult * percent / 100;
     double res = wPer + minResult;
-    //print('>>>>>>>>>>( $difResult  ,   $difRange)    __percent: $percent%  | wPer:$wPer');
 
-    //print('-- pow:$res');
     return res;
   }
 }

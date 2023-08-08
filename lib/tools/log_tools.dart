@@ -49,7 +49,6 @@ class LogTools {
 
     _errorBridge!.init('error_handler', (call) async {
       if(call.method == 'report_error') {
-        print('::::::::::::::::::: error_report recive:  ${call.arguments}');
         reportError(call.arguments);
       }
 

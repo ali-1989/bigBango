@@ -70,7 +70,6 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
 
   Widget buildBody(){
     final List<InlineSpan> spans = generateSpans(exam);
-    print('============== spans: ${spans.length}');
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Directionality(
@@ -109,7 +108,6 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
   
   List<InlineSpan> generateSpans(ExamModel exam){
     final List<InlineSpan> spans = [];
-    print('============== spans >: ${exam.getExamItem().questionSplit.length}');
     for(int i = 0; i < exam.getExamItem().questionSplit.length; i++) {
       spans.add(TextSpan(text: exam.getExamItem().questionSplit[i], style: questionNormalStyle));
 
@@ -277,7 +275,7 @@ class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with E
           }
           else {
             blankText = ' [\u00A0____\u00A0] '; // \u202F , \u2007
-            blankColor = Colors.grey.shade200;
+            blankColor = Colors.grey.shade300;
           }
 
           /// blank space ==> [xxx]
