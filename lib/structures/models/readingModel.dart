@@ -1,10 +1,10 @@
+import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/generator.dart';
 
 import 'package:app/structures/models/mediaModel.dart';
-import 'package:app/structures/models/readingExerciseModel.dart';
 import 'package:app/structures/models/vocabModels/idiomInReadingModel.dart';
 import 'package:app/structures/models/vocabModels/vocabInReadingModel.dart';
 import 'package:app/system/extensions.dart';
@@ -18,7 +18,7 @@ class ReadingModel {
   List<SegmentOfReadingModel> segments = [];
   List<IdiomInReadingModel> clickableIdioms = [];
   List<VocabInReadingModel> clickableVocabsOrg = [];
-  List<ReadingExerciseModel> exerciseList = [];
+  List<ExamModel> exerciseList = [];
 
   ///----------------- local
   List<VocabInReadingModel> clickableVocabsScope = [];
@@ -60,9 +60,10 @@ class ReadingModel {
       }
     }
 
-    if(map['exerciseCategories'] is List) {
-      for(final itm in map['exerciseCategories']){
-        final s = ReadingExerciseModel.fromMap(itm);
+    if(map['exercises'] is List) {
+      for(final itm in map['exercises']){
+        //final s = ReadingExerciseModel.fromMap(itm);
+        final s = ExamModel.fromMap(itm);
         exerciseList.add(s);
       }
     }

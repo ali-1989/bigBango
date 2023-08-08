@@ -6,6 +6,7 @@ import 'package:app/tools/deviceInfoTools.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
@@ -21,6 +22,7 @@ class LogTools {
   static late Reporter reporter;
   static JavaBridge? _errorBridge;
   static JavaBridge? assistanceBridge;
+  static List avoidReport = <String>[];
 
   static Future<bool> init() async {
     try {
@@ -44,6 +46,8 @@ class LogTools {
       return;
     }
 
+    avoidReport.add('\'hasSize\': RenderBox');
+
     _errorBridge = JavaBridge();
     assistanceBridge = JavaBridge();
 
@@ -63,12 +67,21 @@ class LogTools {
   }
 
   static void reportError(Map<String, dynamic> map) async {
+    final String txt = map['error']?? '';
+
+    for(final x in avoidReport){
+      if(txt.contains(x)){
+        return;
+      }
+    }
+
     void fn(){
       final url = Uri.parse(ApiManager.errorReportApi);
 
       final body = {
         'data': map,
         'device_id': DeviceInfoTools.deviceId,
+        'code': Generator.hashMd5(txt),
       };
 
       if(SessionService.hasAnyLogin()){
@@ -77,6 +90,7 @@ class LogTools {
 
       http.post(url, body: JsonHelper.mapToJson(body));
     }
+
 
     runZonedGuarded(fn, (error, stack) {
       LogTools.logger.logToAll('::::::::::::: report ::::::::::: ${error.toString()}');

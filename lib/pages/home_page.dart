@@ -742,7 +742,7 @@ class HomePageState extends StateBase<HomePage> {
       page = GrammarPage(injector: GrammarPageInjector(lessonModel));
     }
     else if (segment is ReadingSegmentModel){
-      page = ReadingPage(injector: ReadingPageInjector(lessonModel));
+      page = ReadingPage(injector: ReadingPageInjector(lessonModel, categoryId: lessonModel.readingSegment!.categories.first.id));
     }
     else if (segment is ListeningSegmentModel && lessonModel.listeningSegment != null && lessonModel.listeningSegment!.listeningList.isNotEmpty){
       page = ListeningPage(injector: ListeningPageInjector(lessonModel, lessonModel.listeningSegment!.listeningList[0].id));

@@ -94,7 +94,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     player.playbackEventStream.listen(eventListener);
     player.positionStream.listen(durationListener);
 
-    currentItemIdx = widget.injector.index?? 0;
+    currentItemIdx = 0;
     requestReading();
   }
 
@@ -430,7 +430,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
                   const SizedBox(height: 14),
 
-                  ...buildExerciseList()
+                  ///...buildExerciseList()
                 ],
               ),
             ],
@@ -463,93 +463,6 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
         ),
       ],
     );
-  }
-
-  List<Widget> buildExerciseList(){
-    final res = <Widget>[];
-
-    for(int i = 0; i < currentItem!.exerciseList.length; i++){
-      final itm = currentItem!.exerciseList[i];
-
-      final w = GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: (){
-          onStartExerciseClick(itm);
-        },
-        child: Card(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const SizedBox(
-                  height: 22,
-                  child: VerticalDivider(color: AppDecoration.red, width: 3, thickness: 3)
-              ),
-
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Row(
-                            children: [
-                              const SizedBox(width: 10),
-
-                              CustomCard(
-                                  color: Colors.grey.shade200,
-                                  radius: 3,
-                                  padding: const EdgeInsets.symmetric(horizontal:10 , vertical: 3),
-                                  child: Text('${i+1}')
-                              ),
-
-                              const SizedBox(width: 10),
-                              Text(itm.title).fsR(-2),
-                            ],
-                          ),
-
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Row(
-                              children: [
-                                Text('${itm.count * itm.progress ~/100} / ${itm.count}', textDirection: TextDirection.ltr,)
-                                    .alpha().fsR(-2),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: LinearProgressIndicator(
-                            backgroundColor: Colors.greenAccent.withAlpha(40),
-                            color: Colors.greenAccent,
-                            value: itm.progress / 100,
-                            minHeight: 3,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      );
-
-      res.add(w);
-    }
-
-    return res;
   }
 
   void playSound() async {
@@ -700,7 +613,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     requestReading();
   }
 
-  void onStartExerciseClick(ReadingExerciseModel model) async {
+  void onStartExerciseClick(ExamModel model) async {
     showLoading();
     await requestExercise(model);
     await hideLoading();
@@ -754,7 +667,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     };
 
     requester.methodType = MethodType.get;
-    requester.prepareUrl(pathUrl: '/reading?LessonId=${widget.injector.lessonModel.id}');
+    requester.prepareUrl(pathUrl: '/reading?CategoryId=${widget.injector.categoryId}');
     requester.request(context);
   }
 
@@ -776,7 +689,7 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
     reviewRequester.request();
   }
 
-  Future<void> requestExercise(ReadingExerciseModel model) async {
+  Future<void> requestExercise(ExamModel model) async {
     Completer c = Completer();
     examList.clear();
 
@@ -857,21 +770,90 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
 
 
 /*
-htmlText = '''
-    <body>
-    <p>verb (used with object)</p>
-    <p><strong>1 ali bagheri is very good:</strong></p>
-    <p><span style="color: #ff0000;">&nbsp; &nbsp; she is not good</span></p>
-    <p>noun</p>
-    <p><strong>2 ali bagheri is very good ali bagheri is very good ali bagheri is very good:</strong></p>
-    <p><span style="color: #ff0000;">&nbsp; &nbsp; she is not good</span></p>
-    <p><strong>&nbsp;&nbsp;</strong></p>
-    </body>
-''';
+List<Widget> buildExerciseList(){
+    final res = <Widget>[];
 
+    for(int i = 0; i < currentItem!.exerciseList.length; i++){
+      final itm = currentItem!.exerciseList[i];
 
-Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: HTML.toRichText(context, htmlText, defaultTextStyle: AppThemes.body2TextStyle())
-                    ),
-* */
+      final w = GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: (){
+          onStartExerciseClick(itm);
+        },
+        child: Card(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const SizedBox(
+                  height: 22,
+                  child: VerticalDivider(color: AppDecoration.red, width: 3, thickness: 3)
+              ),
+
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Row(
+                            children: [
+                              const SizedBox(width: 10),
+
+                              CustomCard(
+                                  color: Colors.grey.shade200,
+                                  radius: 3,
+                                  padding: const EdgeInsets.symmetric(horizontal:10 , vertical: 3),
+                                  child: Text('${i+1}')
+                              ),
+
+                              const SizedBox(width: 10),
+                              Text(itm.title).fsR(-2),
+                            ],
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Row(
+                              children: [
+                                Text('${itm.count * itm.progress ~/100} / ${itm.count}', textDirection: TextDirection.ltr,)
+                                    .alpha().fsR(-2),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: LinearProgressIndicator(
+                            backgroundColor: Colors.greenAccent.withAlpha(40),
+                            color: Colors.greenAccent,
+                            value: itm.progress / 100,
+                            minHeight: 3,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+
+      res.add(w);
+    }
+
+    return res;
+  }
+ */

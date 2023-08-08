@@ -94,7 +94,7 @@ class _SelectReadingDialog extends StateBase<SelectReadingDialog> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        final page = ReadingPage(injector: ReadingPageInjector(widget.lessonModel, index: idx));
+        final page = ReadingPage(injector: ReadingPageInjector(widget.lessonModel, categoryId: itm.id));
 
         RouteTools.pushPage(context, page);
       },

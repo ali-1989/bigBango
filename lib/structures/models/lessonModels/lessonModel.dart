@@ -44,8 +44,8 @@ class LessonModel {
       grammarSegment = GrammarSegmentModel.fromMap(map['grammar']);
     }
 
-    if(map['reading'] is Map) {
-      readingSegment = ReadingSegmentModel.fromMap(map['reading']);
+    if(map['readingCategory'] is Map) {
+      readingSegment = ReadingSegmentModel.fromMap(map['readingCategory']);
     }
 
     if(map['listeningCategory'] is Map) {
