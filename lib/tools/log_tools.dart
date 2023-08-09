@@ -10,6 +10,7 @@ import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
+import 'package:iris_tools/api/tools.dart';
 import 'package:iris_tools/plugins/javaBridge.dart';
 
 import 'package:app/managers/api_manager.dart';
@@ -47,6 +48,8 @@ class LogTools {
     }
 
     avoidReport.add('\'hasSize\': RenderBox');
+    avoidReport.add('has a negative minimum');
+    avoidReport.add('slot == null');
 
     _errorBridge = JavaBridge();
     assistanceBridge = JavaBridge();
@@ -68,19 +71,19 @@ class LogTools {
 
   static void reportError(Map<String, dynamic> map) async {
     final String txt = map['error']?? '';
-
+print('======================================');
     for(final x in avoidReport){
       if(txt.contains(x)){
         return;
       }
     }
-
+    print('====================================== 2');
     void fn(){
       final url = Uri.parse(ApiManager.errorReportApi);
 
-      final body = {
-        'data': map,
-        'device_id': DeviceInfoTools.deviceId,
+      final body = <String, dynamic>{
+        'data': map.toString(),
+        'deviceId': DeviceInfoTools.deviceId,
         'code': Generator.hashMd5(txt),
       };
 
@@ -88,7 +91,12 @@ class LogTools {
         body['user_id'] = SessionService.getLastLoginUser()?.userId;
       }
 
-      http.post(url, body: JsonHelper.mapToJson(body));
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+
+      http.post(url, body: JsonHelper.mapToJson(body), headers: headers);
     }
 
 

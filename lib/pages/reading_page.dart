@@ -18,7 +18,6 @@ import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
-import 'package:app/structures/models/readingExerciseModel.dart';
 import 'package:app/structures/models/readingModel.dart';
 import 'package:app/structures/models/vocabModels/clickableVocabModel.dart';
 import 'package:app/structures/models/vocabModels/idiomModel.dart';
@@ -422,14 +421,20 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 8),
-                  const Text('تمرین', style: TextStyle(fontSize: 16)),
+                  const Text('تمرینها', style: TextStyle(fontSize: 16)),
                   const SizedBox(height: 4),
                   Text('بعد از خواندن متن ، شروع به تمرین کنید و خودتون را محک بزنید',
                       style: TextStyle(fontSize: 10, color: Colors.grey.shade600)
                   ),
 
                   const SizedBox(height: 14),
-
+                  SizedBox(
+                    width: 200,
+                    child: ElevatedButton(
+                        onPressed: onStartExamsClick,
+                        child: Text('شروع')
+                    ),
+                  ),
                   ///...buildExerciseList()
                 ],
               ),
@@ -765,6 +770,22 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
         AppSnack.showSnack$OperationFailed(context);
       }
     }
+  }
+
+  void onStartExamsClick() {
+    if(currentItem!.exerciseList.isEmpty){
+      AppToast.showToast(context, 'تمرینی ثبت نشذه است');
+      return;
+    }
+
+    final inject = ExamPageInjector();
+    inject.prepareExamList(currentItem!.exerciseList);
+    inject.answerUrl = '/reading/exercises/solving';
+    inject.askConfirmToSend = false;
+
+    final p = ExamPage(injector: inject);
+
+    RouteTools.pushPage(context, p);
   }
 }
 
