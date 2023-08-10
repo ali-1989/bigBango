@@ -71,13 +71,13 @@ class LogTools {
 
   static void reportError(Map<String, dynamic> map) async {
     final String txt = map['error']?? '';
-print('======================================');
+
     for(final x in avoidReport){
       if(txt.contains(x)){
         return;
       }
     }
-    print('====================================== 2');
+    
     void fn(){
       final url = Uri.parse(ApiManager.errorReportApi);
 

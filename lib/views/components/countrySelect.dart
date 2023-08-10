@@ -6,10 +6,10 @@ import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/models/countryModel.dart';
 import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appMessages.dart';
+import 'package:app/tools/app/appSizes.dart';
+import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/countryTools.dart';
 import 'package:app/tools/routeTools.dart';
-import '/tools/app/appSizes.dart';
-import '/tools/app/appThemes.dart';
 
 class CountrySelectScreen extends StatefulWidget {
 
