@@ -11,7 +11,6 @@ import 'package:app/views/pages/home_page.dart';
 import 'package:app/views/pages/layout_page.dart';
 import 'package:app/structures/structure/messageStateManager.dart';
 import 'package:app/tools/app/appThemes.dart';
-import 'package:app/views/baseComponents/splashPage.dart';
 
 class AppBroadcast {
   AppBroadcast._();
@@ -19,6 +18,7 @@ class AppBroadcast {
   static final StreamController<bool> viewUpdaterStream = StreamController<bool>();
   static final RefreshController drawerMenuRefresher = RefreshController();
   static final EventStateNotifier<MessageStateManager> messageNotifier = EventStateNotifier(MessageManager.messageStateManager);
+
   //---------------------- keys
   static LocalKey materialAppKey = UniqueKey();
   static final rootScaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -46,10 +46,5 @@ class AppBroadcast {
     }
 
     viewUpdaterStream.sink.add(true);
-  }
-
-  static void gotoSplash() {
-    mustWaitToSplashTimer = true;
-    reBuildMaterial();
   }
 }
