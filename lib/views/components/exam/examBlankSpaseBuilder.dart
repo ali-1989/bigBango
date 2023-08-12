@@ -9,7 +9,7 @@ import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appOverlay.dart';
-import 'package:app/views/widgets/animationPositionScale.dart';
+import 'package:app/views/components/animationPositionScale.dart';
 
 class ExamBlankSpaceBuilder extends StatefulWidget {
   static const questionTitle = 'در جای خالی کلمه ی مناسب بنویسید';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomThumb extends SliderComponentShape {
+class CustomSlider extends SliderComponentShape {
 
   @override
   Size getPreferredSize(bool isEnabled, bool isDiscrete) {

@@ -11,7 +11,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/attribute.dart';
 
 import 'package:app/managers/settings_manager.dart';
-import 'package:app/pages/otp_page.dart';
+import 'package:app/views/pages/otp_page.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';

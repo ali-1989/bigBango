@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
-import 'package:app/pages/grammar_page.dart';
+import 'package:app/views/pages/grammar_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
@@ -115,7 +115,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectGrammarDialog> {
                   ),
 
                   const SizedBox(height: 15),
-                  Text('« ${itm.title} »', maxLines: 1,).fsR(-2),
+                  Text('« ${itm.title} »', maxLines: 2).fitWidthOverflow(minOfFontSize: 12),
 
                   const SizedBox(height: 8),
 

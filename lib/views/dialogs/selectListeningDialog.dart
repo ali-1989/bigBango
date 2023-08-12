@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
-import 'package:app/pages/listening_page.dart';
+import 'package:app/views/pages/listening_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
@@ -115,7 +115,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectListeningDialog> {
                         child: Image.asset(AppImages.speakerIco, width: 25, color: AppDecoration.red,)
                     ),
                     const SizedBox(height: 15),
-                    Text('« ${itm.title} »', maxLines: 1),
+                    Text('« ${itm.title} »', maxLines: 2).fitWidthOverflow(minOfFontSize: 12),
 
                     const SizedBox(height: 8),
                     Padding(

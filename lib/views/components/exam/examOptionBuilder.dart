@@ -14,7 +14,7 @@ import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appToast.dart';
-import 'package:app/views/widgets/sliders.dart';
+import 'package:app/views/components/custom_slider.dart';
 
 class ExamOptionBuilder extends StatefulWidget {
   static const questionTitle = 'با توجه به سوال گزینه ی مناسب را انتخاب کنید';
@@ -122,8 +122,8 @@ class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStat
                                               textDirection: TextDirection.ltr,
                                               child: SliderTheme(
                                                 data: SliderTheme.of(context).copyWith(
-                                                  thumbShape: CustomThumb(),
-                                                  valueIndicatorShape: CustomThumb(),
+                                                  thumbShape: CustomSlider(),
+                                                  valueIndicatorShape: CustomSlider(),
                                                   valueIndicatorColor: Colors.transparent,
                                                   overlayColor: Colors.transparent,
                                                 ),

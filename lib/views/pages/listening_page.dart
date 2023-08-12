@@ -220,7 +220,7 @@ class _ListeningPageState extends StateBase<ListeningPage> {
         ),
 
         Visibility(
-          visible: true,//itemList.length > 1,
+          visible: itemList.length > 1,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

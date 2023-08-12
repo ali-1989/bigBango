@@ -11,8 +11,8 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:app/managers/api_manager.dart';
-import 'package:app/pages/ticket_detail_page.dart';
-import 'package:app/pages/timetable_page.dart';
+import 'package:app/views/pages/ticket_detail_page.dart';
+import 'package:app/views/pages/timetable_page.dart';
 import 'package:app/services/session_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appEvents.dart';

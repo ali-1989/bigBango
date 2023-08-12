@@ -6,7 +6,7 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:iris_tools/widgets/icon/circularIcon.dart';
 
 import 'package:app/managers/leitnerManager.dart';
-import 'package:app/pages/leitner_detail_page.dart';
+import 'package:app/views/pages/leitner_detail_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/leitnerModels/leitnerBoxModel.dart';

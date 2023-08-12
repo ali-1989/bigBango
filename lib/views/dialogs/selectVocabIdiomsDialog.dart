@@ -4,8 +4,8 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 import 'package:slide_switcher/slide_switcher.dart';
 
-import 'package:app/pages/idioms_page.dart';
-import 'package:app/pages/vocab_page.dart';
+import 'package:app/views/pages/idioms_page.dart';
+import 'package:app/views/pages/vocab_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
@@ -179,7 +179,7 @@ class _SelectVocabIdiomsDialog extends StateBase<SelectVocabIdiomsDialog> {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  Text('« ${itm.title} »', maxLines: 1,),
+                  Text('« ${itm.title} »', maxLines: 2).fitWidthOverflow(minOfFontSize: 12),
                   /*const SizedBox(height: 10),
                   const Text('اصطلاحات').bold(),*/
 

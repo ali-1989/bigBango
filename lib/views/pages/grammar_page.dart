@@ -9,7 +9,7 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:app/managers/api_manager.dart';
-import 'package:app/pages/exam_page.dart';
+import 'package:app/views/pages/exam_page.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appAssistKeys.dart';

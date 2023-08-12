@@ -10,7 +10,7 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:app/managers/api_manager.dart';
-import 'package:app/pages/exam_page.dart';
+import 'package:app/views/pages/exam_page.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/services/vocab_clickable_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';

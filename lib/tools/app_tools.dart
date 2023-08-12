@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
-import 'package:app/pages/grammar_page.dart';
-import 'package:app/pages/listening_page.dart';
-import 'package:app/pages/reading_page.dart';
+import 'package:app/views/pages/grammar_page.dart';
+import 'package:app/views/pages/listening_page.dart';
+import 'package:app/views/pages/reading_page.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';

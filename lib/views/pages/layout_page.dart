@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-import 'package:app/pages/home_page.dart';
-import 'package:app/pages/leitner_page.dart';
-import 'package:app/pages/message_page.dart';
-import 'package:app/pages/store_page.dart';
+import 'package:app/views/pages/home_page.dart';
+import 'package:app/views/pages/leitner_page.dart';
+import 'package:app/views/pages/message_page.dart';
+import 'package:app/views/pages/store_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/views/baseComponents/appBarBuilder.dart';

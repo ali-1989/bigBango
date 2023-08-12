@@ -1,22 +1,25 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
 import 'package:iris_runtime_cache/iris_runtime_cache.dart';
+import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 import 'package:iris_tools/widgets/irisSearchBar.dart';
 
 import 'package:app/managers/api_manager.dart';
-import 'package:app/pages/exam_page.dart';
-import 'package:app/pages/grammar_page.dart';
-import 'package:app/pages/idioms_page.dart';
-import 'package:app/pages/listening_page.dart';
-import 'package:app/pages/reading_page.dart';
-import 'package:app/pages/speaking_page.dart';
-import 'package:app/pages/timetable_page.dart';
-import 'package:app/pages/vocab_page.dart';
-import 'package:app/pages/writing_page.dart';
+import 'package:app/views/pages/exam_page.dart';
+import 'package:app/views/pages/grammar_page.dart';
+import 'package:app/views/pages/idioms_page.dart';
+import 'package:app/views/pages/listening_page.dart';
+import 'package:app/views/pages/reading_page.dart';
+import 'package:app/views/pages/speaking_page.dart';
+import 'package:app/views/pages/timetable_page.dart';
+import 'package:app/views/pages/vocab_page.dart';
+import 'package:app/views/pages/writing_page.dart';
 import 'package:app/services/session_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appAssistKeys.dart';
@@ -474,7 +477,7 @@ class HomePageState extends StateBase<HomePage> {
 
                         const SizedBox(height: 10),
 
-                        SizedBox(
+                        /*SizedBox(
                           width: double.infinity,
                           child: Wrap(
                             spacing: 7,
@@ -485,6 +488,23 @@ class HomePageState extends StateBase<HomePage> {
                             direction: Axis.horizontal,
                             children: lessonItems,
                           ),
+                        ),*/
+
+                        GridView.builder(
+                          key: ValueKey(Generator.generateKey(5)),
+                          shrinkWrap: true,
+                          itemCount: lessonItems.length,
+                          padding: EdgeInsets.zero,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 7.0,
+                            mainAxisSpacing: 7.0,
+                            mainAxisExtent: 65,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            return lessonItems[index];
+                          },
                         ),
 
                         const SizedBox(height: 8),
@@ -584,17 +604,13 @@ class HomePageState extends StateBase<HomePage> {
 
   Widget buildSegmentView(LessonModel lesson, ISegmentModel? segmentModel){
     if(segmentModel == null){
-      return const Flexible(
-        fit: FlexFit.tight,
-        flex: 1,
-        child: SizedBox(),
-      );
+      return SizedBox();
     }
 
     return LayoutBuilder(
       builder: (_, siz) {
         return SizedBox(
-          width: (siz.maxWidth/2) -4,
+          width: max(0, (siz.maxWidth/2) -4),
           child: GestureDetector(
             onTap: (){
               onLessonSegmentClick(lesson, segmentModel);

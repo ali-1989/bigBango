@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 
 import 'package:app/constants.dart';
-import 'package:app/pages/new_version_page.dart';
+import 'package:app/views/pages/new_version_page.dart';
 import 'package:app/structures/models/versionModel.dart';
 import 'package:app/tools/app/appDb.dart';
 import 'package:app/tools/app/appThemes.dart';

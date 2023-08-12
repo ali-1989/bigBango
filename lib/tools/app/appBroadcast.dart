@@ -7,8 +7,8 @@ import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/modules/stateManagers/refresh.dart';
 
 import 'package:app/managers/messageManager.dart';
-import 'package:app/pages/home_page.dart';
-import 'package:app/pages/layout_page.dart';
+import 'package:app/views/pages/home_page.dart';
+import 'package:app/views/pages/layout_page.dart';
 import 'package:app/structures/structure/messageStateManager.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/baseComponents/splashPage.dart';

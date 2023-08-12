@@ -12,7 +12,7 @@ import 'package:app/views/components/exam/examBlankSpaseBuilder.dart';
 import 'package:app/views/components/exam/examMakeSentenceBuilder.dart';
 import 'package:app/views/components/exam/examOptionBuilder.dart';
 import 'package:app/views/components/exam/examSelectWordBuilder.dart';
-import 'package:app/views/page_number_selector.dart';
+import 'package:app/views/components/page_number_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 

@@ -10,7 +10,7 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:app/pages/profile_page.dart';
+import 'package:app/views/pages/profile_page.dart';
 import 'package:app/services/session_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appEvents.dart';

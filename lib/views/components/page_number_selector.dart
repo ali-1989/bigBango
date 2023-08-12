@@ -1,6 +1,6 @@
 import 'package:app/system/extensions.dart';
-import 'package:app/views/circle_container.dart';
 import 'package:flutter/material.dart';
+import 'package:iris_tools/widgets/circle_container.dart';
 
 typedef OnChange = void Function(int index);
 ///==================================================================================

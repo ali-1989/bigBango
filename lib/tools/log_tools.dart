@@ -50,6 +50,7 @@ class LogTools {
     avoidReport.add('\'hasSize\': RenderBox');
     avoidReport.add('has a negative minimum');
     avoidReport.add('slot == null');
+    avoidReport.add('FIS_AUTH_ERROR'); // firebase
 
     _errorBridge = JavaBridge();
     assistanceBridge = JavaBridge();
