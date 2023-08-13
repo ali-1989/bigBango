@@ -27,10 +27,10 @@ import 'package:app/tools/routeTools.dart';
 import 'package:app/views/baseComponents/splashPage.dart';
 
 ///================ call on any hot restart
-Future<void> main() async {
+void main() {
   PlatformDispatcher.instance.onError = mainIsolateError;
   FlutterError.onError = onErrorCatch;
-
+  print('-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ main');
   void zoneFn() async {
     if (defaultTargetPlatform != TargetPlatform.linux && defaultTargetPlatform != TargetPlatform.windows) {
       WidgetsFlutterBinding.ensureInitialized();
@@ -50,6 +50,7 @@ Future<void> main() async {
             initialData: true,
             stream: AppBroadcast.viewUpdaterStream.stream,
             builder: (context, snapshot) {
+              print('@@@@@@@@@@@@@@@@@@@@@@@@@ StreamBuilder');
               return MaxWidth(
                 maxWidth: AppSizes.webMaxWidthSize,
                 apply: kIsWeb,
@@ -111,7 +112,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RouteTools.materialContext = context;
-
+    print('@@@@@@@@@@@@@@@@@@@@@@@@@ build MyApp');
     if(kIsWeb && !SplashManager.isFullInitialOk){
       return WidgetsApp(
         debugShowCheckedModeBanner: false,
@@ -166,7 +167,7 @@ class MyApp extends StatelessWidget {
                 builder: (localContext){
                   RouteTools.materialContext = localContext;
                   testCodes(localContext);
-                  print('--------------------- main ---------------------------');
+                  print('--------------------- materialHomeBuilder -');
                   return SplashPage();
                 }
             )
