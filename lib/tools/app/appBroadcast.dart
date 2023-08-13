@@ -41,7 +41,6 @@ class AppBroadcast {
   }
 
   static void reBuildMaterial() {
-    print('++++++++++++++++++++++++++++ reBuild Material # call');
     if(kIsWeb){
       materialAppKey = UniqueKey();
     }

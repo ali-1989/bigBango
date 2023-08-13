@@ -34,7 +34,6 @@ import 'package:app/views/baseComponents/splashView.dart';
 import 'package:app/views/states/waitToLoad.dart';
 
 
-
 class SplashPage extends StatefulWidget {
   SplashPage({super.key});
 
@@ -71,16 +70,15 @@ class SplashPageState extends StateBase<SplashPage> {
     if(kIsWeb && !SplashManager.isFullInitialOk){
       return const SizedBox();
     }
-    print('@@@@@@@@@@@@@@@@@@@@@@@@@ getRoute splash');
+
     return RouteDispatcher.dispatch();
   }
 
   void splashWaitTimer() async {
     final dur = Duration(milliseconds: SplashManager.splashWaitingMil);
 
-    if(SplashManager.mustWaitToSplashTimer || timer == null){
+    if(SplashManager.mustWaitToSplashTimer && timer == null){
       timer = Timer(dur, (){
-        print('--------------------- timer 1');
         SplashManager.mustWaitToSplashTimer = false;
         timer = null;
 
@@ -95,7 +93,7 @@ class SplashPageState extends StateBase<SplashPage> {
     if (SplashManager.isFirstInitOk) {
       return;
     }
-    print('@@@@@@@@@@@@@@@@@@@@@@@@@ startInit');
+
     SplashManager.isFirstInitOk = true;
 
     await appInitial(context);
@@ -139,7 +137,6 @@ class SplashPageState extends StateBase<SplashPage> {
   }
 
   static Future<void> appInitial(BuildContext? context) async {
-    print('@@@@@@@@@@@@@@@@@@@@@@@@@ appInitial');
     try {
       await AppDB.init();
       AppThemes.init();
@@ -178,7 +175,6 @@ class SplashPageState extends StateBase<SplashPage> {
     SplashManager.callLazyInit = true;
 
     Timer.periodic(const Duration(milliseconds: 50), (Timer timer) async {
-      print('--------------------- timer 2');
       if (SplashManager.isFullInitialOk) {
         timer.cancel();
         await _lazyInitCommands();
@@ -191,7 +187,6 @@ class SplashPageState extends StateBase<SplashPage> {
 
   static Future<void> _lazyInitCommands() async {
     try {
-      print('@@@@@@@@@@@@@@@@@@@@@@@@@ _lazyInitCommands');
       ApplicationSignal.start();
       SettingsManager.init();
       LoginService.init();

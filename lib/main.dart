@@ -50,7 +50,6 @@ void main() {
             initialData: true,
             stream: AppBroadcast.viewUpdaterStream.stream,
             builder: (context, snapshot) {
-              print('@@@@@@@@@@@@@@@@@@@@@@@@@ StreamBuilder');
               return MaxWidth(
                 maxWidth: AppSizes.webMaxWidthSize,
                 apply: kIsWeb,
@@ -112,7 +111,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RouteTools.materialContext = context;
-    print('@@@@@@@@@@@@@@@@@@@@@@@@@ build MyApp');
+
     if(kIsWeb && !SplashManager.isFullInitialOk){
       return WidgetsApp(
         debugShowCheckedModeBanner: false,
@@ -167,7 +166,7 @@ class MyApp extends StatelessWidget {
                 builder: (localContext){
                   RouteTools.materialContext = localContext;
                   testCodes(localContext);
-                  print('--------------------- materialHomeBuilder -');
+
                   return SplashPage();
                 }
             )
