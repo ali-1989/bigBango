@@ -210,10 +210,6 @@ class MyErrorApp extends StatelessWidget {
 void onErrorCatch(FlutterErrorDetails errorDetails) {
   var txt = 'AN ERROR HAS OCCURRED:: ${errorDetails.exception.toString()}';
 
-  if(txt.contains('\'hasSize\': RenderBox')){
-    return;
-  }
-
   if(!kIsWeb) {
     txt += '\n STACK TRACE:: ${errorDetails.stack}';
   }
@@ -231,6 +227,10 @@ void onErrorCatch(FlutterErrorDetails errorDetails) {
 ///==============================================================================================
 bool mainIsolateError(error, sTrace) {
   var txt = 'main-isolate CAUGHT AN ERROR:: ${error.toString()}';
+
+  if(!(kDebugMode || kIsWeb)) {
+    txt += '\n STACK TRACE:: $sTrace';
+  }
 
   txt += '\n**************************************** [END MAIN-ISOLATE]';
   LogTools.logger.logToAll(txt);
