@@ -48,7 +48,7 @@ class SplashPageState extends StateBase<SplashPage> {
   Widget build(BuildContext context) {
     splashWaitTimer();
     startInit();
-  print('@@@@@@@@@@@@@@@@@@@@@@@@@ build splash');
+
     if (SplashManager.mustWaitInSplash()) {
       //System.hideBothStatusBarOnce();
       return getSplashView();

@@ -30,7 +30,7 @@ import 'package:app/views/baseComponents/splashPage.dart';
 void main() {
   PlatformDispatcher.instance.onError = mainIsolateError;
   FlutterError.onError = onErrorCatch;
-  print('-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ main');
+
   void zoneFn() async {
     if (defaultTargetPlatform != TargetPlatform.linux && defaultTargetPlatform != TargetPlatform.windows) {
       WidgetsFlutterBinding.ensureInitialized();

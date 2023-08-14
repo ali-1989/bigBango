@@ -10,7 +10,6 @@ import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
-import 'package:iris_tools/api/tools.dart';
 import 'package:iris_tools/plugins/javaBridge.dart';
 
 import 'package:app/managers/api_manager.dart';
@@ -111,7 +110,7 @@ class LogTools {
 /*
 echo
 echo_arg
-throw_error
+throw_error   'throw_error', [{'delay': 15000}]
 set_kv
 get_kv
 setAppIsRun
