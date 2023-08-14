@@ -65,6 +65,7 @@ class SpeakingComponentState extends StateBase<SpeakingComponent> {
   late String savePath;
   Duration currentRecordDuration = const Duration();
   PlayVoiceController answerPlayController = PlayVoiceController();
+  Map<Codec, String> codecs = {};
 
   @override
   void initState(){
@@ -73,9 +74,20 @@ class SpeakingComponentState extends StateBase<SpeakingComponent> {
     speakingModel = widget.speakingModel;
 
     final p = AppDirectories.getAppFolderInInternalStorage();
-    savePath = PathHelper.resolvePath('$p/record.mp4')!;
+    savePath = PathHelper.resolvePath('$p/record.')!;
 
     answerPlayController.onPrepareEvent = onPrepareError;
+
+    codecs[Codec.opusWebM] = 'webm';
+    codecs[Codec.aacADTS] = 'aac';
+    codecs[Codec.amrNB] = 'amr';
+    codecs[Codec.amrWB] = 'amr';
+    codecs[Codec.mp3] = 'mp3';
+    codecs[Codec.opusOGG] = 'ogg';
+    codecs[Codec.vorbisOGG] = 'ogg';
+    codecs[Codec.flac] = 'flac';
+    codecs[Codec.pcm8] = 'pcm';
+    codecs[Codec.aacMP4] = 'mp4';
   }
 
   @override
@@ -168,7 +180,7 @@ class SpeakingComponentState extends StateBase<SpeakingComponent> {
           child: Row(
             children: [
               Expanded(
-                  child: PlayVoiceView(address: savePath, controller: answerPlayController)
+                  child: PlayVoiceView(address: getVoiceAddress(), controller: answerPlayController)
               ),
 
               IconButton(
@@ -256,6 +268,7 @@ class SpeakingComponentState extends StateBase<SpeakingComponent> {
   Future<void> initRecorder() async {
     if (!kIsWeb) {
       final status = await PermissionTools.requestMicPermission();
+
       if (status != PermissionStatus.granted) {
         AppToast.showToast(context, 'امکان ضبط صدا نیست');
         return;
@@ -267,6 +280,19 @@ class SpeakingComponentState extends StateBase<SpeakingComponent> {
 
     voiceRecorder.setSubscriptionDuration(const Duration(milliseconds: 500));
 
+    if (!await voiceRecorder.isEncoderSupported(recorderCodec)) {
+      for (final c in codecs.entries) {
+        recorderCodec = c.key;
+
+        if (!await voiceRecorder.isEncoderSupported(recorderCodec)) {
+          //AppToast.showToast(context, 'امکان ضبط صدا نیست. فرمت فایل پشتیبانی نمی شود.');
+        }
+        else {
+          break;
+        }
+      }
+    }
+
     _recorderSubscription = voiceRecorder.onProgress!.listen((e) {
       if( e.duration.inMilliseconds > 100) {
         currentRecordDuration = e.duration;
@@ -277,18 +303,6 @@ class SpeakingComponentState extends StateBase<SpeakingComponent> {
           double dbLevel = e.decibels as double;
         }*/
     });
-
-
-    if (!await voiceRecorder.isEncoderSupported(recorderCodec)) {
-      recorderCodec = Codec.opusWebM;
-      final p = AppDirectories.getAppFolderInInternalStorage();
-      savePath = PathHelper.resolvePath('$p/record.WebM')!;
-
-      if (!await voiceRecorder.isEncoderSupported(recorderCodec)) {
-        AppToast.showToast(context, 'امکان ضبط صدا نیست. فرمت فایل پشتیبانی نمی شود.');
-        return;
-      }
-    }
 
     recorderIsInit = true;
 
@@ -331,10 +345,10 @@ class SpeakingComponentState extends StateBase<SpeakingComponent> {
 
     try {
       isVoiceRecorded = false;
-      await voiceRecorder.startRecorder(codec: recorderCodec, toFile: savePath, audioSource: rec.AudioSource.microphone);
+      await voiceRecorder.startRecorder(codec: recorderCodec, toFile: getVoiceAddress(), audioSource: rec.AudioSource.microphone);
     }
     catch (e){
-      AppToast.showToast(context, 'متاسفانه ظبط صدا موفق نبود');
+      AppToast.showToast(context, ' متاسفانه ظبط صدا موفق نبود');
     }
   }
 
@@ -415,8 +429,8 @@ class SpeakingComponentState extends StateBase<SpeakingComponent> {
     }
 
     showLoading();
-    var newFile = '${File(savePath).parent.path}/record.mp3';
-    FileHelper.renameSync(savePath, newFile);
+    var newFile = '${File(getVoiceAddress()).parent.path}/record.mp3';
+    FileHelper.renameSync(getVoiceAddress(), newFile);
     final twoResponse = await FileUploadService.uploadFiles([File(newFile)], FileUploadType.autodidact);
 
     if(twoResponse.hasResult2()){
@@ -470,5 +484,15 @@ class SpeakingComponentState extends StateBase<SpeakingComponent> {
     requester.bodyJson = js;
 
     requester.request(context);
+  }
+
+  String getVoiceAddress() {
+    for(final x in codecs.entries){
+      if(x.key == recorderCodec){
+        return savePath + x.value;
+      }
+    }
+
+    return '';
   }
 }
