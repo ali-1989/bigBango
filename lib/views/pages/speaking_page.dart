@@ -83,7 +83,6 @@ class _SpeakingPageState extends StateBase<SpeakingPage> with TickerProviderStat
           Expanded(
               child: buildContent()
           ),
-
         ],
       ),
     );

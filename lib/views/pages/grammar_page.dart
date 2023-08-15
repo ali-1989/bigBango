@@ -489,14 +489,15 @@ class _GrammarPageState extends StateBase<GrammarPage> {
       isLive: false,
       zoomAndPan: false,
       showControls: true,
-      showControlsOnInitialize: false,
+      showControlsOnInitialize: true,
       showOptions: true,
       playbackSpeeds: [1, 1.5, 2],
       placeholder: const Center(child: CircularProgressIndicator()),
       materialProgressColors: ChewieProgressColors(
         handleColor: AppThemes.instance.currentTheme.differentColor,
-        playedColor: AppThemes.instance.currentTheme.differentColor,
-        backgroundColor: Colors.green, bufferedColor: AppThemes.instance.currentTheme.primaryColor,
+        playedColor: Colors.red,
+        backgroundColor: Colors.grey.shade600,
+        bufferedColor: Colors.grey.shade400,
       ),
       errorBuilder: (_, s){
         return const SizedBox(
