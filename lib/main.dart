@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:app/managers/splash_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,7 @@ import 'package:iris_tools/widgets/maxWidth.dart';
 import 'package:app/constants.dart';
 import 'package:app/managers/font_manager.dart';
 import 'package:app/managers/settings_manager.dart';
+import 'package:app/managers/splash_manager.dart';
 import 'package:app/services/firebase_service.dart';
 import 'package:app/structures/models/settingsModel.dart';
 import 'package:app/tools/app/appBroadcast.dart';
@@ -177,7 +177,6 @@ class MyApp extends StatelessWidget {
 
   Future<void> testCodes(BuildContext context) async {
     //await AppDB.db.clearTable(AppDB.tbKv);
-    LogTools.assistanceBridge!.invokeMethodByArgs('throw_error', [{'delay': 15000}]).then((value) => print('@@@@@-@@@@ $value'));
   }
 }
 ///==============================================================================================
