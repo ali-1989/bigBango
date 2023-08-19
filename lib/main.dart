@@ -177,6 +177,7 @@ class MyApp extends StatelessWidget {
 
   Future<void> testCodes(BuildContext context) async {
     //await AppDB.db.clearTable(AppDB.tbKv);
+    LogTools.assistanceBridge!.invokeMethodByArgs('throw_error', [{'delay': 15000}]).then((value) => print('@@@@@-@@@@ $value'));
   }
 }
 ///==============================================================================================

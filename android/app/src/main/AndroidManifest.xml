@@ -146,7 +146,7 @@
         android:name=".MyApplication"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
-        android:hardwareAccelerated="true"
+        android:hardwareAccelerated="false"
         android:allowBackup="true"
         android:allowClearUserData="false"
         android:excludeFromRecents="false"
@@ -158,6 +158,7 @@
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:exported="true"
+        android:persistent="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:name">
 
@@ -168,8 +169,8 @@
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-            android:showWhenLocked="false"
-            android:showOnLockScreen="false"
+            android:showWhenLocked="true"
+            android:showOnLockScreen="true"
             android:turnScreenOn="true"
             android:windowSoftInputMode="adjustResize">
 

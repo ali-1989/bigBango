@@ -20,13 +20,13 @@ public class MyApplication extends FlutterApplication {
 
     public void onCreate () {
         super.onCreate();
-
-        Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
+        Log.i("▄▀▄ Err >>>>>>", "================= onCreate");
+        //Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
 
         flutterEngine = new FlutterEngine(this);
 
         // this is call main() method in dart
-        //flutterEngine.getDartExecutor().executeDartEntrypoint(DartExecutor.DartEntrypoint.createDefault());
+        flutterEngine.getDartExecutor().executeDartEntrypoint(DartExecutor.DartEntrypoint.createDefault());
 
         //FlutterEngineCache.getInstance().put("my_engine_id", flutterEngine);
         //flutterEngine.getNavigationChannel().setInitialRoute("/");
