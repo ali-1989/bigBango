@@ -150,14 +150,20 @@ class MyApp extends StatelessWidget {
   }
 
   Widget materialHomeBuilder(){
-    double factor = PlatformDispatcher.instance.textScaleFactor.clamp(0.85, 1.7);
+    double factor = PlatformDispatcher.instance.textScaleFactor.clamp(0.85, 1.3);
 
     return Builder(
       builder: (context) {
         FontManager.instance.detectDeviceFontSize(context);
 
-        if(factor == 1.0 && FontManager.useFlutterFontSize && FontManager.deviceFontSize > FontManager.maxDeviceFontSize){
-          factor = 0.94;
+        if(FontManager.useFlutterFontSize && FontManager.deviceFontSize > FontManager.maxDeviceFontSize){
+          factor = 1.0;
+        }
+
+        if(factor > 1.0){
+          while(factor > 1.0 && (FontManager.deviceFontSize * factor) > FontManager.maxDeviceFontSize){
+            factor = factor - 0.09;
+          }
         }
 
         return MediaQuery(

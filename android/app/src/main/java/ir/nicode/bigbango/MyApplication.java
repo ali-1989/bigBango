@@ -1,5 +1,9 @@
 package ir.nicode.bigbango;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.media.Ringtone;
@@ -69,7 +73,6 @@ public class MyApplication extends FlutterApplication {
 
             Log.i("▄▀▄ Err >>>>>>", txt);
             passDataToFlutter(report);
-            //System.exit(1);
         }
         catch (Exception ignored) {}
     }
@@ -139,8 +142,9 @@ public class MyApplication extends FlutterApplication {
         Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
         ringtone.play();
     }
+
     private static void wakeup(Context context, Map<String, ?> arg){
-        boolean repeat = (boolean) arg.get("repeat");
+        /*boolean repeat = (boolean) arg.get("repeat");
         int year = (int) arg.get("year");
         int month = (int) arg.get("month");
         int day = (int) arg.get("day");
@@ -172,10 +176,10 @@ public class MyApplication extends FlutterApplication {
         }
         else {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP,  time, pendingIntent);
-        }
+        }*/
     }
 }
 
-
+//System.exit(1)
 //FlutterEngineCache.getInstance().put("my_engine_id", flutterEngine);
 //flutterEngine.getNavigationChannel().setInitialRoute("/");
