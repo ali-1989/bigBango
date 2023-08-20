@@ -49,8 +49,8 @@ dependencies:
   pull_to_refresh: ^2.0.0
   image_picker: ^1.0.2
   toggle_switch: ^2.1.0
-  firebase_messaging: ^14.6.5
-  firebase_core: ^2.15.0
+  firebase_messaging: ^14.6.6
+  firebase_core: ^2.15.1
   im_animations: ^0.1.2                          # ColorSonar
   animate_do: ^3.0.2
   animator: ^3.3.0
