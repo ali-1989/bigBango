@@ -10,7 +10,7 @@ description: A system to learn languages
 
 publish_to: 'none'
 
-version: 1.0.3+1
+version: 1.0.4+1
 
 
 environment:
