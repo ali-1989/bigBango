@@ -16,7 +16,7 @@ class TransactionWalletModel {
     id = map['id']?? Generator.generateKey(8);
     description = map['description'];
     amount = map['amount'];
-    amountType = WalletAmountType.fromType(map['amountType']?? -1);
+    amountType = WalletAmountType.from(map['amountType']?? -1);
     date = DateHelper.tsToSystemDate(map['createdAt'])!;
   }
 

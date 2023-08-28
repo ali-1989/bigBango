@@ -20,7 +20,7 @@ class ExamModel extends ExamSuperModel {
   ExamModel(this.id);
 
   ExamModel.fromMap(Map js){
-    quizType = QuizType.fromType(js['exerciseType']);
+    quizType = QuizType.from(js['exerciseType']);
     title = js['title'];
 
     if(js['items'] is List){

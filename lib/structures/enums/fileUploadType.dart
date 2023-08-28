@@ -8,21 +8,13 @@ enum FileUploadType {
 
   const FileUploadType(this.number);
 
-  static FileUploadType fromType(int type){
-    for(final k in FileUploadType.values){
-      if(k.number == type){
-        return k;
-      }
+  factory FileUploadType.from(dynamic numberOrString){
+    if(numberOrString is String){
+      return values.firstWhere((element) => element.name == numberOrString, orElse: ()=> unKnow);
     }
 
-    return FileUploadType.unKnow;
-  }
-
-  static FileUploadType fromName(String name){
-    for(final k in FileUploadType.values){
-      if(k.name == name){
-        return k;
-      }
+    if(numberOrString is int){
+      return values.firstWhere((element) => element.number == numberOrString, orElse: ()=> unKnow);
     }
 
     return FileUploadType.unKnow;

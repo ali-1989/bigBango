@@ -9,21 +9,13 @@ enum QuizType {
 
   const QuizType(this.number);
 
-  static QuizType fromType(int type){
-    for(final v in QuizType.values){
-      if(v.number == type){
-        return v;
-      }
+  factory QuizType.from(dynamic numberOrString){
+    if(numberOrString is String){
+      return values.firstWhere((element) => element.name == numberOrString, orElse: ()=> unKnow);
     }
 
-    return QuizType.unKnow;
-  }
-
-  static QuizType fromName(String name){
-    for(final v in QuizType.values){
-      if(v.name == name){
-        return v;
-      }
+    if(numberOrString is int){
+      return values.firstWhere((element) => element.number == numberOrString, orElse: ()=> unKnow);
     }
 
     return QuizType.unKnow;

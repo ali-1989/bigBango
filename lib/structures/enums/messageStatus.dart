@@ -8,21 +8,13 @@ enum MessageStatus {
 
   const MessageStatus(this.number);
 
-  static MessageStatus fromType(int num){
-    for(final x in MessageStatus.values){
-      if(x.number == num){
-        return x;
-      }
+  factory MessageStatus.from(dynamic numberOrString){
+    if(numberOrString is String){
+      return values.firstWhere((element) => element.name == numberOrString, orElse: ()=> unKnow);
     }
 
-    return MessageStatus.unKnow;
-  }
-
-  static MessageStatus fromName(String name){
-    for(final x in MessageStatus.values){
-      if(x.name == name){
-        return x;
-      }
+    if(numberOrString is int){
+      return values.firstWhere((element) => element.number == numberOrString, orElse: ()=> unKnow);
     }
 
     return MessageStatus.unKnow;

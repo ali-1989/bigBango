@@ -11,21 +11,13 @@ enum TransactionSectionFilter {
 
   const TransactionSectionFilter(this.number);
 
-  static TransactionSectionFilter fromType(int num){
-    for(final x in TransactionSectionFilter.values){
-      if(x.number == num){
-        return x;
-      }
+  factory TransactionSectionFilter.from(dynamic numberOrString){
+    if(numberOrString is String){
+      return values.firstWhere((element) => element.name == numberOrString, orElse: ()=> unKnow);
     }
 
-    return TransactionSectionFilter.unKnow;
-  }
-
-  static TransactionSectionFilter fromName(String name){
-    for(final x in TransactionSectionFilter.values){
-      if(x.name == name){
-        return x;
-      }
+    if(numberOrString is int){
+      return values.firstWhere((element) => element.number == numberOrString, orElse: ()=> unKnow);
     }
 
     return TransactionSectionFilter.unKnow;

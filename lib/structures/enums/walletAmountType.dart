@@ -8,21 +8,13 @@ enum WalletAmountType {
 
   const WalletAmountType(this.number);
 
-  static WalletAmountType fromType(int num){
-    for(final x in WalletAmountType.values){
-      if(x.number == num){
-        return x;
-      }
+  factory WalletAmountType.from(dynamic numberOrString){
+    if(numberOrString is String){
+      return values.firstWhere((element) => element.name == numberOrString, orElse: ()=> unKnow);
     }
 
-    return WalletAmountType.unKnow;
-  }
-
-  static WalletAmountType fromName(String name){
-    for(final x in WalletAmountType.values){
-      if(x.name == name){
-        return x;
-      }
+    if(numberOrString is int){
+      return values.firstWhere((element) => element.number == numberOrString, orElse: ()=> unKnow);
     }
 
     return WalletAmountType.unKnow;

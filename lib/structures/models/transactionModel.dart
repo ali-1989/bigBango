@@ -23,8 +23,8 @@ class TransactionModel {
     id = map['id']?? Generator.generateKey(8);
     description = map['description'];
     amount = map['amount'];
-    section = TransactionSectionFilter.fromType(map['section']);
-    status = TransactionStatusFilter.fromType(map['status']);
+    section = TransactionSectionFilter.from(map['section']);
+    status = TransactionStatusFilter.from(map['status']);
     date = DateHelper.tsToSystemDate(map['createdAt'])!;
     items = map['items']?? [];
   }

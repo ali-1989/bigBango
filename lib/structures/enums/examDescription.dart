@@ -8,21 +8,13 @@ enum ExamDescription {
 
   const ExamDescription(this.number);
 
-  static ExamDescription fromType(int type){
-    for(final v in ExamDescription.values){
-      if(v.number == type){
-        return v;
-      }
-  }
+  factory ExamDescription.from(dynamic numberOrString){
+    if(numberOrString is String){
+      return values.firstWhere((element) => element.name == numberOrString, orElse: ()=> unKnow);
+    }
 
-  return ExamDescription.unKnow;
-  }
-
-  static ExamDescription fromName(String name){
-    for(final v in ExamDescription.values){
-      if(v.name == name){
-        return v;
-      }
+    if(numberOrString is int){
+      return values.firstWhere((element) => element.number == numberOrString, orElse: ()=> unKnow);
     }
 
     return ExamDescription.unKnow;

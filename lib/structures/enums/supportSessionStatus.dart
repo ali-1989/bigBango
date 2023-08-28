@@ -46,21 +46,13 @@ enum SupportSessionStatus {
     return Colors.black87;
   }
 
-  static SupportSessionStatus fromType(int type){
-    for(final v in SupportSessionStatus.values){
-      if(v.number == type){
-        return v;
-      }
+  factory SupportSessionStatus.from(dynamic numberOrString){
+    if(numberOrString is String){
+      return values.firstWhere((element) => element.name == numberOrString, orElse: ()=> unKnow);
     }
 
-    return SupportSessionStatus.unKnow;
-  }
-
-  static SupportSessionStatus fromName(String name){
-    for(final v in SupportSessionStatus.values){
-      if(v.name == name){
-        return v;
-      }
+    if(numberOrString is int){
+      return values.firstWhere((element) => element.number == numberOrString, orElse: ()=> unKnow);
     }
 
     return SupportSessionStatus.unKnow;

@@ -26,8 +26,8 @@ class MessageModel {
     body = map['body'];
     data = map['data'];
     createAt = DateHelper.tsToSystemDate(map['createdAt'])!;
-    type = NotificationType.fromType(map['type']);
-    status = MessageStatus.fromType(map['status']);
+    type = NotificationType.from(map['type']);
+    status = MessageStatus.from(map['status']);
 
     if(map['image'] is Map){
       image = MediaModel.fromMap(map['image']);
