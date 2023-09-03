@@ -10,7 +10,6 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:app/managers/api_manager.dart';
-import 'package:app/views/pages/exam_page.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/services/vocab_clickable_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
@@ -33,6 +32,7 @@ import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/components/idiomClickableComponent.dart';
 import 'package:app/views/components/vocabClickableComponent.dart';
+import 'package:app/views/pages/exam_page.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';

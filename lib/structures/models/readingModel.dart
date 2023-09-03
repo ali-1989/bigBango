@@ -1,9 +1,9 @@
-import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/generator.dart';
 
+import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
 import 'package:app/structures/models/vocabModels/idiomInReadingModel.dart';
 import 'package:app/structures/models/vocabModels/vocabInReadingModel.dart';

@@ -1,4 +1,8 @@
+import 'package:flutter/material.dart';
+
 import 'package:animate_do/animate_do.dart';
+import 'package:iris_tools/widgets/customCard.dart';
+
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/enums/quizType.dart';
@@ -13,8 +17,6 @@ import 'package:app/views/components/exam/examMakeSentenceBuilder.dart';
 import 'package:app/views/components/exam/examOptionBuilder.dart';
 import 'package:app/views/components/exam/examSelectWordBuilder.dart';
 import 'package:app/views/components/page_number_selector.dart';
-import 'package:flutter/material.dart';
-import 'package:iris_tools/widgets/customCard.dart';
 
 class ListeningExamBuilder extends StatefulWidget {
   final List<ExamModel> examModelList;

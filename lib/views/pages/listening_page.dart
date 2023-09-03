@@ -1,5 +1,3 @@
-import 'package:app/views/components/listening_exam_builder.dart';
-import 'package:app/views/components/playVoiceView.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/duration/durationFormatter.dart';
@@ -18,6 +16,8 @@ import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/components/backBtn.dart';
+import 'package:app/views/components/listening_exam_builder.dart';
+import 'package:app/views/components/playVoiceView.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 

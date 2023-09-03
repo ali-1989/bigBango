@@ -11,7 +11,6 @@ import 'package:app/tools/app/appOverlay.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/views/components/overlay/overlayContainer.dart';
 
-
 class AppLoading {
   AppLoading._();
 

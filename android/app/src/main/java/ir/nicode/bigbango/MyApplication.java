@@ -1,7 +1,9 @@
 package ir.nicode.bigbango;
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -34,7 +36,7 @@ public class MyApplication extends FlutterApplication {
         Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
         flutterEngine = new FlutterEngine(this);
 
-        //prepareAndroidChannel();
+        prepareAndroidChannel();
 
         // this is call main() method in dart
         //flutterEngine.getDartExecutor().executeDartEntrypoint(DartExecutor.DartEntrypoint.createDefault());
@@ -144,15 +146,24 @@ public class MyApplication extends FlutterApplication {
     }
 
     private static void wakeup(Context context, Map<String, ?> arg){
-        /*boolean repeat = (boolean) arg.get("repeat");
+        boolean repeat = (boolean) arg.get("repeat");
         int year = (int) arg.get("year");
         int month = (int) arg.get("month");
         int day = (int) arg.get("day");
         int hour = (int) arg.get("hour");
         int min = (int) arg.get("min");
+        String intervalStr = (String) arg.get("interval");
+        Long interval;
+
+        if(intervalStr != null){
+            interval = Long.valueOf(intervalStr);
+        }
+        else {
+            interval = 1000L * 60 * 20;
+        }
 
         Intent intent = new Intent(context, BootReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         long time;
         Calendar calendar = Calendar.getInstance();
@@ -172,14 +183,52 @@ public class MyApplication extends FlutterApplication {
         }
 
         if(repeat) {
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 10000, pendingIntent);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, interval, pendingIntent);
         }
         else {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP,  time, pendingIntent);
-        }*/
+        }
+    }
+
+    static void launchApp(Context context){
+        if(isActivityRunning(context, MainActivity.class)){
+            Intent intent = new Intent(context, MainActivity.class);
+            //intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            try{
+                contentIntent.send();
+            }
+            catch (Exception ignored){}
+        }
+        else {
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+            context.startActivity(intent);
+        }
+    }
+
+    static Boolean isActivityRunning(Context context, Class<?> activityClass) {
+        ActivityManager activityManager = (ActivityManager) (context.getSystemService(Context.ACTIVITY_SERVICE));
+        List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(Integer.MAX_VALUE);
+
+        for (ActivityManager.RunningTaskInfo taskInfo : tasks) {
+            ComponentName componentName = taskInfo.baseActivity;
+            ComponentName componentName2 = taskInfo.baseActivity;
+
+            if (componentName != null && componentName.getClassName().equals(activityClass.getCanonicalName())) {
+                return true;
+            }
+
+            if (componentName2 != null && componentName2.getClassName().equals(activityClass.getCanonicalName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 
-//System.exit(1)
+//System.exit(1);
 //FlutterEngineCache.getInstance().put("my_engine_id", flutterEngine);
 //flutterEngine.getNavigationChannel().setInitialRoute("/");

@@ -9,7 +9,6 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:app/managers/api_manager.dart';
-import 'package:app/views/pages/exam_page.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appAssistKeys.dart';
@@ -27,6 +26,7 @@ import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/components/backBtn.dart';
+import 'package:app/views/pages/exam_page.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';

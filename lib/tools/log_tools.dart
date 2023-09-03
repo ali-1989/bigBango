@@ -8,7 +8,6 @@ import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/logger/logger.dart';
 import 'package:iris_tools/api/logger/reporter.dart';
-import 'package:iris_tools/plugins/javaBridge.dart';
 
 import 'package:app/managers/api_manager.dart';
 import 'package:app/services/session_service.dart';
@@ -20,8 +19,6 @@ class LogTools {
 
   static late Logger logger;
   static late Reporter reporter;
-  static JavaBridge? _errorBridge;
-  static JavaBridge? assistanceBridge;
   static List avoidReport = <String>[];
 
   static Future<bool> init() async {
@@ -32,42 +29,18 @@ class LogTools {
 
       LogTools.logger = Logger('${AppDirectories.getExternalTempDir()}/logs');
 
-      initErrorReport();
+      avoidReport.add('\'hasSize\': RenderBox');
+      avoidReport.add('has a negative minimum');
+      avoidReport.add('slot == null');
+      avoidReport.add('FIS_AUTH_ERROR'); // firebase
+      avoidReport.add('RenderFlex overflowed by');
+
       return true;
     }
     catch (e){
       log('$e\n\n${StackTrace.current}');
       return false;
     }
-  }
-
-  static void initErrorReport(){
-    if(_errorBridge != null){
-      return;
-    }
-
-    avoidReport.add('\'hasSize\': RenderBox');
-    avoidReport.add('has a negative minimum');
-    avoidReport.add('slot == null');
-    avoidReport.add('FIS_AUTH_ERROR'); // firebase
-    avoidReport.add('RenderFlex overflowed by');
-
-    _errorBridge = JavaBridge();
-    assistanceBridge = JavaBridge();
-
-    _errorBridge!.init('error_handler', (call) async {
-      if(call.method == 'report_error') {
-        reportError(call.arguments);
-      }
-
-      return null;
-    });
-
-    assistanceBridge!.init('assistance', (call) async {
-      /**/
-
-      return null;
-    });
   }
 
   static void reportError(Map<String, dynamic> map) async {
@@ -78,7 +51,7 @@ class LogTools {
         return;
       }
     }
-    
+
     void fn(){
       final url = Uri.parse(ApiManager.errorReportApi);
 
@@ -102,20 +75,7 @@ class LogTools {
 
 
     runZonedGuarded(fn, (error, stack) {
-      LogTools.logger.logToAll('::::::::::::: report ::::::::::: ${error.toString()}');
+      LogTools.logger.logToAll('::::::::::::: report is failed ::::::::::: ${error.toString()}');
     });
   }
 }
-
-
-/*
-echo
-echo_arg
-throw_error   'throw_error', [{'delay': 5000}]
-set_kv
-get_kv
-setAppIsRun
-isAppRun
-dismiss_notification
-move_app_to_back
- */

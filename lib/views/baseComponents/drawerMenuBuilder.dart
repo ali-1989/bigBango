@@ -6,13 +6,6 @@ import 'package:iris_tools/api/helpers/fileHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/widgets/irisImageView.dart';
 
-import 'package:app/views/pages/about_page.dart';
-import 'package:app/views/pages/invite_page.dart';
-import 'package:app/views/pages/logs_page.dart';
-import 'package:app/views/pages/profile_page.dart';
-import 'package:app/views/pages/support_page.dart';
-import 'package:app/views/pages/transaction_page.dart';
-import 'package:app/views/pages/wallet_page.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/services/session_service.dart';
 import 'package:app/structures/enums/appEvents.dart';
@@ -27,6 +20,13 @@ import 'package:app/tools/app/appSizes.dart';
 import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/baseComponents/layoutComponent.dart';
+import 'package:app/views/pages/about_page.dart';
+import 'package:app/views/pages/invite_page.dart';
+import 'package:app/views/pages/logs_page.dart';
+import 'package:app/views/pages/profile_page.dart';
+import 'package:app/views/pages/support_page.dart';
+import 'package:app/views/pages/transaction_page.dart';
+import 'package:app/views/pages/wallet_page.dart';
 
 class DrawerMenuBuilder {
 

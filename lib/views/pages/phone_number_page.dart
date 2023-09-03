@@ -11,7 +11,6 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/attribute.dart';
 
 import 'package:app/managers/settings_manager.dart';
-import 'package:app/views/pages/otp_page.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
@@ -23,6 +22,7 @@ import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/videoPlayer.dart';
+import 'package:app/views/pages/otp_page.dart';
 
 class PhoneNumberPage extends StatefulWidget {
   PhoneNumberPage({Key? key}) : super(key: key);

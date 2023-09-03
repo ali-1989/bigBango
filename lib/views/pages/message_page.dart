@@ -5,7 +5,6 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:app/managers/messageManager.dart';
-import 'package:app/views/pages/ticket_detail_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/enums/notificationType.dart';
@@ -20,6 +19,7 @@ import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/dateTools.dart';
 import 'package:app/tools/routeTools.dart';
 import 'package:app/views/components/fullScreenImage.dart';
+import 'package:app/views/pages/ticket_detail_page.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';

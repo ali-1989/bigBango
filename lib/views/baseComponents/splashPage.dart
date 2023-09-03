@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:app/managers/splash_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +8,7 @@ import 'package:iris_tools/net/trustSsl.dart';
 import 'package:app/managers/leitnerManager.dart';
 import 'package:app/managers/messageManager.dart';
 import 'package:app/managers/settings_manager.dart';
+import 'package:app/managers/splash_manager.dart';
 import 'package:app/managers/storeManager.dart';
 import 'package:app/managers/version_manager.dart';
 import 'package:app/services/audio_player_service.dart';
@@ -32,7 +32,6 @@ import 'package:app/tools/routeTools.dart';
 import 'package:app/views/baseComponents/routeDispatcher.dart';
 import 'package:app/views/baseComponents/splashView.dart';
 import 'package:app/views/states/waitToLoad.dart';
-
 
 class SplashPage extends StatefulWidget {
   SplashPage({super.key});
@@ -187,6 +186,9 @@ class SplashPageState extends StateBase<SplashPage> {
 
   static Future<void> _lazyInitCommands() async {
     try {
+      //WakeupService.init();
+      //NativeCallService.init();
+      //NativeCallService.assistanceBridge!.invokeMethod('setAppIsRun');
       ApplicationSignal.start();
       SettingsManager.init();
       LoginService.init();

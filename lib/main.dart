@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:iris_route/iris_route.dart';
-import 'package:iris_tools/api/system.dart';
 import 'package:iris_tools/widgets/maxWidth.dart';
 
 import 'package:app/constants.dart';
@@ -14,6 +13,7 @@ import 'package:app/managers/font_manager.dart';
 import 'package:app/managers/settings_manager.dart';
 import 'package:app/managers/splash_manager.dart';
 import 'package:app/services/firebase_service.dart';
+import 'package:app/services/native_call_service.dart';
 import 'package:app/structures/models/settingsModel.dart';
 import 'package:app/tools/app/appBroadcast.dart';
 import 'package:app/tools/app/appDirectories.dart';
@@ -83,12 +83,16 @@ Future<void> mainInitialize() async {
   await FireBaseService.initializeApp();
 
   usePathUrlStrategy();
-
-  if(System.isAndroid()) {
-    LogTools.assistanceBridge!.invokeMethod('setAppIsRun');
-  }
 }
 
+@pragma('vm:entry-point')
+void dartFunction() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await prepareDirectoriesAndLogger();
+  NativeCallService.init();
+}
+
+@pragma('vm:entry-point')
 Future<(bool, String?)> prepareDirectoriesAndLogger() async {
   try {
     if (!kIsWeb) {

@@ -73,6 +73,7 @@ class AppNotification {
 	}
 
 	static Future<bool> initial() async {
+		await AppDB.init();
 		var ch = fetchChannelKey();
 
 		/* no need: because initialize do update last channel.

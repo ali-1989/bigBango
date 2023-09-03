@@ -11,8 +11,6 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:app/managers/api_manager.dart';
-import 'package:app/views/pages/ticket_detail_page.dart';
-import 'package:app/views/pages/timetable_page.dart';
 import 'package:app/services/session_service.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appEvents.dart';
@@ -34,6 +32,8 @@ import 'package:app/tools/app/appSnack.dart';
 import 'package:app/tools/app/appToast.dart';
 import 'package:app/tools/dateTools.dart';
 import 'package:app/tools/routeTools.dart';
+import 'package:app/views/pages/ticket_detail_page.dart';
+import 'package:app/views/pages/timetable_page.dart';
 import 'package:app/views/sheets/addTicketSheet.dart';
 import 'package:app/views/sheets/support@selectBuyMethodSheet.dart';
 import 'package:app/views/sheets/supportPlanSheet.dart';

@@ -1,10 +1,12 @@
+<!--
+     installLocation: auto | preferExternal
+-->
+
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="ir.nicode.bigbango"
           android:installLocation="auto">
-    <!-- ================================
-      installLocation: auto | preferExternal
-       ============================================== -->
 
     <!--
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
@@ -17,6 +19,7 @@
     <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
 
     <!-- ..........................  not kill app -->
+    <!-- RECEIVE_BOOT_COMPLETED: show AutoStart switch in app info, allow auto boot like alarm, must enable by user -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
@@ -101,15 +104,16 @@
     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.SENSORS"/>
-    <!--
-    // Android Q+, notificationBuilder.setFullScreenIntent(pendingIntent), for(incoming phone call/alarm clock)
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
 
-    // Android 13+, for (notifications/create chanel)
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- Android Q+, notificationBuilder.setFullScreenIntent(pendingIntent), for(incoming phone call/alarm clock) -->
+    <!-- <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/> -->
+    
+    <!-- Android 13+, for (notifications/create chanel) -->
+    <!-- <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/> -->
 
-    // RECEIVE_BOOT_COMPLETED: show AutoStart switch in app info, allow auto boot like alarm, must enable by user
-    -->
+    <!-- need for launch app from services -->
+    <!--<uses-permission  android:name="android.permission.GET_TASKS"/> -->
+
     <!-- ============================== uses-feature ============================================== -->
     <uses-feature
             android:name="android.hardware.fingerprint"
@@ -177,6 +181,7 @@
               android:resource="@style/NormalTheme"
               />
 
+            <!--  launching App with a URI -->
             <meta-data
                     android:name="flutter_deeplinking_enabled"
                     android:value="true" />
@@ -198,13 +203,14 @@
             </intent-filter>
         </activity>
 
-        <!-- for open/launch app files -->
+        <!-- for open app files by others -->
         <!-- old: android.support.v4.content.FileProvider -->
         <provider
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="${applicationId}.provider"
                 android:exported="false"
                 android:grantUriPermissions="true">
+
             <meta-data
                     android:name="android.support.FILE_PROVIDER_PATHS"
                     android:resource="@xml/provider_paths"/>

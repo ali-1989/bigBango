@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
-import 'package:app/views/pages/reading_page.dart';
 import 'package:app/structures/abstract/stateBase.dart';
 import 'package:app/structures/enums/appAssistKeys.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
@@ -12,6 +11,7 @@ import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appDecoration.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/routeTools.dart';
+import 'package:app/views/pages/reading_page.dart';
 
 class SelectReadingDialog extends StatefulWidget {
   final LessonModel lessonModel;

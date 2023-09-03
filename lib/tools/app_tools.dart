@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
-import 'package:app/views/pages/grammar_page.dart';
-import 'package:app/views/pages/listening_page.dart';
-import 'package:app/views/pages/reading_page.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/mixins/dateFieldMixin.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
+import 'package:app/views/pages/grammar_page.dart';
+import 'package:app/views/pages/listening_page.dart';
+import 'package:app/views/pages/reading_page.dart';
 
 class AppTools {
   AppTools._();
@@ -24,6 +24,10 @@ class AppTools {
     }
 
     list.sort(sorter);
+  }
+
+  static WidgetsBinding getAppWidgetsBinding() {
+    return WidgetsBinding.instance;
   }
 
   static Widget? getNextPartOfLesson(LessonModel lessonModel){
@@ -48,10 +52,6 @@ class AppTools {
     }
 
     return page;
-  }
-
-  static WidgetsBinding getAppWidgetsBinding() {
-    return WidgetsBinding.instance;
   }
 }
 
