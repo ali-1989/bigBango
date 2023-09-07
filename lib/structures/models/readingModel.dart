@@ -105,10 +105,12 @@ class ReadingModel {
         final st = TextSpan(text: i.text, style: clickableStyle, recognizer: TapGestureRecognizer()..onTap = () async {
           onTap.call(i);
         },);
+
         res.add(st);
       }
       else {
         final st = TextSpan(text: i.text, style: i.segmentId == segmentId ? readStyle : normalStyle);
+
         res.add(st);
       }
     }
@@ -116,7 +118,7 @@ class ReadingModel {
     return res;
   }
 
-  void _splits(){
+  /*void _splitsOld(){
     translateSplits.clear();
     textSplits.clear();
 
@@ -134,7 +136,6 @@ class ReadingModel {
     ///------- text
     int c = 0;
     List<ReadingTextSplitHolder> txtTemp = [];
-
     for(final segment in segments) {
       final txt = segment.text!;
       txtTemp.clear();
@@ -245,53 +246,229 @@ class ReadingModel {
         }
       }
     }
-  }
+  }*/
 
-  List<String> splitForIdiom(String txt, String spl){
-    final List<String> res = [];
+  void _splits(){
+    translateSplits.clear();
+    textSplits.clear();
 
-    if(txt.length < spl.length){
-      return res;
+    /// translate
+    for(int i=0; i < segments.length; i++) {
+      final segment = segments[i];
+      final tsh = ReadingTextSplitHolder();
+      tsh.segmentId = segment.id;
+      tsh.text = segment.translation?? '';
+      tsh.order = i;
+
+      translateSplits.add(tsh);
     }
 
-    int c = 0;
-    int idx = -1;
+    ///------- text
+    final twoDList = <List<ReadingTextSplitHolder>>[];
+    var inSideList = <ReadingTextSplitHolder>[];
 
-    while(true){
-      if(c + spl.length > txt.length){
-        break;
-      }
 
-      var t = txt.substring(c, c + spl.length);
+    for(final segment in segments) {
+      inSideList = <ReadingTextSplitHolder>[];
+      final txt = segment.text!;
 
-      if(t == spl){
-        idx = c;
-        break;
-      }
+      /// if there is not any idioms, all of text will be a sentence
+      if(clickableIdioms.isEmpty){
+        final tsh = ReadingTextSplitHolder();
+        tsh.segmentId = segment.id;
+        tsh.text = txt;
 
-      c++;
-    }
-
-    if(idx > -1){
-      if(idx == 0){
-        res.add(txt.substring(0, spl.length));
-        res.add(txt.substring(spl.length));
+        inSideList.add(tsh);
       }
       else {
-        res.add(txt.substring(0, idx));
-        res.add(txt.substring(idx+1, idx + spl.length));
+        final splits = splitForIdiom(txt, clickableIdioms);
+        final idiomHolders = <ReadingTextSplitHolder>[];
 
-        if(idx + spl.length < txt.length) {
-          res.add(txt.substring(idx + spl.length));
+        if(splits.isEmpty){
+          final tsh = ReadingTextSplitHolder();
+          tsh.segmentId = segment.id;
+          tsh.text = txt;
+
+          idiomHolders.add(tsh);
+        }
+        else {
+          bool notVocab = false;
+          int lastIdx = 0;
+
+          for (int i=0; i< txt.length; i++) {
+            var findIdiom = splits.firstWhereSafe((idiom) => idiom.start == i);
+
+            if(findIdiom != null) {
+              if (notVocab) {
+                final tsh = ReadingTextSplitHolder();
+                tsh.segmentId = segment.id;
+                tsh.text = txt.substring(lastIdx, findIdiom.start);
+
+                idiomHolders.add(tsh);
+                notVocab = false;
+              }
+
+              final tsh = ReadingTextSplitHolder();
+              tsh.segmentId = segment.id;
+              tsh.text = findIdiom.idiom.content;
+              tsh.isClickable = true;
+              tsh.idiom = findIdiom.idiom;
+
+              idiomHolders.add(tsh);
+
+              i += findIdiom.idiom.content.length;
+              lastIdx = i;
+            }
+
+            else {
+              notVocab = true;
+            }
+          }
+        }
+
+        inSideList.addAll(idiomHolders);
+      }
+
+      ///===================================
+      for(var k=0; k < inSideList.length; k++){
+        final sentence = inSideList[k];
+
+        if(sentence.isClickable){
+          continue;
+        }
+
+        final vocabList = splitForVocab(sentence.text, clickableVocabsScope);
+
+        if(vocabList.isEmpty){
+          continue;
+        }
+
+        /// So that each word can be clicked in only one section
+        for(final x in vocabList){
+          clickableVocabsScope.removeWhere((element) => element.id == x.vocab.id);
+        }
+
+        inSideList.removeAt(k);
+        final vocabHolders = <ReadingTextSplitHolder>[];
+
+        bool notVocab = false;
+        int lastIdx = 0;
+
+        for (int i=0; i< sentence.text.length; i++) {
+          var findVocab = vocabList.firstWhereSafe((vocab) => vocab.start == i);
+
+          if(findVocab != null) {
+            if (notVocab) {
+              final tsh = ReadingTextSplitHolder();
+              tsh.segmentId = segment.id;
+              tsh.text = sentence.text.substring(lastIdx, findVocab.start);
+
+              vocabHolders.add(tsh);
+              notVocab = false;
+            }
+
+            final tsh = ReadingTextSplitHolder();
+            tsh.segmentId = segment.id;
+            tsh.text = findVocab.vocab.word;
+
+            tsh.isClickable = true;
+            tsh.vocab = findVocab.vocab;
+
+            vocabHolders.add(tsh);
+
+            i += findVocab.vocab.word.length;
+           lastIdx = i;
+          }
+          else {
+            notVocab = true;
+          }
+        }
+
+        if(notVocab){
+          final tsh = ReadingTextSplitHolder();
+          tsh.segmentId = segment.id;
+          tsh.text = sentence.text.substring(lastIdx);
+
+          vocabHolders.add(tsh);
+        }
+
+        inSideList.insertAll(k, vocabHolders);
+      }
+
+
+      twoDList.add(inSideList);
+    }
+
+    for(final lis in twoDList){
+      textSplits.addAll(lis);
+    }
+  }
+
+  List<IdiomIndexModel> splitForIdiom(String txt, List<IdiomInReadingModel> idiomList){
+    final List<IdiomIndexModel> res = [];
+
+    for(final idiom in idiomList){
+      int c = 0;
+
+      while(true){
+        if(c + idiom.content.length > txt.length){
+          break;
+        }
+
+        var t = txt.substring(c, c + idiom.content.length);
+
+        if(t == idiom.content){
+          final m = IdiomIndexModel();
+          m.start = c;
+          m.end = c + idiom.content.length;
+          m.idiom = idiom;
+
+          res.add(m);
+          break;
+        }
+        else {
+          c++;
         }
       }
     }
 
+    List<String> remove = [];
+
+    for(final k1 in res){
+      for(final k2 in res){
+        if(k1.id == k2.id){
+          continue;
+        }
+
+        if(k2.start >= k1.start && k2.start < k1.end){
+          if(k1.idiom.content.length < k2.idiom.content.length){
+            remove.add(k1.id);
+          }
+          else {
+            remove.add(k2.id);
+          }
+        }
+      }
+    }
+
+    for(final r in remove){
+      res.removeWhere((element) => element.id == r);
+    }
+
+    res.sort((e1, e2){
+      if(e1.start < e2.start){
+        return 1;
+      }
+
+      return -1;
+    });
+
     return res;
   }
 
-  List<IndexModel> getVocabIndex(String txt, List<VocabInReadingModel> vocabList){
-    final List<IndexModel> res = [];
+  List<VocabIndexModel> splitForVocab(String txt, List<VocabInReadingModel> vocabList){
+    final List<VocabIndexModel> res = [];
+
     for(final k in vocabList){
       int c = 0;
 
@@ -303,7 +480,7 @@ class ReadingModel {
         var t = txt.substring(c, c + k.word.length);
 
         if(t == k.word){
-          final m = IndexModel();
+          final m = VocabIndexModel();
           m.start = c;
           m.end = c + k.word.length;
           m.vocab = k;
@@ -389,18 +566,85 @@ class ReadingTextSplitHolder {
   IdiomInReadingModel? idiom;
 
   ReadingTextSplitHolder();
+
+  @override
+  String toString(){
+    return '[$text]';
+  }
 }
 ///=====================================================================================
-class IndexModel {
+class VocabIndexModel {
   String id;
   late int start;
   late int end;
   late VocabInReadingModel vocab;
 
-  IndexModel() : id = Generator.generateKey(6);
+  VocabIndexModel() : id = Generator.generateKey(6);
 
   @override
   String toString(){
     return 'W:${vocab.word} [$start, $end] ';
   }
 }
+///=====================================================================================
+class IdiomIndexModel {
+  String id;
+  late int start;
+  late int end;
+  late IdiomInReadingModel idiom;
+
+  IdiomIndexModel() : id = Generator.generateKey(6);
+
+  @override
+  String toString(){
+    return 'idiom:${idiom.content} [$start, $end] ';
+  }
+}
+
+/*List<String> splitForIdiom(String txt, String spl){
+    final List<String> res = [];
+
+    if(txt.length < spl.length){
+      return res;
+    }
+
+    if(txt.length == spl.length){
+      res.add(spl);
+      return res;
+    }
+
+    int pointer = 0;
+    int startIdx = -1;
+
+    while(true){
+      if(pointer + spl.length > txt.length){
+        break;
+      }
+
+      var t = txt.substring(pointer, pointer + spl.length);
+
+      if(t == spl){
+        startIdx = pointer;
+        break;
+      }
+
+      pointer++;
+    }
+
+    if(startIdx > -1){
+      if(startIdx == 0){
+        res.add(txt.substring(0, spl.length));
+        res.add(txt.substring(spl.length));
+      }
+      else {
+        res.add(txt.substring(0, startIdx));
+        res.add(txt.substring(startIdx+1, startIdx + spl.length));
+
+        if(startIdx + spl.length < txt.length) {
+          res.add(txt.substring(startIdx + spl.length));
+        }
+      }
+    }
+
+    return res;
+  }*/

@@ -133,7 +133,7 @@ class AppBarCustomState extends StateBase<AppBarCustom> {
                           child: Text(SettingsManager.getCourseLevelById(SessionService.getLastLoginUser()?.courseLevel?.id?? 1)?.name?? '-'),
                         ),
 
-                        Image.asset(AppImages.levelBadgeIco),
+                        Image.asset(AppImages.levelBadgeIco, scale: 2),
                       ],
                     ),
                   ),

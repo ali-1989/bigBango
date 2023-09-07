@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:app/tools/app/appIcons.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
@@ -320,7 +321,7 @@ class HomePageState extends StateBase<HomePage> {
 
                                 const SizedBox(height: 4),
                                 SizedBox(
-                                  width: 70,
+                                  width: 35,
                                   child: LinearProgressIndicator(
                                     backgroundColor: Colors.greenAccent.withAlpha(40),
                                     color: Colors.greenAccent,
@@ -329,7 +330,7 @@ class HomePageState extends StateBase<HomePage> {
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                const Text('میزان پیشرفت', style: TextStyle(fontSize: 10),),
+                                const Text('پیشرفت', style: TextStyle(fontSize: 10)),
                               ],
                             ),
                           );
@@ -337,7 +338,26 @@ class HomePageState extends StateBase<HomePage> {
                       ),
                     ),
 
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 4),
+                    Card(
+                        elevation: 0,
+                        color: Colors.grey.shade100,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                        child: GestureDetector(
+                          onTap: (){
+                            onLessonDescriptionClick(lesson);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                            child: Icon(
+                                AppIcons.info,
+                                size: 16,
+                                color: lesson.description == null? Colors.grey.shade400 : Colors.black,
+                            ),
+                          ),
+                        ),
+                    ),
+                    const SizedBox(width: 4),
                   ],
                 ),
               ),
@@ -440,7 +460,7 @@ class HomePageState extends StateBase<HomePage> {
 
                                 const SizedBox(height: 4),
                                 SizedBox(
-                                  width: 70,
+                                  width: 35,
                                   child: LinearProgressIndicator(
                                     backgroundColor: Colors.greenAccent.withAlpha(40),
                                     color: Colors.greenAccent,
@@ -449,13 +469,32 @@ class HomePageState extends StateBase<HomePage> {
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                const Text('میزان پیشرفت', style: TextStyle(fontSize: 10)),
+                                const Text('پیشرفت', style: TextStyle(fontSize: 10)),
                               ],
                             ),
                           ),
                         ),
 
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 4),
+                        Card(
+                          elevation: 0,
+                          color: Colors.grey.shade100,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                          child: GestureDetector(
+                            onTap: (){
+                              onLessonDescriptionClick(lesson);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                              child: Icon(
+                                AppIcons.info,
+                                size: 16,
+                                color: lesson.description == null? Colors.grey.shade400 : Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 4),
                       ],
                     ),
                   ),
@@ -500,7 +539,7 @@ class HomePageState extends StateBase<HomePage> {
                             crossAxisCount: 2,
                             crossAxisSpacing: 7.0,
                             mainAxisSpacing: 7.0,
-                            mainAxisExtent: 65,
+                            mainAxisExtent: 70,
                           ),
                           itemBuilder: (BuildContext context, int index) {
                             return lessonItems[index];
@@ -589,7 +628,7 @@ class HomePageState extends StateBase<HomePage> {
                           ),
                         ),
 
-                        const SizedBox(height: 8),
+                        const SizedBox(width: 4),
                       ],
                     ),
                   )
@@ -934,5 +973,13 @@ class HomePageState extends StateBase<HomePage> {
     );
 
     RouteTools.pushPage(context, page);
+  }
+
+  void onLessonDescriptionClick(LessonModel lesson) {
+    if(lesson.description == null){
+      return;
+    }
+
+    AppSheet.showSheetOneAction(context, lesson.description!);
   }
 }

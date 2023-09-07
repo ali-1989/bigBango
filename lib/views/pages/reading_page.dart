@@ -239,6 +239,11 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                             AnimatedBuilder(
                               animation: anim1Ctr,
                               builder: (_, c){
+                                print('==================================================');
+                                for(final x in currentItem!.segments){
+                                  print(x.text);
+                                }
+                                print('==================================================');
                                 return Transform.translate(
                                   offset: Offset(0, anim1Ctr.value),
                                   child: Opacity(

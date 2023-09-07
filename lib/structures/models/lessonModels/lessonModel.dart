@@ -12,8 +12,9 @@ import 'package:app/system/keys.dart';
 class LessonModel {
   late int id;
   late String title;
-  bool isLock = false;
+  bool isLock = true;
   int number = 0;
+  String? description;
   double improvementPercentage = 0;
   QuizSegmentModel? quizSegment;
   VocabularySegmentModel? vocabSegment;
@@ -30,6 +31,7 @@ class LessonModel {
     title = map[Keys.title];
     isLock = map['isLock']?? false;
     number = map['number']?? 0;
+    description = map['description'];
 
     {///progress
       improvementPercentage = MathHelper.clearToDouble(map['progress']);
@@ -76,6 +78,7 @@ class LessonModel {
     map['vocabulary'] = vocabSegment?.toMap();
     map['grammar'] = grammarSegment?.toMap();
     map['reading'] = readingSegment?.toMap();
+    map['description'] = description;
     map['listeningCategory'] = listeningSegment?.toMap();
     map['quizCategory'] = quizSegment?.toMap();
     map['writingCategories'] = writingSegment?.toMap();
@@ -91,6 +94,7 @@ class LessonModel {
     title = others.title;
     improvementPercentage = others.improvementPercentage;
     isLock = others.isLock;
+    description = others.description;
 
     if(others.vocabSegment != null) {
       vocabSegment?.matchBy(others.vocabSegment!);
