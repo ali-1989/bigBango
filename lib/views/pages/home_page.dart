@@ -980,6 +980,37 @@ class HomePageState extends StateBase<HomePage> {
       return;
     }
 
-    AppSheet.showSheetOneAction(context, lesson.description!);
+    AppSheet.showSheetCustom(context,
+        builder: (_){
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('توضیحات درس ${lesson.title}: ', maxLines: 1,).color(Colors.white).bold(),
+
+                SizedBox(height: 10),
+
+                ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Text(lesson.description!, textAlign: TextAlign.justify,).color(Colors.white).fsR(-1),
+
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text('باشه').color(Colors.white)
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        },
+      routeName: 'LessonDescription',
+        isScrollControlled: true
+    );
   }
 }
