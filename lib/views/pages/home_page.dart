@@ -643,7 +643,7 @@ class HomePageState extends StateBase<HomePage> {
 
   Widget buildSegmentView(LessonModel lesson, ISegmentModel? segmentModel){
     if(segmentModel == null){
-      return SizedBox();
+      return const SizedBox();
     }
 
     return LayoutBuilder(
@@ -983,13 +983,13 @@ class HomePageState extends StateBase<HomePage> {
     AppSheet.showSheetCustom(context,
         builder: (_){
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('توضیحات درس ${lesson.title}: ', maxLines: 1,).color(Colors.white).bold(),
 
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 ListView(
                   shrinkWrap: true,
@@ -1000,7 +1000,7 @@ class HomePageState extends StateBase<HomePage> {
                       alignment: Alignment.bottomLeft,
                       child: TextButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: Text('باشه').color(Colors.white)
+                          child: const Text('باشه').color(Colors.white)
                       ),
                     ),
                   ],

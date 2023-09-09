@@ -417,7 +417,7 @@ class ReadingModel {
 
         var t = txt.substring(c, c + idiom.content.length);
 
-        if(t == idiom.content){
+        if(t == idiom.content || t.toLowerCase() == idiom.content.toLowerCase()){
           final m = IdiomIndexModel();
           m.start = c;
           m.end = c + idiom.content.length;
@@ -479,7 +479,7 @@ class ReadingModel {
 
         var t = txt.substring(c, c + k.word.length);
 
-        if(t == k.word){
+        if(t == k.word || t.toLowerCase() == k.word.toLowerCase()){
           final m = VocabIndexModel();
           m.start = c;
           m.end = c + k.word.length;

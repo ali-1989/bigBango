@@ -508,11 +508,11 @@ class MakeSentenceExtra {
         txt += ' ${x2.text}';
       }
 
-      if(x.length == getShuffleForIndex(idx: i).length) {
+      /*if(x.length == getShuffleForIndex(idx: i).length) {
         if(!txt.endsWith('.')) {
           txt += '.';
         }
-      }
+      }*/
     }
 
     return txt.trim();
