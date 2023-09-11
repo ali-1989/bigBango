@@ -430,7 +430,11 @@ class SpeakingComponentState extends StateBase<SpeakingComponent> {
 
     showLoading();
     var newFile = '${File(getVoiceAddress()).parent.path}/record.mp3';
-    FileHelper.renameSync(getVoiceAddress(), newFile);
+
+    if(FileHelper.existSync(getVoiceAddress())) {
+      FileHelper.renameSync(getVoiceAddress(), newFile);
+    }
+
     final twoResponse = await FileUploadService.uploadFiles([File(newFile)], FileUploadType.autodidact);
 
     if(twoResponse.hasResult2()){

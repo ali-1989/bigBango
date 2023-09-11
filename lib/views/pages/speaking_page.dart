@@ -150,7 +150,7 @@ class _SpeakingPageState extends StateBase<SpeakingPage> with TickerProviderStat
       children: [
         const SizedBox(height: 10),
 
-        /// writing exam
+        /// speaking exam
         Expanded(
             child: FadeIn(
                 animate: true,
@@ -167,7 +167,7 @@ class _SpeakingPageState extends StateBase<SpeakingPage> with TickerProviderStat
             ),
         ),
 
-        /// send button
+        /// next/prev button
         buildBottomSection(),
 
         const SizedBox(height: 10),

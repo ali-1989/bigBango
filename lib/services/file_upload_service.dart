@@ -32,12 +32,15 @@ class FileUploadService {
     for(final f in files){
       final fName = PathHelper.getFileName(f.path);
 
-      requester.httpItem.addFormFile('files', fName, f);
+      requester.httpItem.addFormFile('Files', fName, f);
     }
 
     requester.prepareUrl(pathUrl: '/attachments/upload');
     //requester.prepareUrl(pathUrl: 'http://192.168.50.155:7054/v1/attachments/upload', isFull: true);
     requester.methodType = MethodType.post;
+    requester.httpItem.headers = {'accept': 'application/json', 'Content-Type': 'multipart/form-data'};
+
+    requester.debug = true;
 
     requester.request(null, false);
     return res.future;

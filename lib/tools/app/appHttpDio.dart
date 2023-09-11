@@ -28,15 +28,27 @@ class AppHttpDio {
 			var txt = '\n-------------------------http debug\n';
 			txt += 'url: ${httpItem.fullUrl}\n';
 			txt += 'Method: ${httpItem.method}\n';
+			txt += 'Headers: ${httpItem.headers}\n';
+
+			httpItem.prepareMultiParts();
 
 			if(httpItem.body is String) {
 				txt += 'Body: ${httpItem.body} \n------------------------- End';
+			}
+			else if(httpItem.body is MultipartFile) {
+				txt += 'MultipartFile: Len> ${(httpItem.body as MultipartFile).length} \n';
+				txt += 'MultipartFile: Mime> ${(httpItem.body as MultipartFile).contentType?.mimeType} \n------------------------- End';
+			}
+			else if(httpItem.body is FormData) {
+				txt += 'FormData: Len> ${(httpItem.body as FormData).length} \n';
+				txt += 'FormData: boundary> ${(httpItem.body as FormData).boundary} \n';
+				txt += 'FormData: files len> ${(httpItem.body as FormData).files.length} \n';
+				txt += 'FormData: fields len> ${(httpItem.body as FormData).fields.length} \n------------------------- End';
 			}
 
 			LogTools.logger.logToAll(txt);
 		}
 
-		httpItem.prepareMultiParts();
 		final itemRes = HttpRequester();
 
 		try {
@@ -597,12 +609,14 @@ class HttpItem {
 		}
 
 		final newBody = FormData();
-		//final oldBody = body as FormData;
+		final oldBody = body as FormData;
 
-		/*for(final f in oldBody.fields){
+		/// copy Fields
+		for(final f in oldBody.fields){
 			newBody.fields.add(f);
-		}*/
+		}
 
+		/// add Files
 		for(final fd in formDataItems){
 			if(fd.filePath != null){
 				final m = MultipartFile.fromFileSync(fd.filePath!, filename: fd.fileName, contentType: fd.contentType);

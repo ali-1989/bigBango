@@ -6,6 +6,7 @@ import 'package:chewie/chewie.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
+import 'package:iris_tools/widgets/maxHeight.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:app/managers/api_manager.dart';
@@ -264,6 +265,16 @@ class _GrammarPageState extends StateBase<GrammarPage> {
                   const SizedBox(height: 4),
                   Text('بعد از تماشای ویدیو ، شروع به تمرین کنید و خودتون را محک بزنید',
                       style: TextStyle(fontSize: 10, color: Colors.grey.shade600)
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  MaxHeight(
+                      maxHeight: 120,
+                      child: AspectRatio(
+                          aspectRatio: 2/1,
+                          child: Image.asset(AppImages.examManMen)
+                      )
                   ),
                 ],
               ),

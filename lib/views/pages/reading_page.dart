@@ -7,6 +7,7 @@ import 'package:iris_tools/api/duration/durationFormatter.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
+import 'package:iris_tools/widgets/maxHeight.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:app/managers/api_manager.dart';
@@ -239,11 +240,6 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                             AnimatedBuilder(
                               animation: anim1Ctr,
                               builder: (_, c){
-                                print('==================================================');
-                                for(final x in currentItem!.segments){
-                                  print(x.text);
-                                }
-                                print('==================================================');
                                 return Transform.translate(
                                   offset: Offset(0, anim1Ctr.value),
                                   child: Opacity(
@@ -432,6 +428,16 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                       style: TextStyle(fontSize: 10, color: Colors.grey.shade600)
                   ),
 
+                  const SizedBox(height: 10),
+
+                  MaxHeight(
+                      maxHeight: 120,
+                      child: AspectRatio(
+                          aspectRatio: 2/1,
+                          child: Image.asset(AppImages.examManMen)
+                      )
+                  ),
+
                   const SizedBox(height: 14),
                   SizedBox(
                     width: 200,
@@ -440,6 +446,9 @@ class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateM
                         child: Text('شروع')
                     ),
                   ),
+
+                  const SizedBox(height: 8),
+
                   ///...buildExerciseList()
                 ],
               ),
