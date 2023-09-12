@@ -24,7 +24,7 @@ class AppDecoration {
   static Color blueTint = blue.withAlpha(100);
   static Color purpleTint = purple.withAlpha(40);
 
-  
+  //--------------------------------------------------
   static ClassicFooter classicFooter = const ClassicFooter(
     loadingText: '',
     idleText: '',
@@ -88,6 +88,7 @@ class AppDecoration {
   static TextStyle appBarTextStyle() {
     return AppThemes.instance.themeData.appBarTheme.toolbarTextStyle!;
   }
+
   static double fontSizeRelative(double size) {
     var siz = AppThemes.instance.currentTheme.baseTextStyle.fontSize;
     return (siz?? FontManager.deviceFontSize) + size;
@@ -213,10 +214,6 @@ class AppDecoration {
       margin: margin,
       padding: padding,
     );
-  }
-
-  static Color cardColorOnCard() {
-    return ColorHelper.changeHSLByRelativeDarkLight(AppThemes.instance.currentTheme.cardColor, 2, 0.0, 0.04);
   }
 
   static TextStyle relativeFabTextStyle() {

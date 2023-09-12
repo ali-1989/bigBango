@@ -188,7 +188,7 @@ class SplashPageState extends StateBase<SplashPage> {
     try {
       //WakeupService.init();
       //NativeCallService.init();
-      //NativeCallService.assistanceBridge!.invokeMethod('setAppIsRun');
+      //NativeCallService.assistanceBridge?.invokeMethod('setAppIsRun');
       ApplicationSignal.start();
       SettingsManager.init();
       LoginService.init();

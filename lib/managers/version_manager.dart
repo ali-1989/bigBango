@@ -86,7 +86,7 @@ class VersionManager {
 
         await Future.delayed(const Duration(seconds: 4));
 
-        if(context.mounted) {
+        if(context.mounted && !kIsWeb) {
           showUpdateDialog(context, vm);
         }
       }

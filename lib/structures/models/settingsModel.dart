@@ -13,7 +13,7 @@ class SettingsModel {
   static const defaultWsAddress = 'https://bigbangoappapi.nicode.org/v1';
   static const defaultProxyAddress = '95.174.67.50:18080';
   static const Locale defaultAppLocale = Locale('fa', 'IR');
-  static final CalendarType defaultCalendarType = CalendarType.solarHijri;
+  static const CalendarType defaultCalendarType = CalendarType.solarHijri;
   static final defaultDateFormat = DateFormat.yyyyMmDd.format();
   static int webSocketPeriodicHeartMinutes = 3;
   static int drawerMenuTimeMill = 350;
@@ -47,7 +47,6 @@ class SettingsModel {
     calendarType = CalendarTypeHelper.calendarTypeFrom(map['calendar_type_name']);
     dateFormat = map['date_format']?? defaultDateFormat;
     colorTheme = map[Keys.setting$colorThemeName];
-    //lastToBackgroundTs = map[Keys.setting$toBackgroundTs];
     confirmOnExit = map[Keys.setting$confirmOnExit]?? true;
     httpAddress = map['http_address']?? defaultHttpAddress;
     wsAddress = map['ws_address']?? defaultWsAddress;

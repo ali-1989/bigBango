@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:app/tools/app/appIcons.dart';
 import 'package:flutter/material.dart';
 
 import 'package:extended_sliver/extended_sliver.dart';
@@ -33,6 +32,7 @@ import 'package:app/structures/models/lessonModels/vocabSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/writingSegmentModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/tools/app/appDecoration.dart';
+import 'package:app/tools/app/appIcons.dart';
 import 'package:app/tools/app/appImages.dart';
 import 'package:app/tools/app/appMessages.dart';
 import 'package:app/tools/app/appOverlay.dart';

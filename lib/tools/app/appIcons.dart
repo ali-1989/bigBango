@@ -100,6 +100,8 @@ class AppIcons {
   static const IconData filtering = Icons.workspaces;
   static const IconData info = Icons.info_outline;
   static const IconData infoSolid = Icons.info;
+  static const IconData bookmark = Icons.bookmark_border;
+  static const IconData bookmarkSolid = Icons.bookmark;
   static const IconData lastSeenClock = CommunityMaterialIcons.history;
   static const IconData heartSolid = CommunityMaterialIcons.heart;
   static const IconData heart = CommunityMaterialIcons.heart_outline;

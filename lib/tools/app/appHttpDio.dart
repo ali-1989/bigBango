@@ -24,13 +24,13 @@ class AppHttpDio {
 	}
 
 	static HttpRequester send(HttpItem httpItem, {BaseOptions? options}){
+		httpItem.prepareMultiParts();
+
 		if(httpItem.debugMode) {
 			var txt = '\n-------------------------http debug\n';
 			txt += 'url: ${httpItem.fullUrl}\n';
 			txt += 'Method: ${httpItem.method}\n';
 			txt += 'Headers: ${httpItem.headers}\n';
-
-			httpItem.prepareMultiParts();
 
 			if(httpItem.body is String) {
 				txt += 'Body: ${httpItem.body} \n------------------------- End';

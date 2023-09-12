@@ -278,7 +278,7 @@ class SessionService {
 
 		return res > 0;
 	}
-	
+
 	/*static UserModel getGuestUser(){
 		final g = UserModel();
 		g.userId = '0';
