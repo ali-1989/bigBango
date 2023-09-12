@@ -8,7 +8,8 @@ import 'package:app/tools/app/appThemes.dart';
 import 'package:app/tools/dateTools.dart';
 
 class SettingsModel {
-  static const defaultHttpAddress = 'https://testbigbangoappapi.nicode.org/v1';
+  //static const defaultHttpAddress = 'https://testbigbangoappapi.nicode.org/v1';
+  static const defaultHttpAddress = 'https://bigbangoappapi.nicode.org/v1';
   static const defaultWsAddress = 'https://bigbangoappapi.nicode.org/v1';
   static const defaultProxyAddress = '95.174.67.50:18080';
   static const Locale defaultAppLocale = Locale('fa', 'IR');

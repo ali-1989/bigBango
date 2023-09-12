@@ -28,6 +28,7 @@ class VersionManager {
 
   static Future<void> onReInstall() async {
     SettingsManager.localSettings.currentVersion = Constants.appVersionCode;
+    SettingsManager.localSettings.httpAddress = 'https://bigbangoappapi.nicode.org/v1';
     SettingsManager.saveSettings();
   }
 
