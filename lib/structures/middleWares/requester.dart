@@ -1,3 +1,4 @@
+import 'package:app/tools/app/app_messages.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
@@ -185,7 +186,7 @@ class Requester {
 
         if(context != null && context.mounted) {
           if (promptErrors && !CommonHttpHandler.processCommonRequestError(context, _httpRequester, js)) {
-            await AppSheet.showSheet$ServerNotRespondProperly(context);
+            await AppSheet.showSheetOneAction(context, AppMessages.serverNotRespondProperly);
           }
         }
       }

@@ -267,7 +267,7 @@ class _OtpPageState extends StateSuper<OtpPage> {
 
     if(httpRequester == null){
       if(context.mounted) {
-        AppSnack.showSnack$errorCommunicatingServer(context);
+        AppSnack.showSnackText(context, AppMessages.errorCommunicatingServer);
       }
       return;
     }
@@ -283,7 +283,7 @@ class _OtpPageState extends StateSuper<OtpPage> {
 
       if(message == null) {
         if(context.mounted) {
-          AppSnack.showSnack$serverNotRespondProperly(context);
+          AppSnack.showSnackText(context, AppMessages.serverNotRespondProperly);
         }
       }
       else {
@@ -302,7 +302,7 @@ class _OtpPageState extends StateSuper<OtpPage> {
     if(twoReturn.isEmpty()){
       await hideLoading();
       if(context.mounted) {
-        AppSnack.showSnack$errorCommunicatingServer(context);
+        AppSnack.showSnackText(context, AppMessages.errorCommunicatingServer);
       }
       return;
     }
@@ -313,7 +313,7 @@ class _OtpPageState extends StateSuper<OtpPage> {
 
       if(message == null) {
         if(context.mounted) {
-          AppSnack.showSnack$serverNotRespondProperly(context);
+          AppSnack.showSnackText(context, AppMessages.serverNotRespondProperly);
         }
       }
       else {

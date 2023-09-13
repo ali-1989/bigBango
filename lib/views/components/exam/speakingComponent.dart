@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app/tools/app/app_messages.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -439,7 +440,7 @@ class SpeakingComponentState extends StateSuper<SpeakingComponent> {
 
     if(twoResponse.hasResult2()){
       await hideLoading();
-      AppSheet.showSheet$OperationFailedTryAgain(context);
+      AppSnack.showSnackText(context, AppMessages.operationFailedTryAgain);
       return;
     }
     else {
@@ -469,7 +470,7 @@ class SpeakingComponentState extends StateSuper<SpeakingComponent> {
         }
       }
 
-      AppSnack.showSnack$errorCommunicatingServer(context);
+      AppSnack.showSnackText(context, AppMessages.errorCommunicatingServer);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {

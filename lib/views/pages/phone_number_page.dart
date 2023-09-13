@@ -249,7 +249,7 @@ class _PhoneNumberPageState extends StateSuper<PhoneNumberPage> {
     await hideLoading();
 
     if(httpRequester == null){
-      AppSnack.showSnack$errorCommunicatingServer(context);
+      AppSnack.showSnackText(context, AppMessages.errorCommunicatingServer);
       return;
     }
 
@@ -263,7 +263,7 @@ class _PhoneNumberPageState extends StateSuper<PhoneNumberPage> {
       }
 
       if(message == null) {
-        AppSnack.showSnack$serverNotRespondProperly(context);
+        AppSnack.showSnackText(context, AppMessages.serverNotRespondProperly);
       }
       else {
         AppSnack.showError(context, message);

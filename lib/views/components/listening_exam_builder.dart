@@ -1,3 +1,4 @@
+import 'package:app/tools/app/app_messages.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
@@ -216,7 +217,7 @@ class _ListeningExamBuilderState extends StateSuper<ListeningExamBuilder> {
     };
 
     requester.httpRequestEvents.onFailState = (req, res) async {
-      AppSnack.showSnack$errorCommunicatingServer(context);
+      AppSnack.showSnackText(context, AppMessages.errorCommunicatingServer);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {

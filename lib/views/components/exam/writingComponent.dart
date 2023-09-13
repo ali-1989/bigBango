@@ -1,3 +1,4 @@
+import 'package:app/tools/app/app_messages.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/focusHelper.dart';
@@ -255,7 +256,7 @@ class WritingComponentState extends StateSuper<WritingComponent> {
         }
       }
 
-      AppSnack.showSnack$errorCommunicatingServer(context);
+      AppSnack.showSnackText(context, AppMessages.errorCommunicatingServer);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {

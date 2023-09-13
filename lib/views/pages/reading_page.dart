@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/tools/app/app_messages.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/callAction/taskQueueCaller.dart';
@@ -759,7 +760,7 @@ class _ReadingPageState extends StateSuper<ReadingPage> with TickerProviderState
         );
       }
       else {
-        AppSnack.showSnack$OperationFailed(context);
+        AppSnack.showSnackText(context, AppMessages.operationFailed);
       }
     }
     else {
@@ -781,7 +782,7 @@ class _ReadingPageState extends StateSuper<ReadingPage> with TickerProviderState
         );
       }
       else {
-        AppSnack.showSnack$OperationFailed(context);
+        AppSnack.showSnackText(context, AppMessages.operationFailed);
       }
     }
   }

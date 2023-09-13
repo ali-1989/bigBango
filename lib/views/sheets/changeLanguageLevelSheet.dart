@@ -209,14 +209,14 @@ class _ChangeLanguageLevelSheetState extends StateSuper<ChangeLanguageLevelSheet
     };
 
     requester.httpRequestEvents.onFailState = (req, data) async {
-      AppSnack.showSnack$OperationFailed(context);
+      AppSnack.showSnackText(context, AppMessages.operationFailed);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, data) async {
       final user = SessionService.getLastLoginUser()!;
       user.courseLevel = selectedLevel;
       await SessionService.sinkUserInfo(user);
-      AppSnack.showSnack$operationSuccess(context);
+      AppSnack.showSnackText(context, AppMessages.operationSuccess);
 
       AppBroadcast.reBuildMaterial();
       AppBroadcast.homePageKey.currentState?.requestLessons();

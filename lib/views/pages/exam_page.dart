@@ -407,7 +407,7 @@ class _ExamPageState extends StateSuper<ExamPage> with TickerProviderStateMixin 
     };
 
     requester.httpRequestEvents.onFailState = (req, res) async {
-      AppSnack.showSnack$errorCommunicatingServer(context);
+      AppSnack.showSnackText(context, AppMessages.errorCommunicatingServer);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {

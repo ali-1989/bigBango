@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/tools/app/app_messages.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_notifier/iris_notifier.dart';
@@ -571,7 +572,7 @@ class _SupportPageState extends StateSuper<SupportPage> with SingleTickerProvide
       await requestUserLeftTime();
 
       if(userTime == null){
-        AppSnack.showSnack$OperationFailed(context);
+        AppSnack.showSnackText(context, AppMessages.operationFailed);
         return;
       }
     }

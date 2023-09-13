@@ -1,3 +1,4 @@
+import 'package:app/tools/app/app_messages.dart';
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
@@ -290,12 +291,12 @@ class _TicketDetailPageState extends StateSuper<TicketDetailPage> {
   void requestCloseTicket(){
     requester.httpRequestEvents.onFailState = (req, res) async {
       hideLoading();
-      AppSnack.showSnack$OperationFailed(context);
+      AppSnack.showSnackText(context, AppMessages.operationFailed);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, res) async {
       hideLoading();
-      AppSnack.showSnack$operationSuccess(context);
+      AppSnack.showSnackText(context, AppMessages.operationSuccess);
 
       widget.ticketModel?.status = 2;
       ticketDetailModel.status = 2;

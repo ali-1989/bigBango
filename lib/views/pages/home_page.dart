@@ -962,7 +962,7 @@ class HomePageState extends StateSuper<HomePage> {
       await hideLoading();
 
       if(userTime == null){
-        AppSnack.showSnack$OperationFailed(context);
+        AppSnack.showSnackText(context, AppMessages.operationFailed);
         return;
       }
     }

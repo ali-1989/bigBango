@@ -396,7 +396,7 @@ class _LightnerDetailPageState extends StateSuper<LightnerDetailPage> {
   void requestSetReview(LeitnerModel model, bool state) async {
     requester.httpRequestEvents.onFailState = (req, dataJs) async {
       hideLoading();
-      AppSheet.showSheet$OperationFailed(context);
+      AppSheet.showSheetOneAction(context, AppMessages.operationFailed);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, dataJs) async {

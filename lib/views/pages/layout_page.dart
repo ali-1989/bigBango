@@ -10,7 +10,7 @@ import 'package:app/views/baseComponents/drawerMenuBuilder.dart';
 import 'package:app/views/baseComponents/layoutComponent.dart';
 import 'package:app/views/pages/home_page.dart';
 import 'package:app/views/pages/leitner_page.dart';
-import 'package:app/views/pages/message_page.dart';
+import 'package:app/views/pages/notification_message_page.dart';
 import 'package:app/views/pages/store_page.dart';
 
 class LayoutPage extends StatefulWidget {

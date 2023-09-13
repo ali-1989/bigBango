@@ -851,10 +851,10 @@ class _ProfilePageState extends StateSuper<ProfilePage> {
     }
     else {
       if(isOk) {
-        AppSnack.showSnack$operationSuccess(context);
+        AppSnack.showSnackText(context, AppMessages.operationSuccess);
       }
       else {
-        AppSnack.showSnack$errorCommunicatingServer(context);
+        AppSnack.showSnackText(context, AppMessages.errorCommunicatingServer);
       }
     }
 
@@ -870,7 +870,7 @@ class _ProfilePageState extends StateSuper<ProfilePage> {
     };
 
     requester.httpRequestEvents.onFailState = (req, r) async {
-      AppSnack.showSnack$OperationFailed(context);
+      AppSnack.showSnackText(context, AppMessages.operationFailed);
     };
 
     requester.httpRequestEvents.onStatusOk = (req, data) async {

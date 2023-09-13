@@ -48,6 +48,10 @@ class _NotificationPageState extends StateSuper<NotificationPage> {
       assistCtr.addStateWithClear(AssistController.state$loading);
       MessageManager.requestMessages();
     }
+    else if(!AppBroadcast.messageNotifier.stateManager.hasErrorInReceiveData){
+      assistCtr.addStateWithClear(AssistController.state$error);
+      assistCtr.updateHead();
+    }
     else {
       addPostOrCall(fn: (){
         AppBadge.setMessageBadge(0);
