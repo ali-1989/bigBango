@@ -5,12 +5,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
-import 'package:app/structures/enums/appEvents.dart';
+import 'package:app/structures/enums/app_events.dart';
 import 'package:app/structures/structure/messageStateManager.dart';
-import 'package:app/tools/app/appBadge.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appNotification.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_badge.dart';
+import 'package:app/tools/app/app_broadcast.dart';
+import 'package:app/tools/app/app_notification.dart';
+import 'package:app/tools/route_tools.dart';
 
 // https://firebase.google.com/docs/cloud-messaging/flutter/receive
 // https://firebase.google.com/docs/cloud-messaging/flutter/client

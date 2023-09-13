@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:app/tools/app/appIcons.dart';
+import 'package:app/tools/app/app_icons.dart';
 import 'package:app/views/components/filteringBuilder/filteringBuilderOption.dart';
 import 'package:app/views/components/filteringBuilder/filteringChangePage.dart';
 import 'package:app/views/components/filteringBuilder/filteringItemType.dart';

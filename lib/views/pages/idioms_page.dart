@@ -11,16 +11,16 @@ import 'package:video_player/video_player.dart';
 
 import 'package:app/managers/api_manager.dart';
 import 'package:app/services/review_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/vocabModels/idiomModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appThemes.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_themes.dart';
 import 'package:app/tools/app_tools.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/route_tools.dart';
 import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/components/greetingView.dart';
@@ -40,7 +40,7 @@ class IdiomsPage extends StatefulWidget {
   State<IdiomsPage> createState() => _IdiomsPageState();
 }
 ///======================================================================================================================
-class _IdiomsPageState extends StateBase<IdiomsPage> {
+class _IdiomsPageState extends StateSuper<IdiomsPage> {
   Requester requester = Requester();
   bool showTranslate = false;
   bool isVideoInit = false;

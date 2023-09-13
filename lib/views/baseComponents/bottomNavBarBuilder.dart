@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:app/tools/app/appBadge.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/app_badge.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
 
 class BottomNavBar extends StatefulWidget {
   final int selectedItemIndex;

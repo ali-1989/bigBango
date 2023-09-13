@@ -7,12 +7,12 @@ import 'package:iris_tools/api/system.dart';
 import 'package:simple_html_css/simple_html_css.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/models/versionModel.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appNavigator.dart';
-import 'package:app/tools/app/appThemes.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/structures/models/version_model.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_navigator.dart';
+import 'package:app/tools/app/app_themes.dart';
 
 /*
 '''
@@ -37,7 +37,7 @@ class NewVersionPage extends StatefulWidget {
   State<NewVersionPage> createState() => _NewVersionPageState();
 }
 ///================================================================================================
-class _NewVersionPageState extends StateBase<NewVersionPage> {
+class _NewVersionPageState extends StateSuper<NewVersionPage> {
   String html = '';
 
   @override

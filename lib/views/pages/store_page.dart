@@ -5,18 +5,18 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/optionsRow/checkRow.dart';
 
 import 'package:app/managers/api_manager.dart';
-import 'package:app/managers/storeManager.dart';
+import 'package:app/managers/store_manager.dart';
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/appEvents.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/structures/enums/app_events.dart';
 import 'package:app/structures/models/lessonModels/storeModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/currencyTools.dart';
+import 'package:app/tools/app/app_broadcast.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/currency_tools.dart';
 import 'package:app/views/sheets/store@invoiceSheet.dart';
 import 'package:app/views/sheets/support@selectBuyMethodSheet.dart';
 import 'package:app/views/states/emptyData.dart';
@@ -30,7 +30,7 @@ class StorePage extends StatefulWidget {
   State createState() => _StorePageState();
 }
 ///========================================================================================
-class _StorePageState extends StateBase<StorePage> with TickerProviderStateMixin {
+class _StorePageState extends StateSuper<StorePage> with TickerProviderStateMixin {
   late TabController tabCtr;
   int tabIdx = 0;
   bool selectAllState = false;

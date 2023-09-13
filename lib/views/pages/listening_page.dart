@@ -6,14 +6,14 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/managers/api_manager.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/listeningModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
 import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/components/listening_exam_builder.dart';
@@ -33,7 +33,7 @@ class ListeningPage extends StatefulWidget {
   State<ListeningPage> createState() => _ListeningPageState();
 }
 ///======================================================================================================================
-class _ListeningPageState extends StateBase<ListeningPage> {
+class _ListeningPageState extends StateSuper<ListeningPage> {
   Requester requester = Requester();
   Duration totalTime = const Duration();
   Duration currentTime = const Duration();

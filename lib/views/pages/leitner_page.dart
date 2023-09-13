@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/urlHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
-import 'package:iris_tools/widgets/icon/circularIcon.dart';
+import 'package:iris_tools/widgets/icon/circular_icon.dart';
 
-import 'package:app/managers/leitnerManager.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/managers/leitner_manager.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/leitnerModels/leitnerBoxModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appThemes.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_themes.dart';
+import 'package:app/tools/route_tools.dart';
 import 'package:app/views/pages/leitner_detail_page.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
@@ -27,7 +27,7 @@ class LightnerPage extends StatefulWidget {
   State createState() => _LightnerPageState();
 }
 ///========================================================================================
-class _LightnerPageState extends StateBase<LightnerPage> {
+class _LightnerPageState extends StateSuper<LightnerPage> {
   Requester requester = Requester();
   List<LeitnerBoxModel> boxItems = [];
 

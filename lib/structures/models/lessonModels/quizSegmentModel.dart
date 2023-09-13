@@ -1,6 +1,6 @@
 import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/quizCategoryModel.dart';
-import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/app_images.dart';
 
 class QuizSegmentModel extends ISegmentModel {
   List<QuizCategoryModel> categories = [];

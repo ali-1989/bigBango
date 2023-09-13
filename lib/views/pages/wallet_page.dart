@@ -11,19 +11,19 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/appEvents.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/structures/enums/app_events.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/transactionWalletModel.dart';
 import 'package:app/structures/models/withdrawalModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/currencyTools.dart';
-import 'package:app/tools/dateTools.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/currency_tools.dart';
+import 'package:app/tools/date_tools.dart';
+import 'package:app/tools/route_tools.dart';
 import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/pages/profile_page.dart';
 import 'package:app/views/sheets/incraseAmountComponent.dart';
@@ -41,7 +41,7 @@ class WalletPage extends StatefulWidget {
   State<WalletPage> createState() => _WalletPageState();
 }
 ///========================================================================================
-class _WalletPageState extends StateBase<WalletPage> {
+class _WalletPageState extends StateSuper<WalletPage> {
   Requester requester = Requester();
   RefreshController refreshController = RefreshController(initialRefresh: false);
   int walletBalance = 0;

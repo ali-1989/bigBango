@@ -5,19 +5,19 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/services/audio_player_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/leitnerModels/leitnerBoxModel.dart';
 import 'package:app/structures/models/leitnerModels/leitnerModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appNavigator.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appThemes.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_messages.dart';
+import 'package:app/tools/app/app_navigator.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_themes.dart';
+import 'package:app/tools/app/app_toast.dart';
+import 'package:app/tools/route_tools.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
 
@@ -33,7 +33,7 @@ class LightnerDetailPage extends StatefulWidget {
   State<LightnerDetailPage> createState() => _LightnerDetailPageState();
 }
 ///==================================================================================================================
-class _LightnerDetailPageState extends StateBase<LightnerDetailPage> {
+class _LightnerDetailPageState extends StateSuper<LightnerDetailPage> {
   Requester requester = Requester();
   String assistId$player = 'assistId_player';
   List<LeitnerModel> leitnerItems = [];

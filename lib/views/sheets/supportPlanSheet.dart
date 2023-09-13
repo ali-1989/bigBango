@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
-import 'package:iris_tools/widgets/keepAliveWrap.dart';
+import 'package:iris_tools/widgets/keep_alive_wrap.dart';
 import 'package:switch_tab/switch_tab.dart';
 
 import 'package:app/managers/settings_manager.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/models/supportModels/supportPlanModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/currencyTools.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/currency_tools.dart';
+import 'package:app/tools/route_tools.dart';
 
 class SupportPlanSheet extends StatefulWidget {
   final List<SupportPlanModel> planList;
@@ -27,7 +27,7 @@ class SupportPlanSheet extends StatefulWidget {
   State<SupportPlanSheet> createState() => _SupportPlanSheetState();
 }
 ///==================================================================================================
-class _SupportPlanSheetState extends StateBase<SupportPlanSheet> {
+class _SupportPlanSheetState extends StateSuper<SupportPlanSheet> {
   PageController pageCtr = PageController(keepPage: true);
   late ScrollController srcCtr;
   int optionSelectedIdx = -1;

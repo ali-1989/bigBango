@@ -4,15 +4,15 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 import 'package:slide_switcher/slide_switcher.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/appAssistKeys.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/structures/enums/assist_groups.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/structures/models/lessonModels/vocabSegmentModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/route_tools.dart';
 import 'package:app/views/pages/idioms_page.dart';
 import 'package:app/views/pages/vocab_page.dart';
 
@@ -30,7 +30,7 @@ class SelectVocabIdiomsDialog extends StatefulWidget {
   State createState() => _SelectVocabIdiomsDialog();
 }
 ///=================================================================================================
-class _SelectVocabIdiomsDialog extends StateBase<SelectVocabIdiomsDialog> {
+class _SelectVocabIdiomsDialog extends StateSuper<SelectVocabIdiomsDialog> {
   List<Widget> items = [];
   int currentTabIndex = 0;
 

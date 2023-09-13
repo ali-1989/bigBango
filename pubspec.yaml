@@ -30,7 +30,7 @@ dependencies:
   community_material_icon: ^5.9.55      # https://materialdesignicons.com/  https://www.fluttericon.com/
   device_info_plus: ^9.0.3
   platform_device_id: ^1.0.1
-  permission_handler: ^10.4.5            # NoWeb
+  permission_handler: ^11.0.0            # NoWeb
   video_player: ^2.7.1
   chewie: ^1.7.1
   http: ^1.1.0
@@ -59,14 +59,14 @@ dependencies:
   jwt_decoder: ^2.0.1
   dart_jsonwebtoken: ^2.11.0
   android_sms_retriever: ^1.3.3
-  shamsi_date: ^1.0.1
+  shamsi_date: ^1.0.2
   simple_html_css: ^4.0.0
   audio_session: any
   logger: any
   flutter_sound: ^9.2.13
   mask_input_formatter: ^0.0.3
   switch_tab: ^0.1.3
-  just_audio: ^0.9.34
+  just_audio: ^0.9.35
   slide_switcher: ^1.1.2
   # last size: v7a-release.apk (9.9MB)
 
@@ -85,7 +85,7 @@ dependencies:
 
 dependency_overrides:
   intl: 0.18.1    # awesome_notifications, flutter_localizations
-  shamsi_date: 1.0.1
+  shamsi_date: ^1.0.2
 
 
 dev_dependencies:

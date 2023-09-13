@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appNavigator.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_messages.dart';
+import 'package:app/tools/app/app_navigator.dart';
 
 class AppbarLesson extends StatelessWidget {
   final String title;

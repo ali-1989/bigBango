@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/abstract/ticketAttachmentShowSupper.dart';
 import 'package:app/structures/injectors/ticketDetailUserBubbleInjector.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/dateTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/date_tools.dart';
 
 class TicketDetailBigbangoBubbleComponent extends StatefulWidget {
   final TicketDetailBubbleInjector injector;
@@ -24,7 +24,7 @@ class TicketDetailBigbangoBubbleComponent extends StatefulWidget {
   State<TicketDetailBigbangoBubbleComponent> createState() => TicketDetailBigbangoBubbleComponentState();
 }
 ///=================================================================================================================
-class TicketDetailBigbangoBubbleComponentState extends StateBase<TicketDetailBigbangoBubbleComponent> with TicketAttachmentShowSupper  {
+class TicketDetailBigbangoBubbleComponentState extends StateSuper<TicketDetailBigbangoBubbleComponent> with TicketAttachmentShowSupper  {
   late Radius radius;
   late Radius radius2;
 

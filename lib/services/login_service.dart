@@ -6,17 +6,18 @@ import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/models/twoStateReturn.dart';
 
 import 'package:app/managers/api_manager.dart';
-import 'package:app/managers/leitnerManager.dart';
-import 'package:app/managers/messageManager.dart';
+import 'package:app/managers/leitner_manager.dart';
+import 'package:app/managers/message_manager.dart';
 import 'package:app/managers/settings_manager.dart';
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/enums/appEvents.dart';
-import 'package:app/structures/models/countryModel.dart';
-import 'package:app/structures/models/userModel.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appHttpDio.dart';
-import 'package:app/tools/deviceInfoTools.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/structures/enums/app_events.dart';
+import 'package:app/structures/models/country_model.dart';
+import 'package:app/structures/models/user_model.dart';
+import 'package:app/tools/app/app_broadcast.dart';
+import 'package:app/tools/app/app_http_dio.dart';
+import 'package:app/tools/device_info_tools.dart';
+import 'package:app/tools/route_tools.dart';
+import 'package:iris_tools/modules/stateManagers/assistState.dart';
 
 class LoginService {
   LoginService._();
@@ -58,7 +59,7 @@ class LoginService {
     final isCurrent = SessionService.getLastLoginUser()?.userId == userId;
     await SessionService.logoff(userId);
 
-    AppBroadcast.drawerMenuRefresher.update();
+    AssistController.forId(AppBroadcast.drawerMenuRefresherId)!.update();
     //AppBroadcast.layoutPageKey.currentState?.scaffoldState.currentState?.closeDrawer();
 
     if (isCurrent) {
@@ -70,7 +71,7 @@ class LoginService {
   static Future forceLogoffAll() async {
     await SessionService.logoffAll();
 
-    AppBroadcast.drawerMenuRefresher.update();
+    AssistController.forId(AppBroadcast.drawerMenuRefresherId)!.update();
     //AppBroadcast.layoutPageKey.currentState?.scaffoldState.currentState?.closeDrawer();
 
     RouteTools.backToRoot(RouteTools.getTopContext()!);
@@ -125,6 +126,7 @@ class LoginService {
     http.fullUrl = '${ApiManager.serverApi}/verifyPhoneNumber';
     http.method = 'POST';
     http.setBodyJson(js);
+    http.debugMode = true;
 
     final request = AppHttpDio.send(http);
 

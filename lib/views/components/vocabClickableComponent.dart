@@ -5,15 +5,15 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/services/audio_player_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/appAssistKeys.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/structures/enums/assist_groups.dart';
 import 'package:app/structures/models/vocabModels/clickableVocabModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_toast.dart';
+import 'package:app/tools/route_tools.dart';
 
 class VocabClickableComponent extends StatefulWidget {
   final ClickableVocabModel clickableVocabModel;
@@ -27,7 +27,7 @@ class VocabClickableComponent extends StatefulWidget {
   State<VocabClickableComponent> createState() => _VocabClickableComponentState();
 }
 ///====================================================================================
-class _VocabClickableComponentState extends StateBase<VocabClickableComponent> {
+class _VocabClickableComponentState extends StateSuper<VocabClickableComponent> {
   late ClickableVocabModel vocabModel;
   String id$usVoicePlayerSectionId = 'usVoicePlayerSectionId';
   String id$ukVoicePlayerSectionId = 'ukVoicePlayerSectionId';

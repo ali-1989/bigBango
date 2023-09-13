@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_messages.dart';
 
 class GreetingView extends StatelessWidget {
 

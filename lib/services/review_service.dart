@@ -4,11 +4,11 @@ import 'package:iris_db/iris_db.dart';
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-import 'package:app/structures/enums/appAssistKeys.dart';
-import 'package:app/structures/enums/appEvents.dart';
+import 'package:app/structures/enums/assist_groups.dart';
+import 'package:app/structures/enums/app_events.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
-import 'package:app/tools/app/appDb.dart';
+import 'package:app/tools/app/app_db.dart';
 
 class ReviewService {
   ReviewService._();

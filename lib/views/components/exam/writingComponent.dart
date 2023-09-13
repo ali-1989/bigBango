@@ -7,14 +7,14 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 import 'package:just_audio/just_audio.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/writingModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/route_tools.dart';
 
 class WritingComponent extends StatefulWidget {
   final WritingModel writingModel;
@@ -30,7 +30,7 @@ class WritingComponent extends StatefulWidget {
   State<WritingComponent> createState() => WritingComponentState();
 }
 ///=================================================================================================================
-class WritingComponentState extends StateBase<WritingComponent> {
+class WritingComponentState extends StateSuper<WritingComponent> {
   late WritingModel writingModel;
   Requester requester = Requester();
   TextEditingController answerCtr = TextEditingController();

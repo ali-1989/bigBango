@@ -21,22 +21,22 @@ import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:app/services/file_upload_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/speakingModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appDialogIris.dart';
-import 'package:app/tools/app/appDirectories.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/tools/permissionTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_dialog_iris.dart';
+import 'package:app/tools/app/app_directories.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/app/app_toast.dart';
+import 'package:app/tools/permission_tools.dart';
 import 'package:app/views/components/playVoiceView.dart';
 import 'package:app/views/sheets/speakingCorrectAnswerSheet.dart';
 
@@ -54,7 +54,7 @@ class SpeakingComponent extends StatefulWidget {
   State<SpeakingComponent> createState() => SpeakingComponentState();
 }
 ///=================================================================================================================
-class SpeakingComponentState extends StateBase<SpeakingComponent> {
+class SpeakingComponentState extends StateSuper<SpeakingComponent> {
   late SpeakingModel speakingModel;
   Requester requester = Requester();
   FlutterSoundRecorder voiceRecorder = FlutterSoundRecorder();

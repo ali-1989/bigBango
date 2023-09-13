@@ -9,23 +9,23 @@ import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/attribute.dart';
 import 'package:iris_tools/widgets/customCard.dart';
-import 'package:iris_tools/widgets/irisImageView.dart';
+import 'package:iris_tools/widgets/iris_image_view.dart';
 
 import 'package:app/managers/api_manager.dart';
 import 'package:app/managers/font_manager.dart';
 import 'package:app/services/audio_player_service.dart';
 import 'package:app/services/review_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/appAssistKeys.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/structures/enums/assist_groups.dart';
 import 'package:app/structures/injectors/vocabPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/vocabModels/vocabModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appToast.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_toast.dart';
 import 'package:app/tools/app_tools.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/route_tools.dart';
 import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/components/greetingView.dart';
@@ -45,7 +45,7 @@ class VocabPage extends StatefulWidget {
   State<VocabPage> createState() => _VocabPageState();
 }
 ///======================================================================================================================
-class _VocabPageState extends StateBase<VocabPage> {
+class _VocabPageState extends StateSuper<VocabPage> {
   bool showTranslate = false;
   Requester requester = Requester();
   List<VocabModel> vocabList = [];

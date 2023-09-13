@@ -5,9 +5,9 @@ import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/structures/models/lessonModels/storeModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/currencyTools.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/currency_tools.dart';
+import 'package:app/tools/route_tools.dart';
 
 class InvoiceSheet extends StatelessWidget {
   final List<StoreLessonModel> lessons;

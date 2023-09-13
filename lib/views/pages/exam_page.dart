@@ -5,19 +5,19 @@ import 'package:iris_tools/api/system.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/enums/quizType.dart';
 import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appDialogIris.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appNavigator.dart';
-import 'package:app/tools/app/appSnack.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_dialog_iris.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_messages.dart';
+import 'package:app/tools/app/app_navigator.dart';
+import 'package:app/tools/app/app_snack.dart';
 import 'package:app/views/components/exam/examBlankSpaseBuilder.dart';
 import 'package:app/views/components/exam/examMakeSentenceBuilder.dart';
 import 'package:app/views/components/exam/examOptionBuilder.dart';
@@ -35,7 +35,7 @@ class ExamPage extends StatefulWidget {
   State<ExamPage> createState() => _ExamPageState();
 }
 ///======================================================================================================================
-class _ExamPageState extends StateBase<ExamPage> with TickerProviderStateMixin {
+class _ExamPageState extends StateSuper<ExamPage> with TickerProviderStateMixin {
   Requester requester = Requester();
   late ExamModel currentExam;
   int currentExamIndex = 0;

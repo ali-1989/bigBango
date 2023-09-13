@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/route_tools.dart';
 
 class TimetableConfirmRequestSupport extends StatelessWidget {
   final String? lesson;

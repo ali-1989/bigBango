@@ -10,15 +10,15 @@ import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:app/managers/font_manager.dart';
 import 'package:app/services/login_service.dart';
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appDb.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_broadcast.dart';
+import 'package:app/tools/app/app_db.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_messages.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/route_tools.dart';
 
 class OtpPage extends StatefulWidget {
   final String phoneNumber;
@@ -34,7 +34,7 @@ class OtpPage extends StatefulWidget {
   State<OtpPage> createState() => _OtpPageState();
 }
 ///===================================================================================================================
-class _OtpPageState extends StateBase<OtpPage> {
+class _OtpPageState extends StateSuper<OtpPage> {
   late final StopWatchTimer stopWatchTimer;
   TextEditingController pinTextCtr = TextEditingController();
   bool showResendOtpButton = false;

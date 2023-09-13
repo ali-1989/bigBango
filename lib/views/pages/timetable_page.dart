@@ -13,8 +13,8 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/managers/api_manager.dart';
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/appEvents.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/structures/enums/app_events.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/hoursOfSupportModel.dart';
@@ -23,12 +23,12 @@ import 'package:app/structures/models/supportModels/dayWeekModel.dart';
 import 'package:app/structures/models/supportModels/supportPlanModel.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/route_tools.dart';
 import 'package:app/views/sheets/support@selectBuyMethodSheet.dart';
 import 'package:app/views/sheets/supportPlanSheet.dart';
 import 'package:app/views/sheets/timetable@confirmRequestSupport.dart';
@@ -47,7 +47,7 @@ class TimetablePage extends StatefulWidget {
   State<TimetablePage> createState() => _TimetablePageState();
 }
 ///==============================================================================================
-class _TimetablePageState extends StateBase<TimetablePage> {
+class _TimetablePageState extends StateSuper<TimetablePage> {
   Requester requester = Requester();
   ScrollController srcCtr = ScrollController();
   TextEditingController titleCtr = TextEditingController();

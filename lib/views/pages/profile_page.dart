@@ -19,8 +19,8 @@ import 'package:iris_tools/api/helpers/textHelper.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/icon/circularIcon.dart';
-import 'package:iris_tools/widgets/irisImageView.dart';
+import 'package:iris_tools/widgets/icon/circular_icon.dart';
+import 'package:iris_tools/widgets/iris_image_view.dart';
 import 'package:mask_input_formatter/mask_input_formatter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:persian_modal_date_picker/button.dart';
@@ -29,8 +29,8 @@ import 'package:shamsi_date/shamsi_date.dart';
 
 import 'package:app/services/file_upload_service.dart';
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/appEvents.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/structures/enums/app_events.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/enums/genderType.dart';
@@ -38,19 +38,19 @@ import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/cityModel.dart';
 import 'package:app/structures/models/mediaModel.dart';
 import 'package:app/structures/models/provinceModel.dart';
-import 'package:app/structures/models/userModel.dart';
+import 'package:app/structures/models/user_model.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appDirectories.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/dateTools.dart';
-import 'package:app/tools/deviceInfoTools.dart';
-import 'package:app/tools/permissionTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_directories.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_messages.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/date_tools.dart';
+import 'package:app/tools/device_info_tools.dart';
+import 'package:app/tools/permission_tools.dart';
 
 class ProfilePage extends StatefulWidget {
   final UserModel userModel;
@@ -64,7 +64,7 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 ///===================================================================================================================
-class _ProfilePageState extends StateBase<ProfilePage> {
+class _ProfilePageState extends StateSuper<ProfilePage> {
   TextEditingController nameTextCtr = TextEditingController();
   TextEditingController familyTextCtr = TextEditingController();
   TextEditingController emailTextCtr = TextEditingController();
@@ -750,7 +750,7 @@ class _ProfilePageState extends StateBase<ProfilePage> {
   }
 
   Future<XFile?> selectImageFromCamera() async {
-    final hasPermission = await PermissionTools.requestStoragePermission();
+    final hasPermission = await PermissionTools.requestCameraStoragePermissions();
 
     if(hasPermission != PermissionStatus.granted) {
       return null;

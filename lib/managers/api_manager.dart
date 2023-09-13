@@ -9,7 +9,7 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/managers/settings_manager.dart';
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/enums/appAssistKeys.dart';
+import 'package:app/structures/enums/assist_groups.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/courseLevelModel.dart';

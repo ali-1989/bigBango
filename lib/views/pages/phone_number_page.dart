@@ -12,16 +12,16 @@ import 'package:iris_tools/widgets/attribute.dart';
 
 import 'package:app/managers/settings_manager.dart';
 import 'package:app/services/login_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/routeTools.dart';
-import 'package:app/views/components/videoPlayer.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_messages.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/route_tools.dart';
+import 'package:app/views/components/video_player.dart';
 import 'package:app/views/pages/otp_page.dart';
 
 class PhoneNumberPage extends StatefulWidget {
@@ -31,7 +31,7 @@ class PhoneNumberPage extends StatefulWidget {
   State<PhoneNumberPage> createState() => _PhoneNumberPageState();
 }
 ///===================================================================================================================
-class _PhoneNumberPageState extends StateBase<PhoneNumberPage> {
+class _PhoneNumberPageState extends StateSuper<PhoneNumberPage> {
   TextEditingController phoneCtr = TextEditingController();
   AttributeController atrCtr = AttributeController();
   double regulator = 12;

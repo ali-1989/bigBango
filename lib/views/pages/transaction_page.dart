@@ -6,17 +6,17 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/enums/transactionSectionFilter.dart';
 import 'package:app/structures/enums/transactionStatusFilter.dart';
 import 'package:app/structures/middleWares/requester.dart';
-import 'package:app/structures/models/transactionModel.dart';
+import 'package:app/structures/models/transaction_model.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/currencyTools.dart';
-import 'package:app/tools/dateTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/currency_tools.dart';
+import 'package:app/tools/date_tools.dart';
 import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/components/filteringBuilder/filteringBuilder.dart';
 import 'package:app/views/components/filteringBuilder/filteringBuilderOption.dart';
@@ -37,7 +37,7 @@ class TransactionsPage extends StatefulWidget {
   State<TransactionsPage> createState() => _TransactionsPageState();
 }
 ///========================================================================================
-class _TransactionsPageState extends StateBase<TransactionsPage> {
+class _TransactionsPageState extends StateSuper<TransactionsPage> {
   Requester requester = Requester();
   RefreshController refreshController = RefreshController(initialRefresh: false);
   int pageSize = 100;

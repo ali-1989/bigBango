@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
-import 'package:iris_tools/modules/stateManagers/refresh.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appSizes.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/tools/app/app_broadcast.dart';
+import 'package:app/tools/app/app_sizes.dart';
+import 'package:iris_tools/modules/stateManagers/assistState.dart';
 
 class LayoutComponent extends StatefulWidget {
   final Widget body;
@@ -23,7 +23,7 @@ class LayoutComponent extends StatefulWidget {
   }
 }
 ///==========================================================================================
-class LayoutComponentState extends StateBase<LayoutComponent> {
+class LayoutComponentState extends StateSuper<LayoutComponent> {
   static bool _isOpen = false;
   static bool _withAnimation = false;
   static int _drawerTime = 400;
@@ -63,9 +63,9 @@ class LayoutComponentState extends StateBase<LayoutComponent> {
 
        return true;
       },
-      child: Refresh(
-        controller: AppBroadcast.drawerMenuRefresher,
-        builder: (_, ctr){
+      child: AssistBuilder(
+        id: AppBroadcast.drawerMenuRefresherId,
+        builder: (_, ctr, data){
           return SafeArea(
             top: true,
             child: AnimateWidget(
@@ -139,7 +139,7 @@ class LayoutComponentState extends StateBase<LayoutComponent> {
     _isOpen = true;
     _withAnimation = true;
 
-    AppBroadcast.drawerMenuRefresher.update();
+    AssistController.forId(AppBroadcast.drawerMenuRefresherId)!.update();
     await Future.delayed(Duration(milliseconds: _drawerTime), (){});
 
     return;
@@ -156,7 +156,7 @@ class LayoutComponentState extends StateBase<LayoutComponent> {
     final old = _drawerTime;
     _drawerTime = millSec?? _drawerTime;
 
-    AppBroadcast.drawerMenuRefresher.update();
+    AssistController.forId(AppBroadcast.drawerMenuRefresherId)!.update();
 
     await Future.delayed(Duration(milliseconds: _drawerTime), (){});
 

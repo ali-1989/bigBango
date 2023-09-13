@@ -4,21 +4,21 @@ import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'package:app/managers/messageManager.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/managers/message_manager.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/enums/notificationType.dart';
 import 'package:app/structures/models/messageModel.dart';
 import 'package:app/structures/structure/messageStateManager.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appBadge.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/dateTools.dart';
-import 'package:app/tools/routeTools.dart';
-import 'package:app/views/components/fullScreenImage.dart';
+import 'package:app/tools/app/app_badge.dart';
+import 'package:app/tools/app/app_broadcast.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/date_tools.dart';
+import 'package:app/tools/route_tools.dart';
+import 'package:app/views/components/full_screen_image.dart';
 import 'package:app/views/pages/ticket_detail_page.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
@@ -31,7 +31,7 @@ class NotificationPage extends StatefulWidget {
   State createState() => _NotificationPageState();
 }
 ///========================================================================================
-class _NotificationPageState extends StateBase<NotificationPage> {
+class _NotificationPageState extends StateSuper<NotificationPage> {
   RefreshController refreshController = RefreshController(initialRefresh: false);
 
   @override

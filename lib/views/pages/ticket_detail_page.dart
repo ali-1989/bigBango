@@ -4,21 +4,21 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/injectors/ticketDetailUserBubbleInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/ticketModels/ticketDetailModel.dart';
 import 'package:app/structures/models/ticketModels/ticketModel.dart';
-import 'package:app/structures/models/userModel.dart';
+import 'package:app/structures/models/user_model.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appDialogIris.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appNavigator.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/permissionTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_dialog_iris.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_navigator.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/permission_tools.dart';
 import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/components/ticketDetailBigbangoBubbleComponent.dart';
 import 'package:app/views/components/ticketDetailUserBubbleComponent.dart';
@@ -40,7 +40,7 @@ class TicketDetailPage extends StatefulWidget {
   State<TicketDetailPage> createState() => _TicketDetailPageState();
 }
 ///=================================================================================================
-class _TicketDetailPageState extends StateBase<TicketDetailPage> {
+class _TicketDetailPageState extends StateSuper<TicketDetailPage> {
   Requester requester = Requester();
   late UserModel userModel;
   late TicketDetailModel ticketDetailModel;

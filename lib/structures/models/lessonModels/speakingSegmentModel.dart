@@ -1,6 +1,6 @@
 import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/speakingCategoryModel.dart';
-import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/app_images.dart';
 
 class SpeakingSegmentModel extends ISegmentModel {
   List<SpeakingCategoryModel> categories = [];

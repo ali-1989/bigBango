@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'package:app/system/extensions.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/tools/app/appDb.dart';
-import 'package:app/tools/app/appThemes.dart';
+import 'package:app/tools/app/app_db.dart';
+import 'package:app/tools/app/app_themes.dart';
 
 class FontManager {
   FontManager._();

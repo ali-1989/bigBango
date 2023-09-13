@@ -13,7 +13,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:app/managers/api_manager.dart';
 import 'package:app/services/review_service.dart';
 import 'package:app/services/vocab_clickable_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
@@ -22,13 +22,13 @@ import 'package:app/structures/models/readingModel.dart';
 import 'package:app/structures/models/vocabModels/clickableVocabModel.dart';
 import 'package:app/structures/models/vocabModels/idiomModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/app/app_toast.dart';
+import 'package:app/tools/route_tools.dart';
 import 'package:app/views/components/appbarLesson.dart';
 import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/components/idiomClickableComponent.dart';
@@ -50,7 +50,7 @@ class ReadingPage extends StatefulWidget {
   State<ReadingPage> createState() => _ReadingPageState();
 }
 ///======================================================================================================================
-class _ReadingPageState extends StateBase<ReadingPage> with TickerProviderStateMixin {
+class _ReadingPageState extends StateSuper<ReadingPage> with TickerProviderStateMixin {
   Requester requester = Requester();
   Requester reviewRequester = Requester();
   AudioPlayer player = AudioPlayer();

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/widgets/customCard.dart';
-import 'package:iris_tools/widgets/irisImageView.dart';
+import 'package:iris_tools/widgets/iris_image_view.dart';
 
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/models/ticketModels/ticketReplyModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appNavigator.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appSizes.dart';
-import 'package:app/tools/routeTools.dart';
-import 'package:app/views/components/fullScreenImage.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_navigator.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_sizes.dart';
+import 'package:app/tools/route_tools.dart';
+import 'package:app/views/components/full_screen_image.dart';
 
 mixin  TicketAttachmentShowSupper {
 

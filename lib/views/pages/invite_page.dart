@@ -5,14 +5,14 @@ import 'package:iris_tools/api/helpers/colorHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/inviteUserModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appToast.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_toast.dart';
 import 'package:app/views/states/emptyData.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
@@ -24,7 +24,7 @@ class InvitePage extends StatefulWidget {
   State<InvitePage> createState() => _InvitePageState();
 }
 ///==============================================================================================
-class _InvitePageState extends StateBase<InvitePage> {
+class _InvitePageState extends StateSuper<InvitePage> {
   Requester requester = Requester();
   String description = '';
   TextEditingController txtCtr = TextEditingController();

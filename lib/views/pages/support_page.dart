@@ -12,8 +12,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:app/managers/api_manager.dart';
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/appEvents.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/structures/enums/app_events.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/structures/enums/supportSessionStatus.dart';
 import 'package:app/structures/middleWares/requester.dart';
@@ -22,16 +22,16 @@ import 'package:app/structures/models/supportModels/supportSessionModel.dart';
 import 'package:app/structures/models/ticketModels/ticketModel.dart';
 import 'package:app/structures/models/ticketModels/ticketRole.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appDialogIris.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/tools/dateTools.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_broadcast.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_dialog_iris.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/app/app_toast.dart';
+import 'package:app/tools/date_tools.dart';
+import 'package:app/tools/route_tools.dart';
 import 'package:app/views/pages/ticket_detail_page.dart';
 import 'package:app/views/pages/timetable_page.dart';
 import 'package:app/views/sheets/addTicketSheet.dart';
@@ -49,7 +49,7 @@ class SupportPage extends StatefulWidget {
   State<SupportPage> createState() => _SupportPageState();
 }
 ///========================================================================================
-class _SupportPageState extends StateBase<SupportPage> with SingleTickerProviderStateMixin {
+class _SupportPageState extends StateSuper<SupportPage> with SingleTickerProviderStateMixin {
   Requester requester = Requester();
   RefreshController timetableRefreshController = RefreshController(initialRefresh: false);
   RefreshController ticketRefreshController = RefreshController(initialRefresh: false);

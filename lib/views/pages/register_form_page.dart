@@ -13,21 +13,21 @@ import 'package:persian_modal_date_picker/persian_date_picker.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/cityModel.dart';
 import 'package:app/structures/models/provinceModel.dart';
 import 'package:app/system/keys.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appDb.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/app/appThemes.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/tools/dateTools.dart';
-import 'package:app/tools/deviceInfoTools.dart';
+import 'package:app/tools/app/app_broadcast.dart';
+import 'package:app/tools/app/app_db.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_messages.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/app/app_themes.dart';
+import 'package:app/tools/app/app_toast.dart';
+import 'package:app/tools/date_tools.dart';
+import 'package:app/tools/device_info_tools.dart';
 
 class RegisterFormPage extends StatefulWidget {
   final String phoneNumber;
@@ -41,7 +41,7 @@ class RegisterFormPage extends StatefulWidget {
   State<RegisterFormPage> createState() => _RegisterFormPageState();
 }
 ///===================================================================================================================
-class _RegisterFormPageState extends StateBase<RegisterFormPage> {
+class _RegisterFormPageState extends StateSuper<RegisterFormPage> {
   TextEditingController nameTextCtr = TextEditingController();
   TextEditingController familyTextCtr = TextEditingController();
   TextEditingController emailTextCtr = TextEditingController();

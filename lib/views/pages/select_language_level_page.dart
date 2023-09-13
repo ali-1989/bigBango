@@ -7,17 +7,17 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/managers/api_manager.dart';
 import 'package:app/managers/settings_manager.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/middleWares/requester.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appSheet.dart';
+import 'package:app/tools/app/app_broadcast.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_messages.dart';
+import 'package:app/tools/app/app_sheet.dart';
 import 'package:app/views/components/selectLevelOnline.dart';
 import 'package:app/views/components/selectSupportTime.dart';
-import 'package:app/views/components/videoPlayer.dart';
+import 'package:app/views/components/video_player.dart';
 
 class SelectLanguageLevelPage extends StatefulWidget {
 
@@ -29,7 +29,7 @@ class SelectLanguageLevelPage extends StatefulWidget {
   State<SelectLanguageLevelPage> createState() => _SelectLanguageLevelPageState();
 }
 ///===================================================================================================================
-class _SelectLanguageLevelPageState extends StateBase<SelectLanguageLevelPage> {
+class _SelectLanguageLevelPageState extends StateSuper<SelectLanguageLevelPage> {
   int selectValue = 0;
   Requester requester = Requester();
 

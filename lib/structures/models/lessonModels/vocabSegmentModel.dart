@@ -1,7 +1,7 @@
 import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/idiomCategoryModel.dart';
 import 'package:app/structures/models/lessonModels/vocabCategoryModel.dart';
-import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/app_images.dart';
 
 class VocabularySegmentModel extends ISegmentModel {
   List<VocabCategoryModel> vocabularyCategories = [];

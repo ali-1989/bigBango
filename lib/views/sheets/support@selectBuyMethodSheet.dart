@@ -8,13 +8,13 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:iris_tools/widgets/optionsRow/radioRow.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/tools/currencyTools.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_toast.dart';
+import 'package:app/tools/currency_tools.dart';
+import 'package:app/tools/route_tools.dart';
 
 class SelectBuyMethodSheet extends StatefulWidget {
   final int userBalance;
@@ -36,7 +36,7 @@ class SelectBuyMethodSheet extends StatefulWidget {
   State<SelectBuyMethodSheet> createState() => _SelectBuyMethodSheetState();
 }
 ///==================================================================================================
-class _SelectBuyMethodSheetState extends StateBase<SelectBuyMethodSheet> {
+class _SelectBuyMethodSheetState extends StateSuper<SelectBuyMethodSheet> {
   Requester requester = Requester();
   int radioGroupValue = -1;
   bool canPayByWallet = false;

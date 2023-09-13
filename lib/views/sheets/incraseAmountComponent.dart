@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:toggle_switch/toggle_switch.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/currencyTools.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/currency_tools.dart';
+import 'package:app/tools/route_tools.dart';
 
 class IncreaseAmountSheet extends StatefulWidget {
   final int? amount;
@@ -21,7 +21,7 @@ class IncreaseAmountSheet extends StatefulWidget {
   State<IncreaseAmountSheet> createState() => _IncreaseAmountSheetState();
 }
 ///============================================================================================
-class _IncreaseAmountSheetState extends StateBase<IncreaseAmountSheet> {
+class _IncreaseAmountSheetState extends StateSuper<IncreaseAmountSheet> {
   late ButtonStyle style;
   int amount = 10000;
   int selectedKeyIndex = 1;

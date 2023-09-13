@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/irisImageView.dart';
+import 'package:iris_tools/widgets/iris_image_view.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/abstract/ticketAttachmentShowSupper.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/structures/injectors/ticketDetailUserBubbleInjector.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appDirectories.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/dateTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_directories.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/date_tools.dart';
 
 class TicketDetailUserBubbleComponent extends StatefulWidget {
   final TicketDetailBubbleInjector injector;
@@ -26,7 +26,7 @@ class TicketDetailUserBubbleComponent extends StatefulWidget {
   State<TicketDetailUserBubbleComponent> createState() => TicketDetailUserBubbleComponentState();
 }
 ///=================================================================================================================
-class TicketDetailUserBubbleComponentState extends StateBase<TicketDetailUserBubbleComponent> with TicketAttachmentShowSupper  {
+class TicketDetailUserBubbleComponentState extends StateSuper<TicketDetailUserBubbleComponent> with TicketAttachmentShowSupper  {
   late Radius radius;
 
   @override

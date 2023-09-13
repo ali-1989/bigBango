@@ -5,10 +5,10 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/managers/settings_manager.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
 import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/states/errorOccur.dart';
 import 'package:app/views/states/waitToLoad.dart';
@@ -20,7 +20,7 @@ class AboutPage extends StatefulWidget {
   State<AboutPage> createState() => _AboutPageState();
 }
 ///==============================================================================================
-class _AboutPageState extends StateBase<AboutPage> {
+class _AboutPageState extends StateSuper<AboutPage> {
   Color backColor = const Color(0xFFFFDFD0);
 
   @override

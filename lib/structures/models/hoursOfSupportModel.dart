@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 
-import 'package:app/tools/dateTools.dart';
+import 'package:app/tools/date_tools.dart';
 
 // 0 saturday
 // 6 friday

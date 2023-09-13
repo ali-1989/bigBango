@@ -5,12 +5,12 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:iris_tools/widgets/text/autoDirection.dart';
 
 import 'package:app/structures/abstract/examStateMethods.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appThemes.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_themes.dart';
 
 class ExamMakeSentenceBuilder extends StatefulWidget {
   static const questionTitle = 'با چینش کلمات جمله بسازید';
@@ -25,7 +25,7 @@ class ExamMakeSentenceBuilder extends StatefulWidget {
   State<ExamMakeSentenceBuilder> createState() => _ExamMakeSentenceBuilderState();
 }
 ///===============================================================================================================
-class _ExamMakeSentenceBuilderState extends StateBase<ExamMakeSentenceBuilder> with ExamStateMethods {
+class _ExamMakeSentenceBuilderState extends StateSuper<ExamMakeSentenceBuilder> with ExamStateMethods {
   late TextStyle pickedStyle;
   late MakeSentenceExtra sentenceExtra;
   int currentSentence = 0;

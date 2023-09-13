@@ -9,22 +9,22 @@ import 'package:iris_tools/api/helpers/fileHelper.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
-import 'package:iris_tools/widgets/icon/circularIcon.dart';
-import 'package:iris_tools/widgets/irisImageView.dart';
+import 'package:iris_tools/widgets/icon/circular_icon.dart';
+import 'package:iris_tools/widgets/iris_image_view.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/enums/enums.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appDialogIris.dart';
-import 'package:app/tools/app/appDirectories.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appNavigator.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/permissionTools.dart';
-import 'package:app/tools/routeTools.dart';
-import 'package:app/views/components/fullScreenImage.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_dialog_iris.dart';
+import 'package:app/tools/app/app_directories.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_navigator.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/permission_tools.dart';
+import 'package:app/tools/route_tools.dart';
+import 'package:app/views/components/full_screen_image.dart';
 import 'package:app/views/states/emptyData.dart';
 
 class AttachmentFileTicketComponent extends StatefulWidget {
@@ -39,7 +39,7 @@ class AttachmentFileTicketComponent extends StatefulWidget {
   State<AttachmentFileTicketComponent> createState() => _AttachmentFileTicketComponentState();
 }
 ///==================================================================================================
-class _AttachmentFileTicketComponentState extends StateBase<AttachmentFileTicketComponent> {
+class _AttachmentFileTicketComponentState extends StateSuper<AttachmentFileTicketComponent> {
   final ScrollController srlCtr = ScrollController();
 
   @override

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/middleWares/requester.dart';
 
 class LogsPage extends StatefulWidget {
@@ -12,7 +12,7 @@ class LogsPage extends StatefulWidget {
   State<LogsPage> createState() => _LogsPageState();
 }
 ///==============================================================================================
-class _LogsPageState extends StateBase<LogsPage> {
+class _LogsPageState extends StateSuper<LogsPage> {
   Requester requester = Requester();
 
 

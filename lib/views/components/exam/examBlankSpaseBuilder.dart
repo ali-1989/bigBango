@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/structures/abstract/examStateMethods.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appOverlay.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_overlay.dart';
 import 'package:app/views/components/animationPositionScale.dart';
 
 class ExamBlankSpaceBuilder extends StatefulWidget {
@@ -25,7 +25,7 @@ class ExamBlankSpaceBuilder extends StatefulWidget {
   State<ExamBlankSpaceBuilder> createState() => ExamBlankSpaceBuilderState();
 }
 ///======================================================================================================================
-class ExamBlankSpaceBuilderState extends StateBase<ExamBlankSpaceBuilder> with ExamStateMethods {
+class ExamBlankSpaceBuilderState extends StateSuper<ExamBlankSpaceBuilder> with ExamStateMethods {
   late TextStyle questionNormalStyle;
   late TextStyle falseStyle;
   late ExamModel exam;

@@ -8,12 +8,12 @@ import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
-import 'package:iris_tools/widgets/irisSearchBar.dart';
+import 'package:iris_tools/widgets/iris_search_bar.dart';
 
 import 'package:app/managers/api_manager.dart';
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/appAssistKeys.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/structures/enums/assist_groups.dart';
 import 'package:app/structures/enums/appStoreScope.dart';
 import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
@@ -31,15 +31,15 @@ import 'package:app/structures/models/lessonModels/speakingSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/vocabSegmentModel.dart';
 import 'package:app/structures/models/lessonModels/writingSegmentModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appOverlay.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_messages.dart';
+import 'package:app/tools/app/app_overlay.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/app/app_toast.dart';
+import 'package:app/tools/route_tools.dart';
 import 'package:app/views/dialogs/selectGrammarDialog.dart';
 import 'package:app/views/dialogs/selectListeningDialog.dart';
 import 'package:app/views/dialogs/selectQuizDialog.dart';
@@ -68,7 +68,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => HomePageState();
 }
 ///===================================================================================================================
-class HomePageState extends StateBase<HomePage> {
+class HomePageState extends StateSuper<HomePage> {
   List<LessonModel> lessons = [];
   List<LessonModel> lessonsBackup = [];
   List<int> openedLessonsIds = [];

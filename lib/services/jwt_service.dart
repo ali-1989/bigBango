@@ -6,11 +6,11 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:app/managers/api_manager.dart';
 import 'package:app/managers/settings_manager.dart';
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/models/userModel.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appHttpDio.dart';
-import 'package:app/tools/app/appToast.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/structures/models/user_model.dart';
+import 'package:app/tools/app/app_broadcast.dart';
+import 'package:app/tools/app/app_http_dio.dart';
+import 'package:app/tools/app/app_toast.dart';
+import 'package:app/tools/route_tools.dart';
 
 class JwtService {
   JwtService._();

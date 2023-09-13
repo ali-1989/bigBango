@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/app_images.dart';
 
 class EmptyData extends StatelessWidget {
   final TextStyle? textStyle;

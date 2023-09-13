@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/appAssistKeys.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/structures/enums/assist_groups.dart';
 import 'package:app/structures/injectors/examPageInjector.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appSheet.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_messages.dart';
+import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/route_tools.dart';
 import 'package:app/views/pages/exam_page.dart';
 
 class SelectQuizDialog extends StatefulWidget {
@@ -29,7 +29,7 @@ class SelectQuizDialog extends StatefulWidget {
   State createState() => _SelectReadingDialog();
 }
 ///=================================================================================================
-class _SelectReadingDialog extends StateBase<SelectQuizDialog> {
+class _SelectReadingDialog extends StateSuper<SelectQuizDialog> {
   Requester requester = Requester();
 
   @override

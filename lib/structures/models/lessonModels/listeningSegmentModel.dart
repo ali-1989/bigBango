@@ -1,6 +1,6 @@
 import 'package:app/structures/models/lessonModels/iSegmentModel.dart';
 import 'package:app/structures/models/listeningModel.dart';
-import 'package:app/tools/app/appImages.dart';
+import 'package:app/tools/app/app_images.dart';
 
 class ListeningSegmentModel extends ISegmentModel {
   List<ListeningModel> listeningList  = [];

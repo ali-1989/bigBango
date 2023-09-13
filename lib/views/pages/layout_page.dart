@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/views/baseComponents/appBarBuilder.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/tools/app/app_broadcast.dart';
+import 'package:app/views/baseComponents/appbar_builder.dart';
 import 'package:app/views/baseComponents/bottomNavBarBuilder.dart';
 import 'package:app/views/baseComponents/drawerMenuBuilder.dart';
 import 'package:app/views/baseComponents/layoutComponent.dart';
@@ -20,7 +20,7 @@ class LayoutPage extends StatefulWidget {
   State<LayoutPage> createState() => LayoutPageState();
 }
 ///===================================================================================================================
-class LayoutPageState extends StateBase<LayoutPage> {
+class LayoutPageState extends StateSuper<LayoutPage> {
   int selectedPageIndex = 0;
   PageController pageController = PageController(initialPage: 0);
 

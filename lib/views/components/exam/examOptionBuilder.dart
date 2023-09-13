@@ -6,14 +6,14 @@ import 'package:iris_tools/widgets/customCard.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:app/structures/abstract/examStateMethods.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appIcons.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appToast.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_icons.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_toast.dart';
 import 'package:app/views/components/custom_slider.dart';
 
 class ExamOptionBuilder extends StatefulWidget {
@@ -29,7 +29,7 @@ class ExamOptionBuilder extends StatefulWidget {
   State<ExamOptionBuilder> createState() => _ExamOptionBuilderState();
 }
 ///==============================================================================================================
-class _ExamOptionBuilderState extends StateBase<ExamOptionBuilder> with ExamStateMethods {
+class _ExamOptionBuilderState extends StateSuper<ExamOptionBuilder> with ExamStateMethods {
   late ExamModel exam;
   late TextStyle questionNormalStyle;
   AudioPlayer player = AudioPlayer();

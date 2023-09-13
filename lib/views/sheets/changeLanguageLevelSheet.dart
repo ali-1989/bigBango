@@ -6,17 +6,17 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/managers/settings_manager.dart';
 import 'package:app/services/session_service.dart';
-import 'package:app/structures/abstract/stateBase.dart';
-import 'package:app/structures/enums/appEvents.dart';
+import 'package:app/structures/abstract/state_super.dart';
+import 'package:app/structures/enums/app_events.dart';
 import 'package:app/structures/middleWares/requester.dart';
 import 'package:app/structures/models/courseLevelModel.dart';
-import 'package:app/structures/models/userModel.dart';
-import 'package:app/tools/app/appBroadcast.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/app/appMessages.dart';
-import 'package:app/tools/app/appSnack.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/structures/models/user_model.dart';
+import 'package:app/tools/app/app_broadcast.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/app/app_messages.dart';
+import 'package:app/tools/app/app_snack.dart';
+import 'package:app/tools/route_tools.dart';
 
 class ChangeLanguageLevelSheet extends StatefulWidget {
   const ChangeLanguageLevelSheet({Key? key}) : super(key: key);
@@ -25,7 +25,7 @@ class ChangeLanguageLevelSheet extends StatefulWidget {
   State<ChangeLanguageLevelSheet> createState() => _ChangeLanguageLevelSheetState();
 }
 ///=========================================================================================================
-class _ChangeLanguageLevelSheetState extends StateBase<ChangeLanguageLevelSheet> {
+class _ChangeLanguageLevelSheetState extends StateSuper<ChangeLanguageLevelSheet> {
   CourseLevelModel? selectedLevel;
   Requester requester = Requester();
   UserModel? user;

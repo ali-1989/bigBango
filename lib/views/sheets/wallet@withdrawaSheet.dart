@@ -4,8 +4,8 @@ import 'package:iris_tools/api/helpers/mathHelper.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appImages.dart';
-import 'package:app/tools/routeTools.dart';
+import 'package:app/tools/app/app_images.dart';
+import 'package:app/tools/route_tools.dart';
 
 class WalletWithdrawalSheet extends StatefulWidget {
   final int maxAmount;

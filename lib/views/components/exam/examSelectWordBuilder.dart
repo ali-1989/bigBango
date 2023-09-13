@@ -5,12 +5,12 @@ import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/customCard.dart';
 
 import 'package:app/structures/abstract/examStateMethods.dart';
-import 'package:app/structures/abstract/stateBase.dart';
+import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/controllers/examController.dart';
 import 'package:app/structures/models/examModels/examModel.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/appDecoration.dart';
-import 'package:app/tools/app/appThemes.dart';
+import 'package:app/tools/app/app_decoration.dart';
+import 'package:app/tools/app/app_themes.dart';
 
 class ExamSelectWordBuilder extends StatefulWidget {
   static const questionTitle = 'کلمات را در جای مناسب قرار دهید';
@@ -25,7 +25,7 @@ class ExamSelectWordBuilder extends StatefulWidget {
   State<ExamSelectWordBuilder> createState() => _ExamSelectWordBuilderState();
 }
 ///===============================================================================================================
-class _ExamSelectWordBuilderState extends StateBase<ExamSelectWordBuilder> with ExamStateMethods {
+class _ExamSelectWordBuilderState extends StateSuper<ExamSelectWordBuilder> with ExamStateMethods {
   late TextStyle questionNormalStyle;
   late TextStyle falseStyle;
   late TextStyle pickedStyle;
