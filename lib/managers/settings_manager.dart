@@ -170,6 +170,5 @@ class SettingsManager {
 
 		return globalSettings.timeTable['minuteAmount']?? 0;
 	}
-
 }
 
