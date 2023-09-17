@@ -56,8 +56,12 @@ class AppSnack {
   }
 
   static SnackBar buildSnackBar(String message, {SnackBarAction? action, Widget? replaceContent, int? millis}){
-    return AppDecoration.buildSnackBar(message, action: action, replaceContent: replaceContent,
-        margin: const EdgeInsets.fromLTRB(20,0,20,60), durationMillis: millis);
+    return AppDecoration.buildSnackBar(message,
+        action: action,
+        replaceContent: replaceContent,
+        margin: const EdgeInsets.fromLTRB(20,0,20,60),
+        durationMillis: millis,
+    );
   }
 
   static MaterialBanner buildBanner(String message){
