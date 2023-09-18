@@ -7,7 +7,6 @@ import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/system.dart';
 
-import 'package:app/system/constants.dart';
 import 'package:app/managers/api_manager.dart';
 import 'package:app/managers/version_manager.dart';
 import 'package:app/structures/enums/app_events.dart';
@@ -15,6 +14,7 @@ import 'package:app/structures/models/courseLevelModel.dart';
 import 'package:app/structures/models/global_settings_model.dart';
 import 'package:app/structures/models/settings_model.dart';
 import 'package:app/structures/models/version_model.dart';
+import 'package:app/system/constants.dart';
 import 'package:app/tools/app/app_db.dart';
 import 'package:app/tools/app/app_http_dio.dart';
 import 'package:app/tools/route_tools.dart';

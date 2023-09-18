@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
-
 import 'package:app/structures/injectors/grammarPagesInjector.dart';
 import 'package:app/structures/injectors/listeningPagesInjector.dart';
 import 'package:app/structures/injectors/readingPagesInjector.dart';
-
 import 'package:app/structures/models/lessonModels/lessonModel.dart';
 import 'package:app/views/pages/grammar_page.dart';
 import 'package:app/views/pages/listening_page.dart';

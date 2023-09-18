@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:iris_tools/api/generator.dart';
 
-import 'package:app/system/constants.dart';
 import 'package:app/structures/models/statusbar_notification_model.dart';
+import 'package:app/system/constants.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/app/app_broadcast.dart';
 import 'package:app/tools/app/app_db.dart';

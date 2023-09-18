@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:app/system/constants.dart';
 import 'package:app/managers/font_manager.dart';
+import 'package:app/system/constants.dart';
 import 'package:app/tools/app/app_images.dart';
 import 'package:app/tools/app/app_sizes.dart';
 

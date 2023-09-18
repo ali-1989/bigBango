@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/models/twoStateReturn.dart';
+import 'package:iris_tools/modules/stateManagers/assistState.dart';
 
 import 'package:app/managers/api_manager.dart';
 import 'package:app/managers/leitner_manager.dart';
@@ -17,7 +18,6 @@ import 'package:app/tools/app/app_broadcast.dart';
 import 'package:app/tools/app/app_http_dio.dart';
 import 'package:app/tools/device_info_tools.dart';
 import 'package:app/tools/route_tools.dart';
-import 'package:iris_tools/modules/stateManagers/assistState.dart';
 
 class LoginService {
   LoginService._();
