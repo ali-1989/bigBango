@@ -21,12 +21,6 @@ enum MethodType {
   put,
   delete,
 }
-
-enum RequestPath {
-  getData,
-  setData,
-  others
-}
 ///=============================================================================================
 class Requester {
   Map<String, dynamic>? _bodyJs;
@@ -122,13 +116,24 @@ class Requester {
         final url = _httpRequester.requestOptions?.uri;
         var request = '';
 
-        if (_httpRequester.requestOptions?.data is String){
-          var str = _httpRequester.requestOptions!.data as String;
+        if(_http.method != 'GET') {
+          if (_http.body is String) {
+            request = _http.body as String;
+          }
 
-          str = str.substring(0, 15);
+          if (_http.body is Map) {
+            request = _http.body.toString();
+          }
+
+          if (request.length > 500) {
+            request = request.substring(0, 500);
+          }
+        }
+        else {
+          request = 'GET';
         }
 
-        Tools.verboseLog('@@@ API CALLED >>> url:[$url]  request:[$request]  response ====>>  status:[${_httpRequester.responseData?.statusCode}] data:$val');
+        Tools.verboseLog('@@@@@ API CALLED >>> url:[$url]\n\trequest:[$request]\n\tresponse ====>>  status:[${_httpRequester.responseData?.statusCode}] data:$val \n');
       }
 
       if(_httpRequester.responseData?.statusCode == 401 && SessionService.getLastLoginUser() != null){

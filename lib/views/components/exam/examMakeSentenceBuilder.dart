@@ -141,6 +141,7 @@ class _ExamMakeSentenceBuilderState extends StateSuper<ExamMakeSentenceBuilder> 
                         );
                       },
                     ).wrapBackground(
+                      stroke: 1,
                       backColor: Colors.grey.shade100,
                       borderColor: Colors.green,
                     ),

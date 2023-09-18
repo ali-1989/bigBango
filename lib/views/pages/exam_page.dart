@@ -154,7 +154,7 @@ class _ExamPageState extends StateSuper<ExamPage> with TickerProviderStateMixin 
   Widget buildExamView(){
     return FadeIn(
       animate: true,
-      manualTrigger: true,
+      manualTrigger: false,
       controller: (animCtr){
         examAnimController = animCtr;
       },
@@ -424,21 +424,24 @@ class _ExamPageState extends StateSuper<ExamPage> with TickerProviderStateMixin 
     final tempList = [];
     final js = <String, dynamic>{};
 
-    if(currentExam.items.length < 2) {
-      tempList.add({
-        'exerciseId': currentExam.getExamItem().id,
-        'answer': currentExam.getExamItem().getUserAnswerText(),
-        'isCorrect': currentExam.getExamItem().isUserAnswerCorrect(),
-      });
-    }
-    else {
-      for (final itm in currentExam.items){
+    // note: currentExam.items == currentExam.sentenceExtra!.items
+
+    //for(final k in currentExam.items){}
+    if(currentExam.quizType == QuizType.makeSentence) {
+      for (final itm in currentExam.sentenceExtra!.items){
         tempList.add({
           'exerciseId': itm.id,
           'answer': currentExam.sentenceExtra!.joinUserAnswerById(itm.id),
           'isCorrect': currentExam.sentenceExtra!.isCorrectById(itm.id),
         });
       }
+    }
+    else {
+      tempList.add({
+        'exerciseId': currentExam.getExamItem().id,
+        'answer': currentExam.getExamItem().getUserAnswerText(),
+        'isCorrect': currentExam.getExamItem().isUserAnswerCorrect(),
+      });
     }
 
     js['items'] = tempList;
