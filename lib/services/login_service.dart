@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
-import 'package:iris_tools/models/twoStateReturn.dart';
+import 'package:iris_tools/models/two_state_return.dart';
 import 'package:iris_tools/modules/stateManagers/assistState.dart';
 
 import 'package:app/managers/api_manager.dart';

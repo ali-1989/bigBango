@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/customCard.dart';
+import 'package:iris_tools/widgets/custom_card.dart';
 import 'package:iris_tools/widgets/maxHeight.dart';
 import 'package:video_player/video_player.dart';
 

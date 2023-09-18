@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:iris_tools/widgets/customCard.dart';
+import 'package:iris_tools/widgets/custom_card.dart';
 
 import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/structures/controllers/examController.dart';

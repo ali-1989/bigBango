@@ -7,7 +7,7 @@ import 'package:iris_runtime_cache/iris_runtime_cache.dart';
 import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/customCard.dart';
+import 'package:iris_tools/widgets/custom_card.dart';
 import 'package:iris_tools/widgets/iris_search_bar.dart';
 
 import 'package:app/managers/api_manager.dart';

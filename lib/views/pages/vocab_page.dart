@@ -8,7 +8,7 @@ import 'package:iris_tools/api/generator.dart';
 import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/attribute.dart';
-import 'package:iris_tools/widgets/customCard.dart';
+import 'package:iris_tools/widgets/custom_card.dart';
 import 'package:iris_tools/widgets/iris_image_view.dart';
 
 import 'package:app/managers/api_manager.dart';

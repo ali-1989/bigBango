@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:iris_runtime_cache/iris_runtime_cache.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
-import 'package:iris_tools/models/twoStateReturn.dart';
+import 'package:iris_tools/models/two_state_return.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 
 import 'package:app/managers/settings_manager.dart';

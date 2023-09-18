@@ -822,10 +822,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: af1f6b82c35bb3b03ae93af63383d45bc9850fb8
+      resolved-ref: cd5975194d58609bc8689269217b60bfc32e3b50
       url: "https://github.com/ali-1989/IrisTools.git"
     source: git
-    version: "0.1.65"
+    version: "0.1.72"
   jiffy:
     dependency: transitive
     description:
@@ -1078,10 +1078,10 @@ packages:
     dependency: transitive
     description:
       name: permission_handler_android
-      sha256: "6901d50f4d4b9a27e1749dbd4adbf06aa00d90a21a2db563405d5ce27ee120ac"
+      sha256: f23cfe9af0d49c6b9fd8a8b09f7b3301ca7e346204939b5afef4404d36d2608f
       url: "https://pub.dev"
     source: hosted
-    version: "11.0.0"
+    version: "11.0.1"
   permission_handler_apple:
     dependency: transitive
     description:

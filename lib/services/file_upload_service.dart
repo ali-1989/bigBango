@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/api/helpers/pathHelper.dart';
-import 'package:iris_tools/models/twoStateReturn.dart';
+import 'package:iris_tools/models/two_state_return.dart';
 
 import 'package:app/structures/enums/fileUploadType.dart';
 import 'package:app/structures/middleWares/requester.dart';

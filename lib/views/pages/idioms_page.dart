@@ -6,7 +6,7 @@ import 'package:chewie/chewie.dart';
 import 'package:iris_tools/api/callAction/taskQueueCaller.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
 import 'package:iris_tools/widgets/attribute.dart';
-import 'package:iris_tools/widgets/customCard.dart';
+import 'package:iris_tools/widgets/custom_card.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:app/managers/api_manager.dart';

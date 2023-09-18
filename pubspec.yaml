@@ -50,7 +50,7 @@ dependencies:
   firebase_messaging: ^14.6.7
   firebase_core: ^2.15.1
   im_animations: ^0.1.2                          # ColorSonar
-  animate_do: ^3.0.2
+  animate_do: ^3.1.2
   animator: ^3.3.0
   pinput: ^3.0.1
   dropdown_button2: 2.1.0

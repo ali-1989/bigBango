@@ -1,4 +1,4 @@
-import 'package:iris_tools/models/twoStateReturn.dart';
+import 'package:iris_tools/models/two_state_return.dart';
 import 'package:just_audio/just_audio.dart';
 
 class AudioPlayerService {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/customCard.dart';
+import 'package:iris_tools/widgets/custom_card.dart';
 import 'package:iris_tools/widgets/keep_alive_wrap.dart';
 import 'package:switch_tab/switch_tab.dart';
 

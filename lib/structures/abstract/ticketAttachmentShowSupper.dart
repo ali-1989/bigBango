@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:iris_tools/widgets/customCard.dart';
+import 'package:iris_tools/widgets/custom_card.dart';
 import 'package:iris_tools/widgets/iris_image_view.dart';
 
 import 'package:app/structures/enums/enums.dart';

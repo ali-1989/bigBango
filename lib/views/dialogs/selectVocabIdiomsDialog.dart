@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/customCard.dart';
+import 'package:iris_tools/widgets/custom_card.dart';
 import 'package:slide_switcher/slide_switcher.dart';
 
 import 'package:app/structures/abstract/state_super.dart';

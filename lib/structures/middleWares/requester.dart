@@ -128,7 +128,7 @@ class Requester {
           str = str.substring(0, 15);
         }
 
-        Tools.verbosePrint('@@@ API CALLED >>> url:[$url]  request:[$request]  response ====>>  status:[${_httpRequester.responseData?.statusCode}] data:$val');
+        Tools.verboseLog('@@@ API CALLED >>> url:[$url]  request:[$request]  response ====>>  status:[${_httpRequester.responseData?.statusCode}] data:$val');
       }
 
       if(_httpRequester.responseData?.statusCode == 401 && SessionService.getLastLoginUser() != null){

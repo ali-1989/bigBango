@@ -8,7 +8,7 @@ import 'package:iris_pic_editor/pic_editor.dart';
 import 'package:iris_tools/api/helpers/fileHelper.dart';
 import 'package:iris_tools/features/overlayDialog.dart';
 import 'package:iris_tools/modules/stateManagers/assist.dart';
-import 'package:iris_tools/widgets/customCard.dart';
+import 'package:iris_tools/widgets/custom_card.dart';
 import 'package:iris_tools/widgets/icon/circular_icon.dart';
 import 'package:iris_tools/widgets/iris_image_view.dart';
 import 'package:permission_handler/permission_handler.dart';

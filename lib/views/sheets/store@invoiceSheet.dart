@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:iris_tools/api/helpers/mathHelper.dart';
-import 'package:iris_tools/widgets/customCard.dart';
+import 'package:iris_tools/widgets/custom_card.dart';
 
 import 'package:app/structures/models/lessonModels/storeModel.dart';
 import 'package:app/system/extensions.dart';
