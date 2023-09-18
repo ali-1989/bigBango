@@ -81,7 +81,7 @@ class _VocabClickableComponentState extends StateSuper<VocabClickableComponent> 
                           child: Assist(
                             controller: assistCtr,
                             id: id$usVoicePlayerSectionId,
-                            groupIds: [AppAssistKeys.voicePlayerGroupId$vocabClickable],
+                            groupIds: [AssistGroup.voicePlayerGroupId$vocabClickable],
                             builder: (_, ctr, data){
                               return AnimateWidget(
                                 resetOnRebuild: true,
@@ -126,7 +126,7 @@ class _VocabClickableComponentState extends StateSuper<VocabClickableComponent> 
                           child: Assist(
                             controller: assistCtr,
                             id: id$ukVoicePlayerSectionId,
-                            groupIds: [AppAssistKeys.voicePlayerGroupId$vocabClickable],
+                            groupIds: [AssistGroup.voicePlayerGroupId$vocabClickable],
                             builder: (_, ctr, data){
                               return AnimateWidget(
                                 resetOnRebuild: true,
@@ -194,7 +194,7 @@ class _VocabClickableComponentState extends StateSuper<VocabClickableComponent> 
       return;
     }
 
-    assistCtr.updateGroup(AppAssistKeys.voicePlayerGroupId$vocabClickable, stateData: null);
+    assistCtr.updateGroup(AssistGroup.voicePlayerGroupId$vocabClickable, stateData: null);
     assistCtr.updateAssist(sectionId, stateData: 'prepare');
 
     AudioPlayerService.getPlayerWithUrl(voiceUrl!).then((twoState) async {

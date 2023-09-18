@@ -96,7 +96,7 @@ class HomePageState extends StateSuper<HomePage> {
     return Assist(
       controller: assistCtr,
       id: HomePage.id$homePageHead,
-      groupIds: [AppAssistKeys.updateOnLessonChange],
+      groupIds: [AssistGroup.updateOnLessonChange],
       builder: (_, ctr, data) {
         if(assistCtr.hasState(state$error)){
           return ErrorOccur(

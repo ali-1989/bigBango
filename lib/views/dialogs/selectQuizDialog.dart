@@ -42,7 +42,7 @@ class _SelectReadingDialog extends StateSuper<SelectQuizDialog> {
   Widget build(BuildContext context) {
     return Assist(
       controller: assistCtr,
-      groupIds: [AppAssistKeys.updateOnLessonChange],
+      groupIds: [AssistGroup.updateOnLessonChange],
       builder: (_, __, data) {
         return Align(
           alignment: Alignment.bottomCenter,

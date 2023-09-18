@@ -164,8 +164,7 @@ class FontManager {
       */
     //------------- fa -------------------------------------------------
     final shabnam = Font.bySize()
-      ..family = 'shabnam'
-      ..fileName = 'ShabnamMediumFD.ttf'
+      ..family = 'Shabnam'
       ..defaultLanguage = 'fa'
       ..defaultUsage = FontUsage.normal
       ..usages = [FontUsage.sub]

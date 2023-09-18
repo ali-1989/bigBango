@@ -349,7 +349,7 @@ class _VocabPageState extends StateSuper<VocabPage> {
                                                     child: Assist(
                                                       controller: assistCtr,
                                                       id: id$usVoicePlayerSectionId,
-                                                      groupIds: const [AppAssistKeys.voicePlayerGroupId$vocabPage],
+                                                      groupIds: const [AssistGroup.voicePlayerGroupId$vocabPage],
                                                       builder: (_, ctr, data){
                                                         return AnimateWidget(
                                                           resetOnRebuild: true,
@@ -394,7 +394,7 @@ class _VocabPageState extends StateSuper<VocabPage> {
                                                     child: Assist(
                                                       controller: assistCtr,
                                                       id: id$ukVoicePlayerSectionId,
-                                                      groupIds: const [AppAssistKeys.voicePlayerGroupId$vocabPage],
+                                                      groupIds: const [AssistGroup.voicePlayerGroupId$vocabPage],
                                                       builder: (_, ctr, data){
                                                         return AnimateWidget(
                                                           resetOnRebuild: true,
@@ -624,7 +624,7 @@ class _VocabPageState extends StateSuper<VocabPage> {
             child: Assist(
               controller: assistCtr,
               id: id,
-              groupIds: const [AppAssistKeys.voicePlayerGroupId$vocabPage],
+              groupIds: const [AssistGroup.voicePlayerGroupId$vocabPage],
               builder: (_, ctr, data){
                 return AnimateWidget(
                   resetOnRebuild: true,
@@ -695,7 +695,7 @@ class _VocabPageState extends StateSuper<VocabPage> {
       return;
     }
 
-    assistCtr.updateGroup(AppAssistKeys.voicePlayerGroupId$vocabPage, stateData: null);
+    assistCtr.updateGroup(AssistGroup.voicePlayerGroupId$vocabPage, stateData: null);
     assistCtr.updateAssist(sectionId, stateData: 'prepare');
 
     AudioPlayerService.getPlayerWithUrl(voiceUrl!).then((twoState) async {
@@ -732,7 +732,7 @@ class _VocabPageState extends StateSuper<VocabPage> {
 
   void onNextClick(){
     AudioPlayerService.getPlayer().stop();
-    assistCtr.updateGroup(AppAssistKeys.voicePlayerGroupId$vocabPage, stateData: null);
+    assistCtr.updateGroup(AssistGroup.voicePlayerGroupId$vocabPage, stateData: null);
 
     if(currentVocabIdx < vocabList.length-1) {
       currentVocabIdx++;
@@ -757,7 +757,7 @@ class _VocabPageState extends StateSuper<VocabPage> {
     }
     else {
       AudioPlayerService.getPlayer().stop();
-      assistCtr.updateGroup(AppAssistKeys.voicePlayerGroupId$vocabPage, stateData: null);
+      assistCtr.updateGroup(AssistGroup.voicePlayerGroupId$vocabPage, stateData: null);
       currentVocabIdx--;
 
       currentVocab = vocabList[currentVocabIdx];

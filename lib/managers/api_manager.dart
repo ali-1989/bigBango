@@ -108,7 +108,7 @@ class ApiManager {
 
       final les = LessonModel.fromMap(data);
       lessonModel.matchBy(les);
-      AssistController.updateGroupGlobal(AppAssistKeys.updateOnLessonChange);
+      AssistController.updateGroupGlobal(AssistGroup.updateOnLessonChange);
     }
   }
 }

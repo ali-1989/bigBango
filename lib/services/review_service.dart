@@ -110,7 +110,7 @@ class ReviewService {
       lessonModel.matchBy(lesson);
 
       //AssistController.updateAssistGlobal(HomePage.id$homePageHead);
-      AssistController.updateGroupGlobal(AppAssistKeys.updateOnLessonChange);
+      AssistController.updateGroupGlobal(AssistGroup.updateOnLessonChange);
       completer.complete(true);
     };
 

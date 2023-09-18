@@ -84,7 +84,7 @@ class _GrammarPageState extends StateSuper<GrammarPage> {
   Widget build(BuildContext context) {
     return Assist(
       controller: assistCtr,
-        groupIds: const [AppAssistKeys.updateOnLessonChange],//for update exercise progress
+        groupIds: const [AssistGroup.updateOnLessonChange],//for update exercise progress
         builder: (ctx, ctr, data){
           return Scaffold(
             body: SafeArea(

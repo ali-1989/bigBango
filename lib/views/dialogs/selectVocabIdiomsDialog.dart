@@ -46,7 +46,7 @@ class _SelectVocabIdiomsDialog extends StateSuper<SelectVocabIdiomsDialog> {
     return Assist(
         controller: assistCtr,
         isHead: true,
-        groupIds: const [AppAssistKeys.updateOnLessonChange],
+        groupIds: const [AssistGroup.updateOnLessonChange],
         builder: (_, __, data) {
         return Align(
           alignment: Alignment.bottomCenter,
