@@ -43,7 +43,7 @@ class _WalletWithdrawalListSheetState extends StateSuper<WalletWithdrawalListShe
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: sh * 3/5,
+      height: hs * 3/5,
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         child: Padding(

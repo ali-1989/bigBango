@@ -71,7 +71,7 @@ class _NewVersionPageState extends StateSuper<NewVersionPage> {
                 left: 0,
                 right: 0,
                 child: SizedBox(
-                  height: sh * .24,
+                  height: hs * .24,
                   child: CustomPaint(
                     painter: MyCustomPainter(),
                     child: const SizedBox(),
@@ -94,7 +94,7 @@ class _NewVersionPageState extends StateSuper<NewVersionPage> {
                     ),
                   ),
 
-                  SizedBox(height: sh *.04),
+                  SizedBox(height: hs *.04),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

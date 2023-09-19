@@ -223,7 +223,7 @@ class _ReadingPageState extends StateSuper<ReadingPage> with TickerProviderState
               /// content
               const SizedBox(height: 10),
               SizedBox(
-                width: sw,
+                width: ws,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                       color: Colors.grey.shade200,
@@ -234,7 +234,7 @@ class _ReadingPageState extends StateSuper<ReadingPage> with TickerProviderState
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: SizedBox(
-                        width: sw,
+                        width: ws,
                         child: Stack(
                           textDirection: showTranslate? TextDirection.rtl : TextDirection.ltr,
                           children: [

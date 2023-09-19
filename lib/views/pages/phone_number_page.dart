@@ -41,8 +41,8 @@ class _PhoneNumberPageState extends StateSuper<PhoneNumberPage> {
     super.initState();
 
     addPostOrCall(fn: () {
-      if(atrCtr.getHeight()! < sh){
-        regulator = sh - atrCtr.getHeight()!;
+      if(atrCtr.getHeight()! < hs){
+        regulator = hs - atrCtr.getHeight()!;
         assistCtr.updateHead();
       }
     });
@@ -71,19 +71,19 @@ class _PhoneNumberPageState extends StateSuper<PhoneNumberPage> {
                   /// background
                   SizedBox(
                       width: double.infinity,
-                      height: sh * 0.53,
+                      height: hs * 0.53,
                       child: Stack(
                         fit: StackFit.passthrough,
                         children: [
                           Center(
                               child: AspectRatio(
                                 aspectRatio: 3/3.4,
-                                  child: Image.asset(AppImages.register, width: sw*0.8, height: sh*0.5, fit: BoxFit.fill))
+                                  child: Image.asset(AppImages.register, width: ws*0.8, height: hs*0.5, fit: BoxFit.fill))
                           ),
 
                           /// play icon
                           Positioned(
-                            top: sh* 0.18,
+                            top: hs* 0.18,
                               left: 0,
                               right: 0,
                               child: GestureDetector(
@@ -106,7 +106,7 @@ class _PhoneNumberPageState extends StateSuper<PhoneNumberPage> {
 
                           /// why bigbango text
                           Positioned(
-                              top: sh *.27,
+                              top: hs *.27,
                               left: 0,
                               right: 0,
                               child: GestureDetector(
@@ -183,8 +183,8 @@ class _PhoneNumberPageState extends StateSuper<PhoneNumberPage> {
                   const SizedBox(height: 14),
 
                   SizedBox(
-                      height: MathHelper.minDouble(70, sh*0.14),
-                      child: Image.asset(AppImages.keyboardOpacity, width: sw*0.75)
+                      height: MathHelper.minDouble(70, hs*0.14),
+                      child: Image.asset(AppImages.keyboardOpacity, width: ws*0.75)
                   ),
 
                   const SizedBox(height: 7),

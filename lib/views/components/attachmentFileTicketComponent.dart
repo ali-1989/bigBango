@@ -54,7 +54,7 @@ class _AttachmentFileTicketComponentState extends StateSuper<AttachmentFileTicke
               children: [
                 SizedBox(
                   width: double.infinity,
-                  height: sh *3/4,
+                  height: hs *3/4,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(

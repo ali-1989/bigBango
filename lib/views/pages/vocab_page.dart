@@ -296,10 +296,10 @@ class _VocabPageState extends StateSuper<VocabPage> {
                                   Visibility(
                                     visible: currentVocab.image?.fileLocation != null,
                                     child: IrisImageView(
-                                      height: sh/3,
+                                      height: hs/3,
                                       url: currentVocab.image?.fileLocation,
                                       beforeLoadWidget: SizedBox(
-                                          height: sh/3,
+                                          height: hs/3,
                                           child: const WaitToLoad()
                                       ),
                                     ),

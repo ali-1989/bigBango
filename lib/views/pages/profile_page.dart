@@ -461,7 +461,7 @@ class _ProfilePageState extends StateSuper<ProfilePage> {
                                           padding: const EdgeInsets.symmetric(horizontal: 5),
                                         ),
                                         dropdownStyleData: DropdownStyleData(
-                                          width: sw/2,
+                                          width: ws/2,
                                           decoration:BoxDecoration(
                                             borderRadius: BorderRadius.circular(14),
                                           ),

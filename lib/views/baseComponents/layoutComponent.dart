@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:animator/animator.dart';
-import 'package:iris_tools/modules/stateManagers/assistState.dart';
+import 'package:iris_tools/modules/stateManagers/updater_state.dart';
 
 import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/tools/app/app_broadcast.dart';
@@ -63,7 +63,7 @@ class LayoutComponentState extends StateSuper<LayoutComponent> {
 
        return true;
       },
-      child: AssistBuilder(
+      child: UpdaterBuilder(
         id: AppBroadcast.drawerMenuRefresherId,
         builder: (_, ctr, data){
           return SafeArea(
@@ -139,7 +139,7 @@ class LayoutComponentState extends StateSuper<LayoutComponent> {
     _isOpen = true;
     _withAnimation = true;
 
-    AssistController.forId(AppBroadcast.drawerMenuRefresherId)!.update();
+    UpdaterController.forId(AppBroadcast.drawerMenuRefresherId)!.update();
     await Future.delayed(Duration(milliseconds: _drawerTime), (){});
 
     return;
@@ -156,7 +156,7 @@ class LayoutComponentState extends StateSuper<LayoutComponent> {
     final old = _drawerTime;
     _drawerTime = millSec?? _drawerTime;
 
-    AssistController.forId(AppBroadcast.drawerMenuRefresherId)!.update();
+    UpdaterController.forId(AppBroadcast.drawerMenuRefresherId)!.update();
 
     await Future.delayed(Duration(milliseconds: _drawerTime), (){});
 

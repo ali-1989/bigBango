@@ -65,7 +65,7 @@ class _SelectBuyMethodSheetState extends StateSuper<SelectBuyMethodSheet> {
 
           return SizedBox(
             width: double.infinity,
-            height: viewInsets.collapsedSize.height < 10 ? sh *3/7 : sh - viewInsets.collapsedSize.height,
+            height: viewInsets.collapsedSize.height < 10 ? hs *3/7 : hs - viewInsets.collapsedSize.height,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 14),
               child: DecoratedBox(

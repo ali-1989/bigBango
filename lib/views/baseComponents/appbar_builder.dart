@@ -75,7 +75,7 @@ class AppBarCustom extends StatefulWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    return Size.fromHeight((kToolbarHeight + 40) * AppSizes.instance.powerHeight);
+    return Size.fromHeight((kToolbarHeight + 40) * AppSizes.instance.heightRatio);
   }
 }
 ///---------------------------------------------------------------------------------------------------------------
@@ -98,7 +98,7 @@ class AppBarCustomState extends StateSuper<AppBarCustom> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 14 *pw/*22*/, 15, 0),
+                  padding: EdgeInsets.fromLTRB(0, 14 *hr/*22*/, 15, 0),
                   child: GestureDetector(
                     onTap: () async {
                       LayoutComponentState.toggleDrawer();
@@ -116,7 +116,7 @@ class AppBarCustomState extends StateSuper<AppBarCustom> {
                 GestureDetector(
                   onTap: onLevelClick,
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(10, 8*pw, 0, 0),
+                    padding: EdgeInsets.fromLTRB(10, 8*hr, 0, 0),
                     child: Row(
                       children: [
                         const Icon(AppIcons.arrowDropDown),
@@ -155,8 +155,8 @@ class AppBarCustomState extends StateSuper<AppBarCustom> {
                           radius: 20,
                           backgroundColor: Colors.transparent,
                           child: IrisImageView(
-                            height: 40*pw,
-                            width: 40*pw,
+                            height: 40*hr,
+                            width: 40*hr,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                             beforeLoadWidget: const CircularProgressIndicator(),
                             bytes: user.avatarModel?.bytes,
@@ -177,7 +177,7 @@ class AppBarCustomState extends StateSuper<AppBarCustom> {
                     },
                   ),
 
-                SizedBox(height: 20*pw),
+                SizedBox(height: 20*hr),
                 //SizedBox(height: 8),
                 //Text('علی باقری'),
               ],
@@ -193,7 +193,7 @@ class AppBarCustomState extends StateSuper<AppBarCustom> {
       context,
         builder: (_){
           return SizedBox(
-            height: MathHelper.percent(sh, 80),
+            height: MathHelper.percent(hs, 80),
             child: const ChangeLanguageLevelSheet(),
           );
         },

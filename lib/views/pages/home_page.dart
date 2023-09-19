@@ -110,25 +110,25 @@ class HomePageState extends StateSuper<HomePage> {
 
         return Column(
           children: [
-            SizedBox(height: 60 * pw),
+            SizedBox(height: 60 * hr),
 
             Expanded(
                 child: CustomScrollView(
                   slivers: [
                     ExtendedSliverAppbar(
-                      toolbarHeight: 70*pw,
+                      toolbarHeight: 70*hr,
                       toolBarColor: Colors.transparent,
                       isOpacityFadeWithTitle: true,
                       isOpacityFadeWithToolbar: false,
                       actions: const SizedBox(),
                       leading: const SizedBox(),
                       background: SizedBox(
-                        height: 210 * pw,
+                        height: 210 * hr,
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
                             Positioned(
-                              bottom: 30*pw,
+                              bottom: 30*hr,
                               left: 0,
                               right: 0,
                               child: Image.asset(AppImages.homeBackground,
@@ -137,19 +137,19 @@ class HomePageState extends StateSuper<HomePage> {
                             ),
 
                             Positioned(
-                              top: 14 * pw,
-                              left: 25 *pw,
-                              right: 25 *pw,
+                              top: 14 * hr,
+                              left: 25 *hr,
+                              right: 25 *hr,
                               child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30 * pw),
-                              child: Image.asset(AppImages.homeBackIcons, height: 90 *pw,
+                              padding: EdgeInsets.symmetric(horizontal: 30 * hr),
+                              child: Image.asset(AppImages.homeBackIcons, height: 90 *hr,
                                 fit: BoxFit.contain,
                               ),
                             ),
                             ),
 
                             Positioned(
-                              bottom: 68 * pw,
+                              bottom: 68 * hr,
                               left: 0,
                               right: 0,
                               child: Padding(
@@ -172,11 +172,11 @@ class HomePageState extends StateSuper<HomePage> {
                             ),
 
                             Positioned(
-                              bottom: 5 *pw,
+                              bottom: 5 *hr,
                               left: 0,
                               right: 0,
                               child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20 *pw),
+                                padding: EdgeInsets.symmetric(horizontal: 20 *hr),
                                 child: IrisSearchBar(
                                   hint: 'جستجو در دروس',
                                   onChangeEvent: onSearch,

@@ -105,8 +105,8 @@ class _OtpPageState extends StateSuper<OtpPage> {
                   UnconstrainedBox(
                     alignment: Alignment.topCenter,
                     child: SizedBox(
-                        height: sh * calc(0.8, 660, 0.7, 580, sh, symmetry: true),
-                        width: sw,
+                        height: hs * calc(0.8, 660, 0.7, 580, hs, symmetry: true),
+                        width: ws,
                         child: Image.asset(AppImages.otp, fit: BoxFit.fill)
                     ),
                   ),
@@ -231,8 +231,8 @@ class _OtpPageState extends StateSuper<OtpPage> {
                         const SizedBox(height: 30),
 
                         SizedBox(
-                            height: MathHelper.minDouble(70, sh*0.14),
-                            child: Image.asset(AppImages.keyboardOpacity, width: sw*0.75)
+                            height: MathHelper.minDouble(70, hs*0.14),
+                            child: Image.asset(AppImages.keyboardOpacity, width: ws*0.75)
                         ),
 
                         const SizedBox(height: 10),

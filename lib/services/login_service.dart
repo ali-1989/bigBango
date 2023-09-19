@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:iris_notifier/iris_notifier.dart';
 import 'package:iris_tools/api/helpers/jsonHelper.dart';
 import 'package:iris_tools/models/two_state_return.dart';
-import 'package:iris_tools/modules/stateManagers/assistState.dart';
+import 'package:iris_tools/modules/stateManagers/updater_state.dart';
 
 import 'package:app/managers/api_manager.dart';
 import 'package:app/managers/leitner_manager.dart';
@@ -59,7 +59,7 @@ class LoginService {
     final isCurrent = SessionService.getLastLoginUser()?.userId == userId;
     await SessionService.logoff(userId);
 
-    AssistController.forId(AppBroadcast.drawerMenuRefresherId)!.update();
+    UpdaterController.forId(AppBroadcast.drawerMenuRefresherId)!.update();
     //AppBroadcast.layoutPageKey.currentState?.scaffoldState.currentState?.closeDrawer();
 
     if (isCurrent) {
@@ -71,7 +71,7 @@ class LoginService {
   static Future forceLogoffAll() async {
     await SessionService.logoffAll();
 
-    AssistController.forId(AppBroadcast.drawerMenuRefresherId)!.update();
+    UpdaterController.forId(AppBroadcast.drawerMenuRefresherId)!.update();
     //AppBroadcast.layoutPageKey.currentState?.scaffoldState.currentState?.closeDrawer();
 
     RouteTools.backToRoot(RouteTools.getTopContext()!);

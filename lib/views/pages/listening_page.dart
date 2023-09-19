@@ -128,7 +128,7 @@ class _ListeningPageState extends StateSuper<ListeningPage> {
                 child: Directionality(
                   textDirection: LocaleHelper.autoDirection(currentItem?.title?? ''),
                   child: SizedBox(
-                    width: sw,
+                    width: ws,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                           color: Colors.grey.shade200,

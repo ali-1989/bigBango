@@ -125,19 +125,19 @@ class _RegisterFormPageState extends StateSuper<RegisterFormPage> {
                   SingleChildScrollView(
                     child: Stack(
                       children: [
-                        SizedBox(height: sh/2),
+                        SizedBox(height: hs/2),
 
                         UnconstrainedBox(
                           alignment: Alignment.topCenter,
                           child: SizedBox(
-                              height: sh * 0.60,
-                              width: sw,
+                              height: hs * 0.60,
+                              width: ws,
                               child: Image.asset(AppImages.otp, fit: BoxFit.fill)
                           ),
                         ),
 
                         Padding(
-                          padding: EdgeInsets.only(top: sh * 0.35),
+                          padding: EdgeInsets.only(top: hs * 0.35),
                           child: Column(
                             children: [
                               Padding(
@@ -431,8 +431,8 @@ class _RegisterFormPageState extends StateSuper<RegisterFormPage> {
 
                                   const SizedBox(height: 10),
                                   SizedBox(
-                                      height: MathHelper.minDouble(70, sh * 0.14),
-                                      child: Image.asset(AppImages.keyboardOpacity, width: sw * 0.75)
+                                      height: MathHelper.minDouble(70, hs * 0.14),
+                                      child: Image.asset(AppImages.keyboardOpacity, width: ws * 0.75)
                                   ),
                                 ],
                               ),

@@ -63,11 +63,11 @@ class _SelectLanguageLevelPageState extends StateSuper<SelectLanguageLevelPage> 
                         fit: StackFit.passthrough,
                         children: [
                           Center(
-                              child: Image.asset(AppImages.selectLevelBack, height: sh*0.3),
+                              child: Image.asset(AppImages.selectLevelBack, height: hs*0.3),
                           ),
 
                           Positioned(
-                              top: ((sh*0.3)/2)-70,
+                              top: ((hs*0.3)/2)-70,
                               left: -60,
                               right: 0,
                               child: GestureDetector(
@@ -283,8 +283,8 @@ class _SelectLanguageLevelPageState extends StateSuper<SelectLanguageLevelPage> 
 
                           const SizedBox(height: 10),
                           SizedBox(
-                              height: MathHelper.minDouble(70, sh*0.14),
-                              child: Image.asset(AppImages.keyboardOpacity, width: sw*0.75)
+                              height: MathHelper.minDouble(70, hs*0.14),
+                              child: Image.asset(AppImages.keyboardOpacity, width: ws*0.75)
                           ),
                         ],
                       ),
@@ -353,7 +353,7 @@ class _SelectLanguageLevelPageState extends StateSuper<SelectLanguageLevelPage> 
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft:Radius.circular(20), topRight: Radius.circular(20))),
         builder: (context) {
           return SizedBox(
-            height: MathHelper.percent(sh, 85),
+            height: MathHelper.percent(hs, 85),
             child: const SelectLevelOnline(),
           );
         },
@@ -373,7 +373,7 @@ class _SelectLanguageLevelPageState extends StateSuper<SelectLanguageLevelPage> 
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft:Radius.circular(20), topRight: Radius.circular(20))),
       builder: (context) {
         return SizedBox(
-          height: MathHelper.percent(sh, 85),
+          height: MathHelper.percent(hs, 85),
           child: const SelectSupportTime(),
         );
       },
