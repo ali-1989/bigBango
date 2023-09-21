@@ -1,3 +1,4 @@
+import 'package:app/system/extensions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/tools/route_tools.dart';
@@ -10,6 +11,27 @@ class AppMessages {
   static BuildContext _getContext(){
     return RouteTools.getTopContext()!;
   }
+  
+  static String httpMessage(String? cause) {
+    if(cause == null){
+      return errorOccur;
+    }
+
+    return _getContext().tInMap('httpCodes', cause)?? errorOccur;
+  }
+
+  static String operationMessage(String key) {
+    return _getContext().tInMap('operationSection', key)?? _noText;
+  }
+
+  static String loginMessage(String key) {
+    return _getContext().tInMap('loginSection', key)?? _noText;
+  }
+
+  static String registerMessage(String key) {
+    return _getContext().tInMap('registerSection', key)?? _noText;
+  }
+
   static String get ok {
     return 'بله';
   }
@@ -98,6 +120,10 @@ class AppMessages {
     return 'خروج';
   }
 
+  static String get back {
+     return 'برگشت';
+  }
+
   static String get search {
     return 'جستجو';
   }
@@ -108,6 +134,18 @@ class AppMessages {
 
   static String get update {
     return 'بروز رسانه';
+  }
+
+  static String get save {
+    return _getContext().t('save')?? _noText;
+  }
+
+  static String get downloadNewVersion {
+    return _getContext().t('downloadNewVersion')?? _noText;
+  }
+
+  static String get directDownload {
+    return _getContext().t('directDownload')?? _noText;
   }
 
   static String get validation {
@@ -123,7 +161,15 @@ class AppMessages {
   }
 
   static String get otpCodeIsInvalid {
-    return '';
+    return loginMessage('otpCodeIsInvalid');
+  }
+
+  /*static String get doYouWantLogoutYourAccount {
+    return loginMessage('doYouWantLogoutYourAccount');
+  }*/
+
+  static String get doYouWantLogoutYourAccount {
+    return 'آیا از حساب کاربری خارج می شوید؟';
   }
 
   static String get pleaseWait {
@@ -134,15 +180,11 @@ class AppMessages {
     return '';
   }
 
-  static String get doYouWantLogoutYourAccount {
-    return 'آیا از حساب کاربری خارج می شوید؟';
-  }
-  
   static String get newAppVersionIsOk {
     return 'نسخه ی جدید برنامه آماده شده است';
   }
 
-  static String get terms {
+  static String get termPolice {
     return 'سیاست حفظ حریم خصوصی';
   }
 
@@ -154,12 +196,32 @@ class AppMessages {
     return 'ورود';
   }
 
-  static String get back {
-    return 'بازگشت';
+  static String get otherNumber {
+    return registerMessage('otherNumber');
+  }
+
+  static String get enterVerifyCodeDesc {
+    return registerMessage('validationDescription');
+  }
+
+ static String get pleaseEnterAPassword {
+    return registerMessage('selectPassword');
   }
 
   static String get errorOccur {
     return 'خطایی رخ داده';
+  }
+
+  static String get errorOccurTryAgain {
+    return _getContext().t('errorOccurTryAgain')?? _noText;
+  }
+
+  static String get wantToLeave {
+    return _getContext().tC('wantToLeave')?? _noText;
+  }
+
+  static String get e404 {
+    return _getContext().tC('thisPageNotFound')?? _noText;
   }
 
   static String get tryAgain {
@@ -168,10 +230,6 @@ class AppMessages {
 
   static String get tokenIsIncorrectOrExpire {
     return 'توکن صحیح نیست';
-  }
-
-  static String get enterCountryCode {
-    return 'کد کشور را وارد کنید';
   }
 
   static String get databaseError {
@@ -186,16 +244,20 @@ class AppMessages {
     return '';
   }
 
-  static String get wantToLeave {
-    return 'آیا می خواهید خارج شوید';
-  }
-
   static String get dataNotFound {
-    return 'داده ای یافت نشد';
+     return 'داده ای یافت نشد';
   }
 
-  static String get requestDataIsNotJson {
-    return 'داده از نوع جیسان نیست';
+  static String get thisRequestNotDefined {
+    return httpMessage('thisRequestNotDefined');
+  }
+
+  static String get informationWasSend {
+    return httpMessage('informationWasSend');
+  }
+
+  static String get errorUploadingData {
+    return httpMessage('errorUploadingData');
   }
 
   static String get netConnectionIsDisconnect {
@@ -233,15 +295,28 @@ class AppMessages {
   static String get operationCanceled {
     return 'عملیات لغو شد';
   }
-  
+
   static String get sorryYouDoNotHaveAccess {
-    return 'متاسفانه شما اجازه ی دسترسی ندارید';
+     return 'متاسفانه شما اجازه ی دسترسی ندارید';
+  }
+
+  static String get youMustRegister {
+    return _getContext().tC('youMustRegister')?? _noText;
   }
 
   static String get thereAreNoResults {
     return 'نتیجه ای یافت نشد';
   }
-  //---------------------------------------------------------
+  
+  static String get requestDataIsNotJson {
+    return 'داده از نوع جیسان نیست';
+  }
+  
+  static String get enterCountryCode {
+    return 'کد کشور را وارد کنید';
+  }
+
+  ///-----------------------------------------------------------------------------------
   static String get loginDescription {
     return 'ورود به حساب کاربری';
   }
