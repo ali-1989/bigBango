@@ -1,6 +1,6 @@
-import 'package:app/system/extensions.dart';
 import 'package:flutter/material.dart';
 
+import 'package:app/system/extensions.dart';
 import 'package:app/tools/route_tools.dart';
 
 class AppMessages {
@@ -164,16 +164,12 @@ class AppMessages {
     return loginMessage('otpCodeIsInvalid');
   }
 
-  /*static String get doYouWantLogoutYourAccount {
-    return loginMessage('doYouWantLogoutYourAccount');
-  }*/
-
   static String get doYouWantLogoutYourAccount {
-    return 'آیا از حساب کاربری خارج می شوید؟';
+    return loginMessage('doYouWantLogoutYourAccount');
   }
 
-  static String get pleaseWait {
-    return 'لطفا منتظر بمانید';
+  static String get loginWithGoogle {
+    return loginMessage('loginWithGoogle');
   }
 
   static String get countrySelection {
@@ -182,6 +178,10 @@ class AppMessages {
 
   static String get newAppVersionIsOk {
     return 'نسخه ی جدید برنامه آماده شده است';
+  }
+
+  static String get pleaseWait {
+    return _getContext().t('pleaseWait')?? _noText;
   }
 
   static String get termPolice {
@@ -314,6 +314,18 @@ class AppMessages {
   
   static String get enterCountryCode {
     return 'کد کشور را وارد کنید';
+  }
+
+  static String get unkNow {
+    return _getContext().t('unknown')?? _noText;
+  }
+
+  static String get open {
+    return _getContext().t('open')?? _noText;
+  }
+
+  static String get close {
+    return _getContext().t('close')?? _noText;
   }
 
   ///-----------------------------------------------------------------------------------
