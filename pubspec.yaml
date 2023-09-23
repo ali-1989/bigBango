@@ -34,7 +34,7 @@ dependencies:
   video_player: ^2.7.2
   chewie: ^1.7.1
   http: ^1.1.0
-  dio: ^5.3.2
+  dio: ^5.3.3
   connectivity_plus: ^4.0.2
   url_launcher: ^6.1.14
   material_dialogs: ^1.1.4
