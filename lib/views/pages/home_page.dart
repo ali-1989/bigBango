@@ -92,11 +92,10 @@ class HomePageState extends StateSuper<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Assist(
       controller: assistCtr,
       id: HomePage.id$homePageHead,
-      groupIds: [AssistGroup.updateOnLessonChange],
+      groupIds: const [AssistGroup.updateOnLessonChange],
       builder: (_, ctr, data) {
         if(assistCtr.hasState(state$error)){
           return ErrorOccur(
@@ -295,47 +294,46 @@ class HomePageState extends StateSuper<HomePage> {
                         )
                     ),
 
-                    const SizedBox(width: 12),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      child: Text(lesson.title),
+                    /// title
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 5),
+                        child: Text(lesson.title, maxLines: 1),
+                      ),
                     ),
 
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          if(lesson.isLock){
-                            return Align(
-                              alignment: Alignment.centerLeft,
-                                child: Image.asset(AppImages.lockIco, width: 30, height: 30)
-                            );
-                          }
-
-                          return Directionality(
-                            textDirection: TextDirection.ltr,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('${lesson.improvementPercentage} %', style: const TextStyle(fontSize: 12)),
-
-                                const SizedBox(height: 4),
-                                SizedBox(
-                                  width: 35,
-                                  child: LinearProgressIndicator(
-                                    backgroundColor: Colors.greenAccent.withAlpha(40),
-                                    color: Colors.greenAccent,
-                                    value: lesson.improvementPercentage/100,
-                                    minHeight: 3,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                const Text('پیشرفت', style: TextStyle(fontSize: 10)),
-                              ],
-                            ),
+                    Builder(
+                      builder: (context) {
+                        if(lesson.isLock){
+                          return Align(
+                            alignment: Alignment.centerLeft,
+                              child: Image.asset(AppImages.lockIco, width: 30, height: 30)
                           );
                         }
-                      ),
+
+                        return Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('${lesson.improvementPercentage} %', maxLines: 1, style: const TextStyle(fontSize: 12)),
+
+                              const SizedBox(height: 4),
+                              SizedBox(
+                                width: 35,
+                                child: LinearProgressIndicator(
+                                  backgroundColor: Colors.greenAccent.withAlpha(40),
+                                  color: Colors.greenAccent,
+                                  value: lesson.improvementPercentage/100,
+                                  minHeight: 3,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              const Text('پیشرفت' , maxLines: 1, style: TextStyle(fontSize: 10)),
+                            ],
+                          ),
+                        );
+                      }
                     ),
 
                     const SizedBox(width: 4),
@@ -443,35 +441,34 @@ class HomePageState extends StateSuper<HomePage> {
                             )
                         ),
 
-                        const SizedBox(width: 12),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          child: Text(lesson.title),
+                        /// title
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 5),
+                            child: Text(lesson.title, maxLines: 1,),
+                          ),
                         ),
 
-                        Expanded(
-                          child: Directionality(
-                            textDirection: TextDirection.ltr,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('${lesson.improvementPercentage} %', style: const TextStyle(fontSize: 12),),
+                        Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('${lesson.improvementPercentage} %', maxLines: 1, style: const TextStyle(fontSize: 12),),
 
-                                const SizedBox(height: 4),
-                                SizedBox(
-                                  width: 35,
-                                  child: LinearProgressIndicator(
-                                    backgroundColor: Colors.greenAccent.withAlpha(40),
-                                    color: Colors.greenAccent,
-                                    value: lesson.improvementPercentage/100,
-                                    minHeight: 3,
-                                  ),
+                              const SizedBox(height: 4),
+                              SizedBox(
+                                width: 35,
+                                child: LinearProgressIndicator(
+                                  backgroundColor: Colors.greenAccent.withAlpha(40),
+                                  color: Colors.greenAccent,
+                                  value: lesson.improvementPercentage/100,
+                                  minHeight: 3,
                                 ),
-                                const SizedBox(height: 4),
-                                const Text('پیشرفت', style: TextStyle(fontSize: 10)),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(height: 4),
+                              const Text('پیشرفت', maxLines: 1, style: TextStyle(fontSize: 10)),
+                            ],
                           ),
                         ),
 
@@ -539,7 +536,7 @@ class HomePageState extends StateSuper<HomePage> {
                             crossAxisCount: 2,
                             crossAxisSpacing: 7.0,
                             mainAxisSpacing: 7.0,
-                            mainAxisExtent: 70,
+                            mainAxisExtent: 75,
                           ),
                           itemBuilder: (BuildContext context, int index) {
                             return lessonItems[index];
@@ -628,7 +625,7 @@ class HomePageState extends StateSuper<HomePage> {
                           ),
                         ),
 
-                        const SizedBox(width: 4),
+                        const SizedBox(height: 5),
                       ],
                     ),
                   )
@@ -658,7 +655,7 @@ class HomePageState extends StateSuper<HomePage> {
               children: [
                 CustomCard(
                   color: Colors.grey.shade200,
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.fromLTRB(5.0, 5, 5, 5),
                   child: Column(
                     children: [
                       Row(
@@ -676,13 +673,13 @@ class HomePageState extends StateSuper<HomePage> {
                             children: [
                               Text(segmentModel.title),
                               const SizedBox(height: 5),
-                              Text(segmentModel.engTitle).alpha(alpha: 100),
+                              Text(segmentModel.engTitle).alpha(alpha: 100).fsR(-1),
                             ],
                           ),
                         ],
                       ),
 
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 14),
 
                       Visibility(
                         visible: segmentModel.progress != null,
@@ -701,11 +698,11 @@ class HomePageState extends StateSuper<HomePage> {
                 ),
 
                 Positioned(
-                  bottom: 10,
+                  bottom: 6,
                   left: 5,
                   child: Visibility(
                     visible: segmentModel.progress != null,
-                      child: Text('${segmentModel.progress} %')
+                      child: Text('${segmentModel.progress} %').fsR(-1)
                   ),
                 ),
               ],
@@ -980,32 +977,42 @@ class HomePageState extends StateSuper<HomePage> {
       return;
     }
 
-    AppSheet.showSheetCustom(context,
+    AppSheet.showSheetCustom(
+        context,
+        backgroundColor: Colors.transparent,
+        contentColor: Colors.transparent,
         builder: (_){
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('توضیحات درس ${lesson.title}: ', maxLines: 1,).color(Colors.white).bold(),
-
-                const SizedBox(height: 10),
-
-                ListView(
-                  shrinkWrap: true,
+          return ClipRRect(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            child: ColoredBox(
+              color: AppDecoration.mainColor,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(lesson.description!, textAlign: TextAlign.justify,).color(Colors.white).fsR(-1),
+                    Text('توضیحات\n${lesson.title}', maxLines: 2).color(Colors.white).bold(),
 
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('باشه').color(Colors.white)
-                      ),
-                    ),
+                    const SizedBox(height: 10),
+
+                    ListView(
+                      shrinkWrap: true,
+                      children: [
+                        Text(lesson.description!, textAlign: TextAlign.justify,).color(Colors.white).fsR(-1),
+
+                        const SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('باشه').color(Colors.white)
+                          ),
+                        ),
+                      ],
+                    )
                   ],
-                )
-              ],
+                ),
+              ),
             ),
           );
         },
