@@ -209,7 +209,7 @@ class AppMessages {
   }
 
   static String get errorOccur {
-    return 'خطایی رخ داده';
+    return _getContext().t('errorOccur')?? _noText;
   }
 
   static String get errorOccurTryAgain {
@@ -225,7 +225,7 @@ class AppMessages {
   }
 
   static String get tryAgain {
-    return 'تلاش مجدد';
+    return _getContext().t('tryAgain')?? _noText;
   }
 
   static String get tokenIsIncorrectOrExpire {
@@ -233,7 +233,7 @@ class AppMessages {
   }
 
   static String get databaseError {
-    return 'خطای دیتابیس';
+    return httpMessage('databaseError');
   }
 
   static String get userNameOrPasswordIncorrect {
@@ -241,11 +241,11 @@ class AppMessages {
   }
 
   static String get errorOccurredInSubmittedParameters {
-    return '';
+    return httpMessage('errorOccurredInSubmittedParameters');
   }
 
   static String get dataNotFound {
-     return 'داده ای یافت نشد';
+    return httpMessage('dataNotFound');
   }
 
   static String get thisRequestNotDefined {
@@ -265,35 +265,35 @@ class AppMessages {
   }
 
   static String get errorCommunicatingServer {
-    return 'ارتباط با سرور برقرار نشد';
+    return httpMessage('errorCommunicatingServer');
   }
 
   static String get serverNotRespondProperly {
-    return 'سرور پاسخ مناسبی نمی دهد';
+    return httpMessage('serverNotRespondProperly');
   }
 
   static String get accountIsBlock {
-    return '';
+    return httpMessage('accountIsBlock');
   }
 
   static String get operationCannotBePerformed {
-    return '';
+    return operationMessage('operationCannotBePerformed');
   }
 
   static String get operationSuccess {
-    return 'عملیات با موفقیت انجام شد';
+    return operationMessage('successOperation');
   }
 
   static String get operationFailed {
-    return 'عملیات انجام نشد';
+    return operationMessage('operationFailed');
   }
 
   static String get operationFailedTryAgain {
-    return 'عملیات انجام نشد دوباره تلاش کنید';
+    return operationMessage('operationFailedTryAgain');
   }
 
   static String get operationCanceled {
-    return 'عملیات لغو شد';
+    return operationMessage('operationCanceled');
   }
 
   static String get sorryYouDoNotHaveAccess {
