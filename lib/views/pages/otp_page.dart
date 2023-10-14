@@ -328,7 +328,7 @@ class _OtpPageState extends StateSuper<OtpPage> {
     if(dataJs == null || dataJs[Keys.token] == null) {
       await hideLoading();
       AppDB.setReplaceKv(Keys.setting$registerPhoneNumber, widget.phoneNumber);
-      AppDB.setReplaceKv(Keys.setting$registerPhoneNumberTs, DateHelper.getNowTimestamp());
+      AppDB.setReplaceKv(Keys.setting$registerPhoneNumberTs, DateHelper.nowToTimestamp());
       AppBroadcast.reBuildMaterial();
 
       if(context.mounted) {

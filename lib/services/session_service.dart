@@ -75,7 +75,7 @@ class SessionService {
 		_lastLoginUser = newUser;
 		SettingsManager.localSettings.lastUserId = newUser?.userId;
 
-		SettingsManager.saveSettings();
+		SettingsManager.saveLocalSettingsAndNotify();
 	}
 
 	static Future<UserModel?> login$newProfileData(Map json) async {
@@ -89,7 +89,7 @@ class SessionService {
 
 		//newUser.token?.refreshToken = json['refreshToken'];
 
-		newUser.loginDate = DateHelper.getNow().toUtc();
+		newUser.loginDate = DateHelper.nowMinusUtcOffset();
 
 		final wasLoginUser = getExistLoginUserById(userId);
 		var oldDbUser = wasLoginUser;

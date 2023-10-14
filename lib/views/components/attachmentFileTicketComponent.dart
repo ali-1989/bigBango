@@ -261,7 +261,7 @@ class _AttachmentFileTicketComponentState extends StateSuper<AttachmentFileTicke
   }
 
   Future<XFile?> selectImageFromCamera() async {
-    final hasPermission = await PermissionTools.requestStoragePermission();
+    final hasPermission = await PermissionTools.requestCameraPermission();
 
     if(hasPermission != PermissionStatus.granted) {
       return null;
@@ -277,7 +277,7 @@ class _AttachmentFileTicketComponentState extends StateSuper<AttachmentFileTicke
   }
 
   Future<XFile?> selectImageFromGallery() async {
-    final hasPermission = await PermissionTools.requestStoragePermission();
+    final hasPermission = await PermissionTools.requestStoragePermissionWithOsVersion();
 
     if(hasPermission != PermissionStatus.granted) {
       return null;

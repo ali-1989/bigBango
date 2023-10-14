@@ -16,7 +16,7 @@ class TicketModel {
     number = map['number'];
     status = map['status']?? 1; // 1: open 2:close
     trackingRoleName = map['trackingRoleName']?? '';
-    createdAt = DateHelper.tsToSystemDate(map['createdAt'])!;
+    createdAt = DateHelper.timestampToSystem(map['createdAt'])!;
   }
 
   Map<String, dynamic> toMap(){

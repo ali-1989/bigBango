@@ -16,7 +16,7 @@ class SupportSessionModel {
     subject = map['subject'];
     status = SupportSessionStatus.from(map['status']?? 1);
     durationMinutes = map['durationMinutes']?? 0;
-    reservationAt = DateHelper.tsToSystemDate(map['reservationAt'])!;
+    reservationAt = DateHelper.timestampToSystem(map['reservationAt'])!;
 
     if(map['lesson'] is Map) {
       lesson = LessonModel.fromMap(map['lesson']);

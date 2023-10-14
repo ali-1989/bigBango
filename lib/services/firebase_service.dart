@@ -150,7 +150,7 @@ class FireBaseService {
     token = await FirebaseMessaging.instance.getToken(vapidKey: 'BAXEdcb2ZrYd6vPtQcdz03M4JCftVqGh1_TbSU2HXkekcS1y_Y3NB1_UI1p2py6XYZfAi8MvXJlO7k7kRouXY4U');
 
     if(token != null) {
-      lastUpdateToken = DateHelper.getNow();
+      lastUpdateToken = DateHelper.nowMinusUtcOffset();
       EventNotifierService.notify(AppEvents.firebaseTokenReceived);
 
       return token;

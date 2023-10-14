@@ -25,7 +25,7 @@ class MessageModel {
     title = map['title'];
     body = map['body'];
     data = map['data'];
-    createAt = DateHelper.tsToSystemDate(map['createdAt'])!;
+    createAt = DateHelper.timestampToSystem(map['createdAt'])!;
     type = NotificationType.from(map['type']);
     status = MessageStatus.from(map['status']);
 

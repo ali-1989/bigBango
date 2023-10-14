@@ -6,6 +6,7 @@ import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/api/system.dart';
 import 'package:iris_tools/modules/irisLocalizations.dart';
 
+import 'package:app/structures/models/settings_model.dart';
 import 'package:app/system/keys.dart';
 import 'package:app/tools/route_tools.dart';
 import '/managers/settings_manager.dart';
@@ -22,13 +23,17 @@ class AppLocale {
     return localeDelegate.getLocalization();
   }
 
-  static Future<void> init() async {
-    //rint('@@ this line must log once');
+  static void init() {
     if(!_isInit) {
       _isInit = true;
       localeDelegate = IrisLocaleDelegate((locale) => _isLocaleSupported(locale));
     }
+  }
 
+  /// this method help when system not found a key in en_US , search key in en_EE.
+  /// note must exist en_US or fa_IR file, else take error.
+  static Future<void> setFallBack() async {
+    init();
     await localeDelegate.getLocalization().setFallbackByLocale(const Locale('en', 'EE'));
   }
 
@@ -38,17 +43,12 @@ class AppLocale {
 
   static Iterable<Locale> getAssetSupportedLocales() {
     /// must for any record ,create a file in assets/locales directory
-    return [
-      //const Locale('en', 'US'),
-      const Locale('fa', 'IR'),
-    ];
+    return SettingsModel.locals;
   }
 
   static Map<String, Map<String, String>> getAssetSupportedLanguages() {
     final res = <String, Map<String, String>>{};
 
-    //getSupportedLocales().forEach((element) {
-    //});
     res.putIfAbsent('en', () => {'name': 'English', 'local_name': 'English'});
     res.putIfAbsent('fa', () => {'name': 'Persian', 'local_name': 'فارسی'});
 
@@ -85,9 +85,9 @@ class AppLocale {
     await localeDelegate.load(l);
     SettingsManager.localSettings.appLocale = l;
     AppThemes.instance.textDirection = detectLocaleDirection(l);
-    SettingsManager.saveSettings();
+    SettingsManager.saveLocalSettingsAndNotify();
   }
-  ///------------------------------------------------------------------------------------
+  ///---------------------------------------------------------------------------
   static TextDirection detectLocaleDirection(Locale locale){
     if(LocaleHelper.rtlLanguageCode.contains(locale.languageCode)) {
       return TextDirection.rtl;

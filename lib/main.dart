@@ -16,6 +16,7 @@ import 'package:app/services/native_call_service.dart';
 import 'package:app/structures/models/settings_model.dart';
 import 'package:app/system/constants.dart';
 import 'package:app/tools/app/app_broadcast.dart';
+import 'package:app/tools/app/app_cache.dart';
 import 'package:app/tools/app/app_directories.dart';
 import 'package:app/tools/app/app_locale.dart';
 import 'package:app/tools/app/app_sizes.dart';
@@ -58,7 +59,7 @@ void main() {
                   child: DefaultTextHeightBehavior(
                     textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false),
                     child: DefaultTextStyle(
-                      style: AppThemes.instance.themeData.textTheme.bodyMedium?? const TextStyle(),
+                      style: AppThemes.instance.themeData.textTheme.bodySmall?? const TextStyle(),
                       child: OrientationBuilder( /// detect orientation change and rotate screen
                           builder: (context, orientation) {
                             return Toaster(
@@ -107,8 +108,9 @@ Future<(bool, String?)> prepareDirectoriesAndLogger() async {
     return (false, '$e\n\n${StackTrace.current}');
   }
 }
-///==============================================================================================
+///=============================================================================
 class MyApp extends StatelessWidget {
+  // ignore: prefer_const_constructors_in_immutables
   MyApp({Key? key}) : super(key: key);
 
   ///============ call on any hot reload
@@ -144,52 +146,54 @@ class MyApp extends StatelessWidget {
         },
       ),
       locale: SplashManager.isFullInitialOk? SettingsManager.localSettings.appLocale : SettingsModel.defaultAppLocale,
-      supportedLocales: AppLocale.getAssetSupportedLocales(),
-      localizationsDelegates: AppLocale.getLocaleDelegates(), /// this do correct Rtl/Ltr
-      /*localeResolutionCallback: (deviceLocale, supportedLocales) {
-            return SettingsManager.localSettings.appLocale;
-          },*/
+      supportedLocales: AppLocale.getAssetSupportedLocales(), /// this do Rtl/Ltr
+      localizationsDelegates: AppLocale.getLocaleDelegates(), /// this do Rtl/Ltr
       home: materialHomeBuilder(),
     );
   }
 
   Widget materialHomeBuilder(){
-    double factor = PlatformDispatcher.instance.textScaleFactor.clamp(0.85, 1.3);
+    double factor = PlatformDispatcher.instance.textScaleFactor.clamp(0.80, 1.5);
 
     return Builder(
       builder: (context) {
-        FontManager.instance.detectDeviceFontSize(context);
 
-        if(FontManager.useFlutterFontSize && FontManager.deviceFontSize > FontManager.maxDeviceFontSize){
-          factor = 1.0;
-        }
+        if(factor > 1.0 && FontManager.firstFontSize != null){
+          final themeFs = FontManager.instance.getThemeFontSizeOrRelative(context);
 
-        if(factor > 1.0){
-          while(factor > 1.0 && (FontManager.deviceFontSize * factor) > FontManager.maxDeviceFontSize){
+          while(factor > 1.0 && (themeFs * factor) > FontManager.maxForFontSize){
             factor = factor - 0.09;
           }
         }
 
-        return MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: factor),
-            child: Builder(
-                builder: (localContext){
-                  RouteTools.materialContext = localContext;
-                  testCodes(localContext);
+        return Directionality(
+          /// this line override MaterialApp auto direction. if need auto direction, remove this.
+          textDirection: AppThemes.instance.textDirection,
+          child: MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaleFactor: factor),
+              child: Builder(
+                  builder: (localContext){
+                    RouteTools.materialContext = localContext;
+                    testCodes(localContext);
 
-                  return SplashPage();
-                }
-            )
+                    return SplashPage();
+                  }
+              )
+          ),
         );
       }
     );
   }
 
   Future<void> testCodes(BuildContext context) async {
+    if(!AppCache.canCallMethodAgain('testCodes')){
+      return;
+    }
+
     //await AppDB.db.clearTable(AppDB.tbKv);
   }
 }
-///==============================================================================================
+///=============================================================================
 class MyErrorApp extends StatelessWidget {
   final String? errorLog;
 
@@ -216,7 +220,7 @@ class MyErrorApp extends StatelessWidget {
     );
   }
 }
-///==============================================================================================
+///=============================================================================
 void onErrorCatch(FlutterErrorDetails errorDetails) {
   var txt = 'AN ERROR HAS OCCURRED:: ${errorDetails.exception.toString()}';
 
@@ -234,7 +238,7 @@ void onErrorCatch(FlutterErrorDetails errorDetails) {
 
   LogTools.reportError(eMap);
 }
-///==============================================================================================
+///=============================================================================
 bool mainIsolateError(error, sTrace) {
   var txt = 'main-isolate CAUGHT AN ERROR:: ${error.toString()}';
 
@@ -257,7 +261,7 @@ bool mainIsolateError(error, sTrace) {
 
   return true;
 }
-///==============================================================================================
+///=============================================================================
 void zonedGuardedCatch(error, sTrace) {
   var txt = 'ZONED-GUARDED CAUGHT AN ERROR:: ${error.toString()}';
 

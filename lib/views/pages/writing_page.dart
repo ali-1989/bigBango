@@ -155,7 +155,7 @@ class _WritingPageState extends StateSuper<WritingPage> with TickerProviderState
         Expanded(
             child: FadeIn(
                 animate: true,
-                manualTrigger: true,
+                manualTrigger: false,
                 controller: (animCtr){
                   animController = animCtr;
                 },

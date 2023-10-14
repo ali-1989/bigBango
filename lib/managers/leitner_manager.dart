@@ -22,7 +22,7 @@ class LeitnerManager {
   }
 
   static void setUpdate({DateTime? dt}) {
-    _lastUpdateTime = dt?? DateHelper.getNowToUtc();
+    _lastUpdateTime = dt?? DateHelper.nowMinusUtcOffset();
   }
 
   static void setUnUpdate() {

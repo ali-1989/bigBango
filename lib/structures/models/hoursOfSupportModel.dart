@@ -53,8 +53,8 @@ class HoursModel {
       to = map['to'];
       isBlock = map['isBooked'];
 
-      fromHuman = DateTools.hmOnlyRelative(DateHelper.tsToSystemDate('2023-01-01 $from'), isUtc: false);
-      toHuman = DateTools.hmOnlyRelative(DateHelper.tsToSystemDate('2023-01-01 $to'), isUtc: false);
+      fromHuman = DateTools.hmOnlyRelative(DateHelper.timestampToSystem('2023-01-01 $from'), isUtc: false);
+      toHuman = DateTools.hmOnlyRelative(DateHelper.timestampToSystem('2023-01-01 $to'), isUtc: false);
     }
   }
 

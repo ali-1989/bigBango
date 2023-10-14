@@ -19,7 +19,7 @@ class MediaModel {
     path = map['path'];
     fileType = map['fileType'];
     volume = map['volume'];
-    date = DateHelper.tsToSystemDate(map['date']);
+    date = DateHelper.timestampToSystem(map['date']);
   }
 
   Map<String, dynamic> toMap() {

@@ -28,7 +28,7 @@ class TicketDetailModel {
 
     /*attachments = map['attachments'].map<MediaModel>((i) => MediaModel.fromMap(i)).toList();
     description = map['description'];
-    createdAt = DateHelper.tsToSystemDate(map['createdAt'])!;
+    createdAt = DateHelper.timestampToSystem(map['createdAt'])!;
     creator = TicketCreatorModel.fromMap(map['creator']);*/
 
     firstTicket = TicketReplyModel.fromMap(map);

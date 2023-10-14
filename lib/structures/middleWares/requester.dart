@@ -14,14 +14,14 @@ import 'package:app/tools/app/app_http_dio.dart';
 import 'package:app/tools/app/app_messages.dart';
 import 'package:app/tools/app/app_sheet.dart';
 
-///=============================================================================================
+///=============================================================================
 enum MethodType {
   post,
   get,
   put,
   delete,
 }
-///=============================================================================================
+///=============================================================================
 class Requester {
   Map<String, dynamic>? _bodyJs;
   MethodType methodType = MethodType.post;
@@ -133,7 +133,7 @@ class Requester {
           request = 'GET';
         }
 
-        Tools.verboseLog('@@@@@ API CALLED >>> url:[$url]\n\trequest:[$request]\n\tresponse ====>>  status:[${_httpRequester.responseData?.statusCode}] data:$val \n');
+        Tools.verboseLog('@@@@@ API CALLED >>> url:[$url]\n\nrequest:[$request]\n\nresponse ====>>  status:[${_httpRequester.responseData?.statusCode}] data:$val \n');
       }
 
       if(_httpRequester.responseData?.statusCode == 401 && SessionService.getLastLoginUser() != null){
@@ -204,7 +204,7 @@ class Requester {
     AppHttpDio.cancelAndClose(_httpRequester);
   }
 }
-///================================================================================================
+///=============================================================================
 class HttpRequestEvents {
   Future Function(HttpRequester)? onAnyState;
   Future Function(HttpRequester requester, Response? response)? onFailState;

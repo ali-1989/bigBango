@@ -60,19 +60,19 @@ class UserModel {
     }
 
     if(brDate is int) {
-      birthDate = DateHelper.milToDateTime(brDate);
+      birthDate = DateHelper.millToDateTime(brDate);
     }
     else if(brDate is String) {
-      birthDate = DateHelper.tsToSystemDate(brDate);
+      birthDate = DateHelper.timestampToSystem(brDate);
     }
 
     //profileModel?.url = UriTools.correctAppUrl(profileModel?.url, domain: domain);
     //----------------------- local
     if (tLoginDate is int) {
-      loginDate = DateHelper.milToDateTime(tLoginDate);
+      loginDate = DateHelper.millToDateTime(tLoginDate);
     }
     else if (tLoginDate is String) {
-      loginDate = DateHelper.tsToSystemDate(tLoginDate);
+      loginDate = DateHelper.timestampToSystem(tLoginDate);
     }
   }
   
@@ -163,7 +163,7 @@ class Token {
   Token.fromMap(Map json) {
     token = json[Keys.token];
     refreshToken = json['refreshToken'];
-    expireDate = DateHelper.tsToSystemDate(json[Keys.expire]);
+    expireDate = DateHelper.timestampToSystem(json[Keys.expire]);
 
     parseToken();
   }

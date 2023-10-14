@@ -116,7 +116,7 @@ class _ListeningExamBuilderState extends StateSuper<ListeningExamBuilder> {
     return FadeIn(
       //key: ValueKey(Generator.generateKey(8)),
       animate: true,
-      manualTrigger: true,
+      manualTrigger: false,
       controller: (animCtr){
         examAnimController = animCtr;
       },

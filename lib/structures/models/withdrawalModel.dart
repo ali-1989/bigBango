@@ -13,7 +13,7 @@ class WithdrawalModel {
     id = map['id']?? Generator.generateKey(8);
     description = map['description'];
     amount = map['amount'];
-    date = DateHelper.tsToSystemDate(map['createdAt'])!;
+    date = DateHelper.timestampToSystem(map['createdAt'])!;
   }
 
   Map<String, dynamic> toMap(){

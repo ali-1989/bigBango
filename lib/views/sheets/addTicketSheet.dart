@@ -362,7 +362,7 @@ class _AddTicketSheetState extends StateSuper<AddTicketSheet> {
       tik.number = number;
       tik.title = titleCtr.text.trim();
       tik.trackingRoleName = widget.ticketRoles.firstWhere((element) => element.id == selectedTicketRoleId).name;
-      tik.createdAt = DateHelper.getNowAsUtcZ();
+      tik.createdAt = DateHelper.nowMinusUtcOffset();
 
       DataNotifierService.notify(AppBroadcast.addTicketNotifier, tik);
 

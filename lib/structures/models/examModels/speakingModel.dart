@@ -44,7 +44,7 @@ class LastAnswer {
   MediaModel? userAnswerVoice;
 
   LastAnswer.fromMap(Map map){
-    createdAt = DateHelper.tsToSystemDate(map['createdAt']);
+    createdAt = DateHelper.timestampToSystem(map['createdAt']);
 
     if(map['userAnswerVoice'] is Map) {
       userAnswerVoice = MediaModel.fromMap(map['userAnswerVoice']);

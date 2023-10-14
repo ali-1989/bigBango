@@ -617,7 +617,7 @@ class _ProfilePageState extends StateSuper<ProfilePage> {
     userFixInfo['provinceId'] = user.cityModel?.provinceId;
 
     if(birthDate != null) {
-      userFixInfo[Keys.birthdate] = DateHelper.dateOnlyToStamp(birthDate!);
+      userFixInfo[Keys.birthdate] = DateHelper.toTimestampDateOnly(birthDate!);
     }
 
     /// create a copy of user for compare changes
@@ -643,7 +643,7 @@ class _ProfilePageState extends StateSuper<ProfilePage> {
         birthDate = date.toDateTime();
         birthDateText = DateTools.dateOnlyRelative(birthDate!);
 
-        userChangeInfo[Keys.birthdate] = DateHelper.dateOnlyToStamp(birthDate!);
+        userChangeInfo[Keys.birthdate] = DateHelper.toTimestampDateOnly(birthDate!);
         compareChanges();
         Navigator.of(context).pop();
       },
@@ -766,7 +766,7 @@ class _ProfilePageState extends StateSuper<ProfilePage> {
   }
 
   Future<XFile?> selectImageFromGallery() async {
-    final hasPermission = await PermissionTools.requestStoragePermission();
+    final hasPermission = await PermissionTools.requestStoragePermissionWithOsVersion();
 
     if(hasPermission != PermissionStatus.granted) {
       return null;
@@ -1071,7 +1071,7 @@ class _ProfilePageState extends StateSuper<ProfilePage> {
     js['firstName'] = name;
     js['lastName'] = family;
     js['gender'] = currentGender;
-    js['birthDate'] = DateHelper.dateOnlyToStamp(birthDate!);
+    js['birthDate'] = DateHelper.toTimestampDateOnly(birthDate!);
     js['cityId'] = city?.id;
 
     if(iban.isNotEmpty) {

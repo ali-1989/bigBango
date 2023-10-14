@@ -37,6 +37,7 @@ import 'package:app/tools/app/app_images.dart';
 import 'package:app/tools/app/app_messages.dart';
 import 'package:app/tools/app/app_overlay.dart';
 import 'package:app/tools/app/app_sheet.dart';
+import 'package:app/tools/app/app_sizes.dart';
 import 'package:app/tools/app/app_snack.dart';
 import 'package:app/tools/app/app_toast.dart';
 import 'package:app/tools/route_tools.dart';
@@ -67,7 +68,7 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => HomePageState();
 }
-///===================================================================================================================
+///=============================================================================
 class HomePageState extends StateSuper<HomePage> {
   List<LessonModel> lessons = [];
   List<LessonModel> lessonsBackup = [];
@@ -532,11 +533,11 @@ class HomePageState extends StateSuper<HomePage> {
                           itemCount: lessonItems.length,
                           padding: EdgeInsets.zero,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 7.0,
                             mainAxisSpacing: 7.0,
-                            mainAxisExtent: 75,
+                            mainAxisExtent: 70 + (AppSizes.instance.fontRatio * 30),
                           ),
                           itemBuilder: (BuildContext context, int index) {
                             return lessonItems[index];
@@ -655,7 +656,7 @@ class HomePageState extends StateSuper<HomePage> {
               children: [
                 CustomCard(
                   color: Colors.grey.shade200,
-                  padding: const EdgeInsets.fromLTRB(5.0, 5, 5, 5),
+                  padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                   child: Column(
                     children: [
                       Row(
@@ -679,17 +680,24 @@ class HomePageState extends StateSuper<HomePage> {
                         ],
                       ),
 
-                      const SizedBox(height: 14),
+                      const SizedBox(height: 2),
 
                       Visibility(
                         visible: segmentModel.progress != null,
                         child: Directionality(
                           textDirection: TextDirection.ltr,
-                          child: LinearProgressIndicator(
-                            backgroundColor: Colors.greenAccent.withAlpha(40),
-                            color: Colors.greenAccent,
-                            value: (segmentModel.progress?? 100) /100,
-                            minHeight: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('${segmentModel.progress} %').fsR(-1),
+
+                              LinearProgressIndicator(
+                                backgroundColor: Colors.greenAccent.withAlpha(40),
+                                color: Colors.greenAccent,
+                                value: (segmentModel.progress?? 100) /100,
+                                minHeight: 3,
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -697,14 +705,7 @@ class HomePageState extends StateSuper<HomePage> {
                   ),
                 ),
 
-                Positioned(
-                  bottom: 6,
-                  left: 5,
-                  child: Visibility(
-                    visible: segmentModel.progress != null,
-                      child: Text('${segmentModel.progress} %').fsR(-1)
-                  ),
-                ),
+
               ],
             ),
           ),
@@ -885,10 +886,13 @@ class HomePageState extends StateSuper<HomePage> {
       return;
     }
 
+    /// if have not category
     if(lessonModel.quizSegment!.categories.length < 2){
       requestExam(lessonModel.quizSegment!.categories.first.id);
+      return;
     }
 
+    /// show select category dialog
     final view = OverlayScreenView(
       content: GestureDetector(
         behavior: HitTestBehavior.translucent,

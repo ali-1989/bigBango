@@ -154,7 +154,7 @@ class _SpeakingPageState extends StateSuper<SpeakingPage> with TickerProviderSta
         Expanded(
             child: FadeIn(
                 animate: true,
-                manualTrigger: true,
+                manualTrigger: false,
                 controller: (animCtr){
                   animController = animCtr;
                 },

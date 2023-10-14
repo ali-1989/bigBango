@@ -11,13 +11,17 @@ class SettingsModel {
   static const defaultHttpAddress = 'https://testbigbangoappapi.nicode.org/v1';
   //static const defaultHttpAddress = 'https://bigbangoappapi.nicode.org/v1';
   static const defaultWsAddress = 'https://bigbangoappapi.nicode.org/v1';
-  static const defaultProxyAddress = '95.174.67.50:18080';
   static const Locale defaultAppLocale = Locale('fa', 'IR');
   static const CalendarType defaultCalendarType = CalendarType.solarHijri;
   static final defaultDateFormat = DateFormat.yyyyMmDd.format();
   static int webSocketPeriodicHeartMinutes = 3;
   static int drawerMenuTimeMill = 350;
-  
+
+  /// must for any record ,create a file in assets/locales directory
+  static List<Locale> locals = [
+    SettingsModel.defaultAppLocale,
+    //const Locale('fa', 'IR'),
+  ];
 
   String? lastUserId;
   Locale appLocale = defaultAppLocale;
@@ -28,7 +32,6 @@ class SettingsModel {
   bool confirmOnExit = true;
   String httpAddress = defaultHttpAddress;
   String wsAddress = defaultWsAddress;
-  String proxyAddress = defaultProxyAddress;
   Orientation? appRotationState; // null: free
   int? currentVersion;
   
@@ -50,7 +53,6 @@ class SettingsModel {
     confirmOnExit = map[Keys.setting$confirmOnExit]?? true;
     httpAddress = map['http_address']?? defaultHttpAddress;
     wsAddress = map['ws_address']?? defaultWsAddress;
-    proxyAddress = map['proxy_address']?? defaultProxyAddress;
     currentVersion = map[Keys.setting$currentVersion];
 
     _prepareSettings();
@@ -69,7 +71,6 @@ class SettingsModel {
     map[Keys.setting$currentVersion] = currentVersion;
     map['http_address'] = httpAddress;
     map['ws_address'] = wsAddress;
-    map['proxy_address'] = proxyAddress;
     
     return map;
   }
@@ -84,7 +85,6 @@ class SettingsModel {
     lastToBackgroundTs = other.lastToBackgroundTs;
     httpAddress = other.httpAddress;
     wsAddress = other.wsAddress;
-    proxyAddress = other.proxyAddress;
   }
 
   void _prepareSettings() {

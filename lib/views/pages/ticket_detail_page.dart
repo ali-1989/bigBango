@@ -258,7 +258,7 @@ class _TicketDetailPageState extends StateSuper<TicketDetailPage> {
     }
 
     if(need){
-      PermissionTools.requestStoragePermission();
+      PermissionTools.requestStoragePermissionWithOsVersion();
     }
   }
 

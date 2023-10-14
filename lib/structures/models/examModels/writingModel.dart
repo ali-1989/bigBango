@@ -42,7 +42,7 @@ class LastAnswer {
 
   LastAnswer.fromMap(Map map){
     userAnswer = map['userAnswer'];
-    createdAt = DateHelper.tsToSystemDate(map['createdAt']);
+    createdAt = DateHelper.timestampToSystem(map['createdAt']);
   }
 
   Map<String, dynamic> toMap(){

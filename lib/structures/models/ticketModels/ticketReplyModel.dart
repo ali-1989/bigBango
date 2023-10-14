@@ -16,7 +16,7 @@ class TicketReplyModel {
     id = map['id'];
     description = map['description'];
     creator = TicketCreatorModel.fromMap(map['creator']);
-    createdAt = DateHelper.tsToSystemDate(map['createdAt'])!;
+    createdAt = DateHelper.timestampToSystem(map['createdAt'])!;
     attachments = map['attachments'].map<MediaModel>((i) => MediaModel.fromMap(i)).toList();
   }
 

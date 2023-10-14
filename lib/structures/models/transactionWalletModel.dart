@@ -17,7 +17,7 @@ class TransactionWalletModel {
     description = map['description'];
     amount = map['amount'];
     amountType = WalletAmountType.from(map['amountType']?? -1);
-    date = DateHelper.tsToSystemDate(map['createdAt'])!;
+    date = DateHelper.timestampToSystem(map['createdAt'])!;
   }
 
   Map<String, dynamic> toMap(){

@@ -537,7 +537,7 @@ class SegmentOfReadingModel {
 
   SegmentOfReadingModel.fromMap(Map map) {
     id = map['id'];
-    //start = Duration(milliseconds: ((DateHelper.tsToSystemDate('1970-01-01 ${map['start']}.0')?.millisecondsSinceEpoch)?? 0) +12600000);
+    //start = Duration(milliseconds: ((DateHelper.timestampToSystem('1970-01-01 ${map['start']}.0')?.millisecondsSinceEpoch)?? 0) +12600000);
     start = Duration(milliseconds: map['startMilliSeconds']);
     end = Duration(milliseconds: map['endMilliSeconds']);
     text = map['text'];

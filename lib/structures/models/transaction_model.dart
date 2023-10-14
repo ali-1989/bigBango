@@ -25,7 +25,7 @@ class TransactionModel {
     amount = map['amount'];
     section = TransactionSectionFilter.from(map['section']);
     status = TransactionStatusFilter.from(map['status']);
-    date = DateHelper.tsToSystemDate(map['createdAt'])!;
+    date = DateHelper.timestampToSystem(map['createdAt'])!;
     items = map['items']?? [];
   }
 

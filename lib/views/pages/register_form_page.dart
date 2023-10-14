@@ -637,7 +637,7 @@ class _RegisterFormPageState extends StateSuper<RegisterFormPage> {
     js['firstName'] = name;
     js['lastName'] = family;
     js['gender'] = gender;
-    js['birthDate'] = DateHelper.dateOnlyToStamp(birthDate!);
+    js['birthDate'] = DateHelper.toTimestampDateOnly(birthDate!);
     js['clientSecret'] = DeviceInfoTools.deviceId;
     js['cityId'] = city!.id;
 

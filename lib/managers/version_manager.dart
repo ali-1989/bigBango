@@ -24,13 +24,13 @@ class VersionManager {
 
     await AppDB.firstLaunch();
     AppThemes.prepareFonts(SettingsManager.localSettings.appLocale.languageCode);
-    SettingsManager.saveSettings();
+    SettingsManager.saveLocalSettingsAndNotify();
   }
 
   static Future<void> onInstallNewVersion() async {
     SettingsManager.localSettings.currentVersion = Constants.appVersionCode;
     SettingsManager.localSettings.httpAddress = SettingsModel.defaultHttpAddress;
-    SettingsManager.saveSettings();
+    SettingsManager.saveLocalSettingsAndNotify();
   }
 
   static Future<void> checkVersionOnLaunch() async {
