@@ -133,7 +133,7 @@ abstract class StateSuper<W extends StatefulWidget> extends State<W> {
 	## override onWillBack in children (Screen|Page):
 
 	@override
-  Future<bool> onWillBack<s extends StateBase>(s state) {
+  Future<bool> onWillBack<s extends StateSuper>(s state) {
     if (weSlideController.isOpened) {
       weSlideController.hide();
       return Future<bool>.value(false);

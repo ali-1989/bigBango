@@ -30,7 +30,7 @@ class VersionManager {
   static Future<void> onInstallNewVersion() async {
     SettingsManager.localSettings.currentVersion = Constants.appVersionCode;
     SettingsManager.localSettings.httpAddress = SettingsModel.defaultHttpAddress;
-    SettingsManager.saveLocalSettingsAndNotify();
+    SettingsManager.saveLocalSettingsAndNotify(notify: false);
   }
 
   static Future<void> checkVersionOnLaunch() async {

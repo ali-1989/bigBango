@@ -203,5 +203,3 @@ enum SettingsEvents implements EventImplement {
 		return _number;
 	}
 }
-
-
