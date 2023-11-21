@@ -110,25 +110,25 @@ class HomePageState extends StateSuper<HomePage> {
 
         return Column(
           children: [
-            SizedBox(height: 60 * hr),
+            SizedBox(height: 15 * hRel),
 
             Expanded(
                 child: CustomScrollView(
                   slivers: [
                     ExtendedSliverAppbar(
-                      toolbarHeight: 70*hr,
+                      toolbarHeight: 88,
                       toolBarColor: Colors.transparent,
                       isOpacityFadeWithTitle: true,
                       isOpacityFadeWithToolbar: false,
                       actions: const SizedBox(),
                       leading: const SizedBox(),
                       background: SizedBox(
-                        height: 210 * hr,
+                        height: 190 * wRel,
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
                             Positioned(
-                              bottom: 30*hr,
+                              bottom: 20*hRel,
                               left: 0,
                               right: 0,
                               child: Image.asset(AppImages.homeBackground,
@@ -137,19 +137,19 @@ class HomePageState extends StateSuper<HomePage> {
                             ),
 
                             Positioned(
-                              top: 14 * hr,
-                              left: 25 *hr,
-                              right: 25 *hr,
+                              top: 25,
+                              left: 22 *wRel,
+                              right: 22 *wRel,
                               child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30 * hr),
-                              child: Image.asset(AppImages.homeBackIcons, height: 90 *hr,
+                              padding: EdgeInsets.symmetric(horizontal: 10 * wRel),
+                              child: Image.asset(AppImages.homeBackIcons, height: 90 *hRel,
                                 fit: BoxFit.contain,
                               ),
                             ),
                             ),
 
                             Positioned(
-                              bottom: 68 * hr,
+                              bottom: 60,
                               left: 0,
                               right: 0,
                               child: Padding(
@@ -172,11 +172,11 @@ class HomePageState extends StateSuper<HomePage> {
                             ),
 
                             Positioned(
-                              bottom: 5 *hr,
+                              bottom: 5 *hRel,
                               left: 0,
                               right: 0,
                               child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20 *hr),
+                                padding: EdgeInsets.symmetric(horizontal: 20 *hRel),
                                 child: IrisSearchBar(
                                   hint: 'جستجو در دروس',
                                   onChangeEvent: onSearch,
@@ -537,7 +537,7 @@ class HomePageState extends StateSuper<HomePage> {
                             crossAxisCount: 2,
                             crossAxisSpacing: 7.0,
                             mainAxisSpacing: 7.0,
-                            mainAxisExtent: 70 + (AppSizes.instance.fontRatio * 30),
+                            mainAxisExtent: 70 + (AppSizes.instance.iconRatio * 9),
                           ),
                           itemBuilder: (BuildContext context, int index) {
                             return lessonItems[index];
@@ -789,7 +789,9 @@ class HomePageState extends StateSuper<HomePage> {
        page = VocabPage(injector: VocabIdiomsPageInjector(lessonModel, segment.vocabularyCategories.first.id));
      }
 
-     page = IdiomsPage(injector: VocabIdiomsPageInjector(lessonModel, segment.idiomCategories.first.id));
+     if(segment.idiomCategories.isNotEmpty){
+       page = IdiomsPage(injector: VocabIdiomsPageInjector(lessonModel, segment.idiomCategories.first.id));
+     }
     }
     else if (segment is GrammarSegmentModel){
       page = GrammarPage(injector: GrammarPageInjector(lessonModel));
@@ -878,7 +880,7 @@ class HomePageState extends StateSuper<HomePage> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/lessons?CourseLevelId=${SessionService.getLastLoginUser()?.courseLevel?.id}');
-    requester.request(context);
+    requester.request();
   }
 
   void onExamClick(LessonModel lessonModel){
@@ -950,7 +952,7 @@ class HomePageState extends StateSuper<HomePage> {
     showLoading();
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/quizzes?CategoryId=$categoryId');
-    requester.request(context);
+    requester.request();
   }
 
   void requesterSupport(LessonModel lesson) async {

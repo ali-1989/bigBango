@@ -179,16 +179,16 @@ class _IdiomsPageState extends StateSuper<IdiomsPage> {
 
                             Row(
                               children: [
-                                Text('${idiomsList.length}').englishFont().fsR(4),
+                                Text('${idiomsList.length}').englishRegularFont().fsR(4),
 
                                 const SizedBox(width: 10),
-                                const Text('/').englishFont().fsR(5),
+                                const Text('/').englishRegularFont().fsR(5),
 
                                 const SizedBox(width: 10),
                                 CustomCard(
                                   color: Colors.grey.shade200,
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                                    child: Text('${currentIdiomIdx+1}').englishFont().bold().fsR(4)
+                                    child: Text('${currentIdiomIdx+1}').englishRegularFont().bold().fsR(4)
                                 )
                               ],
                             ),
@@ -304,7 +304,7 @@ class _IdiomsPageState extends StateSuper<IdiomsPage> {
                                            textDirection: TextDirection.ltr,
                                            children: [
                                              Flexible(
-                                                 child: Text(currentIdiom.content, textDirection: TextDirection.ltr).englishFont()
+                                                 child: Text(currentIdiom.content, textDirection: TextDirection.ltr).englishRegularFont()
                                                      .bold(weight: FontWeight.w400).fsR(4)),
                                            ],
                                          ),
@@ -354,13 +354,13 @@ class _IdiomsPageState extends StateSuper<IdiomsPage> {
                     quarterTurns: 2,
                     child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
                 ),
-                label: const Text('next').englishFont().color(nextColor)
+                label: const Text('next').englishRegularFont().color(nextColor)
             ),
 
             TextButton.icon(
                 style: TextButton.styleFrom(),
                 onPressed: onPreClick,
-                icon: const Text('prev').englishFont().color(preColor),
+                icon: const Text('prev').englishRegularFont().color(preColor),
                 label: Image.asset(AppImages.arrowLeftIco, color: preColor)
             ),
           ],
@@ -534,7 +534,7 @@ class _IdiomsPageState extends StateSuper<IdiomsPage> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/idioms?CategoryId=${widget.injector.categoryId}');
-    requester.request(context);
+    requester.request();
   }
 
   void sendReview(String id){

@@ -71,6 +71,6 @@ class _LogsPageState extends StateSuper<LogsPage> {
 
     requester.prepareUrl(pathUrl: '/profile/introduces?Page=1&Size=100');
     requester.methodType = MethodType.get;
-    requester.request(context);
+    requester.request();
   }
 }

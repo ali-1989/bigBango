@@ -320,6 +320,6 @@ class _WritingPageState extends StateSuper<WritingPage> with TickerProviderState
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/writing?CategoryId=${widget.categoryId}');
-    requester.request(context);
+    requester.request();
   }
 }

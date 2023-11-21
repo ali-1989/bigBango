@@ -451,6 +451,6 @@ class _ExamPageState extends StateSuper<ExamPage> with TickerProviderStateMixin 
     requester.bodyJson = js;
 
     showLoading();
-    requester.request(context);
+    requester.request();
   }
 }

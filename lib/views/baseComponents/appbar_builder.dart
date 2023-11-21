@@ -15,57 +15,9 @@ import 'package:app/tools/app/app_sizes.dart';
 import 'package:app/views/baseComponents/layoutComponent.dart';
 import 'package:app/views/sheets/changeLanguageLevelSheet.dart';
 
-/*class AppBarCustom2 extends AppBar {
-
-  AppBarCustom2({
-    super.key,
-    super.leading,
-    super.automaticallyImplyLeading = true,
-    super.title,
-    super.actions,
-    super.flexibleSpace,
-    super.bottom,
-    super.elevation,
-    super.scrolledUnderElevation,
-    super.shadowColor,
-    super.surfaceTintColor,
-    super.backgroundColor,
-    super.foregroundColor,
-    super.iconTheme,
-    super.actionsIconTheme,
-    super.primary = true,
-    super.centerTitle,
-    super.excludeHeaderSemantics = false,
-    super.titleSpacing,
-    super.toolbarOpacity = 1.0,
-    super.bottomOpacity = 1.0,
-    super.toolbarHeight,
-    super.leadingWidth,
-    super.toolbarTextStyle,
-    super.titleTextStyle,
-    super.systemOverlayStyle,
-    //super.shape,
-  }) : super();
-
-  @override
-  Size get preferredSize {
-    //MediaQuery.of(context).padding.top + kToolbarHeight;
-    // AppBar().preferredSize.height;
-
-    if(isWeb()){
-      return Size.zero;
-    }
-
-    return const Size.fromHeight(kToolbarHeight);
-  }
-
-  bool isWeb(){
-    return kIsWeb;
-  }
-}*/
-///=====================================================================================================================
 class AppBarCustom extends StatefulWidget implements PreferredSizeWidget {
 
+  // ignore: use_super_parameters
   const AppBarCustom({Key? key}) : super(key: key);
 
   @override
@@ -75,10 +27,11 @@ class AppBarCustom extends StatefulWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    return Size.fromHeight((kToolbarHeight + 40) * AppSizes.instance.heightRatio);
+    //return Size.fromHeight(kToolbarHeight + 15 * AppSizes.instance.heightRelative);
+    return Size.fromHeight(55 * AppSizes.instance.heightRelative);
   }
 }
-///---------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 class AppBarCustomState extends StateSuper<AppBarCustom> {
 
   @override
@@ -98,7 +51,7 @@ class AppBarCustomState extends StateSuper<AppBarCustom> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 14 *hr/*22*/, 15, 0),
+                  padding: EdgeInsets.fromLTRB(0, 14 *wRel, 15, 0),
                   child: GestureDetector(
                     onTap: () async {
                       LayoutComponentState.toggleDrawer();
@@ -116,7 +69,7 @@ class AppBarCustomState extends StateSuper<AppBarCustom> {
                 GestureDetector(
                   onTap: onLevelClick,
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(10, 8*hr, 0, 0),
+                    padding: EdgeInsets.fromLTRB(10, 8*hRel, 0, 0),
                     child: Row(
                       children: [
                         const Icon(AppIcons.arrowDropDown),
@@ -152,12 +105,12 @@ class AppBarCustomState extends StateSuper<AppBarCustom> {
 
                       if(user != null && user.hasAvatar()){
                         return CircleAvatar(
-                          radius: 20,
+                          radius: 15 * wRel,
                           backgroundColor: Colors.transparent,
                           child: IrisImageView(
-                            height: 40*hr,
-                            width: 40*hr,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                            height: 30 * wRel,
+                            width: 30 * wRel,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                             beforeLoadWidget: const CircularProgressIndicator(),
                             bytes: user.avatarModel?.bytes,
                             url: user.avatarModel?.fileLocation,
@@ -168,8 +121,8 @@ class AppBarCustomState extends StateSuper<AppBarCustom> {
                         );
                       }
 
-                      return const CircleAvatar(
-                        radius: 20,
+                      return CircleAvatar(
+                        radius: 15 * hRel,
                         backgroundColor: Colors.transparent,
                         backgroundImage: AssetImage(AppImages.profile),
                         //child: Image.asset(AppImages.profile, fit: BoxFit.fill),
@@ -177,7 +130,7 @@ class AppBarCustomState extends StateSuper<AppBarCustom> {
                     },
                   ),
 
-                SizedBox(height: 20*hr),
+                SizedBox(height: 8 * hRel),
                 //SizedBox(height: 8),
                 //Text('علی باقری'),
               ],

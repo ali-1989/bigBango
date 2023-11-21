@@ -288,6 +288,6 @@ class _InvitePageState extends StateSuper<InvitePage> {
 
     requester.prepareUrl(pathUrl: '/profile/introduces?Page=1&Size=100');
     requester.methodType = MethodType.get;
-    requester.request(context);
+    requester.request();
   }
 }

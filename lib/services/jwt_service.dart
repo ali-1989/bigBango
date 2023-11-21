@@ -15,7 +15,7 @@ import 'package:app/tools/route_tools.dart';
 class JwtService {
   JwtService._();
   static Timer? _refreshTimer;
-  static Duration _refreshDuration = Duration(minutes: 1);
+  static Duration _refreshDuration = const Duration(minutes: 1);
 
   static void runRefreshService(){
     if(!iaRefreshServiceRun()) {

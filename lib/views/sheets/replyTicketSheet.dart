@@ -271,6 +271,6 @@ class _ReplyTicketSheetState extends StateSuper<ReplyTicketSheet> {
     requester.methodType = MethodType.post;
     requester.prepareUrl(pathUrl: '/tickets/reply');
     requester.bodyJson = body;
-    requester.request(context);
+    requester.request();
   }
 }

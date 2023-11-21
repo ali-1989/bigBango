@@ -42,7 +42,7 @@ class ApiManager {
     requester.prepareUrl(pathUrl: url);
     requester.methodType = methodType;
 
-    requester.request(null, false);
+    requester.request();
     return res.future;
   }
 
@@ -65,7 +65,7 @@ class ApiManager {
       final data = r.result1!['data'];
       final int min = max(data['minutes'], 0);
 
-      IrisRuntimeCache.storeOrUpdate(AppStoreScope.user$supportTime, userId, min, updateDuration: Duration(minutes: 10));
+      IrisRuntimeCache.storeOrUpdate(AppStoreScope.user$supportTime, userId, min, updateDuration: const Duration(minutes: 10));
       return min;
     }
     else {
@@ -94,7 +94,7 @@ class ApiManager {
     requester.prepareUrl(pathUrl: '/profile/update');
     requester.methodType = MethodType.put;
 
-    requester.request(null, false);
+    requester.request();
     return res.future;
   }
 

@@ -19,7 +19,7 @@ class LayoutPage extends StatefulWidget {
   @override
   State<LayoutPage> createState() => LayoutPageState();
 }
-///===================================================================================================================
+///=============================================================================
 class LayoutPageState extends StateSuper<LayoutPage> {
   int selectedPageIndex = 0;
   PageController pageController = PageController(initialPage: 0);

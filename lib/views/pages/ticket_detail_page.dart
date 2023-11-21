@@ -285,7 +285,7 @@ class _TicketDetailPageState extends StateSuper<TicketDetailPage> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/tickets/details?Id=${widget.ticketId}');
-    requester.request(context);
+    requester.request();
   }
 
   void requestCloseTicket(){
@@ -310,6 +310,6 @@ class _TicketDetailPageState extends StateSuper<TicketDetailPage> {
     requester.methodType = MethodType.post;
     requester.bodyJson = js;
     requester.prepareUrl(pathUrl: '/tickets/close');
-    requester.request(context);
+    requester.request();
   }
 }

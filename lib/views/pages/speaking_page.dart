@@ -319,6 +319,6 @@ class _SpeakingPageState extends StateSuper<SpeakingPage> with TickerProviderSta
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/speaking?CategoryId=${widget.categoryId}');
-    requester.request(context);
+    requester.request();
   }
 }

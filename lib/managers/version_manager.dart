@@ -62,11 +62,11 @@ class VersionManager {
       res.complete(newVersionModel);
     };
 
-    data[Keys.requestZone] = 'last_version';
+    data[Keys.request] = 'last_version';
 
     requester.bodyJson = data;
     requester.prepareUrl(pathUrl: '');
-    requester.request(context, false);
+    requester.request();
 
     return res.future;
   }*/

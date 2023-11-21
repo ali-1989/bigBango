@@ -151,6 +151,6 @@ class _WalletWithdrawalListSheetState extends StateSuper<WalletWithdrawalListShe
     requester.methodType = MethodType.post;
     requester.bodyJson = {'id': wModel.id};
     requester.prepareUrl(pathUrl: '/wallet/withdrawal/cancel');
-    requester.request(context);
+    requester.request();
   }
 }

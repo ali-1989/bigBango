@@ -297,13 +297,13 @@ class _GrammarPageState extends StateSuper<GrammarPage> {
                       quarterTurns: 2,
                       child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
                   ),
-                  label: const Text('next').englishFont().color(nextColor)
+                  label: const Text('next').englishRegularFont().color(nextColor)
               ),
 
               TextButton.icon(
                   style: TextButton.styleFrom(),
                   onPressed: onPreClick,
-                  icon: const Text('prev').englishFont().color(preColor),
+                  icon: const Text('prev').englishRegularFont().color(preColor),
                   label: Image.asset(AppImages.arrowLeftIco, color: preColor)
               ),
             ],
@@ -594,7 +594,7 @@ class _GrammarPageState extends StateSuper<GrammarPage> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/grammars?LessonId=${widget.injector.lessonModel.id}');
-    requester.request(context);
+    requester.request();
   }
 
   Future<void> requestExercise(GrammarExerciseModel model) async {
@@ -625,7 +625,7 @@ class _GrammarPageState extends StateSuper<GrammarPage> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/grammars/exercises?GrammarExerciseCategoryId=${model.id}');
-    requester.request(context);
+    requester.request();
 
     return c.future;
   }

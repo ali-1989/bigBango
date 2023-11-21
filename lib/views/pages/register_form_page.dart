@@ -601,7 +601,7 @@ class _RegisterFormPageState extends StateSuper<RegisterFormPage> {
 
     requester.prepareUrl(pathUrl: '/provinces');
     requester.methodType = MethodType.get;
-    requester.request(context);
+    requester.request();
   }
 
   void requestCities(){
@@ -623,7 +623,7 @@ class _RegisterFormPageState extends StateSuper<RegisterFormPage> {
 
     requester.prepareUrl(pathUrl: '/cities');
     requester.methodType = MethodType.get;
-    requester.request(context);
+    requester.request();
   }
 
   void requestRegister(){
@@ -700,6 +700,6 @@ class _RegisterFormPageState extends StateSuper<RegisterFormPage> {
     requester.prepareUrl(pathUrl: '/register');
     requester.methodType = MethodType.post;
     requester.bodyJson = js;
-    requester.request(context);
+    requester.request();
   }
 }

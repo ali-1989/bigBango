@@ -887,7 +887,7 @@ class _ProfilePageState extends StateSuper<ProfilePage> {
     requester.methodType = MethodType.delete;
     requester.prepareUrl(pathUrl: '/profile/deleteAvatar');
 
-    requester.request(context, false);
+    requester.request();
   }
 
   void onIbanQuestionMarkClick(){
@@ -1003,7 +1003,7 @@ class _ProfilePageState extends StateSuper<ProfilePage> {
 
     requester.prepareUrl(pathUrl: '/profile?ClientSecret=${DeviceInfoTools.deviceId}');
     requester.methodType = MethodType.get;
-    requester.request(context, false);
+    requester.request();
   }
 
   void requestUpdate(){
@@ -1091,7 +1091,7 @@ class _ProfilePageState extends StateSuper<ProfilePage> {
     requester.prepareUrl(pathUrl: '/profile/update');
 
     showLoading();
-    requester.request(context, false);
+    requester.request();
   }
 
   void requestProvinces(){
@@ -1121,7 +1121,7 @@ class _ProfilePageState extends StateSuper<ProfilePage> {
 
     requester.prepareUrl(pathUrl: '/provinces');
     requester.methodType = MethodType.get;
-    requester.request(context);
+    requester.request();
   }
 
   void requestCities(){
@@ -1149,7 +1149,7 @@ class _ProfilePageState extends StateSuper<ProfilePage> {
 
     requester.prepareUrl(pathUrl: '/cities');
     requester.methodType = MethodType.get;
-    requester.request(context);
+    requester.request();
   }
 
   Future<bool> requestUpdateAvatar(MediaModel media){
@@ -1170,7 +1170,7 @@ class _ProfilePageState extends StateSuper<ProfilePage> {
     requester.prepareUrl(pathUrl: '/profile/update');
     requester.methodType = MethodType.put;
 
-    requester.request(context, false);
+    requester.request();
 
     return result.future;
   }

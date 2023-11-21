@@ -546,7 +546,7 @@ class _TimetablePageState extends StateSuper<TimetablePage> {
     showLoading();
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/shop/supportPackages');
-    requester.request(context);
+    requester.request();
 
     return co.future;
   }
@@ -673,7 +673,7 @@ class _TimetablePageState extends StateSuper<TimetablePage> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/supportTimes?RequiredMinutes=$minNumber');
-    requester.request(context);
+    requester.request();
   }
 
   void requestSupport(){
@@ -721,6 +721,6 @@ class _TimetablePageState extends StateSuper<TimetablePage> {
     requester.prepareUrl(pathUrl: '/appointments/booking');
     requester.methodType = MethodType.post;
     requester.bodyJson = js;
-    requester.request(context);
+    requester.request();
   }
 }

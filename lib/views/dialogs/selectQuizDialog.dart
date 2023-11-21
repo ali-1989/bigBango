@@ -191,6 +191,6 @@ class _SelectReadingDialog extends StateSuper<SelectQuizDialog> {
     showLoading();
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/quizzes?CategoryId=$categoryId');
-    requester.request(context);
+    requester.request();
   }
 }

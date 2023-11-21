@@ -72,7 +72,7 @@ class LeitnerManager {
 
     requester.prepareUrl(pathUrl: '/leitner/count');
     requester.methodType = MethodType.get;
-    requester.request(null, false);
+    requester.request();
   }
 
   static void _onNetConnected({data}) {

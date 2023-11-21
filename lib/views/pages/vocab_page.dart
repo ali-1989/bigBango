@@ -206,16 +206,16 @@ class _VocabPageState extends StateSuper<VocabPage> {
                             visible: vocabList.length > 1,
                             child: Row(
                               children: [
-                                Text('${vocabList.length}').englishFont().fsR(4),
+                                Text('${vocabList.length}').englishRegularFont().fsR(4),
 
                                 const SizedBox(width: 10),
-                                const Text('/').englishFont().fsR(5),
+                                const Text('/').englishRegularFont().fsR(5),
 
                                 const SizedBox(width: 10),
                                 CustomCard(
                                   color: Colors.grey.shade200,
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                                    child: Text('${currentVocabIdx+1}').englishFont().bold().fsR(4)
+                                    child: Text('${currentVocabIdx+1}').englishRegularFont().bold().fsR(4)
                                 )
                               ],
                             ),
@@ -515,13 +515,13 @@ class _VocabPageState extends StateSuper<VocabPage> {
                     quarterTurns: 2,
                     child: Image.asset(AppImages.arrowLeftIco, color: nextBtnColor)
                 ),
-                label: const Text('next').englishFont().color(nextBtnColor)
+                label: const Text('next').englishRegularFont().color(nextBtnColor)
             ),
 
             TextButton.icon(
                 style: TextButton.styleFrom(),
                 onPressed: onPreClick,
-                icon: const Text('prev').englishFont().color(preBtnColor),
+                icon: const Text('prev').englishRegularFont().color(preBtnColor),
                 label: Image.asset(AppImages.arrowLeftIco, color: preBtnColor)
             ),
           ],
@@ -549,7 +549,7 @@ class _VocabPageState extends StateSuper<VocabPage> {
               style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 13,
-                  fontFamily: FontManager.instance.getEnglishFont()?.family,
+                  fontFamily: FontManager.instance.getEnglishRegularFont()?.family,
               ),
               textDirection: dir,
             ),
@@ -559,7 +559,7 @@ class _VocabPageState extends StateSuper<VocabPage> {
                   style: TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 13,
-                      fontFamily: FontManager.instance.getEnglishFont()?.family,
+                      fontFamily: FontManager.instance.getEnglishRegularFont()?.family,
                   ),
                   textDirection: dir,
                 )
@@ -582,7 +582,7 @@ class _VocabPageState extends StateSuper<VocabPage> {
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Colors.deepOrange,
-                      fontFamily: FontManager.instance.getEnglishFont()?.family,
+                      fontFamily: FontManager.instance.getEnglishRegularFont()?.family,
                     ),
                     textDirection: TextDirection.ltr,
                   )
@@ -604,7 +604,7 @@ class _VocabPageState extends StateSuper<VocabPage> {
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       color: Colors.grey.shade800,
-                      fontFamily: FontManager.instance.getEnglishFont()?.family,
+                      fontFamily: FontManager.instance.getEnglishRegularFont()?.family,
                     ),
                     textDirection: TextDirection.ltr,
                   )
@@ -811,7 +811,7 @@ class _VocabPageState extends StateSuper<VocabPage> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/vocabularies?CategoryId=${widget.injector.categoryId}');
-    requester.request(context);
+    requester.request();
   }
 
   void requestSetLeitner(VocabModel vocab, bool state){
@@ -838,7 +838,7 @@ class _VocabPageState extends StateSuper<VocabPage> {
     requester.methodType = MethodType.post;
     requester.prepareUrl(pathUrl: '/leitner/addOrRemove');
     requester.bodyJson = js;
-    requester.request(context);
+    requester.request();
   }
 
   void sendReview(String id){

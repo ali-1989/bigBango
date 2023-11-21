@@ -133,7 +133,7 @@ class SpeakingComponentState extends StateSuper<SpeakingComponent> {
                     minWidth: double.infinity,
                     minHeight: 50,
                   ),
-                  child: Text(speakingModel.text!).englishFont().fsR(-1)),
+                  child: Text(speakingModel.text!).englishRegularFont().fsR(-1)),
             ).wrapDotBorder(
                 color: Colors.black12,
                 alpha: 100,
@@ -488,7 +488,7 @@ class SpeakingComponentState extends StateSuper<SpeakingComponent> {
     requester.prepareUrl(pathUrl: '/speaking/solving');
     requester.bodyJson = js;
 
-    requester.request(context);
+    requester.request();
   }
 
   String getVoiceAddress() {

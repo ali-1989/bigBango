@@ -268,8 +268,8 @@ class _ExamOptionBuilderState extends StateSuper<ExamOptionBuilder> with ExamSta
               ),
               child: Row(
                 children: [
-                  Text('  ${optionIdx+1} -  ', style: (isSelected || (!isSelected && exam.showAnswer && isCorrect))? selectStl : unSelectStl).englishFont(),
-                  Text(opt.text, style: (isSelected || (!isSelected && exam.showAnswer && isCorrect))? selectStl : unSelectStl).englishFont(),
+                  Text('  ${optionIdx+1} -  ', style: (isSelected || (!isSelected && exam.showAnswer && isCorrect))? selectStl : unSelectStl).englishRegularFont(),
+                  Text(opt.text, style: (isSelected || (!isSelected && exam.showAnswer && isCorrect))? selectStl : unSelectStl).englishRegularFont(),
                 ],
               ).wrapBoxBorder(
                   color: Colors.black,
@@ -342,8 +342,8 @@ class _ExamOptionBuilderState extends StateSuper<ExamOptionBuilder> with ExamSta
                 children: [
                   Row(
                     children: [
-                      Text('  ${optionIdx+1} -  ', style: (isSelected || (!isSelected && exam.showAnswer && isCorrect))? selectStl : unSelectStl).englishFont(),
-                      Text(opt.text, style: (isSelected || (!isSelected && exam.showAnswer && isCorrect))? selectStl : unSelectStl).englishFont(),
+                      Text('  ${optionIdx+1} -  ', style: (isSelected || (!isSelected && exam.showAnswer && isCorrect))? selectStl : unSelectStl).englishRegularFont(),
+                      Text(opt.text, style: (isSelected || (!isSelected && exam.showAnswer && isCorrect))? selectStl : unSelectStl).englishRegularFont(),
                     ],
                   ),
 

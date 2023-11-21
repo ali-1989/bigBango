@@ -230,13 +230,13 @@ class _ListeningPageState extends StateSuper<ListeningPage> {
                       quarterTurns: 2,
                       child: Image.asset(AppImages.arrowLeftIco, color: nextColor)
                   ),
-                  label: const Text('next').englishFont().color(nextColor)
+                  label: const Text('next').englishRegularFont().color(nextColor)
               ),
 
               TextButton.icon(
                   style: TextButton.styleFrom(),
                   onPressed: onPreClick,
-                  icon: const Text('prev').englishFont().color(preColor),
+                  icon: const Text('prev').englishRegularFont().color(preColor),
                   label: Image.asset(AppImages.arrowLeftIco, color: preColor)
               ),
             ],
@@ -319,7 +319,7 @@ class _ListeningPageState extends StateSuper<ListeningPage> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/listening?CategoryId=${widget.injector.categoryId}');
-    requester.request(context);
+    requester.request();
   }
 }
 

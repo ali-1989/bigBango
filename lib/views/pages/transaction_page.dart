@@ -393,7 +393,7 @@ class _TransactionsPageState extends StateSuper<TransactionsPage> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: url);
-    requester.request(context);
+    requester.request();
 
     return co.future;
   }

@@ -4,8 +4,10 @@ import 'package:app/managers/font_manager.dart';
 import 'package:app/system/constants.dart';
 import 'package:app/tools/app/app_images.dart';
 import 'package:app/tools/app/app_sizes.dart';
+import 'package:iris_tools/api/managers/fonts_manager.dart';
 
 class SplashView extends StatelessWidget {
+  // ignore: use_super_parameters
   const SplashView({Key? key}) : super(key: key);
 
   @override

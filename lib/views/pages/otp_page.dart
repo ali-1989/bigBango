@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:android_sms_retriever/android_sms_retriever.dart';
 import 'package:iris_tools/api/helpers/localeHelper.dart';
 import 'package:iris_tools/api/helpers/mathHelper.dart';
+import 'package:iris_tools/api/managers/fonts_manager.dart';
 import 'package:iris_tools/dateSection/dateHelper.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -133,7 +134,7 @@ class _OtpPageState extends StateSuper<OtpPage> {
                                   text: TextSpan(
                                       style: TextStyle(
                                           color: Colors.black,
-                                          fontFamily: FontManager.instance.defaultFontFor('fa', FontUsage.normal).family
+                                          fontFamily: FontManager.instance.defaultFontFor('fa', FontUsage.regular).family
                                       ),
                                       children: [
                                         TextSpan(text: AppMessages.otpDescriptionMobile),

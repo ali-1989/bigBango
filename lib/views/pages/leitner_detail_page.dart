@@ -154,18 +154,18 @@ class _LightnerDetailPageState extends StateSuper<LightnerDetailPage> {
 
                 Row(
                   children: [
-                    Text('${leitnerItems.length}').englishFont().fsR(4),
+                    Text('${leitnerItems.length}').englishRegularFont().fsR(4),
 
                     const SizedBox(width: 10),
 
-                    const Text('/').englishFont().fsR(5),
+                    const Text('/').englishRegularFont().fsR(5),
 
                     const SizedBox(width: 10),
 
                     CustomCard(
                       color: Colors.grey.shade200,
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                        child: Text('${currentIdx+1}').englishFont().bold().fsR(4)
+                        child: Text('${currentIdx+1}').englishRegularFont().bold().fsR(4)
                     )
                   ],
                 ),
@@ -390,7 +390,7 @@ class _LightnerDetailPageState extends StateSuper<LightnerDetailPage> {
 
     requester.prepareUrl(pathUrl: '/leitner/contents?BoxNumber=${widget.lightnerBox.number}');
     requester.methodType = MethodType.get;
-    requester.request(null, false);
+    requester.request();
   }
 
   void requestSetReview(LeitnerModel model, bool state) async {
@@ -414,6 +414,6 @@ class _LightnerDetailPageState extends StateSuper<LightnerDetailPage> {
     requester.prepareUrl(pathUrl: '/leitner/review');
     requester.methodType = MethodType.put;
     requester.bodyJson = js;
-    requester.request(null, false);
+    requester.request();
   }
 }

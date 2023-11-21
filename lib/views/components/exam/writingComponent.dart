@@ -85,7 +85,7 @@ class WritingComponentState extends StateSuper<WritingComponent> {
                     minWidth: double.infinity,
                     minHeight: 50,
                   ),
-                  child: Text(writingModel.text!).englishFont()),
+                  child: Text(writingModel.text!).englishRegularFont()),
             ).wrapDotBorder(
                 color: Colors.black12,
                 alpha: 100,
@@ -192,7 +192,7 @@ class WritingComponentState extends StateSuper<WritingComponent> {
                     width: double.infinity,
                     child: Text(
                       writingModel.correctAnswer?? '',
-                    ).englishFont(),
+                    ).englishRegularFont(),
                   ),
                 ),
               ).wrapDotBorder(
@@ -275,7 +275,7 @@ class WritingComponentState extends StateSuper<WritingComponent> {
     requester.bodyJson = js;
 
     showLoading();
-    requester.request(context);
+    requester.request();
   }
 }
 

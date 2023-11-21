@@ -746,7 +746,7 @@ class _SupportPageState extends StateSuper<SupportPage> with SingleTickerProvide
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/roles');
-    requester.request(context);
+    requester.request();
 
     return co.future;
   }
@@ -812,7 +812,7 @@ class _SupportPageState extends StateSuper<SupportPage> with SingleTickerProvide
     requester.methodType = MethodType.get;
     ///&keyword=
     requester.prepareUrl(pathUrl: '/appointments?Page=$timetablePage&status=1&size=200');
-    requester.request(context);
+    requester.request();
 
     return co.future;
   }
@@ -877,7 +877,7 @@ class _SupportPageState extends StateSuper<SupportPage> with SingleTickerProvide
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/tickets?Page=$ticketPage');
-    requester.request(context);
+    requester.request();
 
     return co.future;
   }
@@ -932,7 +932,7 @@ class _SupportPageState extends StateSuper<SupportPage> with SingleTickerProvide
     showLoading();
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/shop/supportPackages');
-    requester.request(context);
+    requester.request();
 
     return co.future;
   }
@@ -966,6 +966,6 @@ class _SupportPageState extends StateSuper<SupportPage> with SingleTickerProvide
     requester.methodType = MethodType.delete;
     requester.bodyJson = {'id': sModel.id};
     requester.prepareUrl(pathUrl: '/appointments/cancel');
-    requester.request(context);
+    requester.request();
   }
 }

@@ -214,6 +214,6 @@ class _SelectBuyMethodSheetState extends StateSuper<SelectBuyMethodSheet> {
       requester.prepareUrl(pathUrl: '/lessons/purchase');
     }
 
-    requester.request(context);
+    requester.request();
   }
 }

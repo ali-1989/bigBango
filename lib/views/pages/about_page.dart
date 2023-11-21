@@ -7,7 +7,6 @@ import 'package:iris_tools/widgets/custom_card.dart';
 import 'package:app/managers/settings_manager.dart';
 import 'package:app/structures/abstract/state_super.dart';
 import 'package:app/system/extensions.dart';
-import 'package:app/tools/app/app_decoration.dart';
 import 'package:app/tools/app/app_images.dart';
 import 'package:app/views/components/backBtn.dart';
 import 'package:app/views/states/errorOccur.dart';
@@ -101,7 +100,7 @@ class _AboutPageState extends StateSuper<AboutPage> {
                     )
                 ),
 
-                const Text('A  B  O  U  T   U  S').englishFont().alpha(alpha: 100).bold(weight: FontWeight.w400),
+                const Text('A  B  O  U  T   U  S').englishRegularFont().alpha(alpha: 100).bold(weight: FontWeight.w400),
               ],
             ),
           ),

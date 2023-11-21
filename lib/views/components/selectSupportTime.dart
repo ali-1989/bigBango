@@ -412,7 +412,7 @@ class _SelectSupportTimeState extends StateSuper<SelectSupportTime> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/supportTimes?RequiredMinutes=$minNumber');
-    requester.request(context);
+    requester.request();
   }
 
   void onRegister(){
@@ -467,6 +467,6 @@ class _SelectSupportTimeState extends StateSuper<SelectSupportTime> {
     requester.prepareUrl(pathUrl: '/appointments/booking');
     requester.methodType = MethodType.post;
     requester.bodyJson = js;
-    requester.request(context);
+    requester.request();
   }
 }

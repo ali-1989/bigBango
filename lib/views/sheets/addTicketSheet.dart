@@ -390,6 +390,6 @@ class _AddTicketSheetState extends StateSuper<AddTicketSheet> {
     requester.methodType = MethodType.post;
     requester.prepareUrl(pathUrl: '/tickets/add');
     requester.bodyJson = body;
-    requester.request(context);
+    requester.request();
   }
 }

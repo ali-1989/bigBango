@@ -226,6 +226,6 @@ class _LightnerPageState extends StateSuper<LightnerPage> {
 
     requester.prepareUrl(pathUrl: '/leitner/boxes');
     requester.methodType = MethodType.get;
-    requester.request(null, false);
+    requester.request();
   }
 }

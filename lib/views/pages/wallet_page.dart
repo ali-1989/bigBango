@@ -444,7 +444,7 @@ class _WalletPageState extends StateSuper<WalletPage> {
 
     requester.methodType = MethodType.get;
     requester.prepareUrl(pathUrl: '/wallet');
-    requester.request(context);
+    requester.request();
 
     return co.future;
   }
@@ -478,7 +478,7 @@ class _WalletPageState extends StateSuper<WalletPage> {
     requester.methodType = MethodType.post;
     requester.bodyJson = {'amount': amount};
     requester.prepareUrl(pathUrl: '/wallet/charge');
-    requester.request(context);
+    requester.request();
   }
 
   Future<void> requestWithdrawal(int amount) async {
@@ -510,6 +510,6 @@ class _WalletPageState extends StateSuper<WalletPage> {
     requester.methodType = MethodType.post;
     requester.bodyJson = {'amount': amount};
     requester.prepareUrl(pathUrl: '/wallet/withdrawal');
-    requester.request(context);
+    requester.request();
   }
 }

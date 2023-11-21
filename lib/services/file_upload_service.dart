@@ -42,7 +42,7 @@ class FileUploadService {
 
     requester.debug = true;
 
-    requester.request(null, false);
+    requester.request();
     return res.future;
   }
 

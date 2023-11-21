@@ -165,7 +165,7 @@ class MessageManager {
 
     requester.prepareUrl(pathUrl: '/notifications?Page=$pageIndex&Size=100');
     requester.methodType = MethodType.get;
-    requester.request(null, false);
+    requester.request();
   }
 
   static void requestUpdateMessageSeen(List<MessageModel> notifyList) async {
@@ -195,7 +195,7 @@ class MessageManager {
     requester.prepareUrl(pathUrl: '/notifications/update');
     requester.methodType = MethodType.put;
     requester.bodyJson = js;
-    requester.request(null, false);
+    requester.request();
   }
 
   static void requestUnReadCount() async {
@@ -226,7 +226,7 @@ class MessageManager {
 
     requester.prepareUrl(pathUrl: '/notifications/count');
     requester.methodType = MethodType.get;
-    requester.request(null, false);
+    requester.request();
   }
 
   static void requestSetFirebaseToken() async {
@@ -260,7 +260,7 @@ class MessageManager {
     requester.prepareUrl(pathUrl: '/messagingDevices/add');
     requester.methodType = MethodType.post;
     requester.bodyJson = js;
-    requester.request(null, false);
+    requester.request();
   }
 
   static void _onNetConnected({data}) {

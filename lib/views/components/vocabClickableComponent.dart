@@ -53,7 +53,7 @@ class _VocabClickableComponentState extends StateSuper<VocabClickableComponent> 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: SizedBox(
@@ -66,10 +66,10 @@ class _VocabClickableComponentState extends StateSuper<VocabClickableComponent> 
                 Row(
                   children: [
                     Text(vocabModel.word).bold(),
-                    SizedBox(width: 10),
-                    Text('[${vocabModel.pronunciation}]').englishFont(),
+                    const SizedBox(width: 10),
+                    Text('[${vocabModel.pronunciation}]').englishRegularFont(),
 
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Row(
                       children: [
                         GestureDetector(
@@ -81,12 +81,12 @@ class _VocabClickableComponentState extends StateSuper<VocabClickableComponent> 
                           child: Assist(
                             controller: assistCtr,
                             id: id$usVoicePlayerSectionId,
-                            groupIds: [AssistGroup.voicePlayerGroupId$vocabClickable],
+                            groupIds: const [AssistGroup.voicePlayerGroupId$vocabClickable],
                             builder: (_, ctr, data){
                               return AnimateWidget(
                                 resetOnRebuild: true,
                                 triggerOnRebuild: true,
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 cycles: data == 'prepare' ? 100 : 1,
                                 builder: (_, animate){
                                   Color color = Colors.grey.shade200;
@@ -98,13 +98,13 @@ class _VocabClickableComponentState extends StateSuper<VocabClickableComponent> 
                                   }
 
                                   return CustomCard(
-                                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+                                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
                                     color: color,
                                     child: Column(
                                       children: [
                                         Image.asset(AppImages.speaker2Ico, height: 16, width: 20),
-                                        SizedBox(height: 3),
-                                        Text('US', style: TextStyle(fontSize: 9))
+                                        const SizedBox(height: 3),
+                                        const Text('US', style: TextStyle(fontSize: 9))
                                       ],
                                     ),
                                   );
@@ -114,7 +114,7 @@ class _VocabClickableComponentState extends StateSuper<VocabClickableComponent> 
                           ),
                         ),
 
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
 
                         GestureDetector(
                           onTap: (){
@@ -126,12 +126,12 @@ class _VocabClickableComponentState extends StateSuper<VocabClickableComponent> 
                           child: Assist(
                             controller: assistCtr,
                             id: id$ukVoicePlayerSectionId,
-                            groupIds: [AssistGroup.voicePlayerGroupId$vocabClickable],
+                            groupIds: const [AssistGroup.voicePlayerGroupId$vocabClickable],
                             builder: (_, ctr, data){
                               return AnimateWidget(
                                 resetOnRebuild: true,
                                 triggerOnRebuild: true,
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 cycles: data == 'prepare' ? 100 : 1,
                                 builder: (_, animate){
                                   Color color = Colors.grey.shade200;
@@ -143,13 +143,13 @@ class _VocabClickableComponentState extends StateSuper<VocabClickableComponent> 
                                   }
 
                                   return CustomCard(
-                                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+                                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
                                       color: color,
                                       child: Column(
                                         children: [
                                           Image.asset(AppImages.speaker2Ico, height: 16, width: 20),
-                                          SizedBox(height: 3),
-                                          Text('UK', style: TextStyle(fontSize: 9),)
+                                          const SizedBox(height: 3),
+                                          const Text('UK', style: TextStyle(fontSize: 9),)
                                         ],
                                       )
                                   );
@@ -163,10 +163,10 @@ class _VocabClickableComponentState extends StateSuper<VocabClickableComponent> 
                   ],
                 ),
 
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(vocabModel.descriptions),
 
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(vocabModel.translation),
 
                 Align(
@@ -174,10 +174,10 @@ class _VocabClickableComponentState extends StateSuper<VocabClickableComponent> 
                   child: IconButton(
                     style: IconButton.styleFrom(
                         padding: EdgeInsets.zero,
-                        visualDensity: VisualDensity(horizontal: -4, vertical: -4)
+                        visualDensity: const VisualDensity(horizontal: -4, vertical: -4)
                     ),
                     onPressed: (){RouteTools.popTopView(context: context);},
-                    icon: Icon(AppIcons.close, color: Colors.red, size: 14,),
+                    icon: const Icon(AppIcons.close, color: Colors.red, size: 14,),
                   ),
                 )
               ],

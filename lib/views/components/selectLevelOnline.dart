@@ -185,14 +185,14 @@ class _SelectLevelOnlineState extends StateSuper<SelectLevelOnline> {
                     goNextQuestion();
                   },
                   icon: Image.asset(AppImages.arrowRightIco, color: nextColor),
-                  label: const Text('Next').englishFont().color(nextColor)
+                  label: const Text('Next').englishRegularFont().color(nextColor)
               ),
 
               TextButton.icon(
                   onPressed: (){
                     goPrevQuestion();
                   },
-                  icon: const Text('prev').englishFont().color(preColor),
+                  icon: const Text('prev').englishRegularFont().color(preColor),
                   label: Image.asset(AppImages.arrowLeftIco, color: preColor)
               ),
             ],

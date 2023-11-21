@@ -135,7 +135,7 @@ class StoreManager {
 
 		requester.methodType = MethodType.get;
 		requester.prepareUrl(pathUrl: '/shop/lessons');
-		requester.request(context);
+		requester.request();
 
 		return res.future;
 	}
